@@ -2,7 +2,7 @@
   "name": "magnito",
   "version": "1.0.0",
   "description": "e-commerce site using mern",
-  "main": "backend/server",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "nodemon",
