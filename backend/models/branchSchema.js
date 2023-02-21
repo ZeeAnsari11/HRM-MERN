@@ -24,6 +24,11 @@ const branchSchema = new mongoose.Schema({
         type : mongoose.Schema.ObjectId,
         ref: 'User',
     },
+    organization: {
+        type : mongoose.Schema.ObjectId,
+        ref: 'Organization',
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now

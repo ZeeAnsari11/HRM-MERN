@@ -68,3 +68,24 @@ export const deleteById = (req, res, next) => {
         })
     })
 }
+
+export const getBranchesByOrganization = (req, res, next) => {
+    const orgId = req.params.id;
+    BranchSchema.find()
+    .then((response) => {
+        console.log(response)
+        const branches = response.filter((branch) => {
+            return branch.organization.toString() === orgId.toString()
+        });
+        res.status(200).json({
+            success: true,
+            branches: branches
+        })
+    })
+    .catch((error) => {
+        res.status(401).json({
+            success: false,
+            error: error
+        })
+    })
+}

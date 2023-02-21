@@ -5,6 +5,6 @@ const app =  express();
 
 app.use(express.json());
 
-app.use('/api/v1/', branch)
+app.use('/api/v1/', branch);
 
 export default app;
