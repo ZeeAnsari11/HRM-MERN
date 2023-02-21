@@ -23,7 +23,6 @@ const branchSchema = new mongoose.Schema({
     manager: {
         type : mongoose.Schema.ObjectId,
         ref: 'User',
-        required: true
     },
     createdAt: {
         type: Date,
