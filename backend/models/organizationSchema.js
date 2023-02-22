@@ -5,14 +5,14 @@ import mongoose from "mongoose";
 const organizationSchema = mongoose.Schema({
     name: {
         type: String,
-        required: [true, "Please Enter Name of Product"],
-        maxlength: [100, "Product Name Can't Exceed 100 Characters"],
+        required: [true, "Please Enter Name of Organization"],
+        maxlength: [100, "Organization Name Can't Exceed 100 Characters"],
         trim: true
     },
     address: {
         type: String,
-        required: [true, "Please Enter Name of Product"],
-        maxlength: [100, "Product Name Can't Exceed 100 Characters"],
+        required: [true, "Please Address of Organization"],
+        maxlength: [100, "Organization Address Can't Exceed 100 Characters"],
         trim: true
     },
     start: {
@@ -23,12 +23,17 @@ const organizationSchema = mongoose.Schema({
     },
     description: {
         type: String,
-        maxlength: [200, "Product Name Can't Exceed 100 Characters"],
+        maxlength: [200, "Organization description Can't Exceed 200 Characters"],
     },
     location: {
-        type: "Point",
-        coordinates: [],
-        required: [true, ' Please Enter the Lcoation of Organization']
+        type: {
+            type:String,
+            default:'point'
+        },
+        coordinates: {
+            type: Array,
+            required:[true, 'Please Enter the Longititude and latitude of the Organization']
+        }
     },
     logo: {
         type: String,
@@ -44,4 +49,4 @@ const organizationSchema = mongoose.Schema({
     }
 })
 
-export default OrganizationModel = mongoose.model('Organization', organizationSchema, 'Organization Collection')
+export const OrganizationModel = mongoose.model('Organization', organizationSchema, 'Organization Collection')
