@@ -6,18 +6,20 @@ export const createOrganization = (req, res, next) => {
 }
 
 export const getAllOrganizations = (req, res, next) => {
-    getAll(req,res,next, OrganizationModel)
+    getAll(res, next, OrganizationModel)
 }
 
 export const getOrganizationById = (req, res, next) => {
-    getById(req,res,next, OrganizationModel)
+    let id = req.params.id;
+    getById(id, res, next, OrganizationModel)
 }
 
 
 export const deleteOrganizationById = (req, res, next) => {
-    deleteById(req,res,next, OrganizationModel)
+    let id = req.params.id;
+    deleteById(id, res, next, OrganizationModel)
 }
 
 export const updateOrganizationById = (req, res, next)=>{
-    updateById(req,res,next, OrganizationModel)
+    updateById(req, res, next, OrganizationModel)
 }
