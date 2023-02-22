@@ -14,10 +14,9 @@ const departmentSchema = mongoose.Schema({
     },
     departmentHead: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
+        ref: 'User'
     },
 
 })
 
-export default DepartmentModel = mongoose.model('Department', departmentSchema, 'Department Collection')
+export const DepartmentModel = mongoose.model('Department', departmentSchema, 'Department Collection')
