@@ -1,4 +1,5 @@
 import { BranchSchema } from "../models/branchSchema.js"
+import { OrganizationModel } from "../models/organizationSchema.js"
 
 export const createBranch = (req, res, next) => {
     BranchSchema.create(req.body)
@@ -99,7 +100,7 @@ export const updateBranch = (req, res, next) => {
                 response
             })
         })
-        .catch((error) => next({error:error, statusCode:404}))
+        .catch((error) => console.log(error))
     }
     catch (error) {
         console.log(error);
@@ -107,12 +108,16 @@ export const updateBranch = (req, res, next) => {
 }
 
 export const getOrganizationByBranchId = (req, res, next) => {
-    BranchSchema.findById().populate('organization')
+    BranchSchema.findById(req.params.id)
     .then((response) => {
-        res.status(200).json({
-            success: true,
-            response: response
+        OrganizationModel.findById(response.organization)
+        .then((organization) => {
+            res.status(200).json({
+                success: true,
+                organization: organization
+            })
         })
+        // .catch((e) => {throw e})
     })
     .catch((e) => console.log(e))
 }
