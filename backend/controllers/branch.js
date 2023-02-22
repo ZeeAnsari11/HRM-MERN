@@ -117,7 +117,7 @@ export const getOrganizationByBranchId = (req, res, next) => {
                 organization: organization
             })
         })
-        // .catch((e) => {throw e})
+        .catch((e) => {throw e})
     })
     .catch((e) => console.log(e))
 }
