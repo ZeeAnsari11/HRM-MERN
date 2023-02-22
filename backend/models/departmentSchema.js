@@ -25,3 +25,4 @@ const departmentSchema = mongoose.Schema({
 })
 
 export const DepartmentModel = mongoose.model('Department', departmentSchema, 'Department Collection')
+
