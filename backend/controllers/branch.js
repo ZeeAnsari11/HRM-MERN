@@ -70,16 +70,11 @@ export const deleteById = (req, res, next) => {
 }
 
 export const getBranchesByOrganization = (req, res, next) => {
-    const orgId = req.params.id;
-    BranchSchema.find()
+    BranchSchema.find({organization: req.params.id})
     .then((response) => {
-        console.log(response)
-        const branches = response.filter((branch) => {
-            return branch.organization.toString() === orgId.toString()
-        });
         res.status(200).json({
             success: true,
-            branches: branches
+            branches: response
         })
     })
     .catch((error) => {
@@ -88,4 +83,36 @@ export const getBranchesByOrganization = (req, res, next) => {
             error: error
         })
     })
+}
+
+export const updateBranch = (req, res, next) => {
+    try {
+        if (!req.body) throw "Already Up to date!";
+        BranchSchema.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true,
+            useFindAndModify: false
+        })
+        .then((response) => {
+            res.status(200).json({
+                success: true,
+                response
+            })
+        })
+        .catch((error) => next({error:error, statusCode:404}))
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+export const getOrganizationByBranchId = (req, res, next) => {
+    BranchSchema.findById().populate('organization')
+    .then((response) => {
+        res.status(200).json({
+            success: true,
+            response: response
+        })
+    })
+    .catch((e) => console.log(e))
 }
