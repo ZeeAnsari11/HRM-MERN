@@ -1,28 +1,41 @@
 import { DepartmentModel } from '../models/departmentSchema.js'
 import { BranchSchema } from '../models/branchSchema.js'
+import { OrganizationModel } from '../models/organizationSchema.js'
 
+//// Creating New Department ////
 const createDepartment = (req, res, next) => {
-    BranchSchema.findById(req.body.branch)
-        .then((branch) => {
-            if (branch) {
-                DepartmentModel.create(req.body)
-                    .then((department) => {
-                        res.status(201).json({
-                            success: true,
-                            department
-                        })
+    OrganizationModel.findById(req.body.organization)
+        .then((organization) => {
+            if (organization) {
+                BranchSchema.findById(req.body.branch)
+                    .then((branch) => {
+                        if (branch && branch.organization === req.body.branch) {
+                            DepartmentModel.create(req.body)
+                                .then((department) => {
+                                    res.status(201).json({
+                                        success: true,
+                                        department
+                                    })
+                                })
+                        }
+                        else {
+                            res.status(404).json({
+                                success: false,
+                                message: `No Branch with this id ${req.body.branch} or Branch does not exist in this organization`
+                            })
+                        }
                     })
             }
             else {
                 res.status(404).json({
                     success: false,
-                    message: `No Branch with this id ${req.body.branch}`
+                    message: `No Organization with this id ${req.body.organization}`
                 })
             }
         })
 }
 
-
+//// Get All Departments By Branch Id ////
 const getAllDepartmentsByBranchId = (req, res, next) => {
     DepartmentModel.find({ branch: req.params.id })
         .then((department) => {
@@ -38,13 +51,24 @@ const getAllDepartmentsByBranchId = (req, res, next) => {
 }
 
 const getAllDepartmentsByOrganizationId = (req, res, next) => {
-    DepartmentModel.find()
+    DepartmentModel.find({ organization: req.params.id })
         .then((departments) => {
-            departments.find({})
+            if (departments) {
+                res.status(200).json({
+                    success: true,
+                    departments
+                })
+            }
+            else {
+                res.status(404).json({
+                    success: false,
+                    message: `No Organization with this id ${req.params.id}`
+                })
+            }
         })
 }
 
-
+//// Get Department By Id ////
 const getDepartmentById = (req, res, next) => {
     DepartmentModel.findById(req.params.id)
         .then((department) => {
@@ -67,6 +91,7 @@ const getDepartmentById = (req, res, next) => {
 
 }
 
+//// Update Department By Id ////
 const updateDepartmentNameById = (req, res, next) => {
     DepartmentModel.findByIdAndUpdate(req.params.id, req.body)
         .then((department) => {
@@ -89,7 +114,7 @@ const updateDepartmentNameById = (req, res, next) => {
 
 }
 
-
+//// Delete Department By Id ////
 const deleteDepartmentById = (req, res, next) => {
     DepartmentModel.findById(req.params.id)
         .then((department) => {
@@ -112,6 +137,7 @@ const deleteDepartmentById = (req, res, next) => {
         })
 }
 
+//// Get Branch By Department Id ////
 const getBranchByDepartmentId = (req, res, next) => {
     DepartmentModel.findById(req.params.id)
         .then((department) => {
@@ -144,9 +170,53 @@ const getBranchByDepartmentId = (req, res, next) => {
         })
 }
 
+//// Get Organization By Department Id ////
+const getOrganizationByDepartmentId = (req, res, next) => {
+    DepartmentModel.findById(req.params.id)
+        .then((department) => {
+            if (department) {
+                BranchSchema.findById(department.branch)
+                    .then((branch) => {
+                        if (branch) {
+                            OrganizationModel.find({ _id: branch.organization })
+                                .then((organization) => {
+                                    if (organization) {
+                                        res.status(201).json({
+                                            success: true,
+                                            organization
+                                        })
+                                    }
+                                    else {
+                                        res.status(404).json({
+                                            success: false,
+                                            message: `No Organization with this id ${req.params.id}`
+                                        })
+                                    }
+                                })
+                        }
+                        else {
+                            res.status(404).json({
+                                success: false,
+                                message: `No Branch with this id ${req.params.id}`
+                            })
+                        }
+                    })
+            }
+            else {
+                res.status(404).json({
+                    success: false,
+                    message: `No Department with this id ${req.params.id}`
+                })
+            }
+        })
+        .catch((error) => {
+            next({ error: error, statusCode: 404 })
+        })
+}
+
 
 
 export {
     createDepartment, getAllDepartmentsByBranchId, getAllDepartmentsByOrganizationId, getDepartmentById,
-    deleteDepartmentById, updateDepartmentNameById, getBranchByDepartmentId
+    deleteDepartmentById, updateDepartmentNameById, getBranchByDepartmentId, getOrganizationByDepartmentId
 }

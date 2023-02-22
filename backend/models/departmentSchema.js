@@ -12,6 +12,11 @@ const departmentSchema = mongoose.Schema({
         ref: 'Branch',
         required: true,
     },
+    organization: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization',
+        required: true,
+    },
     departmentHead: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
