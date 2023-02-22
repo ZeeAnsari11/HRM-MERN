@@ -23,6 +23,10 @@ const branchSchema = new mongoose.Schema({
     manager: {
         type : mongoose.Schema.ObjectId,
         ref: 'User',
+    },
+    organization: {
+        type : mongoose.Schema.ObjectId,
+        ref: 'Organization',
         required: true
     },
     createdAt: {
