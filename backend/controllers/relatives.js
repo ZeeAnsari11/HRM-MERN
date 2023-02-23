@@ -12,7 +12,7 @@ export const getAllRelativesByEmployeeID = (req, res, next) => {
             success: true,
             relatives: response
         })
-    }) 
+    })
     .catch((error) => console.log(error))
 }
 
@@ -21,5 +21,5 @@ export const updateRelative = (req, res, next) => {
 }
 
 export const deleteRelative = (req, res, next) => {
-    deleteById(req, res, next, RelativeModel);
+    deleteById(req.params.id, res, next, RelativeModel);
 }

@@ -1,77 +1,26 @@
-import { BranchSchema } from "../models/branchSchema.js"
+import { BranchModel } from "../models/branchSchema.js"
 import { OrganizationModel } from "../models/organizationSchema.js"
+import { createNew, getById, deleteById as DeleteByID, getAll, updateById } from "../utils/common.js"
+
 
 export const createBranch = (req, res, next) => {
-    BranchSchema.create(req.body)
-    .then((response)=>{
-        res.status(201).json({
-            success: true,
-            response
-        })
-    })
-    .catch((error) => {
-        res.status(401).json({
-            success: false,
-            error: error
-        })
-    })
+    createNew(req, res, next,BranchModel)
 }
 
 export const getBranchById = (req, res, next) => {
-    BranchSchema.findById(req.params.id)
-    .then((response)=>{
-        if (!response) {
-            throw ("Branch Not Found");
-        }
-        else {
-            res.status(200).json({
-                success: true,
-                branch: response
-            })
-        }
-    })
-    .catch((error) => {
-        res.status(401).json({
-            success: false,
-            error: error
-        })
-    })
+    getById(req.params.id, res, next,BranchModel)
 }
 
 export const loadBranchCollection = (req, res, next) => {
-    BranchSchema.find()
-    .then((response) => {
-        res.status(200).json({
-            success: true,
-            branches: response
-        })
-    })  
-    .catch((error) => {
-        res.status(401).json({
-            success: false,
-            error: error
-        })
-    })
+    getAll(req, res, next,BranchModel)
 }
 
 export const deleteById = (req, res, next) => {
-    BranchSchema.findByIdAndDelete(req.params.id)
-    .then(() => {
-        res.status(200).json({
-            success: true,
-            message: "branch deleted successfully"
-        })
-    })
-    .catch((error) => {
-        res.status(401).json({
-            success: false,
-            error: error
-        })
-    })
+    DeleteByID(req.params.id, res, next,BranchModel);
 }
 
 export const getBranchesByOrganization = (req, res, next) => {
-    BranchSchema.find({organization: req.params.id})
+    BranchModel.find({organization: req.params.id})
     .then((response) => {
         res.status(200).json({
             success: true,
@@ -87,28 +36,11 @@ export const getBranchesByOrganization = (req, res, next) => {
 }
 
 export const updateBranch = (req, res, next) => {
-    try {
-        if (!req.body) throw "Already Up to date!";
-        BranchSchema.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-            runValidators: true,
-            useFindAndModify: false
-        })
-        .then((response) => {
-            res.status(200).json({
-                success: true,
-                response
-            })
-        })
-        .catch((error) => console.log(error))
-    }
-    catch (error) {
-        console.log(error);
-    }
+    updateById(req, res, next, BranchModel)
 }
 
 export const getOrganizationByBranchId = (req, res, next) => {
-    BranchSchema.findById(req.params.id)
+    BranchModel.findById(req.params.id)
     .then((response) => {
         OrganizationModel.findById(response.organization)
         .then((organization) => {

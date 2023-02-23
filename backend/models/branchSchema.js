@@ -4,7 +4,8 @@ const branchSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Please enter branch name'],
-        maxlength: [45, 'Branch name is too long']
+        maxlength: [45, 'Branch name is too long'],
+        trim : true
     },
     city: {
         type: String,
@@ -23,6 +24,7 @@ const branchSchema = new mongoose.Schema({
     manager: {
         type : mongoose.Schema.ObjectId,
         ref: 'User',
+        required : false
     },
     organization: {
         type : mongoose.Schema.ObjectId,
@@ -35,4 +37,4 @@ const branchSchema = new mongoose.Schema({
     }
 })
 
-export const BranchSchema = mongoose.model('Branch', branchSchema);
+export const BranchModel = mongoose.model('Branch', branchSchema);

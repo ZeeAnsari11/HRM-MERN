@@ -10,19 +10,18 @@ export const createNew = (req, res, next, model) => {
                     })
                 })
                 .catch((error) => {
-                    res.status(401).json({
-                        success: false,
-                        error: error
-                    })
+                    throw error;
                 })
         }
         else {
             throw "Request Body is empty"
         }
     }
-    catch (err) {
-        console.log("=========eroor=========", err);
-        process.exit(1)
+    catch (error) {
+        res.status(401).json({
+            success: false,
+            error: error
+        })
     }
 
 }
@@ -31,7 +30,7 @@ export const getAll = (res, next, model) => {
     model.find()
         .then((response) => {
             if (!response) {
-                throw (" Nothing Found");
+                throw ("Nothing Found");
             }
             else {
                 res.status(200).json({
@@ -52,7 +51,7 @@ export const getById = (id, res, next, model) => {
     model.findById(id)
         .then((response) => {
             if (!response) {
-                throw (" Nothing Found");
+                throw ("Nothing Found");
             }
             else {
                 res.status(200).json({
@@ -94,7 +93,7 @@ export const updateById = (req, res, next, model) => {
         })
     }
     model.findByIdAndUpdate(req.params.id, req.body)
-        .then((response) => {
+        .then(() => {
             res.status(200).json({
                 success: true,
                 Message: "Updated Successfully"

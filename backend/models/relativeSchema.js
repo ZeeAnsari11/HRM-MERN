@@ -21,9 +21,14 @@ const relativeSchema = mongoose.Schema({
         type: Boolean,
         default: true
     },
-    employee: {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true
+        ref: "User",
+        required: false
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 })
 

@@ -1,5 +1,5 @@
 import { DepartmentModel } from '../models/departmentSchema.js'
-import { BranchSchema } from '../models/branchSchema.js'
+import { BranchModel } from '../models/branchSchema.js'
 import { OrganizationModel } from '../models/organizationSchema.js'
 
 //// Creating New Department ////
