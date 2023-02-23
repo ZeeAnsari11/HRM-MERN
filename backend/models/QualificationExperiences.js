@@ -36,5 +36,4 @@ const QualificationExperiencesSchema = new mongoose.Schema({
         default: Date.now
     }
 })
-
-export const QualificationExperiencesModel = mongoose.model('QualificationExperiences', QualificationExperiencesSchema);
+export const qualificationExperiencesModel = mongoose.model('QualificationExperiences', QualificationExperiencesSchema, 'Qualification & ExperiencesSchema')
