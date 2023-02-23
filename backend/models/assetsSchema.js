@@ -5,29 +5,10 @@ const assetsSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please Enter Name of Asset"],
     },
-    allocationTime: {
-        type: Date,
-        required: [true, "Please Enter the Allocation time of Asset"],
-    },
-    allocatedTo: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: false,
-        ref: 'User'
-    },
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Organization'
-    },
-    branch: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'Branch'
-    },
-    department: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'Department'
     },
     condition: {
         type: String,
@@ -56,6 +37,10 @@ const assetsSchema = new mongoose.Schema({
     },
     description: {
         type: String
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 })
 
