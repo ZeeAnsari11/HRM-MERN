@@ -35,11 +35,12 @@ const userSchema = mongoose.Schema({
         ref: 'Organization',
         required: true,
     },
-    assets: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Assets',
-        required: true,
-    },
+    assets: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Assets'
+        }
+    ],
     relatives: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Relatives',
@@ -69,4 +70,3 @@ const userSchema = mongoose.Schema({
 })
 
 export const UserModel = mongoose.model('User', userSchema, 'User Collection')
-
