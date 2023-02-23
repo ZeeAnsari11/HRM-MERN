@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 const organizationSchema = mongoose.Schema({
     name: {
         type: String,
+        validate: /^[a-zA-Z ][a-zA-Z ]+$/,
         required: [true, "Please Enter Name of Organization"],
         maxlength: [100, "Organization Name Can't Exceed 100 Characters"],
         trim: true

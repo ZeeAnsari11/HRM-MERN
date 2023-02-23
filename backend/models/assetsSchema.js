@@ -44,4 +44,4 @@ const assetsSchema = new mongoose.Schema({
     }
 })
 
-export const assetsModel = mongoose.model('Assets', assetsSchema, 'Assets Collection')
+export const AssetsModel = mongoose.model('Assets', assetsSchema, 'Assets Collection')
