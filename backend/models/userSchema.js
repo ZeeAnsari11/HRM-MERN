@@ -7,7 +7,8 @@ const userSchema = mongoose.Schema({
         type: String,
         required: [true, 'Please enter first name'],
         trim: true,
-        maxLength: [100, 'Cannot exceeds from 100 characters']
+        maxLength: [100, 'Cannot exceeds from 100 characters'],
+        validate: /^[a-zA-Z ][a-zA-Z ]+$/
     },
     middleName: {
         type: String,

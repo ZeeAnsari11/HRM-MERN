@@ -4,6 +4,7 @@ const assetsSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "Please Enter Name of Asset"],
+        trim: true,
     },
     organization: {
         type: mongoose.Schema.Types.ObjectId,
