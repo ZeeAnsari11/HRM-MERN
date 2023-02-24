@@ -30,12 +30,10 @@ export const createNew = (req, res, next, model) => {
 
 }
 
-export const getAll = (res, next, model, query={}) => {
+export const getAll = (res, next, model, query={},message='Result') => {
     model.find(query)
         .then((response) => {
-            if (!response) {
-                throw ("Nothing Found");
-            }
+            if (response.length==0) { throw (`${message} Not Found`) }
             else {
                 res.status(200).json({
                     success: true,
@@ -52,12 +50,10 @@ export const getAll = (res, next, model, query={}) => {
         })
 }
 
-export const getById = (id, res, next, model) => {
+export const getById = (id, res, next, model, message='Result') => {
     model.findById(id)
         .then((response) => {
-            if (!response) {
-                throw ("Nothing Found");
-            }
+            if (!response) { throw (`${message} Not Found`) }
             else {
                 res.status(200).json({
                     success: true,
@@ -73,15 +69,13 @@ export const getById = (id, res, next, model) => {
         })
 }
 
-export const deleteById = (id, res, next, model) => {
+export const deleteById = (id, res, next, model, message='Result') => {
     model.findByIdAndDelete(id)
         .then((response) => {
-            if (!response) {
-                throw ("Nothing Found");
-            }
+            if (!response) { throw (`${message} Not Found`) }
             res.status(200).json({
                 success: true,
-                Message : 'Deleted Successfully'
+                Message: `${message} Deleted Successfully`
             })
         })
         .catch((error) => {
@@ -93,7 +87,7 @@ export const deleteById = (id, res, next, model) => {
 }
 
 
-export const updateById = (req, res, next, model) => {
+export const updateById = (req, res, next, model, message='Result') => {
     try{
         if(req.body.createdAt){
             throw 'You can not update the creation time'
@@ -105,11 +99,11 @@ export const updateById = (req, res, next, model) => {
         model.findByIdAndUpdate(req.params.id, req.body)
             .then((response) => {
                 if (!response) {
-                    throw ("Nothing Found");
+                    throw (`${message} Not Found`);
                 }
                 res.status(200).json({
                     success: true,
-                    Message: "Updated Successfully"
+                    Message: `${message} Updated Successfully`
                 })
             })
             .catch((error) => {

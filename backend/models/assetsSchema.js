@@ -4,6 +4,7 @@ const assetsSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "Please Enter Name of Asset"],
+        trim :true
     },
     organization: {
         type: mongoose.Schema.Types.ObjectId,
@@ -14,20 +15,28 @@ const assetsSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: false,
+        default: null
     },
     condition: {
-        type: String,
-        required:[true , 'Please Enter the Current Condition of Asset']
+        type: Number,
+        required:[true , 'Please Enter the Current Condition of Asset, Out of 10'],
+        trim :true
     },
     ManufacturedBy: {
         type: String,
-        required: [true, 'Please Enter the Manufacturer Name']
+        required: [true, 'Please Enter the Manufacturer Name'],
+        trim :true
     },
     Model: {
         type: String,
-        required: [true, 'Please Enter the Model Name']
+        required: [true, 'Please Enter the Model Name'],
+        trim :true
     },
     isTaxAble: {
+        type: Boolean,
+        default: false
+    },
+    isAllocated: {
         type: Boolean,
         default: false
     },
@@ -41,7 +50,8 @@ const assetsSchema = new mongoose.Schema({
         }
     },
     description: {
-        type: String
+        type: String,
+        trim :true
     },
     createdAt: {
         type: Date,

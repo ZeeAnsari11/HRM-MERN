@@ -1,9 +1,15 @@
 import express from "express";
-import { createAsset, deleteAssetById, getAssetById, UpdateAssetById , getAllAssetsOfOrganization, getAllTaxableAssetsOfOrganization} from "../controllers/assets.js";
+import { createAsset, deleteAssetById, getAssetById, UpdateAssetById , getAssets, getTaxAbleAssets, getNonTaxAbleAssets,getAllocatedAssets,getNonAllocatedAssets} from "../controllers/assets.js";
 export const assetsRouter = express.Router();
 
 assetsRouter.route('/asset/new').post(createAsset)
 assetsRouter.route('/asset/:id').get(getAssetById).delete(deleteAssetById).put(UpdateAssetById)
-assetsRouter.route('/assets/organization/:orgId').get(getAllAssetsOfOrganization)
-assetsRouter.route('/assets/taxable/organization/:orgId').get(getAllTaxableAssetsOfOrganization)
+assetsRouter.route('/assets/organization/:orgId').get(getAssets)
+assetsRouter.route('/assets/organization/taxable/:orgId').get(getTaxAbleAssets)
+assetsRouter.route('/assets/organization/non-taxable/:orgId').get(getNonTaxAbleAssets)
+assetsRouter.route('/assets/organization/allocated/:orgId').get(getAllocatedAssets)
+assetsRouter.route('/assets/organization/non-allocated/:orgId').get(getNonAllocatedAssets)
+
+
+
 
