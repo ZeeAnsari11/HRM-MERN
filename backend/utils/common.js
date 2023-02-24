@@ -10,7 +10,11 @@ export const createNew = (req, res, next, model) => {
                     })
                 })
                 .catch((error) => {
-                    throw error;
+                    console.log("==============called=======",error);
+                    res.status(401).json({
+                        success: false,
+                        error: error
+                    })
                 })
         }
         else {
@@ -26,15 +30,14 @@ export const createNew = (req, res, next, model) => {
 
 }
 
-export const getAll = (res, next, model) => {
-    model.find()
+export const getAll = (res, next, model, query={},message='Result') => {
+    model.find(query)
         .then((response) => {
-            if (!response) {
-                throw ("Nothing Found");
-            }
+            if (response.length==0) { throw (`${message} Not Found`) }
             else {
                 res.status(200).json({
                     success: true,
+                    count: response.length,
                     response
                 })
             }
@@ -47,12 +50,10 @@ export const getAll = (res, next, model) => {
         })
 }
 
-export const getById = (id, res, next, model) => {
+export const getById = (id, res, next, model, message='Result') => {
     model.findById(id)
         .then((response) => {
-            if (!response) {
-                throw ("Nothing Found");
-            }
+            if (!response) { throw (`${message} Not Found`) }
             else {
                 res.status(200).json({
                     success: true,
@@ -68,12 +69,13 @@ export const getById = (id, res, next, model) => {
         })
 }
 
-export const deleteById = (id, res, next, model) => {
+export const deleteById = (id, res, next, model, message='Result') => {
     model.findByIdAndDelete(id)
         .then((response) => {
+            if (!response) { throw (`${message} Not Found`) }
             res.status(200).json({
                 success: true,
-                response
+                Message: `${message} Deleted Successfully`
             })
         })
         .catch((error) => {
@@ -85,24 +87,37 @@ export const deleteById = (id, res, next, model) => {
 }
 
 
-export const updateById = (req, res, next, model) => {
-    if (Object.keys(req.body).length <= 0) {
-        res.status(200).json({
-            success: true,
-            Message: "Already Up to date!"
+export const updateById = (req, res, next, model, message='Result') => {
+    try{
+        if(req.body.createdAt){
+            throw 'You can not update the creation time'
+        }
+        if (Object.keys(req.body).length <= 0) {
+            
+             throw "Already Up to date!"
+        }
+        model.findByIdAndUpdate(req.params.id, req.body)
+            .then((response) => {
+                if (!response) {
+                    throw (`${message} Not Found`);
+                }
+                res.status(200).json({
+                    success: true,
+                    Message: `${message} Updated Successfully`
+                })
+            })
+            .catch((error) => {
+                res.status(404).json({
+                    success: false,
+                    error: error
+                })
+            })
+    }
+    catch(error){
+        res.status(404).json({
+            success: false,
+            error: error
         })
     }
-    model.findByIdAndUpdate(req.params.id, req.body)
-        .then(() => {
-            res.status(200).json({
-                success: true,
-                Message: "Updated Successfully"
-            })
-        })
-        .catch((error) => {
-            res.status(401).json({
-                success: false,
-                error: error
-            })
-        })
 }
+

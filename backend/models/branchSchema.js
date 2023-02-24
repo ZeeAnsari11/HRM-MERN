@@ -26,6 +26,16 @@ const branchSchema = new mongoose.Schema({
         ref: 'User',
         required : false
     },
+    location: {
+        type: {
+            type:String,
+            default:'point'
+        },
+        coordinates: {
+            type: Array,
+            required:[true, 'Please Enter the Longititude and latitude of the Organization']
+        }
+    },
     organization: {
         type : mongoose.Schema.ObjectId,
         ref: 'Organization',

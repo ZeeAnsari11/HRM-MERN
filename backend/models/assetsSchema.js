@@ -11,25 +11,41 @@ const assetsSchema = new mongoose.Schema({
         required: true,
         ref: 'Organization'
     },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: false,
+        default: null
+    },
     condition: {
-        type: String,
-        required:[true , 'Please Enter the Current Condition of Asset']
+        type: Number,
+        required:[true , 'Please Enter the Current Condition of Asset, Out of 10'],
+        trim :true,
+        max: 10,
+        min: 0
     },
     ManufacturedBy: {
         type: String,
-        required: [true, 'Please Enter the Manufacturer Name']
+        required: [true, 'Please Enter the Manufacturer Name'],
+        trim :true
     },
     Model: {
         type: String,
-        required: [true, 'Please Enter the Model Name']
+        required: [true, 'Please Enter the Model Name'],
+        trim :true
     },
     isTaxAble: {
         type: Boolean,
         default: false
     },
+    isAllocated: {
+        type: Boolean,
+        default: false
+    },
     price: {
         type: Number,
-        required: [true, 'Please Enter the price of Asset']
+        required: [true, 'Please Enter the price of Asset'],
+        min: 0
     },
     assetImage: {
         url: {
@@ -37,7 +53,8 @@ const assetsSchema = new mongoose.Schema({
         }
     },
     description: {
-        type: String
+        type: String,
+        trim :true
     },
     createdAt: {
         type: Date,
@@ -45,4 +62,4 @@ const assetsSchema = new mongoose.Schema({
     }
 })
 
-export const assetsModel = mongoose.model('Assets', assetsSchema, 'Assets Collection')
+export const AssetsModel = mongoose.model('Assets', assetsSchema, 'Assets Collection')
