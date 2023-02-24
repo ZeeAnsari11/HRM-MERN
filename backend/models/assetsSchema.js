@@ -10,6 +10,11 @@ const assetsSchema = new mongoose.Schema({
         required: true,
         ref: 'Organization'
     },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: false,
+    },
     condition: {
         type: String,
         required:[true , 'Please Enter the Current Condition of Asset']

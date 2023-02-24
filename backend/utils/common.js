@@ -10,7 +10,11 @@ export const createNew = (req, res, next, model) => {
                     })
                 })
                 .catch((error) => {
-                    throw error;
+                    console.log("==============called=======",error);
+                    res.status(401).json({
+                        success: false,
+                        error: error
+                    })
                 })
         }
         else {
