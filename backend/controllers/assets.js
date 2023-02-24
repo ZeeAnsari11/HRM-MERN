@@ -41,6 +41,7 @@ export const UpdateAssetById = (req, res, next) => {
                             .then((asset) => {
                                 if (!asset) { throw "Asset not Found" }
                                 if (user.organization.toString() !== asset.organization.toString()) { throw "Asset and user not belong to same organization" }
+                                req.body.isAllocated = true;
                                 updateById(req, res, next, AssetsModel, "Asset")
                             })
                             .catch((err) => {
@@ -89,5 +90,5 @@ export const getAllocatedAssets = (req, res, next) => {
 }
 export const getNonAllocatedAssets = (req, res, next) => {
     let query = { organization: req.params.orgId, isAllocated: false };
-    getAll(res, next, AssetsModel, query, 'Allocated Asset')
+    getAll(res, next, AssetsModel, query, 'Non Allocated Asset')
 }

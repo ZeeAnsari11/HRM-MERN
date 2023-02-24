@@ -20,7 +20,9 @@ const assetsSchema = new mongoose.Schema({
     condition: {
         type: Number,
         required:[true , 'Please Enter the Current Condition of Asset, Out of 10'],
-        trim :true
+        trim :true,
+        max: 10,
+        min: 0
     },
     ManufacturedBy: {
         type: String,
@@ -42,7 +44,8 @@ const assetsSchema = new mongoose.Schema({
     },
     price: {
         type: Number,
-        required: [true, 'Please Enter the price of Asset']
+        required: [true, 'Please Enter the price of Asset'],
+        min: 0
     },
     assetImage: {
         url: {
