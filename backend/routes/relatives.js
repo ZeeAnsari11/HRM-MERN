@@ -1,9 +1,10 @@
 import express from 'express'
-import { createRelative, deleteRelative, getAllRelativesByEmployeeID, updateRelative } from '../controllers/relatives';
+import { createRelative, deleteRelativeById, deleteRelativeByUserId, getAllRelativesByUserId, updateRelative } from '../controllers/relatives.js';
 
-const relatives = express.Router();
+export const relativesRoute = express.Router();
 
-relatives.route('/relatives/new').post(createRelative);
-relatives.route('/relatives/employee/:id').get(getAllRelativesByEmployeeID).delete(deleteRelative).put(updateRelative);
-
-export {relatives};
+relativesRoute.route('/relative/new').post(createRelative);
+relativesRoute.route('/relative/:id').delete(deleteRelativeById).put(updateRelative);
+relativesRoute.route('/relatives/user/:id')
+.get(getAllRelativesByUserId)
+.delete(deleteRelativeByUserId);

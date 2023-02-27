@@ -37,4 +37,4 @@ const branchSchema = new mongoose.Schema({
     }
 })
 
-export const BranchModel = mongoose.model('Branch', branchSchema);
+export const BranchModel = mongoose.model('Branch', branchSchema, 'Branches Collection')
