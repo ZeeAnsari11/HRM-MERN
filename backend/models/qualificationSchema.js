@@ -34,7 +34,7 @@ const qualificationSchema = new mongoose.Schema({
         required: [true, "Please enter ending date."],
         default: "processing"
     },
-    degreeAttachment: {
+    lastTranscriptAttachment: {
         type: String,
     },
     description: {
