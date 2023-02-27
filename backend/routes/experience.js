@@ -3,7 +3,7 @@ import { createExperience, deleteExperienceById, deleteExperiences, getAllExperi
 
 export const experienceRoute = express.Router();
 
-experienceRoute.route('/experience/create/new').post(createExperience);
+experienceRoute.route('/experience/new').post(createExperience);
 experienceRoute.route('/experience/:id').delete(deleteExperienceById).put(updateExperiences);
 experienceRoute.route('/experience/user/:id')
 .get(getAllExperiencesByUserID)

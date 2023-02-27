@@ -24,7 +24,7 @@ export const getAllExperiencesByUserID = (req, res, next) => {
 export const updateExperiences = (req, res, next) => {
     try {
         if (req.body.user) throw "Can not assign experience to another user."
-        updateById(req, res, next, ExperienceModel);
+        updateById(req, res, next, ExperienceModel, 'Experience');
     }
     catch (error) {
         res.status(401).json({
