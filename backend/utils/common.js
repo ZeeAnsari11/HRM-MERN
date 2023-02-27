@@ -10,7 +10,6 @@ export const createNew = (req, res, next, model) => {
                     })
                 })
                 .catch((error) => {
-                    console.log("==============called=======",error);
                     res.status(401).json({
                         success: false,
                         error: error
@@ -30,7 +29,7 @@ export const createNew = (req, res, next, model) => {
 
 }
 
-export const getAll = (res, next, model, query={},message='Result') => {
+export const getAll = (res, next, model, query={}, message='Result') => {
     model.find(query)
         .then((response) => {
             if (response.length==0) { throw (`${message} Not Found`) }
@@ -119,5 +118,23 @@ export const updateById = (req, res, next, model, message='Result') => {
             error: error
         })
     }
+}
+
+export const deleteInBulk = (res, next, model, query, message = "Result")=>{
+    model.deleteMany(query)
+    .then((response) => {
+        if (!response.deletedCount) throw `No ${message} exists`
+        res.status(200).json({
+            success: true,
+            count : response.length,
+            message: `${message} Deleted Successfully`
+        })
+    })
+    .catch((error) => {
+        res.status(404).json({
+            success: false,
+            error: error
+        })
+    })
 }
 
