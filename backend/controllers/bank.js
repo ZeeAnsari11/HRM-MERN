@@ -29,26 +29,15 @@ export const createBank= (req, res, next)=>{
     })
 }
 
-export const getBankByUserId = (req, res, next)=>{
-    UserModel.findById(req.params.id)
-    .then((user)=>{
-        if(!user) throw "User not Found"
-        getAll(res, next, BankModel, {user: req.params.id},'Bank')
-    })
-    .catch((err)=>{
-        res.status(404).json({
-            success: false,
-            error: err
-        })
-    })
-    
+export const getBanksByUserId = (req, res, next)=>{
+   getAll(res, next, BankModel, {user: req.params.id},'Bank')
 }
 
 
 export const updateBankById = (req, res, next)=>{
     try{
         if(req.body.organization || req.body.user) throw "You can not update organization or user of a Bank Account"
-    updateById(req, res, next, BankModel, "Bank Details")
+        updateById(req, res, next, BankModel, "Bank Details")
     }
     catch(err){
         res.status(404).json({
@@ -58,7 +47,7 @@ export const updateBankById = (req, res, next)=>{
     }
 }
 
-export const deleteBankByUserId = (req, res, next)=>{
+export const deleteBanksByUserId = (req, res, next)=>{
     deleteInBulk(res, next, BankModel,{user:req.params.id} , "Bank")
 }
 
