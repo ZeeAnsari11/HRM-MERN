@@ -1,10 +1,10 @@
 import express from 'express';
 import { createBranch, deleteById, getBranchById, getBranchesByOrganization, getOrganizationByBranchId, loadBranchCollection, updateBranch } from '../controllers/branch.js';
 
-export const branchRouter = express.Router();
+export const branchRoute = express.Router();
 
-branchRouter.route('/branch/new').post(createBranch);
-branchRouter.route('/branches').get(loadBranchCollection);
-branchRouter.route('/branch/:id').get(getBranchById).delete(deleteById).put(updateBranch);
-branchRouter.route('/branch/organization/:id').get(getBranchesByOrganization);
-branchRouter.route('/organization/branch/:id').get(getOrganizationByBranchId);
+branchRoute.route('/branch/new').post(createBranch);
+branchRoute.route('/branches').get(loadBranchCollection);
+branchRoute.route('/branch/:id').get(getBranchById).delete(deleteById).put(updateBranch);
+branchRoute.route('/branch/organization/:id').get(getBranchesByOrganization);
+branchRoute.route('/organization/branch/:id').get(getOrganizationByBranchId);

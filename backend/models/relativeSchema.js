@@ -11,11 +11,16 @@ const relativeSchema = mongoose.Schema({
         type: String,
         required: [true, "Please enter Relationship"],
         maxlength: [100, "Organization Address Can't Exceed 100 Characters"],
-        trim: true
+        trim: true,
+        unique: true
     },
-    phoneNumber: {
+    cellNumber: {
         type: String,
-        required: [true, "Please enter relatives' phone number."]
+        required: [true, "Please enter relatives' cell number."]
+    },
+    landLineNumber: {
+        type: String,
+        required: [true, "Please enter relatives' landline number."]
     },
     isDependent: {
         type: Boolean,
@@ -24,7 +29,7 @@ const relativeSchema = mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: false
+        required: true
     },
     createdAt: {
         type: Date,
@@ -32,4 +37,4 @@ const relativeSchema = mongoose.Schema({
     }
 })
 
-export const RelativeModel = mongoose.model('Relatives', relativeSchema)
+export const RelativeModel = mongoose.model('Relative', relativeSchema, 'Relatives Collection')
