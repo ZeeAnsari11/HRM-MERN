@@ -21,8 +21,6 @@ export const createNew = (req, res, next, model) => {
         }
     }
     catch (error) {
-        console.log("====called===catc2");
-
         res.status(401).json({
             success: false,
             error: error
@@ -31,10 +29,10 @@ export const createNew = (req, res, next, model) => {
 
 }
 
-export const getAll = (res, next, model, query={}, message='Result') => {
+export const getAll = (res, next, model, query = {}, message = 'Result') => {
     model.find(query)
         .then((response) => {
-            if (response.length==0) { throw (`${message} Not Found`) }
+            if (response.length == 0) { throw (`${message} Not Found`) }
             else {
                 res.status(200).json({
                     success: true,
@@ -51,7 +49,7 @@ export const getAll = (res, next, model, query={}, message='Result') => {
         })
 }
 
-export const getById = (id, res, next, model, message='Result') => {
+export const getById = (id, res, next, model, message = 'Result') => {
     model.findById(id)
         .then((response) => {
             if (!response) { throw (`${message} Not Found`) }
@@ -70,7 +68,7 @@ export const getById = (id, res, next, model, message='Result') => {
         })
 }
 
-export const deleteById = (id, res, next, model, message='Result') => {
+export const deleteById = (id, res, next, model, message = 'Result') => {
     model.findByIdAndDelete(id)
         .then((response) => {
             if (!response) { throw (`${message} Not Found`) }
@@ -88,16 +86,16 @@ export const deleteById = (id, res, next, model, message='Result') => {
 }
 
 
-export const updateById = (req, res, next, model, message='Result') => {
-    try{
-        if(req.body.createdAt){
+export const updateById = (req, res, next, model, message = 'Result') => {
+    try {
+        if (req.body.createdAt) {
             throw 'You can not update the creation time'
         }
         if (Object.keys(req.body).length <= 0) {
-            
-             throw "Already Up to date!"
+
+            throw "Already Up to date!"
         }
-        model.findByIdAndUpdate(req.params.id, req.body,{ runValidators: true })
+        model.findByIdAndUpdate(req.params.id, req.body, { runValidators: true })
             .then((response) => {
                 if (!response) {
                     throw (`${message} Not Found`);
@@ -114,7 +112,7 @@ export const updateById = (req, res, next, model, message='Result') => {
                 })
             })
     }
-    catch(error){
+    catch (error) {
         res.status(404).json({
             success: false,
             error: error
@@ -122,34 +120,34 @@ export const updateById = (req, res, next, model, message='Result') => {
     }
 }
 
-export const deleteInBulk = (res, next, model, query, message = "Result")=>{
+export const deleteInBulk = (res, next, model, query, message = "Result") => {
     model.deleteMany(query)
-    .then((response) => {
-        if (!response.deletedCount) throw `No ${message} exists`
-        res.status(200).json({
-            success: true,
-            count : response.length,
-            message: `${message} Deleted Successfully`
+        .then((response) => {
+            if (!response.deletedCount) throw `No ${message} exists`
+            res.status(200).json({
+                success: true,
+                count: response.length,
+                message: `${message} Deleted Successfully`
+            })
         })
-    })
-    .catch((error) => {
-        res.status(404).json({
-            success: false,
-            error: error
+        .catch((error) => {
+            res.status(404).json({
+                success: false,
+                error: error
+            })
         })
-    })
 }
-export const checkIsExistAndCreate = (req, res, next, id, findInModel, createForModel, message = "Result")=>{
+export const checkIsExistAndCreate = (req, res, next, id, findInModel, createForModel, message = "Result") => {
     findInModel.findById(id)
-    .then((response) => {
-        if (!response) throw `${message} not Found`;
-        createNew(req, res, next, createForModel);
-    })
-    .catch((err) => {
-        res.status(401).json({
-            success: false,
-            error: err
+        .then((response) => {
+            if (!response) throw `${message} not Found`;
+            createNew(req, res, next, createForModel);
         })
-    })
+        .catch((err) => {
+            res.status(401).json({
+                success: false,
+                error: err
+            })
+        })
 }
 

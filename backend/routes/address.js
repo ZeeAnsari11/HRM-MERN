@@ -1,5 +1,8 @@
 import express from 'express';
-import { createAddress, getAddressById, deleteAddressById ,UpdateAddressById, getAllAddressesByUserId, deleteAllAddressesByUserId } from "../controllers/address.js";
+import {
+    createAddress, getAddressById, deleteAddressById, UpdateAddressById,
+    getAllAddressesByUserId, deleteAllAddressesByUserId
+} from "../controllers/address.js";
 
 export const addressRoute = express.Router();
 
