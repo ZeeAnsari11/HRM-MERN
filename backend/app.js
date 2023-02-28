@@ -6,6 +6,7 @@ import { assetsRoute } from "./routes/assets.js";
 import { relativesRoute } from "./routes/relatives.js";
 import { experienceRoute } from "./routes/experience.js"
 import { bankRoute } from "./routes/bank.js";
+import { addressRoute } from "./routes/address.js";
 
 const app = express();
 
@@ -18,6 +19,8 @@ app.use('/api/v1', assetsRoute);
 app.use('/api/v1', relativesRoute);
 app.use('/api/v1', experienceRoute);
 app.use('/api/v1', bankRoute);
+app.use('/api/v1', addressRoute);
+
 
 
 export default app;

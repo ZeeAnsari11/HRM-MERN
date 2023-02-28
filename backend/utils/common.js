@@ -21,6 +21,8 @@ export const createNew = (req, res, next, model) => {
         }
     }
     catch (error) {
+        console.log("====called===catc2");
+
         res.status(401).json({
             success: false,
             error: error
@@ -95,7 +97,7 @@ export const updateById = (req, res, next, model, message='Result') => {
             
              throw "Already Up to date!"
         }
-        model.findByIdAndUpdate(req.params.id, req.body)
+        model.findByIdAndUpdate(req.params.id, req.body,{ runValidators: true })
             .then((response) => {
                 if (!response) {
                     throw (`${message} Not Found`);
@@ -134,6 +136,19 @@ export const deleteInBulk = (res, next, model, query, message = "Result")=>{
         res.status(404).json({
             success: false,
             error: error
+        })
+    })
+}
+export const checkIsExistAndCreate = (req, res, next, id, findInModel, createForModel, message = "Result")=>{
+    findInModel.findById(id)
+    .then((response) => {
+        if (!response) throw `${message} not Found`;
+        createNew(req, res, next, createForModel);
+    })
+    .catch((err) => {
+        res.status(401).json({
+            success: false,
+            error: err
         })
     })
 }
