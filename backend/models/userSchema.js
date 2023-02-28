@@ -13,13 +13,15 @@ const userSchema = mongoose.Schema({
     middleName: {
         type: String,
         trim: true,
-        maxLength: [100, 'Cannot exceeds from 100 characters']
+        maxLength: [100, 'Cannot exceeds from 100 characters'],
+        validate: /^[a-zA-Z ][a-zA-Z ]+$/
     },
     lastName: {
         type: String,
         required: [true, 'Please enter last name'],
         trim: true,
-        maxLength: [100, 'Cannot exceeds from 100 characters']
+        maxLength: [100, 'Cannot exceeds from 100 characters'],
+        validate: /^[a-zA-Z ][a-zA-Z ]+$/
     },
     branch: {
         type: mongoose.Schema.Types.ObjectId,
@@ -28,43 +30,20 @@ const userSchema = mongoose.Schema({
     },
     role: {
         type: String,
-        required: true
+        required: [true, 'Please enter user role'],
     },
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
         required: true,
     },
-    assets: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Assets'
-        }
-    ],
-    relatives: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Relatives',
-        required: true,
-    },
-    qualificationAndExperience: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'QualificationAndExperience',
-        required: true,
-    },
-    bank: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Bank',
-        required: true,
-    },
     isLineManager: {
         type: Boolean,
-        required: true,
-        default : false
+        required: true
     },
     isTeamLead: {
         type: Boolean,
-        required: true,
-        default : false
+        required: true
     },
     createdAt: {
         type: Date,

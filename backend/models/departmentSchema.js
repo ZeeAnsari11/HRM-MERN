@@ -5,7 +5,9 @@ import mongoose from "mongoose";
 const departmentSchema = mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: [true, 'Please enter name of the department'],
+        trim: true,
+        maxLength: [100, 'Cannot exceeds from 100 characters']
     },
     branch: {
         type: mongoose.Schema.Types.ObjectId,
@@ -17,6 +19,12 @@ const departmentSchema = mongoose.Schema({
         ref: 'Organization',
         required: true,
     },
+    users: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ],
     departmentHead: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'

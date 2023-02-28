@@ -1,15 +1,20 @@
 import express from "express";
-import { createDepartment, getAllDepartmentsByBranchId, getAllDepartmentsByOrganizationId, getDepartmentById,
-    updateDepartmentNameById, deleteDepartmentById, getBranchByDepartmentId, getOrganizationByDepartmentId } from '../controllers/department.js'
+import {
+    createDepartment, getAllDepartmentsByBranchId, getAllDepartmentsByOrganizationId, getDepartmentById,
+    updateDepartmentById, deleteDepartmentById, getBranchByDepartmentId, getOrganizationByDepartmentId,
+    getUsersByDepartmentId, getUserDepartmentById, deleteUserDepartmentById
+} from '../controllers/department.js'
 
-const router = express.Router();
-router.route('/new/department').post(createDepartment)
-router.route('/getAllDepartmentsByBranchId/:id').get(getAllDepartmentsByBranchId)
-router.route('/getAllDepartmentsByOrganizationId/:id').get(getAllDepartmentsByOrganizationId)
-router.route('/getDepartmentById/:id').get(getDepartmentById)
-router.route('/updateDepartmentNameById/:id').put(updateDepartmentNameById)
-router.route('/deleteDepartmentById/:id').delete(deleteDepartmentById)
-router.route('/getBranchByDepartmentId/:id').get(getBranchByDepartmentId)
-router.route('/getOrganizationByDepartmentId/:id').get(getOrganizationByDepartmentId)
+export const departmentRoute = express.Router();
 
-export default router;
+departmentRoute.route('/new/department').post(createDepartment)
+departmentRoute.route('/departments/branch/:id').get(getAllDepartmentsByBranchId)
+departmentRoute.route('/departments/organization/:id').get(getAllDepartmentsByOrganizationId)
+departmentRoute.route('/department/:id').get(getDepartmentById)
+departmentRoute.route('/department/update/:id').put(updateDepartmentById)
+departmentRoute.route('/department/delete/:id').delete(deleteDepartmentById)
+departmentRoute.route('/branch/department/:id').get(getBranchByDepartmentId)
+departmentRoute.route('/organization/department/:id').get(getOrganizationByDepartmentId)
+departmentRoute.route('/users/department/:id').get(getUsersByDepartmentId)
+departmentRoute.route('/user/department/:id').get(getUserDepartmentById)
+departmentRoute.route('/user/delete/department/:id').delete(deleteUserDepartmentById)
