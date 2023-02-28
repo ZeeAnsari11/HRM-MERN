@@ -32,6 +32,10 @@ const userSchema = mongoose.Schema({
         type: String,
         required: [true, 'Please enter user role'],
     },
+    status: {
+        type: String,
+        required: [true, 'Please enter user status']
+    },
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
