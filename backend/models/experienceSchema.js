@@ -14,7 +14,7 @@ const experienceSchema = new mongoose.Schema({
     city: {
         type: String,
         required: [true, "Please enter companies' city name"],
-        maxlength: [65, 'Country name is too long']
+        maxlength: [65, 'City name is too long']
     },
     country: {
         type: String,
