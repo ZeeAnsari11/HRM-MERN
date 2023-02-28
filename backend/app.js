@@ -5,6 +5,7 @@ import department from './routes/department.js'
 import { assetsRouter } from "./routes/assets.js";
 import { relativesRoute } from "./routes/relatives.js";
 import { experienceRoute } from "./routes/experience.js"
+import { qualificationRoute } from "./routes/qualification.js";
 const app = express();
 
 app.use(express.json());
@@ -15,5 +16,6 @@ app.use('/api/v1', department);
 app.use('/api/v1', assetsRouter);
 app.use('/api/v1', relativesRoute);
 app.use('/api/v1', experienceRoute);
+app.use('/api/v1', qualificationRoute);
 
 export default app;
