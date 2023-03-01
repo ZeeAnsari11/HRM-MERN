@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const addressSchema = mongoose.Schema({
+const loanTypeSchema = mongoose.Schema({
     type:{
         type : String,
         required : [true, 'Please Enter the Loan Type You want to Create'] ,
@@ -17,4 +17,4 @@ const addressSchema = mongoose.Schema({
     }
 })
 
-export const AddressModel = mongoose.model('Address', addressSchema, 'Address Collection');
+export const LoanTypeModel = mongoose.model('LoanType', loanTypeSchema, 'LoanType Collection');
