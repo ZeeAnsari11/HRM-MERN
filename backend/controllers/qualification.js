@@ -1,4 +1,4 @@
-import { createNew, deleteById, updateById } from "../utils/common.js";
+import { createNew, deleteById, getAll, updateById } from "../utils/common.js";
 import { UserModel } from "../models/userSchema.js";
 import { QualificationModel } from "../models/qualificationSchema.js";
 
@@ -17,21 +17,7 @@ export const createQualification = (req, res, next) => {
 }
 
 export const getAllQualificationsByUserID = (req, res, next) => {
-    QualificationModel.find({ user: req.params.id })
-        .then((response) => {
-            if (!response) throw "No qualification exists accross this user."
-            res.status(200).json({
-                success: true,
-                count: response.length,
-                relatives: response
-            })
-        })
-        .catch((error) => {
-            res.status(401).json({
-                success: false,
-                error: error
-            })
-        })
+    getAll(res,next, QualificationModel, { user: req.params.id }, 'Qualifications');
 }
 
 export const updateQualification = (req, res, next) => {

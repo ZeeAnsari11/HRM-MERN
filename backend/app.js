@@ -10,21 +10,25 @@ import { departmentRoute } from './routes/department.js'
 import { userRoute } from './routes/user.js'
 import { qualificationRoute } from "./routes/qualification.js";
 import { addressRoute } from "./routes/address.js";
+import { certificateRoute } from "./routes/certificate.js";
+
 
 const app = express();
 
 app.use(express.json());
 
-app.use('/api/v1', organizationRoute);
-app.use('/api/v1', branchRoute);
-app.use('/api/v1', assetsRoute);
-app.use('/api/v1', relativesRoute);
-app.use('/api/v1', experienceRoute);
-app.use('/api/v1', bankRoute);
-app.use('/api/v1', departmentRoute);
-app.use('/api/v1', userRoute);
-app.use('/api/v1', qualificationRoute);
-app.use('/api/v1', addressRoute);
+const apiVersion = '/api/v1';
 
+app.use(apiVersion, organizationRoute);
+app.use(apiVersion, branchRoute);
+app.use(apiVersion, assetsRoute);
+app.use(apiVersion, relativesRoute);
+app.use(apiVersion, experienceRoute);
+app.use(apiVersion, bankRoute);
+app.use(apiVersion, departmentRoute);
+app.use(apiVersion, userRoute);
+app.use(apiVersion, qualificationRoute);
+app.use(apiVersion, certificateRoute);
+app.use(apiVersion, addressRoute);
 
 export default app;
