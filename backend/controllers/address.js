@@ -1,4 +1,4 @@
-import { AddressModel } from "../models/address.js";
+import { AddressModel } from "../models/addressSchema";
 import { UserModel } from "../models/userSchema.js";
 import { checkIsExistAndCreate, getById, deleteById, getAll, deleteInBulk, updateById } from "../utils/common.js";
 
