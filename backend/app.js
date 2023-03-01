@@ -33,4 +33,6 @@ app.use(apiVersion, certificateRoute);
 app.use(apiVersion, addressRoute);
 app.use(apiVersion, loanTypeRoute);
 
+
+
 export default app;

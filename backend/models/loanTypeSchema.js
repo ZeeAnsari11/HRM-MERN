@@ -4,7 +4,8 @@ const loanTypeSchema = mongoose.Schema({
     type:{
         type : String,
         required : [true, 'Please Enter the Loan Type You want to Create'] ,
-        trim : true
+        trim : true,
+        uppercase: true
     },
     organization : {
         type : mongoose.Schema.Types.ObjectId,
