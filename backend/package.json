@@ -1,7 +1,7 @@
 {
-  "name": "magnito",
+  "name": "hrms",
   "version": "1.0.0",
-  "description": "e-commerce site using mern",
+  "description": "hrms tool build in mern",
   "main": "server.js",
   "type": "module",
   "scripts": {
@@ -12,15 +12,6 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
-    "@fortawesome/fontawesome-svg-core": "^6.3.0",
-    "@fortawesome/free-regular-svg-icons": "^6.3.0",
-    "@fortawesome/free-solid-svg-icons": "^6.3.0",
-    "@fortawesome/react-fontawesome": "^0.2.0",
-    "@material-tailwind/react": "^1.2.5",
-    "@mui/material": "^5.11.8",
-    "@reduxjs/toolkit": "^1.9.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
     "cookie-parser": "^1.4.6",
