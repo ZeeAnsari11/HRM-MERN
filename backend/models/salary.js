@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const salarySchema = new mongoose.Schema({
     type: {
         type: String,
+        required: true,
         enum: {
             values: [
                 'Hourly',
@@ -12,8 +13,8 @@ const salarySchema = new mongoose.Schema({
                 'Yearly',
             ],
             messsage: 'Please Select Salary Type',
-            default: 'Monthly'
-        }
+        },
+        default: 'Monthly'
     },
     NTN: {
         type: String,
@@ -25,7 +26,6 @@ const salarySchema = new mongoose.Schema({
             values: [
                 'Bank',
                 'Cash'
-
             ],
             messsage: 'Please enter a valid payment method',
         },
