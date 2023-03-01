@@ -10,6 +10,8 @@ import { departmentRoute } from './routes/department.js'
 import { userRoute } from './routes/user.js'
 import { qualificationRoute } from "./routes/qualification.js";
 import { addressRoute } from "./routes/address.js";
+import { loanTypeRoute } from "./routes/loanType.js";
+
 
 const app = express();
 
@@ -25,6 +27,9 @@ app.use('/api/v1', departmentRoute);
 app.use('/api/v1', userRoute);
 app.use('/api/v1', qualificationRoute);
 app.use('/api/v1', addressRoute);
+app.use('/api/v1', loanTypeRoute);
+
+
 
 
 export default app;
