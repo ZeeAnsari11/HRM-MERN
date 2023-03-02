@@ -5,11 +5,11 @@ const designationSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please enter the title of designation'],
         trim : true,
-        unique : true
     },
     shortForm : {
         type: String,
         required: [true, 'Please enter the ShortForm of designation'],
+        uppercase: true
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
@@ -21,9 +21,16 @@ const designationSchema = new mongoose.Schema({
         required: true,
         ref: 'Organization'
     },
+    unique_id : {
+        type: String,
+        trim : true,
+        unique : true,
+        required : true
+    },
     createdAt: {
         type: Date,
         default: Date.now
     }
 })
+
 export const DesignationModel = mongoose.model('Designation', designationSchema, 'Designation Collection')
