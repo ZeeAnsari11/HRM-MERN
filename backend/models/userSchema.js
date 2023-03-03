@@ -49,6 +49,37 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         required: true
     },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
+    EOE: {
+        type: [{
+            Date: {
+                type: Date,
+                default: Date.now
+            },
+            reason: {
+                type: String,
+                trim: true,
+                required: true
+            }
+            
+        }]
+    },
+    rehire: {
+        type: [{
+            Date: {
+                type: Date,
+                default: Date.now
+            },
+            reason: {
+                type: String,
+                trim: true,
+                required: true
+            }
+        }]
+    },
     createdAt: {
         type: Date,
         default: Date.now
