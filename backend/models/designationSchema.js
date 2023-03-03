@@ -8,9 +8,10 @@ const designationSchema = new mongoose.Schema({
     },
     shortForm : {
         type: String,
+        validate: /^\S*$/,
         required: [true, 'Please enter the ShortForm of designation'],
-        uppercase: true,
-        trim : true,
+        uppercase : true,
+        
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
@@ -22,7 +23,7 @@ const designationSchema = new mongoose.Schema({
         required: true,
         ref: 'Organization'
     },
-    unique_id : {
+    designationKey : {
         type: String,
         trim : true,
         unique : true,

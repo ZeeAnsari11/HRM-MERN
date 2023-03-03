@@ -21,6 +21,7 @@ export const createNew = (req, res, next, model) => {
         }
     }
     catch (error) {
+        console.log("============err==============",error);
         res.status(401).json({
             success: false,
             error: error
