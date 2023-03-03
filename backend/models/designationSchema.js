@@ -8,10 +8,9 @@ const designationSchema = new mongoose.Schema({
     },
     shortForm : {
         type: String,
-        validate: /^\S*$/,
+        validate:/^\S*$/,
         required: [true, 'Please enter the ShortForm of designation'],
         uppercase : true,
-        
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
