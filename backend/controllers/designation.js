@@ -1,4 +1,4 @@
-import { DesignationModel } from "../models/designation.js";
+import { DesignationModel } from "../models/designationSchema.js";
 import { UserModel } from "../models/userSchema.js";
 import { createNew, updateById, getAll, getById, deleteInBulk } from "../utils/common.js"
 
@@ -35,7 +35,6 @@ export const updateDesignationById = (req, res, next) => {
         }
         else {
             updateById(req, res, next, DesignationModel, "Designation Details")
-
         }
     }
     catch (err) {
@@ -50,7 +49,7 @@ export const getDesignationById = (req, res, next) => {
     getById(req.params.id, res, next, DesignationModel, 'Designation');
 }
 
-export const getDesignationsByUserId = (req, res, next)=>{
+export const getDesignationsBycreatorId = (req, res, next)=>{
     getAll(res, next, DesignationModel, {createdBy : req.params.id}, "Designation");
 }
 
