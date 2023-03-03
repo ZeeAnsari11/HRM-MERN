@@ -8,7 +8,8 @@ const organizationSchema = mongoose.Schema({
         validate: /^[a-zA-Z ][a-zA-Z ]+$/,
         required: [true, "Please Enter Name of Organization"],
         maxlength: [100, "Organization Name Can't Exceed 100 Characters"],
-        trim: true
+        trim: true,
+        unique : true
     },
     start: {
         type: Date,
