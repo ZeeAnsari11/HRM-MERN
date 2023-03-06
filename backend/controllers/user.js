@@ -14,7 +14,11 @@ export const createUser = (req, res, next) => {
                     .then((branch) => {
                         if (!branch) throw "branch dont exist"
                         if (req.body.organization !== branch.organization.toString()) throw "branch not found in organization"
-                        createNew(req, res, next, UserModel)
+                        req.body.userDefinedCode = (organization.userCode.currentCode + 1);
+                        organization.userCode.currentCode = organization.userCode.currentCode + 1;
+                        organization.save().then((response) => {
+                            createNew(req, res, next, UserModel)
+                        })
                     })
                     .catch((err) => {
                         res.status(404).json({
@@ -43,10 +47,18 @@ export const getUserById = (req, res, next) => {
     UserModel.findById(req.params.id)
         .then((user) => {
             if (!user) throw `No Such User Exist ${req.params.id}`
-            res.status(200).json({
-                success: true,
-                user: user
-            })
+            OrganizationModel.findById(user.organization)
+                .then((organization) => {
+                    if (!organization) throw "organization dont exist"
+                    user.userDefinedCode = organization.userCode.prefix + user.userDefinedCode
+                    res.status(200).json({
+                        success: true,
+                        user: user
+                    })
+                })
+                .catch((error) => {
+                    throw error
+                })
         })
         .catch((error) => {
             res.status(404).json({
@@ -64,6 +76,9 @@ export const getAllUsersByOrganizationId = (req, res, next) => {
             UserModel.find({ organization: req.params.id })
                 .then((users) => {
                     if (users.length === 0) throw "No users are there for this org."
+                    users.forEach((user) => {
+                        user.userDefinedCode = organization.userCode.prefix + user.userDefinedCode
+                    })
                     res.status(200).json({
                         success: true,
                         total_users: users.length,
@@ -130,11 +145,6 @@ export const updateUserById = (req, res, next) => {
     updateById(req, res, next, UserModel);
 }
 
-//// Get user By Status ////
-export const getUsersByStatus = (req, res, next) => {
-    let user = getAll(res, next, UserModel, { status: req.body.status }, "user(s)")
-}
-
 //// Change User Status By Id ////
 export const chnageUserStatus = (userId, status) => {
     UserModel.findById(userId)
@@ -193,20 +203,20 @@ export const getAllNonActiveUsersByOrganizationId = (req, res, next) => {
 }
 
 //// update End of Employment of user By Id ////
-export const updateUserEndOfEmployment = (req, res, next) => {
+export const updateUserEmployment = (req, res, next) => {
     try {
         if (!req.body.date) throw `Kindly Provide date`
         else
-        if (!req.body.reason) throw `Kindly Provide reason`
-        else
-        if (req.body.isActive == false) {
-            userActiovationStatus(req, res, next, false, "User is already de-actiavted")
-        }
-        else
-        if (req.body.isActive == true) {
-            userActiovationStatus(req, res, next, true, "User is already Activated")
-        }
-        else throw "state is not defined."
+            if (!req.body.reason) throw `Kindly Provide reason`
+            else
+                if (req.body.isActive == false) {
+                    userActiovationStatus(req, res, next, false, "User is already de-actiavted")
+                }
+                else
+                    if (req.body.isActive == true) {
+                        userActiovationStatus(req, res, next, true, "User is already Activated")
+                    }
+                    else throw "state is not defined."
     } catch (error) {
         res.status(404).json({
             success: false,
@@ -249,18 +259,18 @@ const userActiovation = (req, res, type, date, arr, user, msg) => {
     if (new Date(req.body.date) > date) {
         arr.push(type)
         user.save()
-        .then((response) => {
-            res.status(200).json({
-                success: true,
-                response: response
+            .then((response) => {
+                res.status(200).json({
+                    success: true,
+                    response: response
+                })
             })
-        })
-        .catch((err) => {
-            res.status(404).json({
-                success: false,
-                message: `${err}`
+            .catch((err) => {
+                res.status(404).json({
+                    success: false,
+                    message: `${err}`
+                })
             })
-        })
     }
     else throw msg
 }
