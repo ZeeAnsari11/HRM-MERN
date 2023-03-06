@@ -55,7 +55,7 @@ const userSchema = mongoose.Schema({
     },
     EOE: {
         type: [{
-            Date: {
+            date: {
                 type: Date,
                 default: Date.now
             },
@@ -69,7 +69,7 @@ const userSchema = mongoose.Schema({
     },
     rehire: {
         type: [{
-            Date: {
+            date: {
                 type: Date,
                 default: Date.now
             },

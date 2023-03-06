@@ -195,13 +195,18 @@ export const getAllNonActiveUsersByOrganizationId = (req, res, next) => {
 //// update End of Employment of user By Id ////
 export const updateUserEndOfEmployment = (req, res, next) => {
     try {
-        if (req.body.date) throw `Remove date request object`
+        if (!req.body.date) throw `Kindly Provide date`
+        else
+        if (!req.body.reason) throw `Kindly Provide reason`
+        else
         if (req.body.isActive == false) {
             userActiovationStatus(req, res, next, false, "User is already de-actiavted")
         }
+        else
         if (req.body.isActive == true) {
             userActiovationStatus(req, res, next, true, "User is already Activated")
         }
+        else throw "state is not defined."
     } catch (error) {
         res.status(404).json({
             success: false,
@@ -217,22 +222,20 @@ const userActiovationStatus = (req, res, next, toggler, msg) => {
             if (!user) throw 'user dies not exist'
             if (user.isActive == toggler) throw msg
             user.isActive = toggler;
-            let reason = {
-                reason: req.body.reason
+            let lastEOE = user.EOE.at(-1)?.date || new Date('0001-01-01')
+            let lastrehire = user.rehire.at(-1)?.date || new Date('0001-01-01');
+            let type = {
+                reason: req.body.reason,
+                date: req.body.date
             }
+            //// EOE Case ////
             if (toggler == false) {
-                user.EOE.push(reason)
+                userActiovation(req, res, type, lastrehire, user.EOE, user, "User EOE must be greater than last rehire date")
             }
-            else if (toggler == true) {
-                user.rehire.push(reason)
+            //// Rehire Case ////
+            else {
+                userActiovation(req, res, type, lastEOE, user.rehire, user, 'User EOE must be define first in order to rehire Or rehire date must be greater than EOE date')
             }
-            user.save()
-                .then((response) => {
-                    res.status(200).json({
-                        success: true,
-                        response: response
-                    })
-                })
         })
         .catch((err) => {
             res.status(404).json({
@@ -240,4 +243,24 @@ const userActiovationStatus = (req, res, next, toggler, msg) => {
                 message: `${err}`
             })
         })
+}
+
+const userActiovation = (req, res, type, date, arr, user, msg) => {
+    if (new Date(req.body.date) > date) {
+        arr.push(type)
+        user.save()
+        .then((response) => {
+            res.status(200).json({
+                success: true,
+                response: response
+            })
+        })
+        .catch((err) => {
+            res.status(404).json({
+                success: false,
+                message: `${err}`
+            })
+        })
+    }
+    else throw msg
 }
