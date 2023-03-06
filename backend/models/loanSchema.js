@@ -32,6 +32,9 @@ const loanSchema = mongoose.Schema({
         ref: 'Organization',
         required: [true, "Please Enter the OrganizationId"]
     },
+    loanStatus : {
+        type : String,
+    },
     createdAt: {
         type: Date,
         default: Date.now
