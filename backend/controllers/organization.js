@@ -2,7 +2,16 @@ import { OrganizationModel } from '../models/organizationSchema.js';
 import { createNew, getAll, getById, deleteById, updateById } from '../utils/common.js';
 
 export const createOrganization = (req, res, next) => {
-    createNew(req, res, next,OrganizationModel)
+    try {
+        if (req.body.userCode.currentCode >= 0) throw "Can't update current code"
+        createNew(req, res, next, OrganizationModel)
+    }
+    catch (error) {
+        res.status(401).json({
+            success: false,
+            error: error
+        })
+    }
 }
 
 export const getAllOrganizations = (req, res, next) => {
@@ -20,6 +29,18 @@ export const deleteOrganizationById = (req, res, next) => {
     deleteById(id, res, next, OrganizationModel)
 }
 
-export const updateOrganizationById = (req, res, next)=>{
-    updateById(req, res, next, OrganizationModel)
+export const updateOrganizationById = (req, res, next) => {
+    OrganizationModel.findById(req.params.id)
+        .then((response) => {
+            if (req.body.userCode.currentCode >= 0) throw "Can't update pre defined code."
+            if (!response) throw (`Organization Not Found`)
+            req.body.userCode.currentCode = response.userCode.currentCode;
+            updateById(req, res, next, OrganizationModel, "Organization")
+        })
+        .catch((error) => {
+            res.status(401).json({
+                success: false,
+                error: `${error}`
+            })
+        })
 }
