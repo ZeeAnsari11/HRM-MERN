@@ -3,6 +3,9 @@ import mongoose from "mongoose";
 //  Schema to Create User 
 
 const userSchema = mongoose.Schema({
+    userDefinedCode: {
+        type: String
+    },
     firstName: {
         type: String,
         required: [true, 'Please enter first name'],

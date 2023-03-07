@@ -1,7 +1,7 @@
 import express from "express";
 import {
     createUser, getAllUsersByOrganizationId, getAllUsersByBranchId, updateUserById,
-    deleteUserById, getUsersByStatus, getUserById, updateUserEndOfEmployment, getAllActiveUsersByOrganizationId,
+    deleteUserById, getUserById, updateUserEmployment, getAllActiveUsersByOrganizationId,
     getAllNonActiveUsersByOrganizationId
 } from '../controllers/user.js'
 
@@ -12,8 +12,7 @@ userRoute.route('/user/organization/:id').get(getAllUsersByOrganizationId)
 userRoute.route('/user/branch/:id').get(getAllUsersByBranchId)
 userRoute.route('/user/update/:id').put(updateUserById)
 userRoute.route('/user/delete/:id').delete(deleteUserById)
-userRoute.route('/user/status').get(getUsersByStatus)
 userRoute.route('/user/:id').get(getUserById)
-userRoute.route('/user/eoe/:id').put(updateUserEndOfEmployment)
+userRoute.route('/user/employment/update/:id').put(updateUserEmployment)
 userRoute.route('/user/active/organization/:id').get(getAllActiveUsersByOrganizationId)
 userRoute.route('/user/non/active/organization/:id').get(getAllNonActiveUsersByOrganizationId)
