@@ -1,6 +1,6 @@
 import { LoanTypeModel } from "../models/loanTypeSchema.js";
 import { DesignationModel } from '../models/designationSchema.js'
-import {deleteInBulk, getAll, deleteById, updateById, createNew, getById, handleCatch } from "../utils/common.js";
+import { deleteInBulk, getAll, deleteById, updateById, createNew, getById, handleCatch } from "../utils/common.js";
 
 export const createLoanType = (req, res, next) => {
     let count = 0;
@@ -33,7 +33,7 @@ export const createLoanType = (req, res, next) => {
 }
 
 export const deleteLoanTypeById = (req, res, next) => {
-    deleteById(req.params.id, res, next, LoanTypeModel, "Loan Type")
+    deleteById(req.params.id, res, next, LoanTypeModel, "LoanType")
 }
 
 export const UpdateLoanTypeById = (req, res, next) => {
@@ -69,11 +69,11 @@ export const UpdateLoanTypeById = (req, res, next) => {
                                 }
                             }
                             if (req.body.designations.length == count) {
-                                req.body.designations = DbDesignations;
-                                LoanTypeModel.findByIdAndUpdate(req.params.id, req.body)
+                                loanType.designations = DbDesignations;
+                                loanType.save()
                                     .then((response) => {
                                         if (!response) {
-                                            throw (`Loan Type Not Updated Successfully`);
+                                            throw (`LoanType Not Updated Successfully`);
                                         }
                                         res.status(200).json({
                                             success: true,
@@ -82,17 +82,17 @@ export const UpdateLoanTypeById = (req, res, next) => {
                                         })
                                     })
                                     .catch((err) => {
-                                        handleCatch(err, res, 401)
+                                        handleCatch(err, res, 401, next)
                                     })
                             }
                         })
                         .catch((err) => {
-                            handleCatch(err, res, 401)
+                            handleCatch(err, res, 401, next)
                         })
                 })
             })
-            .catch((error) => {
-                handleCatch(err, res, 401)
+            .catch((err) => {
+                handleCatch(err, res, 401, next)
             })
     }
 }
