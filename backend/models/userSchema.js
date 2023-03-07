@@ -39,8 +39,10 @@ const userSchema = mongoose.Schema({
     },
     skills: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Skills'
+            type: String,
+            trim: true,
+            maxLength: [40, 'Cannot exceeds from 40 characters'],
+            validate: /^[a-zA-Z ][a-zA-Z ]+$/
         }
     ],
     organization: {

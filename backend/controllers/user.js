@@ -12,8 +12,14 @@ export const createUser = (req, res, next) => {
                 if (!organization) throw "organization dont exist"
                 BranchModel.findById(req.body.branch)
                     .then((branch) => {
+                        let skills = req.body.skills || []
                         if (!branch) throw "branch dont exist"
                         if (req.body.organization !== branch.organization.toString()) throw "branch not found in organization"
+                        skills.forEach((skill, index) => {
+                            skills[index] = skill.toLowerCase();
+                            skills[index][0].toUpperCase();
+                        });
+                        req.body.skills = [...new Set(skills)];
                         createNew(req, res, next, UserModel)
                     })
                     .catch((err) => {
@@ -126,6 +132,14 @@ export const updateUserById = (req, res, next) => {
             success: false,
             message: 'Cannot Update the Organization of the User'
         })
+    }
+    if (req.body.skills.length > 0) {
+        let skills = req.body.skills || [];
+        skills.forEach((skill, index) => {
+            skills[index] = skill.toLowerCase();
+            skills[index][0].toUpperCase();
+        });
+        req.body.skills = [...new Set(skills)];
     }
     updateById(req, res, next, UserModel);
 }
@@ -263,4 +277,8 @@ const userActiovation = (req, res, type, date, arr, user, msg) => {
         })
     }
     else throw msg
+}
+
+export const addSkillsToUser = (req, res, next) => {
+    
 }
