@@ -2,10 +2,9 @@ import mongoose from "mongoose";
 
 const loanSchema = mongoose.Schema({
     loan_type: {
-        type: String,
-        required: [true, "Please Select Address Type"],
-        trim : true,
-        uppercase: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'LoanType',
+        required: [true, "Please Enter the LoanType"]
     },
     loan_amount: {
         type: Number,
@@ -31,9 +30,6 @@ const loanSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
         required: [true, "Please Enter the OrganizationId"]
-    },
-    loanStatus : {
-        type : String,
     },
     createdAt: {
         type: Date,

@@ -3,6 +3,9 @@ import mongoose from "mongoose";
 //  Schema to Create User 
 
 const userSchema = mongoose.Schema({
+    userDefinedCode: {
+        type: String
+    },
     firstName: {
         type: String,
         required: [true, 'Please enter first name'],
@@ -32,10 +35,17 @@ const userSchema = mongoose.Schema({
         type: String,
         required: [true, 'Please enter user role'],
     },
-    status: {
-        type: String,
-        required: [true, 'Please enter user status']
+    designation: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Designation',
+        required: true,
     },
+    skills: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Skills'
+        }
+    ],
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
@@ -48,6 +58,37 @@ const userSchema = mongoose.Schema({
     isTeamLead: {
         type: Boolean,
         required: true
+    },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
+    EOE: {
+        type: [{
+            date: {
+                type: Date,
+                default: Date.now
+            },
+            reason: {
+                type: String,
+                trim: true,
+                required: true
+            }
+
+        }]
+    },
+    rehire: {
+        type: [{
+            date: {
+                type: Date,
+                default: Date.now
+            },
+            reason: {
+                type: String,
+                trim: true,
+                required: true
+            }
+        }]
     },
     createdAt: {
         type: Date,

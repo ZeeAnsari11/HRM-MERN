@@ -151,3 +151,9 @@ export const checkIsExistAndCreate = (req, res, next, id, findInModel, createFor
         })
 }
 
+export const handleCatch = (err, res,  statusCode, next)=>{
+    res.status(statusCode).json({
+        success: false,
+        error: err
+    })
+}
