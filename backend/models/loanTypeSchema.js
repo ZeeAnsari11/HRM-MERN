@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 const loanTypeSchema = mongoose.Schema({
-    type: {
-        type: String,
-        required: [true, 'Please Enter the Loan Type You want to Create'],
-        trim: true
+    type:{
+        type : String,
+        required : [true, 'Please Enter the Loan Type You want to Create'] ,
+        trim : true
     },
     organization: {
         type: mongoose.Schema.Types.ObjectId,
