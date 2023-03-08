@@ -77,16 +77,14 @@ const injection = (req, res, next) => {
         })
 }
 
+//// get line manager of user by id ////
 export const getLineManagerByuserId = (req, res, next) => {
-    UserModel.findById(req.params.id)
+    UserModel.findById(req.params.id).populate('lineManager')
         .then((user) => {
             if (!user) throw `No Such User Exist ${req.params.id}`
-            UserModel.findById(user.lineManager)
-            .then((lineManager) => {
-                res.status(200).json({
-                    success: true,
-                    lineManager: lineManager
-                })
+            res.status(200).json({
+                success: true,
+                lineManager: user.lineManager
             })
         })
         .catch((error) => {
@@ -95,6 +93,57 @@ export const getLineManagerByuserId = (req, res, next) => {
                 message: `${error}`
             })
         })
+}
+
+//// get department's head by id ////
+export const getHODByDepartmentId = (req, res, next) => {
+    DepartmentModel.findById(req.params.id)
+        .then((department) => {
+            if (!department) throw `No Such Department Exist ${req.params.id}`
+            UserModel.find({ "HOD.department": department._id })
+                .then((hod) => {
+                    if (hod.length <= 0) throw 'No Department Found'
+                    res.status(200).json({
+                        success: true,
+                        hod: hod
+                    })
+                })
+                .catch((error) => {
+                    res.status(404).json({
+                        success: false,
+                        message: `${error}`
+                    })
+                })
+        })
+}
+
+export const getAttendanceExemptUsers = (req, res, next) => {
+    try {
+        if (Object.keys(req.body).length == 0) throw "Request Body is empty"
+        if (req.body.attendanceExempt !== undefined) {
+            UserModel.find({ organization: req.params.id, attendanceExempt: req.body.attendanceExempt })
+                .then((users) => {
+                    if (users.length === 0) throw `No users are there in this organization with status: ${req.body.attendanceExempt}`
+                    res.status(200).json({
+                        success: true,
+                        count: users.length,
+                        active_users: users
+                    })
+                })
+                .catch((err) => {
+                    res.status(404).json({
+                        success: false,
+                        message: `${err}`
+                    })
+                })
+        }
+        else throw 'invalid body'
+    } catch (error) {
+        res.status(404).json({
+            success: false,
+            message: `${error}`
+        })
+    }
 }
 
 //// Get User By Id ////
@@ -208,59 +257,106 @@ export const updateUserById = (req, res, next) => {
     updateById(req, res, next, UserModel);
 }
 
-//// get All Active Users of an Organization By Id ////
-export const getAllActiveUsersByOrganizationId = (req, res, next) => {
-    UserModel.find({ organization: req.params.id, isActive: true })
-        .then((users) => {
-            if (users.length === 0) throw "No users are there for this org."
-            res.status(200).json({
-                success: true,
-                total_active_users: users.length,
-                active_users: users
-            })
+//// get All Active / Non-Active Users of an Organization By Id ////
+export const getActiveNonActiveUsersByOrganizationId = (req, res, next) => {
+    try {
+        if (Object.keys(req.body).length == 0) throw "Request Body is empty"
+        if (req.body.isActive !== undefined) {
+            UserModel.find({ organization: req.params.id, isActive: req.body.isActive })
+                .then((users) => {
+                    if (users.length === 0) throw `No users are there in this organization with status: ${req.body.isActive}`
+                    res.status(200).json({
+                        success: true,
+                        count: users.length,
+                        active_users: users
+                    })
+                })
+                .catch((err) => {
+                    res.status(404).json({
+                        success: false,
+                        message: `${err}`
+                    })
+                })
+        }
+        else throw 'invalid body'
+    } catch (error) {
+        res.status(404).json({
+            success: false,
+            message: `${error}`
         })
-        .catch((err) => {
-            res.status(404).json({
-                success: false,
-                message: `${err}`
-            })
-        })
+    }
 }
 
-//// get All Non Active Users of an Organization By Id ////
-export const getAllNonActiveUsersByOrganizationId = (req, res, next) => {
-    UserModel.find({ organization: req.params.id, isActive: false })
-        .then((users) => {
-            if (users.length === 0) throw "No Non Active users are there for this org."
-            res.status(200).json({
-                success: true,
-                total_in_active_users: users.length,
-                in_active_users: users
-            })
+export const getEmployeeTypeByOrganizationId = (req, res, next) => {
+    try {
+        if (Object.keys(req.body).length == 0) throw "Request Body is empty"
+        if (req.body.employeeType !== undefined) {
+            UserModel.find({ organization: req.params.id, employeeType: req.body.employeeType })
+                .then((users) => {
+                    if (users.length === 0) throw `No users are there in this organization with type: ${req.body.employeeType}`
+                    res.status(200).json({
+                        success: true,
+                        count: users.length,
+                        users: users
+                    })
+                })
+                .catch((err) => {
+                    res.status(404).json({
+                        success: false,
+                        message: `${err}`
+                    })
+                })
+        }
+        else throw 'invalid body'
+    } catch (error) {
+        res.status(404).json({
+            success: false,
+            message: `${error}`
         })
-        .catch((err) => {
-            res.status(404).json({
-                success: false,
-                message: `${err}`
-            })
+    }
+}
+
+export const getRoleTypeByOrganizationId = (req, res, next) => {
+    try {
+        if (Object.keys(req.body).length == 0) throw "Request Body is empty"
+        if (req.body.roleType !== undefined) {
+            UserModel.find({ organization: req.params.id, roleType: req.body.roleType })
+                .then((users) => {
+                    if (users.length === 0) throw `No users are there in this organization with type: ${req.body.roleType}`
+                    res.status(200).json({
+                        success: true,
+                        count: users.length,
+                        users: users
+                    })
+                })
+                .catch((err) => {
+                    res.status(404).json({
+                        success: false,
+                        message: `${err}`
+                    })
+                })
+        }
+        else throw 'invalid body'
+    } catch (error) {
+        res.status(404).json({
+            success: false,
+            message: `${error}`
         })
+    }
 }
 
 //// update End of Employment of user By Id ////
 export const updateUserEmployment = (req, res, next) => {
     try {
         if (!req.body.date) throw `Kindly Provide date`
-        else
-            if (!req.body.reason) throw `Kindly Provide reason`
-            else
-                if (req.body.isActive == false) {
-                    userActiovationStatus(req, res, next, false, "User is already de-actiavted")
-                }
-                else
-                    if (req.body.isActive == true) {
-                        userActiovationStatus(req, res, next, true, "User is already Activated")
-                    }
-                    else throw "state is not defined."
+        else if (!req.body.reason) throw `Kindly Provide reason`
+        else if (req.body.isActive == false) {
+            userActiovationStatus(req, res, next, false, "User is already de-actiavted")
+        }
+        else if (req.body.isActive == true) {
+            userActiovationStatus(req, res, next, true, "User is already Activated")
+        }
+        else throw "state is not defined."
     } catch (error) {
         res.status(404).json({
             success: false,
