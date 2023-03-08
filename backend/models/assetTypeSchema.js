@@ -6,7 +6,7 @@ const assetTypeSchema = mongoose.Schema({
         required: [true, 'Please Enter the Asset Type You want to Create'],
         maxlength: [70, 'Length can not exceed 70 characters'],
         trim: true,
-        validate: /^[a-zA-Z ][a-zA-Z ]+$/
+        validate: /^[a-zA-Z0-9 ][a-zA-Z0-9 ]+$/
     },
     organization: {
         type: mongoose.Schema.Types.ObjectId,
