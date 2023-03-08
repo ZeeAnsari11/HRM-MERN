@@ -1,9 +1,9 @@
 import express from "express";
 import {
     createUser, getAllUsersByOrganizationId, getAllUsersByBranchId, updateUserById,
-    deleteUserById, getUserById, updateUserEmployment,
-    addSkillsToUser, deleteSkillFromUser, deleteUserById, getUserById, updateUserEmployment, getActiveNonActiveUsersByOrganizationId,
-    getLineManagerByuserId, getHODByDepartmentId, getAttendanceExemptUsers, getEmployeeTypeByOrganizationId,
+    deleteUserById, getUserById, updateUserEmployment, addSkillsToUser, deleteSkillFromUser, deleteUserById, 
+    getUserById, updateUserEmployment, getActiveNonActiveUsersByOrganizationId, getLineManagerByuserId, 
+    getHODByDepartmentId, getAttendanceExemptUsers, getEmployeeTypeByOrganizationId,
     getRoleTypeByOrganizationId
 
 } from '../controllers/user.js'
