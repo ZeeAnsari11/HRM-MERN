@@ -2,12 +2,7 @@ import express from "express";
 import {
     createUser, getAllUsersByOrganizationId, getAllUsersByBranchId, updateUserById,
     deleteUserById, getUserById, updateUserEmployment, getAllActiveUsersByOrganizationId,
-
-    getAllNonActiveUsersByOrganizationId,
-    addSkillsToUser,
-    deleteSkillFromUser,
-
-    getAllNonActiveUsersByOrganizationId, getLineManagerByuserId
+    addSkillsToUser, deleteSkillFromUser, getAllNonActiveUsersByOrganizationId, getLineManagerByuserId
 
 } from '../controllers/user.js'
 
