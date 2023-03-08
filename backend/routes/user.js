@@ -1,8 +1,10 @@
 import express from "express";
 import {
     createUser, getAllUsersByOrganizationId, getAllUsersByBranchId, updateUserById,
-    deleteUserById, getUserById, updateUserEmployment, getAllActiveUsersByOrganizationId,
-    addSkillsToUser, deleteSkillFromUser, getAllNonActiveUsersByOrganizationId, getLineManagerByuserId
+    deleteUserById, getUserById, updateUserEmployment,
+    addSkillsToUser, deleteSkillFromUser, deleteUserById, getUserById, updateUserEmployment, getActiveNonActiveUsersByOrganizationId,
+    getLineManagerByuserId, getHODByDepartmentId, getAttendanceExemptUsers, getEmployeeTypeByOrganizationId,
+    getRoleTypeByOrganizationId
 
 } from '../controllers/user.js'
 
@@ -15,8 +17,12 @@ userRoute.route('/user/update/:id').put(updateUserById)
 userRoute.route('/user/delete/:id').delete(deleteUserById)
 userRoute.route('/user/:id').get(getUserById)
 userRoute.route('/user/employment/update/:id').put(updateUserEmployment)
-userRoute.route('/user/active/organization/:id').get(getAllActiveUsersByOrganizationId)
-userRoute.route('/user/non/active/organization/:id').get(getAllNonActiveUsersByOrganizationId)
 userRoute.route('/user/skill/:id').post(addSkillsToUser).delete(deleteSkillFromUser)
 userRoute.route('/user/lineManager/:id').get(getLineManagerByuserId)
+userRoute.route('/user/active/organization/:id').get(getActiveNonActiveUsersByOrganizationId)
+userRoute.route('/user/lineManager/:id').get(getLineManagerByuserId)
+userRoute.route('/user/hod/:id').get(getHODByDepartmentId)
+userRoute.route('/exempt/user/organization/:id').get(getAttendanceExemptUsers)
+userRoute.route('/user/type/organization/:id').get(getEmployeeTypeByOrganizationId)
+userRoute.route('/user/role/type/organization/:id').get(getRoleTypeByOrganizationId)
 
