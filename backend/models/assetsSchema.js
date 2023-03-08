@@ -19,20 +19,20 @@ const assetsSchema = new mongoose.Schema({
     },
     condition: {
         type: Number,
-        required:[true , 'Please Enter the Current Condition of Asset, Out of 10'],
-        trim :true,
+        required: [true, 'Please Enter the Current Condition of Asset, Out of 10'],
+        trim: true,
         max: 10,
         min: 0
     },
     ManufacturedBy: {
         type: String,
         required: [true, 'Please Enter the Manufacturer Name'],
-        trim :true
+        trim: true
     },
     Model: {
         type: String,
         required: [true, 'Please Enter the Model Name'],
-        trim :true
+        trim: true
     },
     isTaxAble: {
         type: Boolean,
@@ -54,8 +54,19 @@ const assetsSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        trim :true
+        trim: true
     },
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        required: [true, 'Please Enter the Category']
+    },
+    previousHolders: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ],
     createdAt: {
         type: Date,
         default: Date.now
