@@ -2,9 +2,13 @@ import express from "express";
 import {
     createUser, getAllUsersByOrganizationId, getAllUsersByBranchId, updateUserById,
     deleteUserById, getUserById, updateUserEmployment, getAllActiveUsersByOrganizationId,
+
     getAllNonActiveUsersByOrganizationId,
     addSkillsToUser,
-    deleteSkillFromUser
+    deleteSkillFromUser,
+
+    getAllNonActiveUsersByOrganizationId, getLineManagerByuserId
+
 } from '../controllers/user.js'
 
 export const userRoute = express.Router();
@@ -19,3 +23,5 @@ userRoute.route('/user/employment/update/:id').put(updateUserEmployment)
 userRoute.route('/user/active/organization/:id').get(getAllActiveUsersByOrganizationId)
 userRoute.route('/user/non/active/organization/:id').get(getAllNonActiveUsersByOrganizationId)
 userRoute.route('/user/skill/:id').post(addSkillsToUser).delete(deleteSkillFromUser)
+userRoute.route('/user/lineManager/:id').get(getLineManagerByuserId)
+

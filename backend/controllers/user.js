@@ -1,26 +1,43 @@
 import { BranchModel } from '../models/branchSchema.js'
 import { OrganizationModel } from '../models/organizationSchema.js'
 import { UserModel } from '../models/userSchema.js'
+import { DepartmentModel } from '../models/departmentSchema.js'
 import { createNew, deleteById, getAll, updateById } from '../utils/common.js'
 
 //// Create User ////
 export const createUser = (req, res, next) => {
     try {
-        if (req.body.isActive == true || req.body.isActive == false || req.body.isActive) throw 'you cannot provide the isActive status of the employee'
+        if (req.body.isActive == true || req.body.isActive == false || req.body.isActive) throw 'you cannot provide the isActive status of the employee';
         OrganizationModel.findById(req.body.organization)
             .then((organization) => {
                 if (!organization) throw "organization dont exist"
                 BranchModel.findById(req.body.branch)
                     .then((branch) => {
                         let skills = req.body.skills || []
-                        if (!branch) throw "branch dont exist"
-                        if (req.body.organization !== branch.organization.toString()) throw "branch not found in organization"
                         skills.forEach((skill, index) => {
                             skills[index] = skill.toLowerCase();
                             skills[index][0].toUpperCase();
                         });
                         req.body.skills = [...new Set(skills)];
-                        createNew(req, res, next, UserModel)
+                        if (!branch) throw "branch dont exist"
+                        else if (req.body.organization !== branch.organization.toString()) throw "branch not found in organization"
+                        else if (req.body.areaBounded.isBounded == true && !req.body.areaBounded.addArea) throw 'Kindly Add the area'
+                        else if (req.body.HOD.isHOD == true && !req.body.HOD.department) throw 'Kindly provide the department name of HOD'
+                        else if (req.body.HOD.isHOD == true && req.body.HOD.department) {
+                            DepartmentModel.findById(req.body.HOD.department)
+                                .then((department) => {
+                                    if (!department) throw 'No Such Department'
+                                    if (department.organization.toString() !== req.body.organization.toString()) throw `Department does not match with org.`
+                                    injection(req, res, next);
+                                })
+                                .catch((err) => {
+                                    res.status(404).json({
+                                        success: false,
+                                        message: `${err}`
+                                    })
+                                })
+                        }
+                        else injection(req, res, next);
                     })
                     .catch((err) => {
                         res.status(404).json({
@@ -43,6 +60,43 @@ export const createUser = (req, res, next) => {
         })
     }
 }
+
+const injection = (req, res, next) => {
+    UserModel.findById(req.body.lineManager)
+        .then((user) => {
+            if (!user) throw 'No Such User'
+            if (user.organization.toString() !== req.body.organization.toString()) throw `Line Manager does not match with org.`
+            if (user.isLineManager !== true) throw `Provided Line Manager is not Line Manager.`
+            createNew(req, res, next, UserModel)
+        })
+        .catch((err) => {
+            res.status(404).json({
+                success: false,
+                message: `${err}`
+            })
+        })
+}
+
+export const getLineManagerByuserId = (req, res, next) => {
+    UserModel.findById(req.params.id)
+        .then((user) => {
+            if (!user) throw `No Such User Exist ${req.params.id}`
+            UserModel.findById(user.lineManager)
+            .then((lineManager) => {
+                res.status(200).json({
+                    success: true,
+                    lineManager: lineManager
+                })
+            })
+        })
+        .catch((error) => {
+            res.status(404).json({
+                success: false,
+                message: `${error}`
+            })
+        })
+}
+
 //// Get User By Id ////
 export const getUserById = (req, res, next) => {
     UserModel.findById(req.params.id)
@@ -166,25 +220,6 @@ export const updateUserById = (req, res, next) => {
         })
     }
     else updateById(req, res, next, UserModel);
-}
-
-//// Change User Status By Id ////
-export const chnageUserStatus = (userId, status) => {
-    UserModel.findById(userId)
-        .then((user) => {
-            if (!user) throw `No Such User ${userId}`
-            user.status = status
-            user.save()
-                .then((response) => {
-                    return response
-                })
-                .catch((error) => {
-                    return error
-                })
-        })
-        .catch((error) => {
-            return error
-        })
 }
 
 //// get All Active Users of an Organization By Id ////
