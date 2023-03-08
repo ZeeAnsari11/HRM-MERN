@@ -13,6 +13,8 @@ import { addressRoute } from "./routes/address.js";
 import { certificateRoute } from "./routes/certificate.js";
 import { loanTypeRoute } from "./routes/loanType.js";
 import { loanRoute } from "./routes/loan.js";
+import { salaryRoute } from "./routes/salary.js";
+import { designationRoute } from "./routes/designation.js";
 
 
 const app = express();
@@ -34,6 +36,8 @@ app.use(apiVersion, certificateRoute);
 app.use(apiVersion, addressRoute);
 app.use(apiVersion, loanTypeRoute);
 app.use(apiVersion, loanRoute);
+app.use(apiVersion, salaryRoute);
+app.use(apiVersion, designationRoute);
 
 
 export default app;
