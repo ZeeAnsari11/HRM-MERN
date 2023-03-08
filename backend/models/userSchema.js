@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import timeZone from "mongoose-timezone";
 
 //  Schema to Create User 
 
@@ -31,10 +32,6 @@ const userSchema = mongoose.Schema({
         ref: 'Branch',
         required: true,
     },
-    role: {
-        type: String,
-        required: [true, 'Please enter user role'],
-    },
     designation: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Designation',
@@ -55,15 +52,79 @@ const userSchema = mongoose.Schema({
     },
     isLineManager: {
         type: Boolean,
-        required: true
+        default: false
     },
     isTeamLead: {
         type: Boolean,
-        required: true
+        default: false
     },
     isActive: {
         type: Boolean,
         default: true
+    },
+    isFinalAuthority: {
+        type: Boolean,
+        default: false
+    },
+    areaBounded: {
+        isBounded: {
+            type: Boolean,
+            default: false
+        },
+        addArea: {
+            type: String,
+            trim: true
+        }
+    },
+    HOD: {
+        isHOD: {
+            type: Boolean,
+            default: false
+        },
+        department: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Department'
+        }
+    },
+    attendanceExempt: {
+        type: Boolean,
+        default: false
+    },
+    lineManager: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    employeeType: {
+        type: String,
+        enum: {
+            values: [
+                'field',
+                'non-field'
+            ],
+            messsage: 'Enter a valid Employee Type',
+        },
+        required: [true, "Select Employee Type"],
+    },
+    roleType: {
+        type: String,
+        enum: {
+            values: [
+                'Admin',
+                'Manager',
+                'Employee'
+            ],
+            messsage: 'Enter a valid Role Type',
+        },
+        required: [true, "Select Role Type"],
+    },
+    timeZone: {
+        type: Date,
+        default: Date.now
+    },
+    joiningDate: {
+        type: Date,
+        required: true
     },
     EOE: {
         type: [{
@@ -98,4 +159,5 @@ const userSchema = mongoose.Schema({
     }
 })
 
+userSchema.plugin(timeZone, { paths: ['timeZone'] });
 export const UserModel = mongoose.model('User', userSchema, 'User Collection')
