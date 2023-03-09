@@ -158,6 +158,92 @@ const userSchema = mongoose.Schema({
             }
         }]
     },
+    religion: {
+        type: String,
+        trim: true,
+        maxLength: [70, 'Cannot exceeds from 70 characters'],
+        validate: /^[a-zA-Z]+$/
+    },
+    nationality: {
+        type: String,
+        required: [true, 'Please enter your nationality'],
+        trim: true,
+        maxLength: [100, 'Cannot exceeds from 100 characters'],
+        validate: /^[a-zA-Z]+$/
+    },
+    bloodGroup: {
+        type: String,
+        trim: true,
+        enum: [
+            'A+',
+            'A-',
+            'B+',
+            'B-',
+            'AB+',
+            'AB-',
+            'O+',
+            'O-'
+        ]
+    },
+    personalEmail: {
+        type: String,
+        required: [true, 'Please enter your personal email'],
+        trim: true,
+        maxLength: [100, 'Cannot exceeds from 100 characters'],
+        validate: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+        unique: [true, 'Email already in use']
+    },
+    nic: {
+        number: {
+            type: String,
+            required: [true, 'Please enter your CNIC without dashes'],
+            trim: true,
+            validate: /^[0-9]+$/,
+            unique: [true, 'CNIC already in use']
+        },
+        attachment: {
+            front: {
+                type: String,
+                required: [true, 'Please enter your cnic front attachment']
+            },
+            back: {
+                type: String,
+                required: [true, 'Please enter your cnic back attachment']
+            }
+        },
+        expiry: {
+            type: Date,
+            required: [true, 'Please enter your cnic expiry date']
+        }
+    },
+    passport: {
+        number: {
+            type: String,
+            trim: true,
+            validate: /^[0-9]+$/,
+            unique: [true, 'Passport already in use']
+        },
+        attachment: {
+            type: String,
+        },
+        expiry: {
+            type: Date,
+        }
+    },
+    drivingLiscence: {
+        number: {
+            type: String,
+            trim: true,
+            validate: /^[0-9]+$/,
+            unique: [true, 'Driving Lisence already in use']
+        },
+        attachment: {
+            type: String,
+        },
+        expiry: {
+            type: Date,
+        }
+    },
     createdAt: {
         type: Date,
         default: Date.now
