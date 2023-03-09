@@ -28,7 +28,7 @@ export const createUser = (req, res, next) => {
                                 .then((department) => {
                                     if (!department) throw 'No Such Department'
                                     if (department.organization.toString() !== req.body.organization.toString()) throw `Department does not match with org.`
-                                    injection(req, res, next);
+                                    injection(req, res, next, organization);
                                 })
                                 .catch((err) => {
                                     res.status(404).json({
@@ -37,7 +37,7 @@ export const createUser = (req, res, next) => {
                                     })
                                 })
                         }
-                        else injection(req, res, next);
+                        else injection(req, res, next, organization);
                     })
                     .catch((err) => {
                         res.status(404).json({
@@ -61,13 +61,17 @@ export const createUser = (req, res, next) => {
     }
 }
 
-const injection = (req, res, next) => {
+const injection = (req, res, next, organization) => {
     UserModel.findById(req.body.lineManager)
         .then((user) => {
             if (!user) throw 'No Such User'
             if (user.organization.toString() !== req.body.organization.toString()) throw `Line Manager does not match with org.`
             if (user.isLineManager !== true) throw `Provided Line Manager is not Line Manager.`
-            createNew(req, res, next, UserModel)
+            req.body.userDefinedCode = (organization.userCode.currentCode + 1);
+            organization.userCode.currentCode = organization.userCode.currentCode + 1;
+            organization.save().then((response) => {
+                createNew(req, res, next, UserModel)
+            })
         })
         .catch((err) => {
             res.status(404).json({
