@@ -106,6 +106,11 @@ const userSchema = mongoose.Schema({
         },
         required: [true, "Select Employee Type"],
     },
+    employmentType: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Employment',
+        required: true,
+    },
     roleType: {
         type: String,
         enum: {
