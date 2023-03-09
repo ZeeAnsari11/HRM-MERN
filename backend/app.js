@@ -15,6 +15,8 @@ import { loanTypeRoute } from "./routes/loanType.js";
 import { loanRoute } from "./routes/loan.js";
 import { salaryRoute } from "./routes/salary.js";
 import { designationRoute } from "./routes/designation.js";
+import { assetTypeRoute } from "./routes/assetType.js";
+import { employmentTypeRoute } from "./routes/employmentType.js";
 
 
 const app = express();
@@ -38,6 +40,10 @@ app.use(apiVersion, loanTypeRoute);
 app.use(apiVersion, loanRoute);
 app.use(apiVersion, salaryRoute);
 app.use(apiVersion, designationRoute);
+app.use(apiVersion, assetTypeRoute);
+app.use(apiVersion, employmentTypeRoute);
+
+
 
 
 export default app;
