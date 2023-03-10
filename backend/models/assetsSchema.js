@@ -56,7 +56,7 @@ const assetsSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
-    category: {
+    type: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
         required: [true, 'Please Enter the Category']
@@ -64,7 +64,7 @@ const assetsSchema = new mongoose.Schema({
     previousHolders: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
+            ref: 'AssetsRevision',
         }
     ],
     createdAt: {
