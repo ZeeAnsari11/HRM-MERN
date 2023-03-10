@@ -86,7 +86,7 @@ export const deleteById = (id, res, next, model, message = 'Result') => {
 }
 
 
-export const updateById = (req, res, next, model, message = 'Result') => {
+export const updateById = (req, res, next, model, message = 'Result', inject = null) => {
     try {
         if (req.body.createdAt) {
             throw 'You can not update the creation time'
@@ -100,6 +100,7 @@ export const updateById = (req, res, next, model, message = 'Result') => {
                 if (!response) {
                     throw (`${message} Not Found`);
                 }
+                if(inject) inject();
                 res.status(200).json({
                     success: true,
                     Message: `${message} Updated Successfully`

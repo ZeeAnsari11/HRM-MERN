@@ -1,5 +1,8 @@
 import express from 'express'
-import { createCertification, deleteAllCertifications, deleteCertificationById, getAllCertificationByUserID, updateCertification } from '../controllers/certificate.js';
+import {
+    createCertification, deleteAllCertifications, deleteCertificationById,
+    getAllCertificationByUserID, updateCertification
+} from '../controllers/certificate.js';
 
 export const certificateRoute = express.Router();
 

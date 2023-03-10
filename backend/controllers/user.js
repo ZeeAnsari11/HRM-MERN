@@ -68,10 +68,23 @@ const injection = (req, res, next, organization) => {
             if (user.organization.toString() !== req.body.organization.toString()) throw `Line Manager does not match with org.`
             if (user.isLineManager !== true) throw `Provided Line Manager is not Line Manager.`
             req.body.userDefinedCode = (organization.userCode.currentCode + 1);
-            organization.userCode.currentCode = organization.userCode.currentCode + 1;
-            organization.save().then((response) => {
-                createNew(req, res, next, UserModel)
-            })
+            UserModel.create(req.body)
+                .then((response) => {
+                    organization.userCode.currentCode = organization.userCode.currentCode + 1;
+                    res.status(200).json({
+                        success: true,
+                        response
+                    })
+                })
+                .catch((error) => {
+                    res.status(401).json({
+                        success: false,
+                        error: error
+                    })
+                })
+                .finally(() => {
+                    organization.save();
+                })
         })
         .catch((err) => {
             res.status(404).json({
@@ -252,25 +265,25 @@ export const updateUserById = (req, res, next) => {
     }
     if (req.body.skills.length > 0) {
         UserModel.findById(req.params.id)
-        .then((user) => {
-            if (!user) throw `No Such User ${req.body.id}`;
-            let dbSkills = user.skills || []
-            let skills = req.body.skills || [];
-            skills.forEach((skill) => {
-                let skl = skill.toLowerCase();
-                if (!dbSkills.includes(skl)) {
-                    dbSkills.push(skl);
-                }
-            });
-            req.body.skills = dbSkills;
-            updateById(req, res, next, UserModel);
-        })
-        .catch((err) => {
-            res.status(404).json({
-                success: false,
-                message: `${err}`
+            .then((user) => {
+                if (!user) throw `No Such User ${req.body.id}`;
+                let dbSkills = user.skills || []
+                let skills = req.body.skills || [];
+                skills.forEach((skill) => {
+                    let skl = skill.toLowerCase();
+                    if (!dbSkills.includes(skl)) {
+                        dbSkills.push(skl);
+                    }
+                });
+                req.body.skills = dbSkills;
+                updateById(req, res, next, UserModel);
             })
-        })
+            .catch((err) => {
+                res.status(404).json({
+                    success: false,
+                    message: `${err}`
+                })
+            })
     }
     else updateById(req, res, next, UserModel);
 }
@@ -435,61 +448,61 @@ const userActiovation = (req, res, type, date, arr, user, msg) => {
 
 export const addSkillsToUser = (req, res, next) => {
     UserModel.findById(req.params.id)
-    .then((user) => {
-        if (!user) throw 'user dies not exist';
-        if (req.body.skills.length > 0) {
-            let skills = req.body.skills || [];
-            skills.forEach((skill, index) => {
-                skills[index] = skill.toLowerCase();
-                skills[index][0].toUpperCase();
-            });
-            user.skills.push(...skills);
-            user.skills = [...new Set(user.skills)];
-            user.save().then((response)=>{
-                res.status(200).json({
-                    success: true,
-                    message: "Skills added successfully",
-                    data: response
+        .then((user) => {
+            if (!user) throw 'user dies not exist';
+            if (req.body.skills.length > 0) {
+                let skills = req.body.skills || [];
+                skills.forEach((skill, index) => {
+                    skills[index] = skill.toLowerCase();
+                    skills[index][0].toUpperCase();
+                });
+                user.skills.push(...skills);
+                user.skills = [...new Set(user.skills)];
+                user.save().then((response) => {
+                    res.status(200).json({
+                        success: true,
+                        message: "Skills added successfully",
+                        data: response
+                    })
                 })
-            })
-            .catch((err) => {
-                throw err;
-            });
-        }
-    })
-    .catch((err) => {
-        res.status(401).json({
-            success: false,
-            message: err
+                    .catch((err) => {
+                        throw err;
+                    });
+            }
         })
-    })
-    
+        .catch((err) => {
+            res.status(401).json({
+                success: false,
+                message: err
+            })
+        })
+
 }
 
 export const deleteSkillFromUser = (req, res, next) => {
     UserModel.findById(req.params.id)
-    .then((user) => {
-        if (!user) throw 'user does not exist';
-        if (req.body.skill) {
-            if (!user.skills.includes(req.body.skill.toLowerCase())) throw "Skill not found";
-            let skills = user.skills.filter((skill) => skill !== req.body.skill.toLowerCase());
-            user.skills = skills;
-            user.save().then(()=>{
-                res.status(200).json({
-                    success: true,
-                    message: "Skill deleted successfully",
+        .then((user) => {
+            if (!user) throw 'user does not exist';
+            if (req.body.skill) {
+                if (!user.skills.includes(req.body.skill.toLowerCase())) throw "Skill not found";
+                let skills = user.skills.filter((skill) => skill !== req.body.skill.toLowerCase());
+                user.skills = skills;
+                user.save().then(() => {
+                    res.status(200).json({
+                        success: true,
+                        message: "Skill deleted successfully",
+                    })
                 })
-            })
-            .catch((err) => {
-                throw err;
-            });
-        }
-    })
-    .catch((err) => {
-        res.status(401).json({
-            success: false,
-            message: err
+                    .catch((err) => {
+                        throw err;
+                    });
+            }
         })
-    })
-    
+        .catch((err) => {
+            res.status(401).json({
+                success: false,
+                message: err
+            })
+        })
+
 }
