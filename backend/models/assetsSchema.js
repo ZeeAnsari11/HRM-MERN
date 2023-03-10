@@ -64,7 +64,7 @@ const assetsSchema = new mongoose.Schema({
     previousHolders: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
+            ref: 'AssetsRevision',
         }
     ],
     createdAt: {
