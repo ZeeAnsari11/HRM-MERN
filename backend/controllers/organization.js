@@ -7,6 +7,7 @@ export const createOrganization = (req, res, next) => {
         createNew(req, res, next, OrganizationModel)
     }
     catch (error) {
+        console.log("=========err========",error);
         res.status(401).json({
             success: false,
             error: error

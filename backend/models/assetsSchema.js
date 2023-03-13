@@ -18,11 +18,9 @@ const assetsSchema = new mongoose.Schema({
         default: null
     },
     condition: {
-        type: Number,
-        required: [true, 'Please Enter the Current Condition of Asset, Out of 10'],
-        trim: true,
-        max: 10,
-        min: 0
+        type: String,
+        required: [true, 'Please Enter the Current Condition of Asset'],
+        trim: true
     },
     ManufacturedBy: {
         type: String,
