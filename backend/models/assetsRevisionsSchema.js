@@ -31,9 +31,9 @@ const AssetsRevisions = new mongoose.Schema({
         required: [true, 'please Enter the Reason'],
         trim : true
     },
-    description  : {
+    condition  : {
         type : String,
-        required : [true, 'Please Enter the Description'],
+        required : [true, 'Please Enter the Condition'],
         trim: true
     },
     createdAt: {

@@ -1,14 +1,14 @@
 import { deleteInBulk, handleCatch, updateById } from "../utils/common.js";
 import { AssetsRevisionsModel } from "../models/assetsRevisionsSchema.js";
 
-export const createAssetRevision = (organization, date, action, reason, user, description) => {
+export const createAssetRevision = (organization, date, action, reason, user, condition) => {
     let body = {
         organization,
         date,
         action,
         reason,
         user,
-        description
+        condition
     };
    return AssetsRevisionsModel.create(body)
         .then((res) => {

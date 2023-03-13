@@ -40,7 +40,7 @@ export const UpdateAssetById = (req, res, next) => {
 
 //  Peform Allocation and Deallocatio of an asset also create revisions of an asset
 export const AssetManagment = (req, res, next) => {
-    let condition = (Object.keys(req.body).length > 6 || !req.body.user || !req.body.asset || !req.body.action || !req.body.reason || !req.body.date || !req.body.description);
+    let condition = (Object.keys(req.body).length > 6 || !req.body.user || !req.body.asset || !req.body.action || !req.body.reason || !req.body.date || !req.body.condition);
     try {
         if (condition) throw "You can only perform Allocation and deallocation operations here with all necessary information"
         UserModel.findById(req.body.user)
@@ -53,12 +53,12 @@ export const AssetManagment = (req, res, next) => {
                         if (req.body.action.toLowerCase() === "allocate" && asset.isAllocated === false) {
                             asset.isAllocated = true;
                             asset.user = user._id;
-                            createAssetRevisionAndUpdateAssetStatus(res, next, user.organization.toString(), new Date(req.body.date), req.body.action.toLowerCase(), req.body.reason, req.body.description, req.body.user, asset, "Allocated")
+                            createAssetRevisionAndUpdateAssetStatus(res, next, user.organization.toString(), new Date(req.body.date), req.body.action.toLowerCase(), req.body.reason, req.body.condition, req.body.user, asset, "Allocated")
                         }
                         else if (req.body.action.toLowerCase() === "deallocate" && asset.isAllocated === true) {
                             asset.isAllocated = false;
                             asset.user = null;
-                            createAssetRevisionAndUpdateAssetStatus(res, next, user.organization.toString(), new Date(req.body.date), req.body.action.toLowerCase(), req.body.reason, req.body.description, req.body.user, asset, "DeAllocated")
+                            createAssetRevisionAndUpdateAssetStatus(res, next, user.organization.toString(), new Date(req.body.date), req.body.action.toLowerCase(), req.body.reason, req.body.condition, req.body.user, asset, "DeAllocated")
                         }
                         else {
                             throw "Invalid Action"
@@ -193,9 +193,9 @@ export const deleteAssetById = (req, res, next) => {
 
 
 //  This fuction creates a new Asset revision on allocation and deallcation of an asset alos update the asset
-const createAssetRevisionAndUpdateAssetStatus = (res, next, organization, date, action, reason, description, user, assetRef, msg = "Action Done") => {
+const createAssetRevisionAndUpdateAssetStatus = (res, next, organization, date, action, reason, condition, user, assetRef, msg = "Action Done") => {
 
-    createAssetRevision(organization, date, action, reason, user, description)
+    createAssetRevision(organization, date, action, reason, user, condition)
         .then((revision) => {
             assetRef.previousHolders.push(revision._id);
             assetRef.save()
