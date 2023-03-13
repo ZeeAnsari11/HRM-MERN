@@ -17,10 +17,7 @@ import { salaryRoute } from "./routes/salary.js";
 import { designationRoute } from "./routes/designation.js";
 import { assetTypeRoute } from "./routes/assetType.js";
 import { employmentTypeRoute } from "./routes/employmentType.js";
-<<<<<<< Updated upstream
-=======
 import { userRoleRoute } from "./routes/userRole.js";
->>>>>>> Stashed changes
 
 
 const app = express();
@@ -46,12 +43,7 @@ app.use(apiVersion, salaryRoute);
 app.use(apiVersion, designationRoute);
 app.use(apiVersion, assetTypeRoute);
 app.use(apiVersion, employmentTypeRoute);
-<<<<<<< Updated upstream
-
-
-
-=======
 app.use(apiVersion, userRoleRoute);
->>>>>>> Stashed changes
+
 
 export default app;
