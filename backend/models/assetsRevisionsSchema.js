@@ -1,10 +1,15 @@
 import mongoose from "mongoose";
 
 const AssetsRevisions = new mongoose.Schema({
-    asset: {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Assets',
-        required: true,
+        ref: 'User',
+        required: [true, 'Please Enter an User'],
+    },
+    organization: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization',
+        required: [true, 'please Enter an organization'],
     },
     action :{
         type: String,
