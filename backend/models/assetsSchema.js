@@ -11,6 +11,10 @@ const assetsSchema = new mongoose.Schema({
         required: true,
         ref: 'Organization'
     },
+    destroyed: {
+        type: Boolean,
+        default: false
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
