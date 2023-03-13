@@ -131,15 +131,33 @@ const userSchema = mongoose.Schema({
         required: true
     },
     EOE: {
-        type: [{
-            date: {
-                type: Date,
-                default: Date.now
+        details: [{
+            eoeType: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'EOEType',
+                required: true,
             },
-            reason: {
-                type: String,
-                trim: true,
-                required: true
+            data: {
+                resignationDate: {
+                    type: Date,
+                    required: true,
+                },
+                noticePeriod: {
+                    type: Boolean,
+                    default: false,
+                },
+                lastWorkingDate: {
+                    type: Date,
+                    default: Date.now,
+                },
+                attachment: {
+                    type: String
+                },
+                reason: {
+                    type: String,
+                    trim: true,
+                    required: true,
+                }
             }
 
         }]
