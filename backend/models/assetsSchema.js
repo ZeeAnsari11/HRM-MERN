@@ -11,9 +11,9 @@ const assetsSchema = new mongoose.Schema({
         required: true,
         ref: 'Organization'
     },
-    destroyed: {
+    isActive: {
         type: Boolean,
-        default: false
+        default: true
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
