@@ -72,7 +72,7 @@ const injection = (req, res, next, organization) => {
             EmploymentModel.findById(req.body.employmentType)
                 .then((employmentType) => {
                     if (!employmentType) throw 'No Such Employment Type'
-                    if (employmentType.organization.toString() !== req.body.employmentType.toString()) throw `Employment Type does not match with org.`
+                    if (employmentType.organization.toString() !== req.body.organization.toString()) throw `Employment Type does not match with org.`
                     req.body.userDefinedCode = (organization.userCode.currentCode + 1);
                     UserModel.create(req.body)
                         .then((response) => {
@@ -91,6 +91,12 @@ const injection = (req, res, next, organization) => {
                         .finally(() => {
                             organization.save();
                         })
+                })
+                .catch((error) => {
+                    res.status(401).json({
+                        success: false,
+                        error: error
+                    })
                 })
         })
         .catch((err) => {
