@@ -39,6 +39,11 @@ export const createUser = (req, res, next) => {
                                     })
                                 })
                         }
+                        else if (req.body.probation?.isOnProbation == true) {
+                            if (!req.body.probation.durationOfProbation) throw 'Kindly Add the duration of probation period'
+                            req.body.probation.status = "pending";
+                            injection(req, res, next, organization);
+                        }
                         else injection(req, res, next, organization);
                     })
                     .catch((err) => {
@@ -67,7 +72,7 @@ const injection = (req, res, next, organization) => {
     UserModel.findById(req.body.lineManager)
         .then((user) => {
             if (!user) throw 'No Such User'
-            if (user.organization.toString() !== req.body.organization.toString()) throw `Line Manager does not match with org.`
+            //if (user.organization.toString() !== req.body.organization.toString()) throw `Line Manager does not match with org.`
             if (user.isLineManager !== true) throw `Provided Line Manager is not Line Manager.`
             EmploymentModel.findById(req.body.employmentType)
                 .then((employmentType) => {
@@ -584,5 +589,8 @@ export const deleteSkillFromUser = (req, res, next) => {
                 message: err
             })
         })
+}
 
+export const updateUserProbation = (req, res, next) => {
+    
 }
