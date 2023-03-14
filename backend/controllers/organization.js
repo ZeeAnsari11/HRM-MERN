@@ -3,7 +3,7 @@ import { createNew, getAll, getById, deleteById, updateById } from '../utils/com
 
 export const createOrganization = (req, res, next) => {
     try {
-        if (req.body.userCode.currentCode >= 0) throw "Can't update current code"
+        if (req.body.userCode?.currentCode >= 0) throw "Can't update current code"
         createNew(req, res, next, OrganizationModel)
     }
     catch (error) {
