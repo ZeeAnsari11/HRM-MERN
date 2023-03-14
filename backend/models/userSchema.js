@@ -66,6 +66,21 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
+    probation: {
+        isOnProbation: {
+            type: Boolean,
+            default: false
+        },
+        durationOfProbation: {
+            type: Number,
+            min: 0,
+            max: 12
+        },
+        status: {
+            type: String,
+            default: "complete"
+        }
+    },
     areaBounded: {
         isBounded: {
             type: Boolean,
