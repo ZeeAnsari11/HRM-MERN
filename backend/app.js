@@ -17,7 +17,7 @@ import { salaryRoute } from "./routes/salary.js";
 import { designationRoute } from "./routes/designation.js";
 import { assetTypeRoute } from "./routes/assetType.js";
 import { employmentTypeRoute } from "./routes/employmentType.js";
-import { userRoleRoute } from "./routes/userRole.js";
+import { eoeTypeRoute } from "./routes/eoeType.js";
 
 
 const app = express();
@@ -43,7 +43,7 @@ app.use(apiVersion, salaryRoute);
 app.use(apiVersion, designationRoute);
 app.use(apiVersion, assetTypeRoute);
 app.use(apiVersion, employmentTypeRoute);
-app.use(apiVersion, userRoleRoute);
+app.use(apiVersion, eoeTypeRoute);
 
 
 export default app;
