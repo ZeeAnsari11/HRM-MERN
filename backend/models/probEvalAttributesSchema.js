@@ -1,5 +1,5 @@
 import mongoose from mongoose;
-const ProbEvalAttributesSchema = mongoose.Schema({
+const probEvalAttributesSchema = mongoose.Schema({
     attributes : [
         {
             name : {
@@ -8,14 +8,19 @@ const ProbEvalAttributesSchema = mongoose.Schema({
             },
             overAllEval : {
                 type : Number,
-                required : true
+                default : 0
             },
             performance : {
                 type : Number,
-                required : true
+                default : 0
             },
+            probFormId :{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "ProbEvalForm",
+                required: true
+            }
         }
     ]
 })
 
-export const ProbEvalAttributesModel = mongoose.model('ProbEvalAttributes', ProbEvalAttributesSchema, 'ProbEvalAttributes Collection')
+export const ProbEvalAttributesModel = mongoose.model('ProbEvalAttributes', probEvalAttributesSchema, 'ProbEvalAttributes Collection')
