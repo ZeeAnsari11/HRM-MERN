@@ -1,6 +1,6 @@
 import express from 'express';
-export const qualificationRoute = express.Router();
-import {updateAssetRevisionById } from '../controllers/assetsRevisions';
+export const assetRevisionRoute = express.Router();
+import {updateAssetRevisionById } from '../controllers/assetsRevisions.js';
 
-qualificationRoute.route('/assets-revision/:id').put(updateAssetRevisionById);
+assetRevisionRoute.route('/assets-revision/:id').put(updateAssetRevisionById);
 

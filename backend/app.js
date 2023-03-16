@@ -18,8 +18,8 @@ import { designationRoute } from "./routes/designation.js";
 import { assetTypeRoute } from "./routes/assetType.js";
 import { employmentTypeRoute } from "./routes/employmentType.js";
 import { eoeTypeRoute } from "./routes/eoeType.js";
-
-
+import { probEvalAttributesRoute } from "./routes/probEvalAttributes.js";
+import { assetRevisionRoute } from "./routes/assetsRevisions.js";
 const app = express();
 
 app.use(express.json());
@@ -29,6 +29,7 @@ const apiVersion = '/api/v1';
 app.use(apiVersion, organizationRoute);
 app.use(apiVersion, branchRoute);
 app.use(apiVersion, assetsRoute);
+app.use(apiVersion, assetRevisionRoute);
 app.use(apiVersion, relativesRoute);
 app.use(apiVersion, experienceRoute);
 app.use(apiVersion, bankRoute);
@@ -44,6 +45,7 @@ app.use(apiVersion, designationRoute);
 app.use(apiVersion, assetTypeRoute);
 app.use(apiVersion, employmentTypeRoute);
 app.use(apiVersion, eoeTypeRoute);
+app.use(apiVersion, probEvalAttributesRoute);
 
 
 export default app;
