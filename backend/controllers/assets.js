@@ -22,7 +22,7 @@ export const createAsset = (req, res, next) => {
 
 // Update assets all fields except the fields related to the allocation and deallocation of an asset
 export const UpdateAssetById = (req, res, next) => {
-    let condition = (req.body.organization || req.body.user || req.body.previousHolders || (req.body.isAllocated == true) || req.body.isAllocated == false || req.body.type);
+    let condition = (req.body.organization || req.body.user || req.body.previousHolders || (req.body.isAllocated == true) || req.body.isAllocated == false || req.body.type || (req.body.isActive == true) || req.body.isActive == false);
     try {
         if (condition) {
             throw 'You can not update the owner/holder of an asset please user AssetManagment of this'
@@ -50,6 +50,7 @@ export const AssetManagment = (req, res, next) => {
                     .then(asset => {
                         if (!asset) throw "Asset Not Found"
                         if (asset.organization.toString() !== user.organization.toString()) throw "User and Asset not belong to same organization"
+                        if (asset.isActive === false) throw "You can not allocate / deallocate a destroyed asset";
                         if (req.body.action.toLowerCase() === "allocate" && asset.isAllocated === false) {
                             asset.isAllocated = true;
                             asset.user = user._id;
@@ -72,14 +73,14 @@ export const AssetManagment = (req, res, next) => {
     }
 }
 
-// Filter assets on the basis of IsAllocated : true/false or isTaxable : true/false
+// Filter assets on the basis of IsAllocated : true/false or isTaxable : true/false    or isActive  :  true/false
 export const filterAssets = (req, res, next) => {
     try {
         if (!req.query.organization) throw "Organization not specified";
         if (Object.keys(req.query).length > 1) {
             AssetsModel.find(req.query)
                 .then((assets) => {
-                    if (assets.length == 0) throw "No such asset found"
+                    if (assets.length == 0) throw "No such asset/organization found"
                     res.status(200).json({
                         success: true,
                         count: assets.length,
@@ -97,9 +98,9 @@ export const filterAssets = (req, res, next) => {
     }
 }
 
-// Return All the Assets allocated toa user
+// Return All the Active Assets allocated to a user
 export const getAssetsAllocatedToUserById = (req, res, next) => {
-    getAll(res, next, AssetsModel, { user: req.params.id, isAllocated: true }, 'Asset')
+    getAll(res, next, AssetsModel, { user: req.params.id, isAllocated: true, isActive: true }, 'Asset')
 }
 
 // Return the Recorde of users to whom an asset is allocated previously/ return Asset Revision History
@@ -182,15 +183,26 @@ export const getAssetById = (req, res, next) => {
 }
 
 // Delete an asset 
-export const deleteAssetById = (req, res, next) => {
-    deleteById(eq.params.id, res, next, AssetsModel, 'Asset')
+export const setAssetToNonActive = (req, res, next) => {
+    try {
+        if (!req.body.date || !req.body.reason) throw " Date and Reason of Asset Destruction is required"
+        AssetsModel.findById(req.params.id)
+            .then((asset) => {
+                if (!asset) throw (`Asset Not Found`)
+                createAssetRevisionAndUpdateAssetStatus(res, next, asset.organization, new Date(req.body.date), "deallocate", req.body.reason, "Asset is Destroyed", asset.user, asset, "Asset Set to Non Active")
+                asset.user = null;
+                asset.isAllocated = false;
+                asset.isActive = false;
+            })
+            .catch(err => handleCatch(err, res, 401, next));
+    }
+    catch(err){handleCatch(err, res, 401, next)}
 }
 
 // export const deleteAllAssets = (req, res, next) => {
 //     let query = { organization: req.params.orgId, isAllocated: false };
 //     getAll(res, next, AssetsModel, query, 'Non Allocated Asset')
 // }
-
 
 //  This fuction creates a new Asset revision on allocation and deallcation of an asset alos update the asset
 const createAssetRevisionAndUpdateAssetStatus = (res, next, organization, date, action, reason, condition, user, assetRef, msg = "Action Done") => {

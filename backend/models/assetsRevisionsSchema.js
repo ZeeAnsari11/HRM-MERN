@@ -4,7 +4,8 @@ const AssetsRevisions = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: [true, 'Please Enter an User'],
+        required:false,
+        default: null
     },
     organization: {
         type: mongoose.Schema.Types.ObjectId,

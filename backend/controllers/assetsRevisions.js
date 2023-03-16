@@ -14,7 +14,7 @@ export const createAssetRevision = (organization, date, action, reason, user, co
         .then((res) => {
             return res;
         })
-        .catch((err) => console.log("==========error while creating a new AssetsRevision"));
+        .catch((err) => console.log("==========error while creating a new AssetsRevision======",err));
 }
 
 
