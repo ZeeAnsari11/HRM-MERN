@@ -76,6 +76,9 @@ const userSchema = mongoose.Schema({
             min: 0,
             max: 12
         },
+        completionDate: {
+            type: Date
+        },
         status: {
             type: String,
             default: "complete"

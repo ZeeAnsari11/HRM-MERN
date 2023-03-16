@@ -3,7 +3,7 @@ import { OrganizationModel } from '../models/organizationSchema.js'
 import { UserModel } from '../models/userSchema.js'
 import { DepartmentModel } from '../models/departmentSchema.js'
 import { EmploymentModel } from '../models/employmentSchema.js'
-import { updateById } from '../utils/common.js'
+import { handleCatch, updateById } from '../utils/common.js'
 
 //// Create User ////
 export const createUser = (req, res, next) => {
@@ -29,7 +29,6 @@ export const createUser = (req, res, next) => {
                                 .then((department) => {
                                     if (!department) throw 'No Such Department'
                                     if (department.organization.toString() !== req.body.organization.toString()) throw `Department does not match with org.`
-
                                     injection(req, res, next, organization);
                                 })
                                 .catch((err) => {
@@ -38,11 +37,6 @@ export const createUser = (req, res, next) => {
                                         message: `${err}`
                                     })
                                 })
-                        }
-                        else if (req.body.probation?.isOnProbation == true) {
-                            if (!req.body.probation.durationOfProbation) throw 'Kindly Add the duration of probation period'
-                            req.body.probation.status = "pending";
-                            injection(req, res, next, organization);
                         }
                         else injection(req, res, next, organization);
                     })
@@ -74,6 +68,16 @@ const injection = (req, res, next, organization) => {
             if (!user) throw 'No Such User'
             //if (user.organization.toString() !== req.body.organization.toString()) throw `Line Manager does not match with org.`
             if (user.isLineManager !== true) throw `Provided Line Manager is not Line Manager.`
+            else if (req.body.probation?.isOnProbation == true) {
+                if (!req.body.probation.durationOfProbation) throw 'Kindly Add the duration of probation period'
+                if (req.body.probation.durationOfProbation < 0 || req.body.probation.durationOfProbation > 12) throw 'duration must be in range of 0-12'
+                req.body.probation.status = "pending";
+                let joiningMonth = new Date(req.body.joiningDate).getMonth()
+                let completionMonth = Number(joiningMonth) + Number(req.body.probation.durationOfProbation)
+                let completionDate = new Date(req.body.joiningDate);
+                completionDate.setMonth(completionMonth)
+                req.body.probation.completionDate = completionDate
+            }
             EmploymentModel.findById(req.body.employmentType)
                 .then((employmentType) => {
                     if (!employmentType) throw 'No Such Employment Type'
@@ -276,31 +280,37 @@ export const deleteUserById = (req, res, next) => {
 //// Update User By Id ////
 export const updateUserById = (req, res, next) => {
     try {
-        if (Object.keys(req.body).length == 0) throw "Request Body is empty"
-        if (req.body.organization !== undefined) throw 'Cannot Update Org.'
-        if (req.body.reason !== undefined && req.body.id !== undefined) {
-            if (Object.keys(req.body).length > 2) throw 'Cannot update reason'
+        if (req.body.organization) throw 'Cannot Update Org.'
+        if (req.body.reason && req.body.id && req.body.action) {
+            if (Object.keys(req.body).length > 3) throw 'Cannot update reason'
             UserModel.findById(req.params.id)
                 .then((user) => {
                     if (!user) throw `No Such User ${req.body.id}`;
-                    let updated = false
-                    user.EOE.details.forEach((eoe) => {
-                        if (eoe._id == req.body.id) {
-                            updated = true
-                            eoe.data.reason = req.body.reason
-                        }
-                    });
-                    if (updated == false) {
-                        user.rehire.forEach((reh) => {
-                            if (reh._id == req.body.id) {
-                                updated = true
-                                reh.reason = req.body.reason
-                            }
-                            else if (updated == false) {
-                                throw 'id did not exist'
-                            }
-                        });
+                    updateUserEOERehireReason(req, res, next, user)
+                })
+                .catch((error) => {
+                    handleCatch(`${error}`, res, 401, next)
+                })
+        }
+        else if (req.body.duration !== undefined) {
+            if (Object.keys(req.body).length > 1) throw 'Cannot update probation details'
+            if (req.body.duration < 0 || req.body.duration > 12) throw 'duration must be in range of 0-12'
+            UserModel.findById(req.params.id)
+                .then((user) => {
+                    if (!user) throw `No Such User ${req.body.id}`;
+                    if (req.body.duration == 0) {
+                        user.probation.durationOfProbation = 0;
+                        user.probation.status = "complete"
+                        user.probation.completionDate = new Date(user.joiningDate)
                     }
+                    else {
+                        user.probation.durationOfProbation = req.body.duration
+                        let joiningMonth = new Date(user.joiningDate).getMonth()
+                        let completionMonth = Number(joiningMonth) + Number(user.probation.durationOfProbation)
+                        let completionDate = new Date(user.joiningDate);
+                        user.probation.completionDate = completionDate
+                    }
+
                     user.save()
                         .then((response) => {
                             res.status(200).json({
@@ -308,21 +318,14 @@ export const updateUserById = (req, res, next) => {
                                 response: response
                             })
                         })
-                        .catch((err) => {
-                            res.status(404).json({
-                                success: false,
-                                message: `${err}`
-                            })
+                        .catch((error) => {
+                            handleCatch(`${error}`, res, 401, next)
                         })
                 })
-                .catch((err) => {
-                    res.status(404).json({
-                        success: false,
-                        message: `${err}`
-                    })
+                .catch((error) => {
+                    handleCatch(`${error}`, res, 401, next)
                 })
         }
-
         else if (req.body.skills.length > 0) {
             if (req.body.reason !== undefined > 0) throw 'Cannot update Skills'
             UserModel.findById(req.params.id)
@@ -339,21 +342,49 @@ export const updateUserById = (req, res, next) => {
                     req.body.skills = dbSkills;
                     updateById(req, res, next, UserModel);
                 })
-                .catch((err) => {
-                    res.status(404).json({
-                        success: false,
-                        message: `${err}`
-                    })
+                .catch((error) => {
+                    handleCatch(`${error}`, res, 401, next)
                 })
         }
         else updateById(req, res, next, UserModel);
     } catch (error) {
-        res.status(404).json({
-            success: false,
-            message: `${error}`
-        })
+        handleCatch(`${error}`, res, 401, next)
     }
 }
+
+const updateUserEOERehireReason = (req, res, next, user) => {
+    try {
+        if (req.body.action == "E0E") {
+            user.EOE.details.forEach((eoe) => {
+                if (eoe._id == req.body.id) {
+                    eoe.data.reason = req.body.reason
+                }
+            });
+        }
+        else if (req.body.action == "rehire") {
+            user.rehire.forEach((reh) => {
+                if (reh._id == req.body.id) {
+                    reh.reason = req.body.reason
+                }
+            });
+        }
+        else throw 'id did not exist'
+        user.save()
+            .then((response) => {
+                res.status(200).json({
+                    success: true,
+                    response: response
+                })
+            })
+            .catch((err) => {
+                handleCatch(`${err}`, res, 401, next)
+            })
+    }
+    catch (error) {
+        handleCatch(`${error}`, res, 401, next)
+    }
+}
+
 
 //// get All Active / Non-Active Users of an Organization By Id ////
 export const getActiveNonActiveUsersByOrganizationId = (req, res, next) => {
@@ -592,5 +623,5 @@ export const deleteSkillFromUser = (req, res, next) => {
 }
 
 export const updateUserProbation = (req, res, next) => {
-    
+
 }
