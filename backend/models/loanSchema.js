@@ -21,6 +21,19 @@ const loanSchema = mongoose.Schema({
         type: String,
         required: [true, 'Please Enter the Reason For Loan']
     },
+    status:{
+        type: String,
+        lowercase: true,
+        default: 'pending',
+        enum: {
+            values: [
+                'pending',
+                'approved',
+                'rejected'
+            ],
+            messsage: 'Please Enter Action Type'
+        }
+        },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
