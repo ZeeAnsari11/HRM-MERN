@@ -21,6 +21,7 @@ import { eoeTypeRoute } from "./routes/eoeType.js";
 import { probEvalAttributesRoute } from "./routes/probEvalAttributes.js";
 import { assetRevisionRoute } from "./routes/assetsRevisions.js";
 import { commonQuestionsRoute } from "./routes/commonQuestions.js"; 
+import { evaluationRatingRoute } from "./routes/evaluationRatings.js"; 
 
 
 const app = express();
@@ -50,6 +51,7 @@ app.use(apiVersion, employmentTypeRoute);
 app.use(apiVersion, eoeTypeRoute);
 app.use(apiVersion, probEvalAttributesRoute);
 app.use(apiVersion, commonQuestionsRoute);
+app.use(apiVersion, evaluationRatingRoute);
 
 
 

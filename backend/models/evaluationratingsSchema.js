@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const evaluationratingsSchema = mongoose.Schema({
+const evaluationRatingsSchema = mongoose.Schema({
     ratings: {
         type: String,
         required: [true, "Enter Ratings"],
@@ -24,4 +24,4 @@ const evaluationratingsSchema = mongoose.Schema({
     }
 })
 
-export const EvaluationRatingseModel = mongoose.model('Evaluationratings', evaluationratingsSchema, 'Evaluation Ratings Collection')
+export const EvaluationRatingseModel = mongoose.model('Evaluationratings', evaluationRatingsSchema, 'Evaluation Ratings Collection')
