@@ -18,6 +18,7 @@ import { designationRoute } from "./routes/designation.js";
 import { assetTypeRoute } from "./routes/assetType.js";
 import { employmentTypeRoute } from "./routes/employmentType.js";
 import { eoeTypeRoute } from "./routes/eoeType.js";
+import { commonQuestionsRoute } from "./routes/commonQuestions.js"; 
 
 
 const app = express();
@@ -44,6 +45,7 @@ app.use(apiVersion, designationRoute);
 app.use(apiVersion, assetTypeRoute);
 app.use(apiVersion, employmentTypeRoute);
 app.use(apiVersion, eoeTypeRoute);
+app.use(apiVersion, commonQuestionsRoute);
 
 
 export default app;
