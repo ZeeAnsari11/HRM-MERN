@@ -1,5 +1,6 @@
 import { LoanTypeModel } from "../models/loanTypeSchema.js";
 import { DesignationModel } from '../models/designationSchema.js'
+import { UserModel } from '../models/userSchema.js'
 import { deleteInBulk, getAll, deleteById, updateById, createNew, getById, handleCatch } from "../utils/common.js";
 
 export const createLoanType = (req, res, next) => {
@@ -34,6 +35,25 @@ export const createLoanType = (req, res, next) => {
 
 export const deleteLoanTypeById = (req, res, next) => {
     deleteById(req.params.id, res, next, LoanTypeModel, "LoanType")
+}
+
+export const getAllLoanTypesByUserDesignation = (req, res, next) => {
+    UserModel.findById(req.params.id)
+        .then((user) => {
+            if (!user) throw "User not found"
+            if (!user.isActive) throw "User is not active"
+            LoanTypeModel.find({ designations: { $elemMatch: { $eq : user.designation } }, organization: user.organization })
+                .then((loanTypes) => {
+                    if(loanTypes.length == 0) throw "There is not loan type available for usre's designation"
+                    res.status(200).json({
+                        success: true,
+                        count : loanTypes.length,
+                        Date: loanTypes
+                    })
+                })
+                .catch(err => handleCatch(err, res, 401, next))
+        })
+        .catch(err => handleCatch(err, res, 401, next))
 }
 
 export const UpdateLoanTypeById = (req, res, next) => {
