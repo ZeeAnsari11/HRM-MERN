@@ -20,6 +20,9 @@ import { employmentTypeRoute } from "./routes/employmentType.js";
 import { eoeTypeRoute } from "./routes/eoeType.js";
 import { probEvalAttributesRoute } from "./routes/probEvalAttributes.js";
 import { assetRevisionRoute } from "./routes/assetsRevisions.js";
+import { commonQuestionsRoute } from "./routes/commonQuestions.js"; 
+
+
 const app = express();
 
 app.use(express.json());
@@ -46,6 +49,8 @@ app.use(apiVersion, assetTypeRoute);
 app.use(apiVersion, employmentTypeRoute);
 app.use(apiVersion, eoeTypeRoute);
 app.use(apiVersion, probEvalAttributesRoute);
+app.use(apiVersion, commonQuestionsRoute);
+
 
 
 export default app;
