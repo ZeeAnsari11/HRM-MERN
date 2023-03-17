@@ -24,9 +24,16 @@ export const updateEvaluationRating = (req, res, next) => {
     try {
         if (Object.keys(req.body).length == 0) throw "Request Body is empty."
         if (req.body.organization || req.body.unique_id) throw "Invalid Body."
-        req.body.ratings = req.body.ratings.replace(/\s/g, "")
-        req.body.unique_id = req.body.organization + req.body.ratings.toLowerCase()
-        updateById(req, res, next, EvaluationRatingseModel, 'EvaluationRatings')
+        EvaluationRatingseModel.findById(req.params.id)
+            .then((response) => {
+                if (!response) throw 'No Such EvaluationRatings'
+                req.body.ratings = req.body.ratings.replace(/\s/g, "")
+                req.body.unique_id = response.organization + req.body.ratings.toLowerCase()
+                updateById(req, res, next, EvaluationRatingseModel, 'EvaluationRatings')
+            })
+            .catch((error) => {
+                handleCatch(`${error}`, res, 401, next)
+            })
     } catch (error) {
         handleCatch(`${error}`, res, 401, next)
     }
