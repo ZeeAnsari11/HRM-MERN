@@ -44,7 +44,7 @@ export const getAllLoanTypesByUserDesignation = (req, res, next) => {
             if (!user.isActive) throw "User is not active"
             LoanTypeModel.find({ designations: { $elemMatch: { $eq : user.designation } }, organization: user.organization })
                 .then((loanTypes) => {
-                    if(loanTypes.length == 0) throw "There is not loan type available for usre's designation"
+                    if(loanTypes.length == 0) throw "There is not loan type available for usre's designation or organization might be wrong"
                     res.status(200).json({
                         success: true,
                         count : loanTypes.length,
