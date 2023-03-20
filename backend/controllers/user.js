@@ -623,6 +623,26 @@ export const deleteSkillFromUser = (req, res, next) => {
         })
 }
 
+export const getChildsByUserId = (req, res, next) => {
+    try {
+        if (!req.body.id) throw "Please provide the Id for which you want to retrieve childs"
+        UserModel.find({ lineManager: req.body.id , isActive: true})
+            .then((childs) => {
+                if (childs.length == 0) {
+                    throw "No childs found"
+                }
+                res.status(200).json({
+                    success: true,
+                    count: childs.length,
+                    childs
+                })
+            })
+            .catch(err => handleCatch(err, res, 401, next))
+    }
+    catch (err) { handleCatch(err, res, 401, next) }
+}
+
+
 export const updateUserProbation = (req, res, next) => {
 
 }

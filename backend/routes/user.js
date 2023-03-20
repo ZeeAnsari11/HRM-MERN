@@ -3,8 +3,8 @@ import {
     createUser, getAllUsersByOrganizationId, getAllUsersByBranchId, updateUserById,
     deleteUserById, getUserById, updateUserEmployment, addSkillsToUser, deleteSkillFromUser, 
     getActiveNonActiveUsersByOrganizationId, getLineManagerByuserId, getHODByDepartmentId,
-    getAttendanceExemptUsers, getEmployeeTypeByOrganizationId, getRoleTypeByOrganizationId
-
+    getAttendanceExemptUsers, getEmployeeTypeByOrganizationId, getRoleTypeByOrganizationId,
+    getChildsByUserId
 } from '../controllers/user.js'
 
 export const userRoute = express.Router();
@@ -24,4 +24,6 @@ userRoute.route('/user/hod/:id').get(getHODByDepartmentId)
 userRoute.route('/exempt/user/organization/:id').get(getAttendanceExemptUsers)
 userRoute.route('/user/type/organization/:id').get(getEmployeeTypeByOrganizationId)
 userRoute.route('/user/role/type/organization/:id').get(getRoleTypeByOrganizationId)
+userRoute.route('/user/my-chart').get(getChildsByUserId);
+
 
