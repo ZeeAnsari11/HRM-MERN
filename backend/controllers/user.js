@@ -31,45 +31,52 @@ export const createUser = (req, res, next) => {
                                     if (department.organization.toString() !== req.body.organization.toString()) throw `Department does not match with org.`
                                     injection(req, res, next, organization);
                                 })
-                                .catch((err) => {
-                                    res.status(404).json({
-                                        success: false,
-                                        message: `${err}`
-                                    })
+                                .catch((error) => {
+                                    handleCatch(`${error}`, res, 401, next)
                                 })
                         }
                         else injection(req, res, next, organization);
                     })
-                    .catch((err) => {
-                        res.status(404).json({
-                            success: false,
-                            message: `${err}`
-                        })
+                    .catch((error) => {
+                        handleCatch(`${error}`, res, 401, next)
                     })
             })
-            .catch((err) => {
-                res.status(404).json({
-                    success: false,
-                    message: `${err}`
-                })
+            .catch((error) => {
+                handleCatch(`${error}`, res, 401, next)
             })
     }
     catch (error) {
-        res.status(404).json({
-            success: false,
-            message: `${error}`
-        })
+        handleCatch(`${error}`, res, 401, next)
     }
 }
 
 const injection = (req, res, next, organization) => {
+    if (req.body.lineManager) {
+        checkLineManager(req, res, next, organization)
+    }
+    else {
+        creatingUser(req, res, next, organization)
+    }
+}
+
+const checkLineManager = (req, res, next, organization) => {
     UserModel.findById(req.body.lineManager)
         .then((user) => {
-            if (!user) throw 'No Such User'
+            if (!user) throw `No Such Line Manager ${req.body.lineManager}`
             if (user.organization.toString() !== req.body.organization.toString()) throw `Line Manager does not match with org.`
             if (user.branch.toString() !== req.body.branch.toString()) { throw "Line Manager does not match with branch of newly creating user" }
             if (user.isLineManager !== true) throw `Provided Line Manager is not Line Manager.`
-            else if (req.body.probation?.isOnProbation == true) {
+            creatingUser(req, res, next, organization)
+        })
+        .catch((error) => {
+            handleCatch(`${error}`, res, 401, next)
+        })
+}
+
+const creatingUser = (req, res, next, organization) => {
+    try {
+        if (req.body.probation) {
+            if (req.body.probation.isOnProbation == true) {
                 if (!req.body.probation.durationOfProbation) throw 'Kindly Add the duration of probation period'
                 if (req.body.probation.durationOfProbation < 0 || req.body.probation.durationOfProbation > 12) throw 'duration must be in range of 0-12'
                 req.body.probation.status = "pending";
@@ -79,42 +86,41 @@ const injection = (req, res, next, organization) => {
                 completionDate.setMonth(completionMonth)
                 req.body.probation.completionDate = completionDate
             }
-            EmploymentModel.findById(req.body.employmentType)
-                .then((employmentType) => {
-                    if (!employmentType) throw 'No Such Employment Type'
-                    if (employmentType.organization.toString() !== req.body.organization.toString()) throw `Employment Type does not match with org.`
-                    req.body.userDefinedCode = (organization.userCode.currentCode + 1);
-                    UserModel.create(req.body)
-                        .then((response) => {
-                            organization.userCode.currentCode = organization.userCode.currentCode + 1;
-                            res.status(200).json({
-                                success: true,
-                                response
+            else if (req.body.probation.isOnProbation == undefined && req.body.probation.durationOfProbation) {
+                if (req.body.probation.durationOfProbation) throw 'kindly provide isOnProbation'
+            }
+            else {
+                if (req.body.probation.isOnProbation == false && req.body.probation.durationOfProbation) {
+                    if (req.body.probation.durationOfProbation) throw 'kindly provide isOnProbation as true'
+                }
+                EmploymentModel.findById(req.body.employmentType)
+                    .then((employmentType) => {
+                        if (!employmentType) throw 'No Such Employment Type'
+                        if (employmentType.organization.toString() !== req.body.organization.toString()) throw `Employment Type does not match with org.`
+                        req.body.userDefinedCode = (organization.userCode.currentCode + 1);
+                        UserModel.create(req.body)
+                            .then((response) => {
+                                organization.userCode.currentCode = organization.userCode.currentCode + 1;
+                                res.status(200).json({
+                                    success: true,
+                                    response
+                                })
                             })
-                        })
-                        .catch((error) => {
-                            res.status(401).json({
-                                success: false,
-                                error: error
+                            .catch((error) => {
+                                handleCatch(`${error}`, res, 401, next)
                             })
-                        })
-                        .finally(() => {
-                            organization.save();
-                        })
-                })
-                .catch((error) => {
-                    res.status(401).json({
-                        success: false,
-                        error: error
+                            .finally(() => {
+                                organization.save();
+                            })
                     })
-                })
-        })
-        .catch((err) => {
-            res.status(404).json({
-                success: false,
-                message: `${err}`
-            })
-        })
+                    .catch((error) => {
+                        handleCatch(`${error}`, res, 401, next)
+                    })
+            }
+        }
+    } catch (error) {
+        handleCatch(`${error}`, res, 401, next)
+    }
 }
 
 //// get line manager of user by id ////
@@ -327,7 +333,7 @@ export const updateUserById = (req, res, next) => {
                     handleCatch(`${error}`, res, 401, next)
                 })
         }
-        else if (req.body.skills.length > 0) {
+        else if (req.body.skills?.length > 0) {
             if (req.body.reason !== undefined > 0) throw 'Cannot update Skills'
             UserModel.findById(req.params.id)
                 .then((user) => {

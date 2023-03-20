@@ -110,7 +110,8 @@ const userSchema = mongoose.Schema({
     },
     lineManager: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        default: null
     },
     employeeType: {
         type: String,
