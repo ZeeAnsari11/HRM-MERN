@@ -4,33 +4,36 @@ import { UserModel } from '../models/userSchema.js'
 import { deleteInBulk, getAll, deleteById, updateById, createNew, getById, handleCatch } from "../utils/common.js";
 
 export const createLoanType = (req, res, next) => {
-    let count = 0;
-    let skip = false;
-    let designations = req.body.designations;
-    designations.forEach(designation => {
-        DesignationModel.find({ _id: designation, organization: req.body.organization })
-            .then((response) => {
-                if (skip) {
-                    return;
-                }
-                count++;
-                if (response.length == 0) {
-                    skip = true;
-                    throw "Designation Is Not In Your Organization";
-                }
-                else {
-                    if (count == designations.length) {
-                        createNew(req, res, next, LoanTypeModel)
+    try {
+        let count = 0;
+        let skip = false;
+        if (typeof(req.body.designations)!== Object || req.body.designations.length < 0 ) throw "List of designations must be specified for loan type creation"
+        let designations = req.body.designations;
+        designations.forEach(designation => {
+            DesignationModel.find({ _id: designation, organization: req.body.organization })
+                .then((response) => {
+                    if (skip) {
+                        return;
                     }
-                }
-            })
-            .catch((err) => {
-                res.status(401).json({
-                    success: false,
-                    error: err
+                    count++;
+                    if (response.length == 0) {
+                        skip = true;
+                        throw "Designation Is Not In Your Organization";
+                    }
+                    else {
+                        if (count == designations.length) {
+                            createNew(req, res, next, LoanTypeModel)
+                        }
+                    }
                 })
-            })
-    });
+                .catch((err) => {
+                    handleCatch(err, res, 401, next)
+                })
+        });
+    }
+    catch (err) {
+        handleCatch(err, res, 401, next)
+    }
 }
 
 export const deleteLoanTypeById = (req, res, next) => {
@@ -42,12 +45,12 @@ export const getAllLoanTypesByUserDesignation = (req, res, next) => {
         .then((user) => {
             if (!user) throw "User not found"
             if (!user.isActive) throw "User is not active"
-            LoanTypeModel.find({ designations: { $elemMatch: { $eq : user.designation } }, organization: user.organization })
+            LoanTypeModel.find({ designations: { $elemMatch: { $eq: user.designation } }, organization: user.organization })
                 .then((loanTypes) => {
-                    if(loanTypes.length == 0) throw "There is not loan type available for usre's designation or organization might be wrong"
+                    if (loanTypes.length == 0) throw "There is not loan type available for usre's designation or organization might be wrong"
                     res.status(200).json({
                         success: true,
-                        count : loanTypes.length,
+                        count: loanTypes.length,
                         Date: loanTypes
                     })
                 })
