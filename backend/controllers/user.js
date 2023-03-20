@@ -67,6 +67,7 @@ const injection = (req, res, next, organization) => {
         .then((user) => {
             if (!user) throw 'No Such User'
             if (user.organization.toString() !== req.body.organization.toString()) throw `Line Manager does not match with org.`
+            if (user.branch.toString() !== req.body.branch.toString()) { throw "Line Manager does not match with branch of newly creating user" }
             if (user.isLineManager !== true) throw `Provided Line Manager is not Line Manager.`
             else if (req.body.probation?.isOnProbation == true) {
                 if (!req.body.probation.durationOfProbation) throw 'Kindly Add the duration of probation period'
