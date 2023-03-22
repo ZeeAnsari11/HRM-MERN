@@ -7,6 +7,11 @@ const userSchema = mongoose.Schema({
     userDefinedCode: {
         type: String
     },
+    grade: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Grade',
+        required: true,
+    },
     firstName: {
         type: String,
         required: [true, 'Please enter first name'],
