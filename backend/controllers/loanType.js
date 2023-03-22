@@ -42,12 +42,12 @@ export const getAllLoanTypesByUserDesignation = (req, res, next) => {
         .then((user) => {
             if (!user) throw "User not found"
             if (!user.isActive) throw "User is not active"
-            LoanTypeModel.find({ designations: { $elemMatch: { $eq : user.designation } }, organization: user.organization })
+            LoanTypeModel.find({ designations: { $elemMatch: { $eq: user.designation } }, organization: user.organization })
                 .then((loanTypes) => {
-                    if(loanTypes.length == 0) throw "There is not loan type available for usre's designation or organization might be wrong"
+                    if (loanTypes.length == 0) throw "There is not loan type available for usre's designation or organization might be wrong"
                     res.status(200).json({
                         success: true,
-                        count : loanTypes.length,
+                        count: loanTypes.length,
                         Date: loanTypes
                     })
                 })
@@ -121,8 +121,13 @@ export const getAllLoanTypeByOrgId = (req, res, next) => {
     getAll(res, next, LoanTypeModel, { organization: req.params.id }, "Loan Type")
 }
 
-export const deleteAllLoanTypeByOrgId = (req, res, next) => {
-    deleteInBulk(res, next, LoanTypeModel, { organization: req.params.id }, "Loan Type")
+export const deleteAllLoanTypeByOrgId = (orgId) => {
+    LoanTypeModel.deleteMany({ organization: orgId })
+        .then(() => {
+            console.log("=========deleted successfully")
+            process.exit(0);
+        })
+        .catch((error) => handleCatch(error, res, 401, next))
 }
 
 export const getLoanTypeById = (req, res, next) => {
