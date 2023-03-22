@@ -1,0 +1,18 @@
+{
+    "location": {
+        "type": "Point",
+        "coordinates": [
+            28.0421,
+            38.1751
+        ]
+    },
+    "userCode" : {
+        "prefix" : "TO"
+    },
+   "name": "Test Organization",
+    "address": "Model ",
+    "start": "2023-02-21T14:33:35.036Z",
+    "description": "This is an amazing organization Pure Logics",
+    "logo": "https://www.google.com/imgres?imgurl=https%3A%2F%2Flookaside.fbsbx.com%2Flookaside%2Fcrawler%2Fmedia%2F%3Fmedia_id%3D100063679525795&imgrefurl=https%3A%2F%2Fwww.facebook.com%2FPureLogics%2F&tbnid=PzV4srTkHmjsCM&vet=12ahUKEwj-0ueVqaf9AhVvXKQEHUPUA-kQMygCegUIARDEAQ..i&docid=dnP59L91VDdlxM&w=2048&h=2048&q=pure%20logics&ved=2ahUKEwj-0ueVqaf9AhVvXKQEHUPUA-kQMygCegUIARDEAQ",
+    "timeZone": "EST"
+}
