@@ -23,7 +23,7 @@ export const creatEOEType = (req, res, next) => {
 export const updateEOETypeById = (req, res, next) => {
     try {
         if (Object.keys(req.body).length == 0) throw "Request Body is empty."
-        if (req.body.organization || req.body.unique_id) throw "Invalid Body."
+        if (req.body.organization || req.body.unique_id || req.body.createdAt) throw "Invalid Body."
         EOETypeModel.findById(req.params.id)
             .then((response) => {
                 if (!response) throw 'No Such EOEType'

@@ -23,7 +23,7 @@ export const createEmploymentType = (req, res, next) => {
 export const updateEmploymentTypeById = (req, res, next) => {
     try {
         if (Object.keys(req.body).length == 0) throw "Request Body is empty."
-        if (req.body.organization || req.body.unique_id) throw "Invalid Body."
+        if (req.body.organization || req.body.unique_id || req.body.createdAt) throw "Invalid Body."
         EmploymentModel.findById(req.params.id)
             .then((response) => {
                 if (!response) throw 'No Such EmploymentType'
