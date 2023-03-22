@@ -490,13 +490,13 @@ export const updateUserEmployment = (req, res, next) => {
             else if (!req.body.noticePeriod && req.body.lastWorkingDate !== undefined) throw "You cannot provide the Last Working Date while the notice period is not been served"
             else if (req.body.noticePeriod !== undefined && !req.body.lastWorkingDate) throw "Kindly provide the Last Working Date"
             else if (!req.body.reason) throw "Kindly Provide the Reason"
-            userActiovationStatus(req, res, next, false, "User is already de-actiavted")
+            userActivationStatus(req, res, next, false, "User is already de-actiavted")
         }
         else if (req.body.isActive == true) {
             if (!req.body.date) throw "Kindly Provide the Rehire Date"
             else if (req.body.eoeType !== undefined) throw "EOE type must not be defined while rehiring"
             else if (!req.body.reason) throw "Kindly Provide the Reason"
-            userActiovationStatus(req, res, next, true, "User is already Activated")
+            userActivationStatus(req, res, next, true, "User is already Activated")
         }
         else throw "state is not defined."
     } catch (error) {
@@ -508,7 +508,7 @@ export const updateUserEmployment = (req, res, next) => {
 }
 
 //// local method for de-activating user's account ////
-const userActiovationStatus = (req, res, next, toggler, msg) => {
+const userActivationStatus = (req, res, next, toggler, msg) => {
     UserModel.findById(req.params.id)
         .then((user) => {
             if (!user) throw "user does not exist"
@@ -529,7 +529,7 @@ const userActiovationStatus = (req, res, next, toggler, msg) => {
                         noticePeriod: req.body.noticePeriod || false
                     }
                 }
-                userActiovation(req, res, details, lastrehire, user.EOE.details, date, user, "User EOE must be greater than last rehire date")
+                userActivation(req, res, details, lastrehire, user.EOE.details, date, user, "User EOE must be greater than last rehire date")
             }
 
             //// Rehire Case ////
@@ -538,7 +538,7 @@ const userActiovationStatus = (req, res, next, toggler, msg) => {
                     date: req.body.date,
                     reason: req.body.reason
                 }
-                userActiovation(req, res, type, lastEOE, user.rehire, req.body.date, user, 'User EOE must be define first in order to rehire Or rehire date must be greater than EOE date')
+                userActivation(req, res, type, lastEOE, user.rehire, req.body.date, user, 'User EOE must be define first in order to rehire Or rehire date must be greater than EOE date')
             }
         })
         .catch((err) => {
@@ -549,7 +549,7 @@ const userActiovationStatus = (req, res, next, toggler, msg) => {
         })
 }
 
-const userActiovation = (req, res, details, date, arr, statusDate, user, msg) => {
+const userActivation = (req, res, details, date, arr, statusDate, user, msg) => {
     if (new Date(statusDate) >= date) {
         arr.push(details)
         user.save()
