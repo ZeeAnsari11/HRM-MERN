@@ -23,6 +23,7 @@ import { assetRevisionRoute } from "./routes/assetsRevisions.js";
 import { commonQuestionsRoute } from "./routes/commonQuestions.js"; 
 import { evaluationRatingRoute } from "./routes/evaluationRatings.js"; 
 import { leaveSlabsRoute } from "./routes/leaveSlabs.js";
+import { userRoleRoute } from "./routes/userRole.js";
 
 
 const app = express();
@@ -54,7 +55,7 @@ app.use(apiVersion, probEvalAttributesRoute);
 app.use(apiVersion, commonQuestionsRoute);
 app.use(apiVersion, evaluationRatingRoute);
 app.use(apiVersion, leaveSlabsRoute);
-
+app.use(apiVersion, userRoleRoute);
 
 
 export default app;
