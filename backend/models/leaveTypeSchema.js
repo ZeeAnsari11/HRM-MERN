@@ -6,14 +6,13 @@ const leaveTypeSchema = mongoose.Schema({
         required: [true, 'Please enter name of the leave '],
         trim: true,
         maxLength: [100, 'Cannot exceeds from 100 characters'],
-        validate: /^[a-zA-Z ][a-zA-Z ]+$/
+        validate: /^[a-zA-Z][ a-zA-Z]+$/
     },
     shortName: {
         type: String,
         required: [true, 'Please enter short name of the leave '],
         trim: true,
-        maxLength: [100, 'Cannot exceeds from 15 characters'],
-        validate: /^[a-zA-Z ][a-zA-Z ]+$/
+        maxLength: [15, 'Cannot exceeds from 15 characters']
     },
     canApplyInProbation: {
         type: Boolean,
@@ -21,7 +20,7 @@ const leaveTypeSchema = mongoose.Schema({
     },
     active: {
         type: Boolean,
-        default: false
+        default: true
     },
     autoAllotment: {
         type: Boolean,
@@ -55,15 +54,14 @@ const leaveTypeSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
-    applicable: {
-        canApplyForBackDay: {
-            type: Boolean,
-            default: false
-        },
-        buffer: {
-            type: Date,
-            default: null
-        }
+    canApplyForBackDay: {
+        type: Boolean,
+        default: false
+    },
+    buffer: {
+        type: Number,
+        min: 0,
+        max: 31
     },
     attachmentRequired: {
         type: Boolean,
@@ -92,6 +90,19 @@ const leaveTypeSchema = mongoose.Schema({
     gapBetweenApplicationsInMonths: {
         type: Number
     },
+    accumulativeCountOptions: {
+        type: String,
+        default: 'per year',
+        lowercase: true,
+        enum: {
+            values: [
+                'per month',
+                'per year'
+            ],
+            messsage: 'enter a valid accumulative count option',
+        },
+
+    },
     accumulativeCount: {
         type: Number,
         required: [true, 'Please provide accumulative account count'],
@@ -101,11 +112,11 @@ const leaveTypeSchema = mongoose.Schema({
         ref: 'Organization',
         required: true,
     },
-    unique_id : {
+    unique_id: {
         type: String,
-        trim : true,
-        unique : true,
-        required : true
+        trim: true,
+        unique: true,
+        required: true
     },
     createdAt: {
         type: Date,
