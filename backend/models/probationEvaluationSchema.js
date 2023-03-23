@@ -8,6 +8,7 @@ const probationEvaluationSchema = mongoose.Schema({
                 required: [true, 'Please enter name of the question'],
                 trim: true,
                 maxLength: [100, 'Cannot exceeds from 100 characters']
+
             },
             overAllEvaluation: {
                 type: Number,
@@ -43,13 +44,6 @@ const probationEvaluationSchema = mongoose.Schema({
                 min: 0,
                 max: 10
             },
-        }
-    ],
-    Requestee: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: [true, "Please Enter the Requestee"]
         }
     ],
     organization: {
@@ -100,6 +94,7 @@ const probationEvaluationSchema = mongoose.Schema({
             max: 5
           }
       }],
+
     createdAt: {
         type: Date,
         default: Date.now
