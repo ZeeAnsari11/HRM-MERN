@@ -26,7 +26,7 @@ export const updateDesignationById = (req, res, next) => {
             DesignationModel.findById(req.params.id)
                 .then((designatin) => {
                     if (designatin.length == 0) throw "Designation Not Found"
-                    req.body.unique_id =( designatin.organization + req.body.shortForm).toUpperCase();
+                    req.body.unique_id =( designatin.organization + req.body.shortForm).toLowerCase();
                     updateById(req, res, next, DesignationModel, "Designation Details")
                 })
                 .catch((err) => {
