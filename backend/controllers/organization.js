@@ -2,6 +2,7 @@ import { OrganizationModel } from '../models/organizationSchema.js';
 import { createNew, getAll, getById, deleteById, updateById } from '../utils/common.js';
 
 export const createOrganization = (req, res, next) => {
+    console.log("==================req.body=========",req);
     try {
         if (req.body.userCode?.currentCode >= 0) throw "Can't update current code"
         createNew(req, res, next, OrganizationModel)
