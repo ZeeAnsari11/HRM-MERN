@@ -1,23 +1,77 @@
-import mongoose from "mongoose"; 
+import mongoose from "mongoose";
 
 const timeSlotsSchema = mongoose.Schema({
-    status: {
+    name: {
         type: String,
-        enum: ['temporary', 'permanent'],
-        required: [true, 'Select valid time slot status']
+        required: [true, "Please Enter the Name of TimeSlot"],
+        lowercase: true,
+        validate: /^[a-zA-Z0-9][a-zA-Z0-9-]*$/
     },
     startTime: {
         type: Date,
-        required: [true, 'Enter starting time']
+        required: [true, "Please Enter the Start Time of TimeSlot"]
     },
     endTime: {
         type: Date,
-        required: [true, 'Enter ending time']
+        required: [true, "Please Enter the End Time of TimeSlot"]
     },
-    Days: {
-        type: Map,
-        of: Boolean,
-        required: [true, 'Select valid days']
+    isOverNight: {
+        type: Boolean,
+        default: false
+    },
+    isFlexible: {
+        type: Boolean,
+        default: false
+    },
+    workAble_hours: {
+        type: Number,
+        min: 0,
+        max: 12
+    },
+    lateBuffer: {
+        type: Number,
+        min: 0,
+        max: 1440
+    },
+    earlyBuffer: {
+        type: Number,
+        min: 0,
+        max: 1440
+    },
+    punchBufferStart: {
+        type: Number,
+        min: 0,
+        max: 1440
+    },
+    punchBufferEnd: {
+        type: Number,
+        min: 0,
+        max: 1440
+    },
+    breaks: [
+        {
+            name: {
+                type: String,
+                required: [true, "Please Enter the Name of Break"]
+            },
+            startTime: {
+                type: Date,
+                required: [true, "Please Enter the Start Time of Break"]
+            },
+            endTime: {
+                type: Date,
+                required: [true, "Please Enter the End Time of Break"]
+            },
+            inclusive: {
+                type: Boolean,
+                default: true
+            }
+        }
+    ],
+    organization: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization',
+        required: [true, "Please Enter the OrganizationId"]
     },
     createdAt: {
         type: Date,
