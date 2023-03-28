@@ -30,6 +30,23 @@ const leaveTypeSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
+    shortLeaveType: [{
+        name: {
+            type: String,
+            trim: true,
+            maxLength: [100, 'Cannot exceeds from 100 characters'],
+        },
+        balance: {
+            type: Number,
+            min: 0.2,
+            max: 1
+        },
+        shiftReductionInPercentage: {
+            type: Number,
+            min: 20,
+            max: 100
+        }
+    }],
     showRemainingCountInPayslip: {
         type: Boolean,
         default: false

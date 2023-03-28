@@ -8,6 +8,7 @@ export const createNewLeaveType = (req, res, next) => {
         if (req.body.unique_id) throw "Invalid Body."
         req.body.unique_id = req.body.organization + req.body.name.replace(/\s/g, "").toLowerCase()
         if ((req.body.canApplyForBackDay == true && !req.body.buffer) || (req.body.canApplyForBackDay == undefined && req.body.buffer)) throw 'kindly provide Buffer and canApplyForBackDay'
+        if (req.body.shortLeave == true && (!req.body.shortLeaveType.name || !req.body.shortLeaveType.balance || !req.body.shortLeaveType.shiftReductionInPercentage)) throw 'Invalid Body'
         checkIsExistAndCreate(req, res, next, req.body.organization, OrganizationModel, LeaveTypeModel, "Organization")
     }
     catch (error) {
