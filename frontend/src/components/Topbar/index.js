@@ -1,39 +1,63 @@
-import { faBarChart, faSquareCaretRight, faEnvelope, faMoon, faUser } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { selectWidth } from '../../states/reducers/slices/frontend/Navbar'
+import React from 'react';
+import Brightness2OutlinedIcon from '@material-ui/icons/Brightness2Outlined';
+import FullscreenRoundedIcon from '@material-ui/icons/FullscreenRounded';
+import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
+import MailOutlineRoundedIcon from '@material-ui/icons/MailOutlineRounded';
+import NotificationsRoundedIcon from '@material-ui/icons/NotificationsRounded';
+import Logo from '../../assets/default-avatar.png';
+import SearchRoundedIcon from '@material-ui/icons/SearchRounded';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectNavState, setNavbarState } from '../../states/reducers/slices/frontend/Navbar';
 
 const Topbar = () => {
-    const width = useSelector(selectWidth);
+    const dispatcher = useDispatch();
+    let open = useSelector(selectNavState);
+    const [fullScreen, setFullScreen] = React.useState(false);
+    const tailwindStyle = {
+        topBarContainer : `h-24 z-0 ${open ? 'left-[269px] tablet:left-0' : 'left-0'} border flex justify-between items-center fixed right-0 px-4 bg-white duration-300`,
+        toglerContainer : 'flex justify-center items-center space-x-4',
+        iconsContainer : 'p-3 bg-[#f1f4fb] rounded-lg hover:shadow-md cursor-pointer duration-200',
+        textColor: 'text-gray-500'
+    }
+    const toggleFullScreen = () => {
+        if (fullScreen === false) {
+            document.documentElement.requestFullscreen();
+            setFullScreen(true);
+        }
+        else {
+            document.exitFullscreen();
+            setFullScreen(false);
+        }
+    }
     return (
-        <div className={`flex justify-between items-center fixed right-0 w-[calc(100%-${width})] h-20 p-4 bg-white duration-300`}>
-            <div>
-                <div>
-                    <FontAwesomeIcon icon={faBarChart} />
+        <div className={tailwindStyle.topBarContainer}>
+            <div className={tailwindStyle.toglerContainer}>
+                <div className={tailwindStyle.iconsContainer} 
+                     onClick={() => dispatcher(setNavbarState(!open))}>
+                    <MenuRoundedIcon />
                 </div>
                 <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <svg aria-hidden="true" className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+                        <SearchRoundedIcon className={tailwindStyle.textColor}/>
                     </div>
-                    <input type="text" id="voice-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Mockups, Logos, Design Templates..." required />
-                    <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3">
-                        <svg aria-hidden="true" className="w-4 h-4 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"></path></svg>
-                    </button>
+                    <input type="text" className="bg-[#f1f4fb] text-gray-900 text-sm rounded-lg focus:ring-primaryColorLight block w-full pl-10 p-3.5" placeholder="Search Mockups, Logos, Design Templates..." required />
                 </div>
             </div>
-            <div className='flex justify-center items-center space-x-4'>
-                <div className='p-3 bg-[#f1f4fb] rounded-lg'>
-                    <FontAwesomeIcon icon={faMoon} />
+            <div className={tailwindStyle.toglerContainer}>
+                <div className={tailwindStyle.iconsContainer}>
+                    <Brightness2OutlinedIcon className={tailwindStyle.textColor}/>
                 </div>
-                <div>
-                    <FontAwesomeIcon icon={faSquareCaretRight} />
+                <div className={tailwindStyle.iconsContainer} onClick={() => toggleFullScreen()}>
+                    <FullscreenRoundedIcon className={tailwindStyle.textColor}/>
                 </div>
-                <div>
-                    <FontAwesomeIcon icon={faEnvelope} />
+                <div className={tailwindStyle.iconsContainer}>
+                    <MailOutlineRoundedIcon className={tailwindStyle.textColor}/>
                 </div>
-                <div>
-                    <FontAwesomeIcon icon={faUser} />
+                <div className={tailwindStyle.iconsContainer}>
+                    <NotificationsRoundedIcon className={tailwindStyle.textColor}/>
+                </div>
+                <div className='rounded-lg hover:shadow-lg cursor-pointer'>
+                    <img src={Logo} className="rounded-md w-12" alt="avatar"/>
                 </div>
             </div>
         </div>

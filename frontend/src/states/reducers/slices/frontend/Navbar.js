@@ -9,7 +9,7 @@ export const NavbarSlice = createSlice({
   reducers: {
     setNavbarState: (state, action) => {
         state.isNavSm = action.payload;
-        (state.isNavSm) ? state.actionBarWidth='269px': state.actionBarWidth='135px' ;
+        (state.isNavSm) ? state.actionBarWidth='269px': state.actionBarWidth='0' ;
     }
   }
 });
