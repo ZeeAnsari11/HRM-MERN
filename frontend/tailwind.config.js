@@ -3,7 +3,10 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     colors: ({ colors }) => ({
-      sideBarPrimaryColor: '#17263a',
+      primaryColorDark: '#25274a',
+      primaryColorLight: '#17263a',
+      lightText: '#aab3cc',
+      backgroundDark: '#0d093e',
       inherit: colors.inherit,
       current: colors.current,
       transparent: colors.transparent,
