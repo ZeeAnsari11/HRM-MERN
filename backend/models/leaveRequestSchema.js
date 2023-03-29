@@ -14,8 +14,9 @@ const leaveRequestSchema = mongoose.Schema({
         default: false
     },
     shortleaveDetails: {
-        shortLeaveDetails: {
-            type: String
+        shortLeaveType: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'ShortLeaveType'
         },
         startTime: {
             type: Date
