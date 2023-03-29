@@ -7,10 +7,17 @@ module.exports = {
       'desktop': {'max': '1023px'},
       'tablet': {'max': '767px'},
       'mobile': {'max': '639px'},
+
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
     },
     colors: ({ colors }) => ({
       primaryColorDark: '#25274a',
       primaryColorLight: '#17263a',
+      lightBgColor: '#f0f0f0',
       lightText: '#aab3cc',
       backgroundDark: '#0d093e',
       inherit: colors.inherit,
