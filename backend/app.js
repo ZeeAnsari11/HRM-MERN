@@ -24,12 +24,11 @@ import { commonQuestionsRoute } from "./routes/commonQuestions.js";
 import { evaluationRatingRoute } from "./routes/evaluationRatings.js"; 
 import { leaveSlabsRoute } from "./routes/leaveSlabs.js";
 import { leaveTypeRoute } from "./routes/leaveType.js"; 
-<<<<<<< HEAD
 import { gradeRoute } from "./routes/grade.js";
 import { gradeBenefitsRoute } from "./routes/gradeBenefits.js";
-=======
+import { shortLeaveTypeRoute } from "./routes/shortLeaveType.js"; 
+import { leaveRequestRoute } from "./routes/leaveRequest.js"; 
 import { userRoleRoute } from "./routes/userRole.js";
->>>>>>> 7c96fd395c769e88372e69b63abbd42fc8019129
 
 
 const app = express();
@@ -62,12 +61,11 @@ app.use(apiVersion, commonQuestionsRoute);
 app.use(apiVersion, evaluationRatingRoute);
 app.use(apiVersion, leaveSlabsRoute);
 app.use(apiVersion, leaveTypeRoute);
-<<<<<<< HEAD
 app.use(apiVersion, gradeRoute)
 app.use(apiVersion, gradeBenefitsRoute)
-=======
+app.use(apiVersion, shortLeaveTypeRoute);
+app.use(apiVersion, leaveRequestRoute);
 app.use(apiVersion, userRoleRoute);
->>>>>>> 7c96fd395c769e88372e69b63abbd42fc8019129
 
 
 export default app;

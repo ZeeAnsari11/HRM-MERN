@@ -8,7 +8,10 @@ export const createNewLeaveType = (req, res, next) => {
         if (req.body.unique_id) throw "Invalid Body."
         req.body.unique_id = req.body.organization + req.body.name.replace(/\s/g, "").toLowerCase()
         if ((req.body.canApplyForBackDay == true && !req.body.buffer) || (req.body.canApplyForBackDay == undefined && req.body.buffer)) throw 'kindly provide Buffer and canApplyForBackDay'
-        if (req.body.shortLeave == true && (!req.body.shortLeaveType.name || !req.body.shortLeaveType.balance || !req.body.shortLeaveType.shiftReductionInPercentage)) throw 'Invalid Body'
+        if (req.body.shortLeave == true) {
+            if (!req.body.shortLeaveType.name || !req.body.shortLeaveType.balance || !req.body.shortLeaveType.shiftReductionInPercentage) throw 'Invalid Body.'
+            req.body.shortLeaveType.unique_id = req.body.organization + req.body.shortLeaveType.name.replace(/\s/g, "").toLowerCase()
+        }
         checkIsExistAndCreate(req, res, next, req.body.organization, OrganizationModel, LeaveTypeModel, "Organization")
     }
     catch (error) {
@@ -52,18 +55,39 @@ export const updateLeaveTypeById = (req, res, next) => {
     try {
         if (req.body.organization || req.body.active) throw 'Invalid Body'
         if ((req.body.canApplyForBackDay == true && !req.body.buffer) || (req.body.canApplyForBackDay == undefined && req.body.buffer)) throw 'kindly provide Buffer and canApplyForBackDay'
-        if (req.body.name) {
-            LeaveTypeModel.findById(req.params.id)
-                .then((leaveType) => {
-                    if (!leaveType) throw 'No such leaveType';
+        LeaveTypeModel.findById(req.params.id)
+            .then((leaveType) => {
+                if (!leaveType) throw 'No such leaveType';
+                if (req.body.name) {
                     req.body.unique_id = leaveType.organization + req.body.name.replace(/\s/g, "").toLowerCase();
                     updateById(req, res, next, LeaveTypeModel, 'Leave Type');
-                })
-                .catch((error) => {
-                    handleCatch(`${error}`, res, 401, next)
-                })
-        }
-        else updateById(req, res, next, LeaveTypeModel, 'Leave Type')
+                }
+                else if (req.body.shortLeaveType) {
+                    leaveType.shortLeaveType.forEach((shrtLeaveType) => {
+                        if (req.body.name) {
+                            req.body.unique_id = leaveType.organization + req.body.name.replace(/\s/g, "").toLowerCase();
+                        }
+                        if (shrtLeaveType._id == req.body.id) {
+                            reh.reason = req.body.reason
+                        }
+                    });
+                    leaveType.save()
+                        .then((response) => {
+                            res.status(200).json({
+                                success: true,
+                                response: response
+                            })
+                        })
+                        .catch((error) => {
+                            handleCatch(`${error}`, res, 401, next)
+                        })
+                }
+            })
+            .catch((error) => {
+                handleCatch(`${error}`, res, 401, next)
+            })
+
+        // else updateById(req, res, next, LeaveTypeModel, 'Leave Type')
     } catch (error) {
         handleCatch(`${error}`, res, 401, next)
     }
