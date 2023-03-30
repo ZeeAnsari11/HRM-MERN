@@ -19,15 +19,6 @@ const timeSlotsSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
-    isFlexible: {
-        type: Boolean,
-        default: false
-    },
-    workAble_hours: {
-        type: Number,
-        min: 0,
-        max: 12
-    },
     lateBuffer: {
         type: Number,
         min: 0,
@@ -48,26 +39,26 @@ const timeSlotsSchema = mongoose.Schema({
         min: 0,
         max: 1440
     },
-    breaks: [
-        {
-            name: {
-                type: String,
-                required: [true, "Please Enter the Name of Break"]
-            },
-            startTime: {
-                type: Date,
-                required: [true, "Please Enter the Start Time of Break"]
-            },
-            endTime: {
-                type: Date,
-                required: [true, "Please Enter the End Time of Break"]
-            },
-            inclusive: {
-                type: Boolean,
-                default: true
-            }
+    break:
+    {
+        name: {
+            type: String,
+            required: [true, "Please Enter the Name of Break"]
+        },
+        startTime: {
+            type: Date,
+            required: [true, "Please Enter the Start Time of Break"]
+        },
+        endTime: {
+            type: Date,
+            required: [true, "Please Enter the End Time of Break"]
+        },
+        inclusive: {
+            type: Boolean,
+            default: true
         }
-    ],
+    }
+    ,
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
@@ -79,4 +70,4 @@ const timeSlotsSchema = mongoose.Schema({
     }
 })
 
-export const TimeSlotSchema = mongoose.model('TimeSlots', timeSlotsSchema, 'TimeSlots Collection')
+export const TimeSlotsModel = mongoose.model('TimeSlots', timeSlotsSchema, 'TimeSlots Collection')
