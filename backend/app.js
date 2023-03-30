@@ -29,8 +29,12 @@ import { gradeBenefitsRoute } from "./routes/gradeBenefits.js";
 import { shortLeaveTypeRoute } from "./routes/shortLeaveType.js"; 
 import { leaveRequestRoute } from "./routes/leaveRequest.js"; 
 import { userRoleRoute } from "./routes/userRole.js";
+import { timeSlotsRoute } from "./routes/timeSlots.js";
+
+
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandler.js";
+
 
 const app = express();
 
@@ -68,6 +72,8 @@ app.use(apiVersion, gradeBenefitsRoute)
 app.use(apiVersion, shortLeaveTypeRoute);
 app.use(apiVersion, leaveRequestRoute);
 app.use(apiVersion, userRoleRoute);
+app.use(apiVersion, timeSlotsRoute);
+
 app.use(errorHandler);
 
 export default app;
