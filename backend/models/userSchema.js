@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import timeZone from "mongoose-timezone";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 //  Schema to Create User 
 
@@ -7,6 +9,19 @@ const userSchema = mongoose.Schema({
     userDefinedCode: {
         type: String
     },
+    email: {
+        type: String,
+        required: [true, 'Please enter your email'],
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: [true, 'Please enter password'],
+        minlength: [9, 'password must be at least 9 charachters.'],
+        select: false
+    },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
     grade: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Grade',
@@ -292,4 +307,28 @@ const userSchema = mongoose.Schema({
 })
 
 userSchema.plugin(timeZone, { paths: ['timeZone'] });
+
+userSchema.pre('save', function (next) {
+    var user = this;
+
+    if (!user.isModified('password')) return next();
+
+    bcrypt.genSalt(10, function (err, salt) {
+        if (err) return next({ error: err, statusCode: 404 });
+        bcrypt.hash(user.password, salt, function (err, hash) {
+            if (err) return next({ error: err, statusCode: 404 });
+            user.password = hash;
+            next();
+        });
+    });
+})
+
+userSchema.methods.getJwtToken = function() {
+    return jwt.sign({ id: this.id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_TIME })
+}
+
+userSchema.methods.comparePassword = function(pswd) {
+    return bcrypt.compare(this.password, pswd)
+}
+
 export const UserModel = mongoose.model('User', userSchema, 'User Collection')
