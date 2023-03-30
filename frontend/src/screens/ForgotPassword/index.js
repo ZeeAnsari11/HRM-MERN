@@ -1,8 +1,10 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const ForgotPassword = () => {
+    const navigation = useNavigate();
     return (
-        <div className="flex justify-center items-center w-screen px-4 mobile:px-8 bg-lightBgColor">
+        <div className="flex justify-center items-center w-screen h-screen px-4 mobile:px-8 bg-lightBgColor">
             <div className="w-1/2 mobile:w-full tablet:w-3/4 p-5 pt-8 rounded-lg bg-white shadow-lg">
                 <div className="px-8 tablet:px-2 mb-4 text-center">
                     <h3 className="pt-4 mb-2 text-2xl mobile:text-xl font-bold">Forgot Your Password?</h3>
@@ -33,8 +35,9 @@ const ForgotPassword = () => {
                     </div>
                     <hr className="mb-6 border-t" />
                     <div className="text-center">
-                        <div className="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800">
-                            Already have an account? Login!
+                        Already have an account?
+                        <div className="inline-block cursor-pointer pl-2 text-sm text-blue-500 align-baseline hover:text-blue-800" onClick={() => navigation('/')}>
+                             Login
                         </div>
                     </div>
                 </form>

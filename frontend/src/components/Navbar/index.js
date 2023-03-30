@@ -3,7 +3,7 @@ import { Menus } from './configuration';
 import logo from '../../assets/logo-white.png';
 import logoNoText from '../../assets/logo-no-text.png';
 import MenuRenderer from './elements/Menu';
-import { selectNavState, selectWidth, setNavbarState } from '../../states/reducers/slices/frontend/Navbar';
+import { selectNavState, selectWidth } from '../../states/reducers/slices/frontend/Navbar';
 import {useSelector} from 'react-redux'
 
 const Navbar = () => {

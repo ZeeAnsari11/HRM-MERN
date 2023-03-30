@@ -2,8 +2,10 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCode, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import LoginOthers from './LoginOthers';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = ({showOtherLoginTypes}) => {
+    const navigation = useNavigate();
     return (
         <div className="md:flex md:items-center md:justify-center w-full sm:w-auto md:h-full xl:w-2/5 p-8  md:p-10 lg:p-14 sm:rounded-lg md:rounded-none bg-white">
             <div className="max-w-md w-full space-y-8">
@@ -37,13 +39,14 @@ const LoginForm = ({showOtherLoginTypes}) => {
                             </label>
                         </div>
                         <div className="text-sm">
-                            <div className="text-indigo-400 hover:text-blue-500">
-                                Forgot your password?
+                            <div className="text-indigo-400 hover:text-blue-500"
+                                 onClick={() => navigation('/forgot-password')}>
+                                 Forgot your password?
                             </div>
                         </div>
                     </div>
                     <div>
-                        <button type="submit"
+                        <button type="submit" onClick={() => navigation('/dashboard')}
                             className="w-full flex justify-center bg-gradient-to-r from-indigo-500 to-blue-600  hover:bg-gradient-to-l hover:from-blue-500 hover:to-indigo-600 text-gray-100 px-4 py-2 rounded-lg tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500">
                             Sign in
                         </button>
