@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import timeZone from "mongoose-timezone";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 
 //  Schema to Create User 
 
@@ -332,6 +333,14 @@ userSchema.methods.getJwtToken = function() {
 
 userSchema.methods.comparePassword = function(password) {
     return bcrypt.compare(password, this.password)
+}
+
+userSchema.methods.getResetPasswordToken = function() {
+    let user = this;
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    user.resetPasswordExpire = Date.now() + (30 * 60 * 1000);
+    return resetToken
 }
 
 export const UserModel = mongoose.model('User', userSchema, 'User Collection')
