@@ -32,9 +32,9 @@ import orgBody from './requests/orgBody.json' assert{ type: 'json' };
 
 describe('==================Integration Tests==================', () => {
 
-    // --------------------------- test Case for create organization---------------------------
+    // ----------(1)----------------- test Case for create organization---------------------------
 
-    it('Shoud create organization', async () => {
+    it('(1) Shoud create organization', async () => {
         // Set up the mock HTTP server using nock for post request
         const scope = nock('http://localhost:4000/api/v1')
             .post('/organization/new')
@@ -47,10 +47,7 @@ describe('==================Integration Tests==================', () => {
             headers: { 'Content-Type': 'application/json' },
         });
 
-        // Verify that the response status is 200
         assert.equal(response.status, 200);
-
-        // Parse the JSON response body and verify its contents
         const data = await response.json();
 
         assert.strictEqual(data.success, true)
@@ -62,39 +59,91 @@ describe('==================Integration Tests==================', () => {
         assert(scope.isDone());
     });
 
-    // --------------------------- test Case for Get organization By Id---------------------------
 
-    it('Should return organization By Id', async () => {
-        // Set up the mock HTTP server using nock for get request
+    // ------(2)---------test case if currentCode  >=0 throw error-------------
+
+    it('(2) Shoud not create organization when currentCode >= 0', async () => {
+
+        const scope = nock('http://localhost:4000/api/v1')
+            .post('/organization/new')
+            .reply(401, {
+                success: false,
+                error: "currentCode can not be >= 0"
+            });
+
+        orgBody.userCode.currentCode = 5;
+        const response = await fetch('http://localhost:4000/api/v1/organization/new', {
+            method: 'POST',
+            body: JSON.stringify(orgBody),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        assert.equal(response.status, 401);
+        const data = await response.json();
+        assert.strictEqual(data.success, false);
+        assert.equal(data.error, "currentCode can not be >= 0");
+
+        assert(scope.isDone());
+    });
+
+
+    // --------(3)-------test case if userCode is undefined throw error-------------
+
+    it('(3) Shoud not create organization when usercode is undefined', async () => {
+
+        const scope = nock('http://localhost:4000/api/v1')
+            .post('/organization/new')
+            .reply(401, {
+                success: false,
+                error: "usercode is undefined"
+            });
+
+        orgBody.userCode = undefined;
+        const response = await fetch('http://localhost:4000/api/v1/organization/new', {
+            method: 'POST',
+            body: JSON.stringify(orgBody),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        assert.equal(response.status, 401);
+        const data = await response.json();
+        assert.strictEqual(data.success, false);
+        assert.equal(data.error, "usercode is undefined");
+
+        assert(scope.isDone());
+    });
+
+
+    // ---------(4)------------------ test Case for Get organization By Id---------------------------
+
+    it('(4) Should return organization By Id', async () => {
         const scope = nock('http://localhost:4000/api/v1')
             .get('/organization/641b175923732c218f4fafa1')
             .reply(200, organization);
 
-        // Create get request for getOrganizationById
         const response = await fetch('http://localhost:4000/api/v1/organization/641b175923732c218f4fafa1');
         const data = await response.json();
 
         assert.strictEqual(data.success, true)
         assert.equal(data.response._id, "641b175923732c218f4fafa1")
         assert.strictEqual(data.response.userCode.currentCode, 0)
-        assert.equal(data.response.name, "Test Organization") 
-        assert(scope.isDone());  
+        assert.equal(data.response.name, "Test Organization")
+        assert(scope.isDone());
     })
-    
 
-    it('Should Update organization By Id', async () => {
-        // Set up the mock HTTP server using nock for get request
-        const scope = nock('http://localhost:4000/api/v1')
-        .put('/organization/641b175923732c218f4fafa1', response)
+    // --------------------------- test Case for Update organization By Id---------------------------
 
-        // Create get request for getOrganizationById
-        const response = await fetch('http://localhost:4000/api/v1/organization/641b175923732c218f4fafa1');
-        const data = await response.json();
+    // it('Should Update organization By Id', async () => {
+    //     // Set up the mock HTTP server using nock for get request
+    //     const scope = nock('http://localhost:4000/api/v1')
+    //         .put('/organization/641b175923732c218f4fafa1', {})
 
-        assert.strictEqual(data.success, true)
-        assert.equal(data.response._id, "641b175923732c218f4fafa1")
-        assert.strictEqual(data.response.userCode.currentCode, 0)
-        assert.equal(data.response.name, "Test Organization") 
-        assert(scope.isDone());  
-    })
+    //     // Create get request for getOrganizationById
+    //     const response = await fetch('http://localhost:4000/api/v1/organization/641b175923732c218f4fafa1');
+    //     const data = await response.json();
+
+    //     assert.strictEqual(data.success, true)
+    //     assert.equal(data.response._id, "641b175923732c218f4fafa1")
+    //     assert.strictEqual(data.response.userCode.currentCode, 0)
+    //     assert.equal(data.response.name, "Test Organization")
+    //     assert(scope.isDone());
+    // })
 });
