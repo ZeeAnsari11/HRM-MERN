@@ -11,8 +11,11 @@ const userSchema = mongoose.Schema({
     },
     email: {
         type: String,
-        required: [true, 'Please enter your email'],
-        unique: true,
+        required: [true, 'Please enter valid email'],
+        trim: true,
+        maxLength: [100, 'Email cannot exceeds from 100 characters'],
+        validate: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+        unique: [true, 'Email already in use']
     },
     password: {
         type: String,
@@ -327,8 +330,8 @@ userSchema.methods.getJwtToken = function() {
     return jwt.sign({ id: this.id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_TIME })
 }
 
-userSchema.methods.comparePassword = function(pswd) {
-    return bcrypt.compare(this.password, pswd)
+userSchema.methods.comparePassword = function(password) {
+    return bcrypt.compare(password, this.password)
 }
 
 export const UserModel = mongoose.model('User', userSchema, 'User Collection')

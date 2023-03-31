@@ -31,6 +31,7 @@ import { leaveRequestRoute } from "./routes/leaveRequest.js";
 import { userRoleRoute } from "./routes/userRole.js";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandler.js";
+import { authRoute } from "./routes/auth.js";
 
 const app = express();
 
@@ -68,6 +69,7 @@ app.use(apiVersion, gradeBenefitsRoute)
 app.use(apiVersion, shortLeaveTypeRoute);
 app.use(apiVersion, leaveRequestRoute);
 app.use(apiVersion, userRoleRoute);
+app.use(apiVersion, authRoute);
 app.use(errorHandler);
 
 export default app;
