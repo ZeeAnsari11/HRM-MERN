@@ -24,7 +24,7 @@ export const createUser = (req, res, next) => {
                         else if (req.body.organization !== branch.organization.toString()) throw "branch not found in organization"
                         else if (req.body.areaBounded?.isBounded == true && !req.body.areaBounded.addArea) throw 'Kindly Add the area'
                         else if (req.body.HOD?.isHOD == true && !req.body.HOD.department) throw 'Kindly provide the department name of HOD'
-                        else if (req.body.HOD.isHOD == true && req.body.HOD.department) {
+                        else if (req.body.HOD?.isHOD == true && req.body.HOD.department) {
                             DepartmentModel.findById(req.body.HOD.department)
                                 .then((department) => {
                                     if (!department) throw 'No Such Department'
