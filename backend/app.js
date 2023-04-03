@@ -34,6 +34,7 @@ import { timeSlotsRoute } from "./routes/timeSlots.js";
 
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandler.js";
+import { authRoute } from "./routes/auth.js";
 
 
 const app = express();
@@ -73,7 +74,7 @@ app.use(apiVersion, shortLeaveTypeRoute);
 app.use(apiVersion, leaveRequestRoute);
 app.use(apiVersion, userRoleRoute);
 app.use(apiVersion, timeSlotsRoute);
-
+app.use(apiVersion, authRoute);
 app.use(errorHandler);
 
 export default app;

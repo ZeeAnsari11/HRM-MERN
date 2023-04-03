@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import timeZone from "mongoose-timezone";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 
 //  Schema to Create User 
 
@@ -11,8 +12,11 @@ const userSchema = mongoose.Schema({
     },
     email: {
         type: String,
-        required: [true, 'Please enter your email'],
-        unique: true,
+        required: [true, 'Please enter valid email'],
+        trim: true,
+        maxLength: [100, 'Email cannot exceeds from 100 characters'],
+        validate: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+        unique: [true, 'Email already in use']
     },
     password: {
         type: String,
@@ -327,8 +331,16 @@ userSchema.methods.getJwtToken = function() {
     return jwt.sign({ id: this.id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_TIME })
 }
 
-userSchema.methods.comparePassword = function(pswd) {
-    return bcrypt.compare(this.password, pswd)
+userSchema.methods.comparePassword = function(password) {
+    return bcrypt.compare(password, this.password)
+}
+
+userSchema.methods.getResetPasswordToken = function() {
+    let user = this;
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    user.resetPasswordExpire = Date.now() + (30 * 60 * 1000);
+    return resetToken
 }
 
 export const UserModel = mongoose.model('User', userSchema, 'User Collection')
