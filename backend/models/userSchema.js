@@ -183,16 +183,9 @@ const userSchema = mongoose.Schema({
         required: true,
     },
     roleType: {
-        type: String,
-        enum: {
-            values: [
-                'Admin',
-                'Manager',
-                'Employee'
-            ],
-            messsage: 'Enter a valid Role Type',
-        },
-        required: [true, "Select Role Type"],
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'UserRole',
+        required: true,
     },
     timeZone: {
         type: Date,
