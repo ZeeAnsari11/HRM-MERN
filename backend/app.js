@@ -1,4 +1,5 @@
 import express  from "express";
+import cors from "cors";
 
 import { organizationRoute } from "./routes/organization.js";
 import { branchRoute } from "./routes/branch.js";
@@ -39,6 +40,7 @@ import { authRoute } from "./routes/auth.js";
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 

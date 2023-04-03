@@ -3,9 +3,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCode, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import LoginOthers from './LoginOthers';
 import { useNavigate } from 'react-router-dom';
+import {loginAuth} from '../../../api/user';
+import { useDispatch } from 'react-redux';
 
 const LoginForm = ({showOtherLoginTypes}) => {
+    const dispatcher = useDispatch();
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
     const navigation = useNavigate();
+    const handleLogin = (e) => {
+        e.preventDefault();
+        loginAuth(dispatcher, { email:email.toLowerCase(), password }, navigation);
+    }
     return (
         <div className="md:flex md:items-center md:justify-center w-full sm:w-auto md:h-full xl:w-2/5 p-8  md:p-10 lg:p-14 sm:rounded-lg md:rounded-none bg-white">
             <div className="max-w-md w-full space-y-8">
@@ -16,19 +25,19 @@ const LoginForm = ({showOtherLoginTypes}) => {
                     <p className="mt-2 text-sm text-gray-500">Please sign in to your account</p>
                 </div>
                 {showOtherLoginTypes && <LoginOthers />}
-                <form className="mt-8 space-y-6">
+                <form onSubmit={handleLogin} className="mt-8 space-y-6">
                     <input type="hidden" name="remember" value="true" />
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <FontAwesomeIcon icon={faEnvelope} />
                         </div>
-                        <input type="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Email" />
+                        <input type="email" onChange={(e) => setEmail(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Email" required/>
                     </div>
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <FontAwesomeIcon icon={faCode} />
                         </div>
-                        <input type="password" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Password" />
+                        <input type="password" onChange={(e) => setPassword(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Password" required/>
                     </div>
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
@@ -46,7 +55,7 @@ const LoginForm = ({showOtherLoginTypes}) => {
                         </div>
                     </div>
                     <div>
-                        <button type="submit" onClick={() => navigation('/dashboard')}
+                        <button type="submit"
                             className="w-full flex justify-center bg-gradient-to-r from-indigo-500 to-blue-600  hover:bg-gradient-to-l hover:from-blue-500 hover:to-indigo-600 text-gray-100 px-4 py-2 rounded-lg tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500">
                             Sign in
                         </button>
