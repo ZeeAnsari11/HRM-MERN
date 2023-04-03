@@ -20,7 +20,7 @@ export const createTimeSlot = (req, res, next) => {
     }
 };
 
-export const updateTimeSlotById = async (req, res, next) => {
+export const updateTimeSlotById = (req, res, next) => {
 try {
     TimeSlotsModel.findById(req.params.id)
         .then((slot) => {
@@ -29,6 +29,7 @@ try {
             }
             if (req.body.startTime) {
                 req.body.startTime = new Date(placeHolder + req.body.startTime);
+                console.log("=======req.body.startTime===",req.body.startTime);
             }
             if (req.body.endTime) {
                 req.body.endTime = new Date(placeHolder + req.body.endTime);
@@ -45,18 +46,19 @@ try {
             if (req.body.endTime && req.body.endTime.getTime() === slot.startTime.getTime()) {
                 throw ("New endTime cannot be the same as the current startTime");
             }
-            if (req.body.break.startTime && req.body.break.startTime.getTime() === slot.break.endTime.getTime()) {
+            if (req.body.break?.startTime && req.body.break?.startTime.getTime() === slot.break?.endTime.getTime()) {
                 throw ("New startTime for break cannot be the same as the current endTime for break");
             }
-            if (req.body.break.endTime && req.body.break.endTime.getTime() === slot.break.startTime.getTime()) {
+            if (req.body.break?.endTime && req.body.break?.endTime.getTime() === slot.break?.startTime.getTime()) {
                 throw ("New endTime for break cannot be the same as the current startTime for break");
             }
             if (req.body.startTime && req.body.endTime && req.body.startTime.getTime() === req.body.endTime.getTime()) {
                 throw ("startTime and endTime cannot be the same");
             }
-            if (req.body.break.startTime && req.body.break.endTime && req.body.break.startTime.getTime() === req.body.break.endTime.getTime()) {
+            if (req.body.break?.startTime && req.body.break?.endTime && req.body.break?.startTime.getTime() === req.body.break?.endTime.getTime()) {
                 throw ("startTime and endTime for Break cannot be the same");
             }
+            console.log("=req.body======", req.body);
             TimeSlotsModel.findByIdAndUpdate(req.params.id, req.body, { runValidators: true })
                 .then((response) => {
                     res.status(200).json({
@@ -64,11 +66,16 @@ try {
                         message: "Updated Successfully",
                     })
                 })
-                .catch((err) => { handleCatch(err, res, 401, "TimeSlot") })
+                .catch((err) => { 
+    console.log("========err=====1====",err);
+    handleCatch(err, res, 401, "TimeSlot") })
         })
-        .catch((err) => { handleCatch(err, res, 401, "TimeSlot") })
+        .catch((err) => { 
+    console.log("========err=====2====",err);
+    handleCatch(err, res, 401, "TimeSlot") })
 }
 catch (err) {
+    console.log("========err=========",err);
     handleCatch(err, res, 401, "Time")
 }
 };
