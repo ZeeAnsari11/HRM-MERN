@@ -27,10 +27,7 @@ export const updateUserRoleById = (req, res, next) => {
             }))
             .catch(err=> {handleCatch(err, res, 410 ,next)})
         }
-        else{
-            updateById(req, res, next, UserRoleModel, 'User Role');
-        }
-        
+        else{ updateById(req, res, next, UserRoleModel, 'User Role') }
     }
     catch (err) { handleCatch(err, res, 401, next) }
 }

@@ -26,6 +26,10 @@ const leaveSlabsSchema = new mongoose.Schema({
     deductionType:{
         type: String,
         required: [true, "Please enter a deduction type"]
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 })
 

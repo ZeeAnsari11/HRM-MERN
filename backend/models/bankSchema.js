@@ -43,6 +43,10 @@ const bankSchema = mongoose.Schema({
     accType : {
         type :String,
         required:[true, "please Enter the Account Type"]
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 
 })

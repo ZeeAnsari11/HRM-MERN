@@ -21,6 +21,10 @@ const commonQuestionsSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
         required: true,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 })
 export const CommonQuestionsModel = mongoose.model('CommonQuestions', commonQuestionsSchema, 'Common Questions Collection')
