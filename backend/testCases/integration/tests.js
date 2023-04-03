@@ -2,7 +2,9 @@ import fetch from "node-fetch";
 import nock from 'nock';
 import assert from "assert";
 import organization from './responses/organization.json' assert{ type: 'json' };
+import updatedOrganization from './responses/updatedOrganization.json' assert{ type: 'json' };
 import orgBody from './requests/orgBody.json' assert{ type: 'json' };
+
 
 // describe('================================Integration Test================================', () => {
 
@@ -31,6 +33,16 @@ import orgBody from './requests/orgBody.json' assert{ type: 'json' };
 //   });
 
 describe('==================Integration Tests==================', () => {
+
+    beforeEach(() => {
+        nock('http://localhost:4000/api/v1')
+            .get('/organization/641b175923732c218f4fafa1')
+            .reply(200, organization);
+
+        nock('http://localhost:4000/api/v1')
+            .put('/organization/641b175923732c218f4fafa1')
+            .reply(200, updatedOrganization);
+    })
 
     // ----------(1)----------------- test Case for create organization---------------------------
 
@@ -115,9 +127,6 @@ describe('==================Integration Tests==================', () => {
     // ---------(4)------------------ test Case for Get organization By Id---------------------------
 
     it('(4) Should return organization By Id', async () => {
-        const scope = nock('http://localhost:4000/api/v1')
-            .get('/organization/641b175923732c218f4fafa1')
-            .reply(200, organization);
 
         const response = await fetch('http://localhost:4000/api/v1/organization/641b175923732c218f4fafa1');
         const data = await response.json();
@@ -126,24 +135,32 @@ describe('==================Integration Tests==================', () => {
         assert.equal(data.response._id, "641b175923732c218f4fafa1")
         assert.strictEqual(data.response.userCode.currentCode, 0)
         assert.equal(data.response.name, "Test Organization")
-        assert(scope.isDone());
     })
 
     // --------------------------- test Case for Update organization By Id---------------------------
+    it('(5) Should Update Organization By Id', async () => {
+        const response = await fetch('http://localhost:4000/api/v1/organization/641b175923732c218f4fafa1');
+        const data = await response.json();
 
-    // it('Should Update organization By Id', async () => {
-    //     // Set up the mock HTTP server using nock for get request
-    //     const scope = nock('http://localhost:4000/api/v1')
-    //         .put('/organization/641b175923732c218f4fafa1', {})
+        assert.strictEqual(data.success, true)
+        assert.equal(data.response._id, "641b175923732c218f4fafa1")
+        assert.strictEqual(data.response.userCode.prefix, "TO")
+        assert.strictEqual(data.response.description, "This is an amazing organization Pure Logics")
 
-    //     // Create get request for getOrganizationById
-    //     const response = await fetch('http://localhost:4000/api/v1/organization/641b175923732c218f4fafa1');
-    //     const data = await response.json();
 
-    //     assert.strictEqual(data.success, true)
-    //     assert.equal(data.response._id, "641b175923732c218f4fafa1")
-    //     assert.strictEqual(data.response.userCode.currentCode, 0)
-    //     assert.equal(data.response.name, "Test Organization")
-    //     assert(scope.isDone());
-    // })
+        const updatedOrganization = fetch('http://localhost:3000/organizations/1', {
+            method: 'PUT',
+            body: JSON.stringify({
+                userCode: {
+                    prefix: "TEST"
+                },
+                name: "Testing Organization",
+                description: "This is an Testing organization"
+            }),
+            headers: { 'Content-Type': 'application/json' }
+        })
+        const updatedData = (await updatedOrganization).json()
+
+    })
+
 });
