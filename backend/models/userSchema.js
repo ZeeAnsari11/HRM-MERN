@@ -2,10 +2,8 @@ import mongoose from "mongoose";
 import timeZone from "mongoose-timezone";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-<<<<<<< HEAD
 import crypto from "crypto";
-=======
->>>>>>> HRMD-695
+
 
 //  Schema to Create User 
 
