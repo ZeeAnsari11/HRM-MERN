@@ -2,7 +2,10 @@ import mongoose from "mongoose";
 import timeZone from "mongoose-timezone";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+<<<<<<< HEAD
 import crypto from "crypto";
+=======
+>>>>>>> HRMD-695
 
 //  Schema to Create User 
 
@@ -69,6 +72,30 @@ const userSchema = mongoose.Schema({
             validate: /^[a-zA-Z ][a-zA-Z ]+$/
         }
     ],
+    roster: {
+        employeeRosterDetails: [{
+            day: {
+                type: String
+            },
+            date: {
+                type: Date
+            },
+            workingHours: {
+                type: String
+            },
+            plannedHours: {
+                type: String
+            },
+        }]
+    },
+    userRoster: {
+        timeSlots: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'TimeSlots',
+            required: true
+        },
+        restDays: [Number],
+    },
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
@@ -136,6 +163,10 @@ const userSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         default: null
+    },
+    firstUser: {
+        type: Boolean,
+        default: false
     },
     employeeType: {
         type: String,
@@ -327,6 +358,7 @@ userSchema.pre('save', function (next) {
     });
 })
 
+
 userSchema.methods.getJwtToken = function() {
     return jwt.sign({ id: this.id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_TIME })
 }
@@ -341,6 +373,7 @@ userSchema.methods.getResetPasswordToken = function() {
     user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
     user.resetPasswordExpire = Date.now() + (30 * 60 * 1000);
     return resetToken
+
 }
 
 export const UserModel = mongoose.model('User', userSchema, 'User Collection')

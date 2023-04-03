@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+//  Schema to Create Employment 
+
 const employmentSchema = mongoose.Schema({
     employmentType: {
         type: String,

@@ -3,10 +3,11 @@ import { OrganizationModel } from '../models/organizationSchema.js'
 import { UserModel } from '../models/userSchema.js'
 import { DepartmentModel } from '../models/departmentSchema.js'
 import { EmploymentModel } from '../models/employmentSchema.js'
+import { TimeSlotsModel } from "../models/timeSlotsSchema.js";
 import { handleCatch, updateById } from '../utils/common.js'
 
 //// Create User ////
-export const createUser = (req, res, next) => {
+export const addingUser = (req, res, next) => {
     try {
         if (req.body.isActive == true || req.body.isActive == false || req.body.isActive) throw 'you cannot provide the isActive status of the employee';
         OrganizationModel.findById(req.body.organization)
@@ -14,12 +15,6 @@ export const createUser = (req, res, next) => {
                 if (!organization) throw "organization dont exist"
                 BranchModel.findById(req.body.branch)
                     .then((branch) => {
-                        let skills = req.body.skills || []
-                        skills.forEach((skill, index) => {
-                            skills[index] = skill.toLowerCase();
-                            skills[index][0].toUpperCase();
-                        });
-                        req.body.skills = [...new Set(skills)];
                         if (!branch) throw "branch dont exist"
                         else if (req.body.organization !== branch.organization.toString()) throw "branch not found in organization"
                         else if (req.body.areaBounded?.isBounded == true && !req.body.areaBounded.addArea) throw 'Kindly Add the area'
@@ -51,11 +46,11 @@ export const createUser = (req, res, next) => {
 }
 
 const injection = (req, res, next, organization) => {
-    if (req.body.lineManager) {
-        checkLineManager(req, res, next, organization)
+    if (req.body.firstUser == true) {
+        userCreate(req, res, next, organization)
     }
     else {
-        creatingUser(req, res, next, organization)
+        checkLineManager(req, res, next, organization)
     }
 }
 
@@ -66,14 +61,14 @@ const checkLineManager = (req, res, next, organization) => {
             if (user.organization.toString() !== req.body.organization.toString()) throw `Line Manager does not match with org.`
             if (user.branch.toString() !== req.body.branch.toString()) { throw "Line Manager does not match with branch of newly creating user" }
             if (user.isLineManager !== true) throw `Provided Line Manager is not Line Manager.`
-            creatingUser(req, res, next, organization)
+            checkingProbation(req, res, next, organization)
         })
         .catch((error) => {
             handleCatch(`${error}`, res, 401, next)
         })
 }
 
-const creatingUser = (req, res, next, organization) => {
+const checkingProbation = (req, res, next, organization) => {
     try {
         if (req.body.probation) {
             if (req.body.probation.isOnProbation == true) {
@@ -85,6 +80,8 @@ const creatingUser = (req, res, next, organization) => {
                 let completionDate = new Date(req.body.joiningDate);
                 completionDate.setMonth(completionMonth)
                 req.body.probation.completionDate = completionDate
+                userRoster(req, res, next)
+                userCreate(req, res, next, organization)
             }
             else if (req.body.probation.isOnProbation == undefined && req.body.probation.durationOfProbation) {
                 if (req.body.probation.durationOfProbation) throw 'kindly provide isOnProbation'
@@ -93,31 +90,88 @@ const creatingUser = (req, res, next, organization) => {
                 if (req.body.probation.isOnProbation == false && req.body.probation.durationOfProbation) {
                     if (req.body.probation.durationOfProbation) throw 'kindly provide isOnProbation as true'
                 }
-                EmploymentModel.findById(req.body.employmentType)
-                    .then((employmentType) => {
-                        if (!employmentType) throw 'No Such Employment Type'
-                        if (employmentType.organization.toString() !== req.body.organization.toString()) throw `Employment Type does not match with org.`
-                        req.body.userDefinedCode = (organization.userCode.currentCode + 1);
-                        UserModel.create(req.body)
-                            .then((response) => {
-                                organization.userCode.currentCode = organization.userCode.currentCode + 1;
-                                res.status(200).json({
-                                    success: true,
-                                    response
-                                })
-                            })
-                            .catch((error) => {
-                                handleCatch(`${error}`, res, 401, next)
-                            })
-                            .finally(() => {
-                                organization.save();
-                            })
+            }
+        }
+        else {
+            userRoster(req, res, next)
+            userCreate(req, res, next, organization)
+        }
+    } catch (error) {
+        handleCatch(`${error}`, res, 401, next)
+    }
+}
+
+const userRoster = (req, res, next) => {
+    if (!req.body.userRoster || !req.body.userRoster?.timeSlots || !req.body.userRoster?.restDays) throw 'Kindly Provide Data for Roster'
+    req.body.userRoster.restDays.forEach(restDay => {
+        if (restDay < 1 || restDay > 7) throw 'Invalid Rest Days.'
+    });
+    TimeSlotsModel.findById(req.body.userRoster.timeSlots)
+        .then((timeSlot) => {
+            if (!timeSlot) throw `No such timeSlot ${req.body.userRoster.timeSlots}`
+            if (timeSlot.organization.toString() !== req.body.organization.toString()) throw 'No such timeSlot in Provided organization.'
+            creatingRoster(req, res, next, null, timeSlot)
+        })
+        .catch((error) => {
+            handleCatch(`${error}`, res, 401, next)
+        })
+}
+
+const creatingRoster = (req, res, next, user = null, timeSlot = null) => {
+    var startDate = new Date(user ? user.joiningDate : req.body.joiningDate);
+    var endDate = new Date(startDate.getFullYear(), 11, 32);
+    var slotTimeStart = timeSlot.startTime.getHours() + ":" + timeSlot.startTime.getMinutes()
+    var slotTimeEnd = timeSlot.endTime.getHours() + ":" + timeSlot.endTime.getMinutes();
+    user ? user.roster.employeeRosterDetails = []
+        :
+        req.body.roster = {
+            employeeRosterDetails: []
+        }
+    for (let i = startDate; i <= endDate; i.setDate(i.getDate() + 1)) {
+        if (!req.body.userRoster.restDays.includes(i.getDay())) {
+            let x = {
+                day: i.getDay(),
+                date: i.toUTCString(),
+                workingHours: slotTimeStart + " - " + slotTimeEnd,
+                plannedHours: Math.abs(new Date(timeSlot.endTime) - new Date(timeSlot.startTime)) / (60 * 60 * 1000)
+            }
+            user ? user.roster.employeeRosterDetails.push(x) : req.body.roster.employeeRosterDetails.push(x)
+        }
+    }
+    user ? userSave(res, next, user) : ''
+}
+
+const userCreate = (req, res, next, organization) => {
+    try {
+        EmploymentModel.findById(req.body.employmentType)
+            .then((employmentType) => {
+                if (!employmentType) throw 'No Such Employment Type'
+                if (employmentType.organization.toString() !== req.body.organization.toString()) throw `Employment Type does not match with org.`
+                req.body.userDefinedCode = (organization.userCode.currentCode + 1);
+                let skills = req.body.skills || []
+                skills.forEach((skill, index) => {
+                    skills[index] = skill.toLowerCase();
+                    skills[index][0].toUpperCase();
+                });
+                req.body.skills = [...new Set(skills)];
+                UserModel.create(req.body)
+                    .then((response) => {
+                        organization.userCode.currentCode = organization.userCode.currentCode + 1;
+                        res.status(200).json({
+                            success: true,
+                            response
+                        })
                     })
                     .catch((error) => {
                         handleCatch(`${error}`, res, 401, next)
                     })
-            }
-        }
+                    .finally(() => {
+                        organization.save();
+                    })
+            })
+            .catch((error) => {
+                handleCatch(`${error}`, res, 401, next)
+            })
     } catch (error) {
         handleCatch(`${error}`, res, 401, next)
     }
@@ -288,23 +342,20 @@ export const deleteUserById = (req, res, next) => {
 export const updateUserById = (req, res, next) => {
     try {
         if (req.body.organization) throw 'Cannot Update Org.'
-        if (req.body.reason && req.body.id && req.body.action) {
-            if (Object.keys(req.body).length > 3) throw 'Cannot update reason'
-            UserModel.findById(req.params.id)
-                .then((user) => {
-                    if (!user) throw `No Such User ${req.body.id}`;
+        UserModel.findById(req.params.id)
+            .then((user) => {
+                if (!user) throw `No Such User ${req.params.id}`;
+                if (req.body.userRoster && (req.body.userRoster?.timeSlots || req.body.userRoster?.restDays)) {
+                    if (Object.keys(req.body).length > 3) throw 'Cannot update roster'
+                    updateUserRoster(req, res, next, user)
+                }
+                else if (req.body.reason && req.body.id && req.body.action) {
+                    if (Object.keys(req.body).length > 3) throw 'Cannot update reason'
                     updateUserEOERehireReason(req, res, next, user)
-                })
-                .catch((error) => {
-                    handleCatch(`${error}`, res, 401, next)
-                })
-        }
-        else if (req.body.duration !== undefined) {
-            if (Object.keys(req.body).length > 1) throw 'Cannot update probation details'
-            if (req.body.duration < 0 || req.body.duration > 12) throw 'duration must be in range of 0-12'
-            UserModel.findById(req.params.id)
-                .then((user) => {
-                    if (!user) throw `No Such User ${req.body.id}`;
+                }
+                else if (req.body.duration !== undefined) {
+                    if (Object.keys(req.body).length > 1) throw 'Cannot update probation details'
+                    if (req.body.duration < 0 || req.body.duration > 12) throw 'duration must be in range of 0-12'
                     if (req.body.duration == 0) {
                         user.probation.durationOfProbation = 0;
                         user.probation.status = "complete"
@@ -312,32 +363,13 @@ export const updateUserById = (req, res, next) => {
                     }
                     else {
                         user.probation.durationOfProbation = req.body.duration
-                        let joiningMonth = new Date(user.joiningDate).getMonth()
-                        let completionMonth = Number(joiningMonth) + Number(user.probation.durationOfProbation)
                         let completionDate = new Date(user.joiningDate);
                         user.probation.completionDate = completionDate
                     }
-
-                    user.save()
-                        .then((response) => {
-                            res.status(200).json({
-                                success: true,
-                                response: response
-                            })
-                        })
-                        .catch((error) => {
-                            handleCatch(`${error}`, res, 401, next)
-                        })
-                })
-                .catch((error) => {
-                    handleCatch(`${error}`, res, 401, next)
-                })
-        }
-        else if (req.body.skills?.length > 0) {
-            if (req.body.reason !== undefined > 0) throw 'Cannot update Skills'
-            UserModel.findById(req.params.id)
-                .then((user) => {
-                    if (!user) throw `No Such User ${req.body.id}`;
+                    userSave(res, next, user)
+                }
+                else if (req.body.skills?.length > 0) {
+                    if (req.body.reason !== undefined > 0) throw 'Cannot update Skills'
                     let dbSkills = user.skills || []
                     let skills = req.body.skills
                     skills.forEach((skill) => {
@@ -348,15 +380,89 @@ export const updateUserById = (req, res, next) => {
                     });
                     req.body.skills = dbSkills;
                     updateById(req, res, next, UserModel);
+                }
+                else updateById(req, res, next, UserModel);
+            })
+            .catch((error) => {
+                handleCatch(`${error}`, res, 401, next)
+            })
+    } catch (error) {
+        handleCatch(`${error}`, res, 401, next)
+    }
+}
+
+const updateUserRoster = (req, res, next, user) => {
+    try {
+        if (!req.body.userRoster.timeSlots && req.body.userRoster.restDays) {
+            user.userRoster.restDays = [];
+            req.body.userRoster.restDays.forEach(restDay => {
+                if (restDay < 1 || restDay > 7) throw 'Invalid Rest Days.'
+                user.userRoster.restDays.push(restDay)
+            });
+            TimeSlotsModel.findById(user.userRoster.timeSlots)
+                .then((timeSlot) => {
+                    if (!timeSlot) throw `No such timeSlot ${user.userRoster.timeSlots}`
+                    creatingRoster(req, res, next, user, timeSlot)
                 })
                 .catch((error) => {
                     handleCatch(`${error}`, res, 401, next)
                 })
         }
-        else updateById(req, res, next, UserModel);
-    } catch (error) {
+        else if (req.body.userRoster.timeSlots && req.body.userRoster.restDays) {
+            user.userRoster.restDays = [];
+            req.body.userRoster.restDays.forEach(restDay => {
+                if (restDay < 1 || restDay > 7) throw 'Invalid Rest Days.'
+                user.userRoster.restDays.push(restDay)
+            });
+            TimeSlotsModel.findById(req.body.userRoster.timeSlots)
+                .then((timeSlot) => {
+                    if (!timeSlot) throw `No such timeSlot ${req.body.userRoster.timeSlots}`
+                    if (timeSlot.organization.toString() !== user.organization.toString()) throw 'No such timeSlot in Provided organization.'
+                    user.userRoster.timeSlots = req.body.userRoster.timeSlots
+                    creatingRoster(req, res, next, user, timeSlot)
+                })
+                .catch((error) => {
+                    handleCatch(`${error}`, res, 401, next)
+                })
+        }
+        else if (req.body.date && req.body.userRoster.timeSlots) {
+            TimeSlotsModel.findById(req.body.userRoster.timeSlots)
+                .then((timeSlot) => {
+                    if (!timeSlot) throw `No such timeSlot ${req.body.userRoster.timeSlots}`
+                    user.roster.employeeRosterDetails.forEach(rosterDetail => {
+                        if (rosterDetail.date.toString() == new Date(req.body.date).toString()) {
+                            var slotTimeStart = timeSlot.startTime.getHours() + ":" + timeSlot.startTime.getMinutes()
+                            var slotTimeEnd = timeSlot.endTime.getHours() + ":" + timeSlot.endTime.getMinutes();
+                            let workingHours = slotTimeStart + " - " + slotTimeEnd
+                            let plannedHours = Math.abs(new Date(timeSlot.endTime) - new Date(timeSlot.startTime)) / (60 * 60 * 1000)
+                            rosterDetail.workingHours = workingHours
+                            rosterDetail.plannedHours = plannedHours
+                            userSave(res, next, user)
+                        }
+                    })
+                })
+                .catch((error) => {
+                    handleCatch(`${error}`, res, 401, next)
+                })
+        }
+        else throw 'Invalid Body.'
+    }
+    catch (error) {
         handleCatch(`${error}`, res, 401, next)
     }
+}
+
+const userSave = (res, next, user) => {
+    user.save()
+        .then((response) => {
+            res.status(200).json({
+                success: true,
+                response: response
+            })
+        })
+        .catch((error) => {
+            handleCatch(`${error}`, res, 401, next)
+        })
 }
 
 const updateUserEOERehireReason = (req, res, next, user) => {
@@ -632,7 +738,7 @@ export const deleteSkillFromUser = (req, res, next) => {
 export const getChildsByUserId = (req, res, next) => {
     try {
         if (!req.body.id) throw "Please provide the Id for which you want to retrieve childs"
-        UserModel.find({ lineManager: req.body.id , isActive: true})
+        UserModel.find({ lineManager: req.body.id, isActive: true })
             .then((childs) => {
                 if (childs.length == 0) {
                     throw "No childs found"
