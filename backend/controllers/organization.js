@@ -4,6 +4,11 @@ import { createNew, getAll, getById, deleteById, updateById } from '../utils/com
 export const createOrganization = (req, res, next) => {
     try {
         if (req.body.userCode?.currentCode >= 0) throw "Can't update current code"
+        if (!req.body.restDays) { throw "Rest days are required and must be in between 1 and 7 " }
+        const restDays = [...new Set(req.body.restDays)];
+        restDays.forEach(restDay => {
+            if (restDay < 1 || restDay > 7) { throw "Rest days must be in between 1 and 7 " }
+        })
         createNew(req, res, next, OrganizationModel)
     }
     catch (error) {
@@ -34,7 +39,13 @@ export const updateOrganizationById = (req, res, next) => {
         .then((response) => {
             if (req.body.userCode.currentCode >= 0) throw "Can't update pre defined code."
             if (!response) throw (`Organization Not Found`)
-            req.body.userCode.currentCode = response.userCode.currentCode;
+            if (req.body.restDays) {
+                const restDays = [...new Set(req.body.restDays)];
+                restDays.forEach(restDay => {
+                    if (restDay < 1 || restDay > 7) { throw "Rest days must be in between 1 and 7 " }
+                })
+            }
+            req.body.userCode.currentCode = response.userCode.currentgtiCode;
             updateById(req, res, next, OrganizationModel, "Organization")
         })
         .catch((error) => {

@@ -29,6 +29,7 @@ const organizationSchema = mongoose.Schema({
         type: String,
         maxlength: [200, "Organization description Can't Exceed 200 Characters"],
     }, 
+    restDays:[Number],
     logo: {
         type: String,
         required: [true, 'Please Enter the Logo for the Organization']

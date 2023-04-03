@@ -107,7 +107,6 @@ export const updateById = (req, res, next, model, message = 'Result', inject = n
                 })
             })
             .catch((error) => {
-                console.log("=============1===========",error);
                 res.status(404).json({
                     success: false,
                     error: error
@@ -115,7 +114,6 @@ export const updateById = (req, res, next, model, message = 'Result', inject = n
             })
     }
     catch (error) {
-        console.log("=============4===========",error);
         res.status(404).json({
             success: false,
             error: error
