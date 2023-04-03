@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+//  Schema to Create eoeType 
+
 const eoeTypeSchema = mongoose.Schema({
     eoeType: {
         type: String,

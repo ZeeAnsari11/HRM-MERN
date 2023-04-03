@@ -1,6 +1,6 @@
 import express from "express";
 import {
-    createUser, getAllUsersByOrganizationId, getAllUsersByBranchId, updateUserById,
+    addingUser, getAllUsersByOrganizationId, getAllUsersByBranchId, updateUserById,
     deleteUserById, getUserById, updateUserEmployment, addSkillsToUser, deleteSkillFromUser, 
     getActiveNonActiveUsersByOrganizationId, getLineManagerByuserId, getHODByDepartmentId,
     getAttendanceExemptUsers, getEmployeeTypeByOrganizationId, getRoleTypeByOrganizationId,
@@ -9,7 +9,7 @@ import {
 
 export const userRoute = express.Router();
 
-userRoute.route('/user/new').post(createUser)
+userRoute.route('/user/new').post(addingUser)
 userRoute.route('/user/organization/:id').get(getAllUsersByOrganizationId)
 userRoute.route('/user/branch/:id').get(getAllUsersByBranchId)
 userRoute.route('/user/update/:id').put(updateUserById)
