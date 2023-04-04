@@ -45,7 +45,7 @@ export const updateOrganizationById = (req, res, next) => {
                     if (restDay < 1 || restDay > 7) { throw "Rest days must be in between 1 and 7 " }
                 })
             }
-            req.body.userCode.currentCode = response.userCode.currentgtiCode;
+            req.body.userCode.currentCode = response.userCode.currentCode;
             updateById(req, res, next, OrganizationModel, "Organization")
         })
         .catch((error) => {
