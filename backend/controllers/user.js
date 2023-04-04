@@ -779,6 +779,12 @@ export const getChildsByUserId = (req, res, next) => {
     catch (err) { handleCatch(err, res, 401, next) }
 }
 
+export const validateUserToken = (req, res, next) => {
+    if ( req.body.resetPasswordToken || req.body.resetPasswordExpire ) {
+        return handleCatch("Can't add/update reset password token", res, 401, next);
+    }
+    else return next();
+}
 
 export const updateUserProbation = (req, res, next) => {
 

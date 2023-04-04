@@ -23,7 +23,7 @@ const Dashboard = () => {
         <div className="flex w-screen h-screen">
             <Navbar />
             <Topbar />
-            <button onClick={() => logout(dispatcher, navigation)}>log out</button>
+            {/* <button onClick={() => logout(dispatcher, navigation)}>log out</button> */}
             <div className="h-screen text-black p-7 relative top-[5rem] w-[calc(100%-269px)] duration-300" style={{left: width, width:(open)?'':'100vw'}}>
                 <Skeleton />
             </div>
