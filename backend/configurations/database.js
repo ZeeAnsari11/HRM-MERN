@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import zk from "../machine.js";
+import zk from "../machine.js"
 
 export const connectDatabase = () => {
     console.log("=================1===============");
@@ -14,6 +14,8 @@ export const connectDatabase = () => {
         console.log("=================2===============");
         zk;
         console.log("================3===============");
+        console.log("================4===============");
+
     })
     .catch((e) => {console.log('-----------------e---------',e)
         console.log('Database connection Failed!')})

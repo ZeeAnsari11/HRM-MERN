@@ -1,21 +1,21 @@
-import net from 'net'
+// import net from 'net'
 
-const socket = new net.Socket();
+// const socket = new net.Socket();
 
-export default socket.connect({
-  host: '72.255.38.48',
-  port: 4370
-}, () => {
-  console.log('Connected to ZK device!');
-});
+// export default socket.connect({
+//   host: '72.255.38.48',
+//   port: 4370
+// }, () => {
+//   console.log('Connected to ZK device!');
+// });
 
-socket.on('error', (error) => {
-  console.error(error);
-});
+// socket.on('error', (error) => {
+//   console.error(error);
+// });
 
-socket.on('close', () => {
-  console.log('Disconnected from ZK device.');
-});
+// socket.on('close', () => {
+//   console.log('Disconnected from ZK device.');
+// });
 
 // // export const userData = zk.getUser('1', (err, user) => {
 // //     if (err) {
@@ -119,7 +119,7 @@ socket.on('close', () => {
 // zk.socket = socket;
 
 // // connect to the device
-// zk.socket.connect({port: "4370", ip: "72.255.38.48"}, function() {
+// export default zk.socket.connect({port: "4370", ip: "72.255.38.48"}, function() {
 //     console.log("================called===================");
 //     console.log('Connected to the device.');
 //     // enable the device
@@ -174,10 +174,7 @@ socket.on('close', () => {
 // import net from 'net';
 // import zklib from 'node-zklib';
 
-// const socket = new net.Socket({
-//   port: 4370,
-//   host: '72.255.38.48'
-// });
+// const socket = new net.Socket();
 
 // const zk = new zklib({
 //   ip: '72.255.38.48',
@@ -187,11 +184,11 @@ socket.on('close', () => {
 //   isUDP: false,
 //   socket: socket
 // });
+// zk.socket = socket;
 
-// console.log("===========zk.port=========",zk.ip.socket);
 
 // // connect to the device
-// export default zk.ip.socket.connect({
+// export default zk.socket.connect({
 //   port: 4370,
 //   host: '72.255.38.48'
 // }, () => {
@@ -238,3 +235,40 @@ socket.on('close', () => {
 // // send data to the device
 // const message = 'Hello, device!';
 // socket.write(message);
+// =====================================================================================
+
+import net from "net";
+import zklib from "node-zklib";
+
+const socket = new net.Socket();
+
+const zk = new zklib();
+
+zk.socket = socket;
+
+export default socket.connect({
+  port: 4370,
+  host: "72.255.38.48"
+});
+
+zk.socket.on("error", (error) => {
+  console.error("Error:", error);
+});
+socket.on("close", () => {
+  console.log("Disconnected from ZK device.");
+});
+socket.on("connect_error", (err) => {
+  console.log(`connect_error due to ${err.message}`);
+});
+
+socket.on("connect", () => {
+  console.log("Connected to ZK device!");
+  zk.getUsers()
+  .then((res)=>{
+    console.log("==============",res)
+  })
+  .catch((err)=>{
+    console.log("===============erroor si s=======",err);
+  })
+});
+
