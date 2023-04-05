@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import timeZone from "mongoose-timezone";
+// import timeZone from "mongoose-timezone";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -332,7 +332,7 @@ const userSchema = mongoose.Schema({
     }
 })
 
-userSchema.plugin(timeZone, { paths: ['timeZone'] });
+// userSchema.plugin(timeZone, { paths: ['timeZone'] });
 
 userSchema.pre('save', function (next) {
     var user = this;
