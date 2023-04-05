@@ -19,7 +19,6 @@ const organizationSchema = mongoose.Schema({
         required: [true, "Please Enter Name of Organization"],
         maxlength: [100, "Organization Name Can't Exceed 100 Characters"],
         trim: true,
-        unique : true
     },
     start: {
         type: Date,
@@ -33,6 +32,13 @@ const organizationSchema = mongoose.Schema({
     logo: {
         type: String,
         required: [true, 'Please Enter the Logo for the Organization']
+    },
+    unique_id : {
+        type: String,
+        trim : true,
+        lowercase: true,
+        unique : true,
+        required : true
     },
     createdAt: {
         type: Date,
