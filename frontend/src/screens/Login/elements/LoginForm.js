@@ -16,7 +16,7 @@ const LoginForm = ({showOtherLoginTypes}) => {
         loginAuth(dispatcher, { email:email.toLowerCase(), password }, navigation);
     }
     return (
-        <div className="md:flex md:items-center md:justify-center w-full sm:w-auto md:h-full xl:w-2/5 p-8  md:p-10 lg:p-14 sm:rounded-lg md:rounded-none bg-white">
+        <div className="flex items-center justify-center w-full md:w-auto h-full xl:w-2/5 p-8 md:px-6 lg:p-14 sm:rounded-lg md:rounded-none bg-white">
             <div className="max-w-md w-full space-y-8">
                 <div className="text-center">
                     <h2 className="mt-6 text-3xl font-bold text-gray-900">

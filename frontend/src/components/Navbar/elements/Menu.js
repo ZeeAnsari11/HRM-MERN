@@ -1,6 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
 const Menu = ({ menu }) => {
     const [toggle, setToggler] = React.useState(false);
@@ -11,9 +12,9 @@ const Menu = ({ menu }) => {
             className={`flex items-center justify-between ${menu.gap ? "mt-9" : "mt-2"} rounded text-center px-2 py-1 hover:bg-gray-600 hover:shadow-md`}>
             <div className={`flex rounded-md p-1 text-gray-300 text-sm items-center gap-x-4`}>
                 <FontAwesomeIcon icon={menu.font} className={`${hoverEffect}`} width={'20'}/>
-                <p className={`origin-left duration-300 font-semibold ${hoverEffect}`}>
+                <Link to={menu.to} className={`origin-left duration-300 font-semibold ${hoverEffect}`}>
                     {menu.title}
-                </p>
+                </Link>
             </div>
             {(menu.child.length !== 0) ? <FontAwesomeIcon icon={faChevronDown} className={`cursor-pointer duration-300 ${hoverEffect} ${toggle && 'rotate-180'}`} onClick={() => setToggler(!toggle)}/> : null}
         </div>
@@ -21,9 +22,9 @@ const Menu = ({ menu }) => {
                 {menu.child.map((menuItem) => {
                     return <li className={`flex rounded-md p-1 cursor-pointer text-gray-300 text-sm items-center gap-x-4`}>
                         <FontAwesomeIcon icon={menuItem.font} color={'white'} width={'20'}/>
-                        <p className={`origin-left duration-200 ${hoverEffect}`}>
+                        <Link to={menuItem.to} className={`origin-left duration-200 ${hoverEffect}`}>
                             {menuItem.title}
-                        </p>
+                        </Link>
                     </li>
                 })}
             </ul>
