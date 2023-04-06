@@ -3,14 +3,14 @@ import { createNew, getAll, getById, deleteById, updateById } from '../utils/com
 
 export const createOrganization = (req, res, next) => {
     try {
-        if(req.body.unique_id) throw "unique_id is not required"
+        if (req.body.unique_id) throw "unique_id is not required"
         if (req.body.userCode?.currentCode >= 0) throw "Can't update current code"
         if (!req.body.restDays) { throw "Rest days are required and must be in between 1 and 7 " }
         const restDays = [...new Set(req.body.restDays)];
         restDays.forEach(restDay => {
             if (restDay < 1 || restDay > 7) { throw "Rest days must be in between 1 and 7 " }
         })
-        req.body.unique_id = req.body.name;
+        req.body.unique_id = req.body.name.replace(/\s/g, "");
         createNew(req, res, next, OrganizationModel)
     }
     catch (error) {
@@ -48,7 +48,7 @@ export const updateOrganizationById = (req, res, next) => {
                 })
             }
             req.body.userCode.currentCode = response.userCode.currentCode;
-            if(req.body.name){req.body.unique_id = req.body.name};
+            if (req.body.name) { req.body.unique_id = req.body.name.replace(/\s/g, ""); };
             updateById(req, res, next, OrganizationModel, "Organization")
         })
         .catch((error) => {
