@@ -5,13 +5,9 @@ import { handleCatch, createNew, updateById, checkIsExistAndCreate } from '../ut
 //// Create New Leave Type ////
 export const createNewLeaveType = (req, res, next) => {
     try {
-        if (req.body.unique_id) throw "Invalid Body."
+        if (req.body.unique_id || !req.body.organization || !req.body.name) throw "Invalid Body."
         req.body.unique_id = req.body.organization + req.body.name.replace(/\s/g, "").toLowerCase()
         if ((req.body.canApplyForBackDay == true && !req.body.buffer) || (req.body.canApplyForBackDay == undefined && req.body.buffer)) throw 'kindly provide Buffer and canApplyForBackDay'
-        if (req.body.shortLeave == true) {
-            if (!req.body.shortLeaveType.name || !req.body.shortLeaveType.balance || !req.body.shortLeaveType.shiftReductionInPercentage) throw 'Invalid Body.'
-            req.body.shortLeaveType.unique_id = req.body.organization + req.body.shortLeaveType.name.replace(/\s/g, "").toLowerCase()
-        }
         checkIsExistAndCreate(req, res, next, req.body.organization, OrganizationModel, LeaveTypeModel, "Organization")
     }
     catch (error) {

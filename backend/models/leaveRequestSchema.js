@@ -48,6 +48,15 @@ const leaveRequestSchema = mongoose.Schema({
         ref: 'User',
         required: [true, "Please Enter the UserId"]
     },
+    leaveStatus: {
+        type: String,
+        enum: {
+            values: [
+                'Pending',
+                'Complete',
+            ],
+        }
+    },
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',

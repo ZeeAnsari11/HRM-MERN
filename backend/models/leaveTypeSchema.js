@@ -90,19 +90,6 @@ const leaveTypeSchema = mongoose.Schema({
     gapBetweenApplicationsInMonths: {
         type: Number
     },
-    accumulativeCountOptions: {
-        type: String,
-        default: 'per year',
-        lowercase: true,
-        enum: {
-            values: [
-                'per month',
-                'per year'
-            ],
-            messsage: 'enter a valid accumulative count option',
-        },
-
-    },
     accumulativeCount: {
         type: Number,
         required: [true, 'Please provide accumulative account count'],

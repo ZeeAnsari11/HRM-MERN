@@ -16,7 +16,7 @@ const userSchema = mongoose.Schema({
         required: [true, 'Please enter valid email'],
         trim: true,
         maxLength: [100, 'Email cannot exceeds from 100 characters'],
-        validate: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+        // validate: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
         unique: [true, 'Email already in use']
     },
     password: {
@@ -244,14 +244,14 @@ const userSchema = mongoose.Schema({
         type: String,
         trim: true,
         maxLength: [70, 'Cannot exceeds from 70 characters'],
-        validate: /^[a-zA-Z]+$/
+        //validate: /^[a-zA-Z]+$/
     },
     nationality: {
         type: String,
         required: [true, 'Please enter your nationality'],
         trim: true,
         maxLength: [100, 'Cannot exceeds from 100 characters'],
-        validate: /^[a-zA-Z]+$/
+        //validate: /^[a-zA-Z]+$/
     },
     bloodGroup: {
         type: String,
@@ -272,7 +272,7 @@ const userSchema = mongoose.Schema({
         required: [true, 'Please enter your personal email'],
         trim: true,
         maxLength: [100, 'Cannot exceeds from 100 characters'],
-        validate: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+        //validate: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
         unique: [true, 'Email already in use']
     },
     nic: {
@@ -280,7 +280,7 @@ const userSchema = mongoose.Schema({
             type: String,
             required: [true, 'Please enter your CNIC without dashes'],
             trim: true,
-            validate: /^[0-9]+$/,
+            //validate: /^[0-9]+$/
             unique: [true, 'CNIC already in use']
         },
         attachment: {
@@ -302,7 +302,7 @@ const userSchema = mongoose.Schema({
         number: {
             type: String,
             trim: true,
-            validate: /^[0-9]+$/,
+            //validate: /^[0-9]+$/
             unique: [true, 'Passport already in use']
         },
         attachment: {
@@ -317,15 +317,27 @@ const userSchema = mongoose.Schema({
             type: String,
             trim: true,
             validate: /^[0-9]+$/,
-            unique: [true, 'Driving Lisence already in use']
+            unique: [true, 'Driving Lisence already in use'],
+            
         },
         attachment: {
             type: String,
         },
         expiry: {
             type: Date,
-        }
+        },
+        required: false,
+        default: {}
     },
+    leaveTypeDetails: [{
+        leaveType: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'LeaveType'
+        },
+        count: {
+            type: Number
+        }
+    }],
     createdAt: {
         type: Date,
         default: Date.now
@@ -350,15 +362,15 @@ userSchema.pre('save', function (next) {
 })
 
 
-userSchema.methods.getJwtToken = function() {
+userSchema.methods.getJwtToken = function () {
     return jwt.sign({ id: this.id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_TIME })
 }
 
-userSchema.methods.comparePassword = function(password) {
+userSchema.methods.comparePassword = function (password) {
     return bcrypt.compare(password, this.password)
 }
 
-userSchema.methods.getResetPasswordToken = function() {
+userSchema.methods.getResetPasswordToken = function () {
     let user = this;
     const resetToken = crypto.randomBytes(20).toString('hex');
     user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
