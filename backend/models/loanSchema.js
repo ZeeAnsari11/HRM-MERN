@@ -21,7 +21,7 @@ const loanSchema = mongoose.Schema({
         type: String,
         required: [true, 'Please Enter the Reason For Loan']
     },
-    status:{
+    status: {
         type: String,
         lowercase: true,
         default: 'pending',
@@ -33,12 +33,18 @@ const loanSchema = mongoose.Schema({
             ],
             messsage: 'Please Enter Action Type'
         }
-        },
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: [true, "Please Enter the UserId"]
     },
+    repaymentSchedules: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'loanRepayment'
+        }
+    ],
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
