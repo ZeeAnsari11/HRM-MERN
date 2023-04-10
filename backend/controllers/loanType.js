@@ -7,7 +7,7 @@ export const createLoanType = (req, res, next) => {
     try {
         let count = 0;
         let skip = false;
-        if (typeof(req.body.designations)!== Object || req.body.designations.length < 0 ) throw "List of designations must be specified for loan type creation"
+        if (req.body.designations.length < 0 ) throw "List of designations must be specified for loan type creation"
         let designations = req.body.designations;
         designations.forEach(designation => {
             DesignationModel.find({ _id: designation, organization: req.body.organization })

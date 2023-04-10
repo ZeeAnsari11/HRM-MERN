@@ -1,12 +1,14 @@
 import { LoanModel } from "../models/loanSchema.js"
 import { LoanTypeModel } from "../models/loanTypeSchema.js"
+import { LoanRepaymentModel } from "../models/loanRepaymentSchema.js"
 import { UserModel } from "../models/userSchema.js"
-import { createNew, deleteById, getById, handleCatch, updateById, getAll } from "../utils/common.js"
+import { createNew, handleCatch, updateById, getAll } from "../utils/common.js"
 
 export const createLoan = (req, res, next) => {
     try {
         let loanType;
         let user;
+
         if (req.body.status) { throw "Loan status is not required" }
         LoanTypeModel.find({ _id: req.body.loan_type, organization: req.body.organization })
             .then((loanTypes) => {
@@ -18,7 +20,8 @@ export const createLoan = (req, res, next) => {
                         user = users[0];
                         if (!loanType.designations.includes(user.designation)) throw "Your Designation is not allowed for applying this loan"
                         if (new Date(req.body.required_Date) < Date.now()) throw "Your can not Request Loan in Past Date"
-                        createNew(req, res, next, LoanModel);
+                        if (!req.body.repaymentSchedules || req.body.repaymentSchedules.length == 0) throw "Please create the repayment schedule"
+                        createRepaymentSchedules(req, res, next)
                     })
                     .catch((err) => {
                         handleCatch(err, res, 401, next)
@@ -31,12 +34,49 @@ export const createLoan = (req, res, next) => {
     catch (err) { handleCatch(err, res, 401, next) }
 }
 
+const createRepaymentSchedules = (req, res, next) => {
+    let ids = [];
+    let index = 0;
+    req.body.repaymentSchedules.forEach(schedule => {
+        if (schedule.rePaymentDate <= req.body.required_Date) { throw "You canot schedule the rePaymentDate before the loan required date" }
+        LoanRepaymentModel.create(schedule)
+            .then((loanRepayment) => {
+                index++;
+                ids.push(loanRepayment._id);
+                if (index == req.body.repaymentSchedules.length) {
+                    req.body.repaymentSchedules = ids;
+                    createNew(req, res, next, LoanModel);
+                }
+            })
+            .catch((err) => handleCatch(err, res, 401, next));
+    });
+}
+
 export const getLoanById = (req, res, next) => {
-    getById(req.params.id, res, next, LoanModel, "Loan")
+    LoanModel.findById(req.params.id).populate('repaymentSchedules')
+        .then((loan) => {
+            res.status(200).json({
+                success: true,
+                loan
+            })
+        })
+        .catch((err) => handleCatch(err, res, 401, next))
 }
 
 export const deleteLoanById = (req, res, next) => {
-    deleteById(req.params.id, res, next, LoanModel, "Loan")
+    LoanModel.findById(req.params.id)
+        .then((loan) => {
+            if (!loan) throw "Loan not found"
+            if (loan.status !== "pending") { throw "You can not delete an approved or rejected loan Request" }
+            loan.remove()
+                .then(() => {
+                    res.status(200).json({
+                        success: true,
+                        Message: `Loan Request Deleted Successfully`
+                    })
+                })
+        })
+        .catch((err) => handleCatch(err, res, 401, next))
 }
 
 export const filterLoans = (req, res, next) => {
@@ -66,13 +106,17 @@ export const filterLoans = (req, res, next) => {
 }
 
 export const updateLoanById = (req, res, next) => {
-    const inject = () => {
+    try {
         if (req.body.user || req.body.organization || req.body.status) throw 'You can not update the organization, and user of loan'
         if (new Date(req.body.required_Date) < Date.now()) throw "Your can not Request Loan in Past Date"
-    }
-    try {
-
-        updateById(req, res, next, LoanModel, "Loan", inject)
+        if (req.body.repaymentSchedules) throw "You can not update the repayment schedule here"
+        LoanModel.findById(req.params.id)
+            .then((loan) => {
+                if (!loan) throw "Loan not found"
+                if (loan.status !== "pending") throw "You can not Update an approved or rejected loan Request"
+                updateById(req, res, next, LoanModel, "Loan")
+            })
+            .catch(err => handleCatch(err, res, 401, next))
     }
     catch (err) {
         res.status(401).json({
@@ -86,15 +130,16 @@ export const getAllLoansByUserId = (req, res, next) => {
     getAll(res, next, LoanModel, { user: req.params.id }, "Loan");
 }
 
-export const chanegeLoanStatus = (new_Status, loanId)=>{ 
+export const chanegeLoanStatus = (new_Status, loanId) => {
     new_Status = new_Status.toLowerCase();
     if (new_Status.status == "pending" || new_Status == "approved" || new_Status == "rejected") {
-    LoanModel.updateOne({ _id: loanId }, { status: new_Status })
-    .then((response)=>{
-        res.status(200).json({
-            success: true,
-            data: response
-        })
-    })
-}
+        LoanModel.updateOne({ _id: loanId }, { status: new_Status })
+            .then((response) => {
+                res.status(200).json({
+                    success: true,
+                    data: response
+                })
+            })
+            .catch((err) => handleCatch(err, res, 401, next))
+    }
 }
