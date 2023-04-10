@@ -6,6 +6,7 @@ import { EmploymentModel } from '../models/employmentSchema.js'
 import { TimeSlotsModel } from "../models/timeSlotsSchema.js";
 import { handleCatch, updateById } from '../utils/common.js'
 import { UserRoleModel } from '../models/userRoleSchema.js'
+import { LeaveTypeModel } from '../models/leaveTypeSchema.js'
 
 //// Create User ////
 export const addingUser = (req, res, next) => {
@@ -89,12 +90,13 @@ const checkingProbation = (req, res, next, organization) => {
                 userRoster(req, res, next)
                 userCreate(req, res, next, organization)
             }
-            else if (req.body.probation.isOnProbation == undefined && req.body.probation.durationOfProbation) {
-                if (req.body.probation.durationOfProbation) throw 'kindly provide isOnProbation'
-            }
             else {
                 if (req.body.probation.isOnProbation == false && req.body.probation.durationOfProbation) {
                     if (req.body.probation.durationOfProbation) throw 'kindly provide isOnProbation as true'
+                }
+                else {
+                    userRoster(req, res, next)
+                    userCreate(req, res, next, organization)
                 }
             }
         }
@@ -160,9 +162,30 @@ const userCreate = (req, res, next, organization) => {
                     skills[index][0].toUpperCase();
                 });
                 req.body.skills = [...new Set(skills)];
-                UserModel.create(req.body)
+                addingUserLeaves(req, res, next, organization);
+            })
+            .catch((error) => {
+                handleCatch(`${error}`, res, 401, next)
+            })
+    } catch (error) {
+        handleCatch(`${error}`, res, 401, next)
+    }
+}
+
+const addingUserLeaves = (req, res, next, organizationRef) => {
+    req.body.leaveTypeDetails = []
+    LeaveTypeModel.find({ organization: req.body.organization })
+        .then((leaveTypes) => {
+            leaveTypes.forEach(leaveType => {
+                let x = {
+                    leaveType: leaveType._id,
+                    count: leaveType.accumulativeCount
+                }
+                req.body.leaveTypeDetails.push(x)
+            })
+            UserModel.create(req.body)
                     .then((response) => {
-                        organization.userCode.currentCode = organization.userCode.currentCode + 1;
+                        organizationRef.userCode.currentCode = organizationRef.userCode.currentCode + 1;
                         res.status(200).json({
                             success: true,
                             response
@@ -172,15 +195,13 @@ const userCreate = (req, res, next, organization) => {
                         handleCatch(`${error}`, res, 401, next)
                     })
                     .finally(() => {
-                        organization.save();
+                        organizationRef.save();
                     })
-            })
-            .catch((error) => {
-                handleCatch(`${error}`, res, 401, next)
-            })
-    } catch (error) {
-        handleCatch(`${error}`, res, 401, next)
-    }
+        })
+        .catch((error) => {
+            handleCatch(`${error}`, res, 401, next)
+        })
+
 }
 
 //// get line manager of user by id ////
