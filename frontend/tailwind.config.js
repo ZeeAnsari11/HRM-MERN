@@ -7,7 +7,6 @@ module.exports = {
       'desktop': {'max': '1023px'},
       'tablet': {'max': '767px'},
       'mobile': {'max': '639px'},
-
       'sm': '640px',
       'md': '768px',
       'lg': '1024px',
@@ -20,6 +19,7 @@ module.exports = {
       lightBgColor: '#f0f0f0',
       lightText: '#aab3cc',
       backgroundDark: '#0d093e',
+      secondaryLight: '#f1f4fb',
       inherit: colors.inherit,
       current: colors.current,
       transparent: colors.transparent,
