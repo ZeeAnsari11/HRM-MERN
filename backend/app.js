@@ -32,6 +32,10 @@ import { leaveRequestRoute } from "./routes/leaveRequest.js";
 import { userRoleRoute } from "./routes/userRole.js";
 import { timeSlotsRoute } from "./routes/timeSlots.js";
 import { loanRepaymentRoute } from "./routes/loanRepayment.js";
+import { probationEvaluationRoute } from "./routes/probationEvaluation.js";
+import { requestFlowRoute } from "./routes/requestFlow.js";
+import { requestTypeRoute } from "./routes/requestType.js";
+import { gradeRoute } from "./routes/grade.js";
 import { wfhRoute } from "./routes/wfh.js";
 
 
@@ -81,6 +85,10 @@ app.use(apiVersion, timeSlotsRoute);
 app.use(apiVersion, loanRepaymentRoute);
 app.use(apiVersion, authRoute);
 app.use(apiVersion, wfhRoute);
+app.use(apiVersion, probationEvaluationRoute)
+app.use(apiVersion, requestFlowRoute)
+app.use(apiVersion, requestTypeRoute)
+app.use(apiVersion, gradeRoute)
 app.use(errorHandler);
 
 export default app;
