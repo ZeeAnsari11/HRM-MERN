@@ -32,6 +32,7 @@ import { leaveRequestRoute } from "./routes/leaveRequest.js";
 import { userRoleRoute } from "./routes/userRole.js";
 import { timeSlotsRoute } from "./routes/timeSlots.js";
 import { loanRepaymentRoute } from "./routes/loanRepayment.js";
+import { wfhRoute } from "./routes/wfh.js";
 
 
 import cookieParser from "cookie-parser";
@@ -79,7 +80,7 @@ app.use(apiVersion, userRoleRoute);
 app.use(apiVersion, timeSlotsRoute);
 app.use(apiVersion, loanRepaymentRoute);
 app.use(apiVersion, authRoute);
-
+app.use(apiVersion, wfhRoute);
 app.use(errorHandler);
 
 export default app;

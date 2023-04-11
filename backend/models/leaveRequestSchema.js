@@ -52,8 +52,9 @@ const leaveRequestSchema = mongoose.Schema({
         type: String,
         enum: {
             values: [
-                'Pending',
-                'Complete',
+                'pending',
+                'approved',
+                'rejected'
             ],
         }
     },
