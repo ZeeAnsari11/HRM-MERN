@@ -11,8 +11,8 @@ const Notification = ({ styled }) => {
     return (
         <div className={styled.iconsContainer}>
             <NotificationsRoundedIcon className={styled.textColor} onClick={() => dispatcher(setTogglers(key))}/>
-            <div style={{ maxHeight: (isMenuOpen[key]) ? '400px' : '0' }} className="overflow-hidden duration-300 absolute z-20 my-4 right-[5rem] w-full max-w-sm bg-white divide-y divide-gray-100 rounded-lg shadow-lg">
-                <div className="divide-y divide-gray-100 dark:divide-gray-700">
+            <div style={{ maxWidth: (isMenuOpen[key]) ? '400px' : '0' }} className="overflow-hidden duration-300 fixed z-50 right-0 top-0 h-screen bg-lightBgColor divide-y divide-gray-100 rounded-lg shadow-lg">
+                <div className="divide-y divide-gray-100">
                     <div className="flex px-4 py-3 hover:bg-gray-100">
                         <div className="flex-shrink-0">
                             <img className="rounded-full w-11 h-11" src={Logo} alt="sample" />
@@ -21,11 +21,10 @@ const Notification = ({ styled }) => {
                             </div>
                         </div>
                         <div className="w-full pl-3">
-                            <div className="text-gray-500 text-sm mb-1.5">New message from <span className="font-semibold text-gray-900 dark:text-white">Jese Leos</span>: "Hey, what's up? All set for the presentation?"</div>
+                            <div className="text-gray-500 text-sm mb-1.5">New message from <span className="font-semibold text-gray-900">Jese Leos</span>: "Hey, what's up? All set for the presentation?"</div>
                             <div className="text-xs text-blue-600">a few moments ago</div>
                         </div>
                     </div>
-
                     <div className="block py-2 text-sm font-medium text-center text-gray-900 rounded-b-lg bg-gray-50 hover:bg-gray-100">
                         <div className="inline-flex items-center ">
                             <svg className="w-4 h-4 mr-2 text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd"></path></svg>

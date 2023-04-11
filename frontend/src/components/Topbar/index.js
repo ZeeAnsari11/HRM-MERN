@@ -14,7 +14,7 @@ const Topbar = () => {
     let open = useSelector(selectNavState);
     const [fullScreen, setFullScreen] = React.useState(false);
     const tailwindStyle = {
-        topBarContainer: `h-24 z-0 ${open ? 'left-[269px] tablet:left-0' : 'left-0'} border flex justify-between items-center fixed right-0 px-4 bg-white duration-300`,
+        topBarContainer: `h-24 z-50 ${open ? 'left-[269px] tablet:left-0' : 'left-0'} border flex justify-between items-center fixed right-0 px-4 bg-white duration-300`,
         toglerContainer: 'flex justify-center items-center space-x-4',
         iconsContainer: 'p-3 bg-[#f1f4fb] rounded-lg hover:shadow-md cursor-pointer duration-200',
         textColor: 'text-gray-500'

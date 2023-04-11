@@ -5,9 +5,6 @@ export const UserSlice = createSlice({
   name: 'user',
   initialState: {
     currentUser: {},
-    userId: null,
-    userRole: null,
-    userEmail: null,
     userAuthToken: null,
   },
   reducers: {
@@ -22,12 +19,18 @@ export const UserSlice = createSlice({
     logout: (state, action) => {
       state.userAuthToken = null;
       state.userId = null;
+    },
+    setOrganization: (state, action) => {
+      state.currentUser.organization = action.payload;
     }
   }
 });
 
 // Action Methods
-export const { setCurrentUser, setAuth, logout } = UserSlice.actions;
+export const { 
+  setCurrentUser, setAuth, logout,
+  setOrganization
+} = UserSlice.actions;
 
 // Selector Methods
 export const selectCurrentUser = (state) => state.user.currentUser;

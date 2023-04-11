@@ -4,3 +4,11 @@ export const authentication = {
     login: baseUrl+'/login',
     logout: baseUrl+'/logout',
 }
+
+export const userRoutes = {
+    getUserById: baseUrl+'/user/',
+}
+
+export const organizationRoutes = {
+    getUserById: baseUrl+'/organization/',
+}
