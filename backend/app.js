@@ -31,6 +31,7 @@ import { shortLeaveTypeRoute } from "./routes/shortLeaveType.js";
 import { leaveRequestRoute } from "./routes/leaveRequest.js"; 
 import { userRoleRoute } from "./routes/userRole.js";
 import { timeSlotsRoute } from "./routes/timeSlots.js";
+import { wfhRoute } from "./routes/wfh.js";
 
 
 import cookieParser from "cookie-parser";
@@ -77,6 +78,7 @@ app.use(apiVersion, leaveRequestRoute);
 app.use(apiVersion, userRoleRoute);
 app.use(apiVersion, timeSlotsRoute);
 app.use(apiVersion, authRoute);
+app.use(apiVersion, wfhRoute);
 app.use(errorHandler);
 
 export default app;
