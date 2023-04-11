@@ -42,6 +42,7 @@ export const getAll = (res, next, model, query = {}, message = 'Result') => {
             }
         })
         .catch((error) => {
+            console.log(error);
             res.status(401).json({
                 success: false,
                 error: error

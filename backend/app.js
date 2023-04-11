@@ -25,6 +25,10 @@ import { evaluationRatingRoute } from "./routes/evaluationRatings.js";
 import { leaveSlabsRoute } from "./routes/leaveSlabs.js";
 import { leaveTypeRoute } from "./routes/leaveType.js"; 
 import { userRoleRoute } from "./routes/userRole.js";
+import { probationEvaluationRoute } from "./routes/probationEvaluation.js";
+import { requestFlowRoute } from "./routes/requestFlow.js";
+import { requestTypeRoute } from "./routes/requestType.js";
+import { gradeRoute } from "./routes/grade.js";
 
 
 const app = express();
@@ -58,6 +62,9 @@ app.use(apiVersion, evaluationRatingRoute);
 app.use(apiVersion, leaveSlabsRoute);
 app.use(apiVersion, leaveTypeRoute);
 app.use(apiVersion, userRoleRoute);
-
+app.use(apiVersion, probationEvaluationRoute)
+app.use(apiVersion, requestFlowRoute)
+app.use(apiVersion, requestTypeRoute)
+app.use(apiVersion, gradeRoute)
 
 export default app;
