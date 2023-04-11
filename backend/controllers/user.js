@@ -275,7 +275,7 @@ export const getAttendanceExemptUsers = (req, res, next) => {
 
 //// Get User By Id ////
 export const getUserById = (req, res, next) => {
-    UserModel.findById(req.params.id)
+    UserModel.findById(req.params.id).populate('organization branch')
         .then((user) => {
             if (!user) throw `No Such User Exist ${req.params.id}`
             OrganizationModel.findById(user.organization)
