@@ -35,7 +35,6 @@ import { loanRepaymentRoute } from "./routes/loanRepayment.js";
 import { probationEvaluationRoute } from "./routes/probationEvaluation.js";
 import { requestFlowRoute } from "./routes/requestFlow.js";
 import { requestTypeRoute } from "./routes/requestType.js";
-import { gradeRoute } from "./routes/grade.js";
 import { wfhRoute } from "./routes/wfh.js";
 
 
