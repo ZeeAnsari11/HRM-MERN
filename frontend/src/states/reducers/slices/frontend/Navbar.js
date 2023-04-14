@@ -24,12 +24,15 @@ export const NavbarSlice = createSlice({
             state.topbarMenu[key] = (key === action.payload) ? true : false
           })
         }
-    }
+    },
+    closeAll: (state, action) => {
+       console.log("close all")
+    },
   }
 });
 
 // Action Methods
-export const { setTogglers, setNavbarState } = NavbarSlice.actions;
+export const { setTogglers, setNavbarState, closeAll } = NavbarSlice.actions;
 
 // Selector Methods
 export const selectNavState = (state) => state.navbar.isNavSm;

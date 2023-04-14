@@ -18,11 +18,13 @@ import Attendence from "./screens/Attendence";
 import WorkFromHome from "./screens/WorkFromHome";
 import LeaveRequest from "./screens/LeaveRequest";
 import Error from "./screens/Error/404";
+import FirstUser from "./screens/FirstUser";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Login/>}/>
+      <Route path="/welcome" element={<FirstUser />}/>
       <Route path="/forgot-password" element={<ForgotPassword/>}/>
       <Route path="/reset-password" element={<ResetPassword/>}/>
       <Route path="/dashboard" element={<Dashboard/>}>

@@ -1,6 +1,7 @@
 import React from 'react'
 import Logo from '../../../assets/default-avatar.png';
 import NotificationsRoundedIcon from '@material-ui/icons/NotificationsRounded';
+import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectMenuOpen, setTogglers } from '../../../states/reducers/slices/frontend/Navbar';
 
@@ -9,11 +10,12 @@ const Notification = ({ styled }) => {
     const dispatcher = useDispatch();
     let isMenuOpen = useSelector(selectMenuOpen);
     return (
-        <div className={styled.iconsContainer}>
-            <NotificationsRoundedIcon className={styled.textColor} onClick={() => dispatcher(setTogglers(key))}/>
-            <div style={{ maxWidth: (isMenuOpen[key]) ? '400px' : '0' }} className="overflow-hidden duration-300 fixed z-50 right-0 top-0 h-screen bg-lightBgColor divide-y divide-gray-100 rounded-lg shadow-lg">
+        <div className={styled.iconsContainer} onClick={() => dispatcher(setTogglers(key))}>
+            <NotificationsRoundedIcon className={styled.textColor} />
+            <div style={{ maxWidth: (isMenuOpen[key]) ? '400px' : '0' }} className="overflow-hidden cursor-default duration-300 fixed z-50 right-0 top-0 h-screen bg-lightBgColor divide-y divide-gray-100 rounded-lg shadow-lg">
+                <div className='p-4 w-full'><CloseRoundedIcon className='cursor-pointer' onClick={() => dispatcher(setTogglers(key))}/></div>
                 <div className="divide-y divide-gray-100">
-                    <div className="flex px-4 py-3 hover:bg-gray-100">
+                    <div className="flex px-4 py-3 hover:bg-gray-100 cursor-pointer">
                         <div className="flex-shrink-0">
                             <img className="rounded-full w-11 h-11" src={Logo} alt="sample" />
                             <div className="absolute flex items-center justify-center w-5 h-5 ml-6 -mt-5 bg-blue-600 border border-white rounded-full">
@@ -25,13 +27,14 @@ const Notification = ({ styled }) => {
                             <div className="text-xs text-blue-600">a few moments ago</div>
                         </div>
                     </div>
-                    <div className="block py-2 text-sm font-medium text-center text-gray-900 rounded-b-lg bg-gray-50 hover:bg-gray-100">
+                    <div className="block py-2 text-sm font-medium text-center text-gray-900 bg-gray-50 cursor-pointer hover:bg-gray-100">
                         <div className="inline-flex items-center ">
                             <svg className="w-4 h-4 mr-2 text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd"></path></svg>
                             View all
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
 
