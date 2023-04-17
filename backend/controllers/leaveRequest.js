@@ -301,7 +301,7 @@ export const rejectLeaveRequest = (req, res, next) => {
                                         .then(() => {
                                             res.status(200).json({
                                                 success: true,
-                                                Message: 'Leave Rejected Successfully'
+                                                Message: 'Leave Rejected Successfully.'
                                             })
                                         })
                                 })
