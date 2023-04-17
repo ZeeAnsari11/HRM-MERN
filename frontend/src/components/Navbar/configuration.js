@@ -1,4 +1,4 @@
-import { faHome, faUser, faGear, faTimeline, faChartArea, faCircleDollarToSlot, faCalendarDays, faCalendarDay, faCodePullRequest, faCalendarPlus, faCalendarWeek, faCalendarTimes, faFileAlt, faCalendarCheck, faUserClock, faNetworkWired, faUserCircle } from '@fortawesome/free-solid-svg-icons'
+import { faHome, faUser, faGear, faTimeline, faChartArea, faCircleDollarToSlot, faCalendarDays, faCalendarDay, faCodePullRequest, faCalendarPlus, faCalendarWeek, faCalendarTimes, faFileAlt, faCalendarCheck, faUserClock, faNetworkWired, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons'
 
 export const Menus = [
     { title: "Dashboard", font:faHome, gap: true, child:[], to: "/dashboard/home"},
@@ -13,12 +13,40 @@ export const Menus = [
         ] 
     },
     {
-        title: "Leaves", 
+        title: "Assets",
+        access:"admin",
         font: faCalendarDay,
         child: [
+            { title: "Add Asset", font: faCodePullRequest, to:"/dashboard/leaverequest" },
+            { title: "Manage Assets", font: faCalendarCheck, to:"/dashboard/leaves"},
+        ]
+    },
+    {
+        title: "Employee", 
+        access:"admin",
+        font: faUsers,
+        child: [
+            { title: "Create Employee", font: faCalendarTimes, to:"/dashboard/timesheet" },
+            { title: "View Employees", font: faFileAlt, to:"/dashboard/attendence" },
+        ]
+    },
+    {
+        title: "Leave", 
+        font: faCalendarWeek,
+        child: [
+            { access:"admin", title: "Requests", font: faCalendarTimes, to:"/dashboard/timesheet" },
             { title: "Request Leave", font: faCodePullRequest, to:"/dashboard/leaverequest" },
             { title: "View Leaves", font: faCalendarCheck, to:"/dashboard/leaves"},
             { title: "Policy", font: faTimeline, to:"/dashboard/policy" },
+        ]
+    },
+    {
+        title: "Work From Home", 
+        font: faCalendarWeek,
+        child: [
+            { access:"admin", title: "Requests", font: faCalendarTimes, to:"/dashboard/timesheet" },
+            { title: "Request", font: faCalendarTimes, to:"/dashboard/timesheet" },
+            { title: "View WFH Requests", font: faFileAlt, to:"/dashboard/attendence" },
         ]
     },
     {
@@ -27,7 +55,6 @@ export const Menus = [
         child: [
             { title: "Time Sheet", font: faCalendarTimes, to:"/dashboard/timesheet" },
             { title: "Attendence Request ", font: faFileAlt, to:"/dashboard/attendence" },
-            { title: "Work From Home", font: faNetworkWired, to:"/dashboard/wfh" },
         ]
     },
 

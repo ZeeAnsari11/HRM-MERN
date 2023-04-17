@@ -20,13 +20,14 @@ const Menu = ({ menu }) => {
         </div>
             <ul className={`px-6 space-y-2 py-1 relative left-0 w-full ${toggle?"max-h-[500px]":"max-h-0"} overflow-hidden rounded-md transition-max-height duration-300 ease-in-out`}>
                 {menu.child.map((menuItem, index) => {
-                    return <li key={index} className={`flex rounded-md p-1 cursor-pointer text-gray-300 text-sm items-center gap-x-4`}>
-                        <FontAwesomeIcon icon={menuItem.font} color={'white'} width={'20'}/>
-                        <Link to={menuItem.to} className={`origin-left duration-200 ${hoverEffect}`}>
-                            {menuItem.title}
-                        </Link>
-                    </li>
-                })}
+                    if (menuItem.access !== "admin")
+                        return <li key={index} className={`flex rounded-md p-1 cursor-pointer text-gray-300 text-sm items-center gap-x-4`}>
+                            <FontAwesomeIcon icon={menuItem.font} color={'white'} width={'20'}/>
+                            <Link to={menuItem.to} className={`origin-left duration-200 ${hoverEffect}`}>
+                                {menuItem.title}
+                            </Link>
+                        </li>
+                    })}
             </ul>
         </>
     )
