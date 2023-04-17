@@ -5,7 +5,6 @@ import { DepartmentModel } from '../models/departmentSchema.js'
 import { EmploymentModel } from '../models/employmentSchema.js'
 import { TimeSlotsModel } from "../models/timeSlotsSchema.js";
 import { handleCatch, updateById } from '../utils/common.js'
-import { UserRoleModel } from '../models/userRoleSchema.js'
 import { LeaveTypeModel } from '../models/leaveTypeSchema.js'
 
 //// Create User ////
@@ -15,37 +14,30 @@ export const addingUser = (req, res, next) => {
         OrganizationModel.findById(req.body.organization)
             .then((organization) => {
                 if (!organization) throw "organization dont exist"
-                UserRoleModel.find({ organization: req.body.organization, _id: req.body.roleType })
-                    .then((userRoles) => {
-                        if (userRoles.length == 0) { throw "User Role and Organization not belong to each other" }
-                        BranchModel.findById(req.body.branch)
-                            .then((branch) => {
-                                if (!branch) throw "branch dont exist"
-                                else if (req.body.organization !== branch.organization.toString()) throw "branch not found in organization"
-                                else if (req.body.areaBounded?.isBounded == true && !req.body.areaBounded.addArea) throw 'Kindly Add the area'
-                                else if (req.body.HOD?.isHOD == true && !req.body.HOD.department) throw 'Kindly provide the department name of HOD'
-                                else if (req.body.HOD?.isHOD == true && req.body.HOD.department) {
-                                    DepartmentModel.findById(req.body.HOD.department)
-                                        .then((department) => {
-                                            if (!department) throw 'No Such Department'
-                                            if (department.organization.toString() !== req.body.organization.toString()) throw `Department does not match with org.`
-                                            injection(req, res, next, organization);
-                                        })
-                                        .catch((error) => {
-                                            handleCatch(`${error}`, res, 401, next)
-                                        })
-                                }
-                                else injection(req, res, next, organization);
-                            })
-                            .catch((error) => {
-                                handleCatch(`${error}`, res, 401, next)
-                            })
+                BranchModel.findById(req.body.branch)
+                    .then((branch) => {
+                        if (!branch) throw "branch dont exist"
+                        else if (req.body.organization !== branch.organization.toString()) throw "branch not found in organization"
+                        else if (req.body.areaBounded?.isBounded == true && !req.body.areaBounded.addArea) throw 'Kindly Add the area'
+                        else if (req.body.HOD?.isHOD == true && !req.body.HOD.department) throw 'Kindly provide the department name of HOD'
+                        else if (req.body.HOD?.isHOD == true && req.body.HOD.department) {
+                            DepartmentModel.findById(req.body.HOD.department)
+                                .then((department) => {
+                                    if (!department) throw 'No Such Department'
+                                    if (department.organization.toString() !== req.body.organization.toString()) throw `Department does not match with org.`
+                                    injection(req, res, next, organization);
+                                })
+                                .catch((error) => {
+                                    handleCatch(`${error}`, res, 401, next)
+                                })
+                        }
+                        else injection(req, res, next, organization);
                     })
-                    .catch((err) => { handleCatch(err, res, 401, next) })
+                    .catch((error) => {
+                        handleCatch(`${error}`, res, 401, next)
+                    })
             })
-            .catch((error) => {
-                handleCatch(`${error}`, res, 401, next)
-            })
+            .catch((err) => { handleCatch(err, res, 401, next) })
     }
     catch (error) {
         handleCatch(`${error}`, res, 401, next)
@@ -184,19 +176,19 @@ const addingUserLeaves = (req, res, next, organizationRef) => {
                 req.body.leaveTypeDetails.push(x)
             })
             UserModel.create(req.body)
-                    .then((response) => {
-                        organizationRef.userCode.currentCode = organizationRef.userCode.currentCode + 1;
-                        res.status(200).json({
-                            success: true,
-                            response
-                        })
+                .then((response) => {
+                    organizationRef.userCode.currentCode = organizationRef.userCode.currentCode + 1;
+                    res.status(200).json({
+                        success: true,
+                        response
                     })
-                    .catch((error) => {
-                        handleCatch(`${error}`, res, 401, next)
-                    })
-                    .finally(() => {
-                        organizationRef.save();
-                    })
+                })
+                .catch((error) => {
+                    handleCatch(`${error}`, res, 401, next)
+                })
+                .finally(() => {
+                    organizationRef.save();
+                })
         })
         .catch((error) => {
             handleCatch(`${error}`, res, 401, next)
@@ -275,7 +267,7 @@ export const getAttendanceExemptUsers = (req, res, next) => {
 
 //// Get User By Id ////
 export const getUserById = (req, res, next) => {
-    UserModel.findById(req.params.id).populate('organization branch')
+    UserModel.findById(req.params.id).populate('organization branch designation')
         .then((user) => {
             if (!user) throw `No Such User Exist ${req.params.id}`
             OrganizationModel.findById(user.organization)
@@ -406,18 +398,10 @@ export const updateUserById = (req, res, next) => {
                         }
                     });
                     req.body.skills = dbSkills;
-                    if (req.body.roleType) {
-                        if (!checkRoleType(req.body.roleType, req.body.organization, res, next)) { throw "User Role and organization not belong to each other" }
-                    }
                     updateById(req, res, next, UserModel);
                 }
                 else {
-                    if (checkRoleType(req.body.roleType, req.body.organization, res, next)) {
                         updateById(req, res, next, UserModel)
-                    }
-                    else {
-                        throw "User Role and organization not belong to each other"
-                    }
                 };
             })
             .catch((error) => {
@@ -426,15 +410,6 @@ export const updateUserById = (req, res, next) => {
     } catch (error) {
         handleCatch(`${error}`, res, 401, next)
     }
-}
-
-const checkRoleType = (type, org, res, next) => {
-    UserRoleModel.find({ organization: org, type: type })
-        .then((roleTypes) => {
-            if (roleTypes.length == 0) return false;
-            return true
-        })
-
 }
 
 const updateUserRoster = (req, res, next, user) => {
@@ -801,7 +776,7 @@ export const getChildsByUserId = (req, res, next) => {
 }
 
 export const validateUserToken = (req, res, next) => {
-    if ( req.body.resetPasswordToken || req.body.resetPasswordExpire ) {
+    if (req.body.resetPasswordToken || req.body.resetPasswordExpire) {
         return handleCatch("Can't add/update reset password token", res, 401, next);
     }
     else return next();

@@ -183,9 +183,17 @@ const userSchema = mongoose.Schema({
         required: true,
     },
     roleType: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'UserRole',
-        required: true,
+        type: String,
+        required: [true, 'please Enter the User Role'],
+        lowercase: true,
+        enum: {
+            values: [
+                'admin',
+                'user',
+                'manager'
+            ],
+            messsage: 'Please Enter Action Type'
+        }
     },
     timeZone: {
         type: Date,
