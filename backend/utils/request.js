@@ -105,6 +105,9 @@ export const requestToNextNode = (req, res, next) => {
                                     handleCatch(`${error}`, res, 401, next)
                                 })
                         })
+                        .catch((error) => {
+                            handleCatch(`${error}`, res, 401, next)
+                        })
                 }
                 else {
                     LeaveRequestModel.findById(req.body.requestId)
