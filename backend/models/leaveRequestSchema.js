@@ -48,7 +48,7 @@ const leaveRequestSchema = mongoose.Schema({
         ref: 'User',
         required: [true, "Please Enter the UserId"]
     },
-    leaveStatus: {
+    status: {
         type: String,
         enum: {
             values: [
@@ -56,6 +56,7 @@ const leaveRequestSchema = mongoose.Schema({
                 'approved',
                 'rejected'
             ],
+            default: 'pending'
         }
     },
     organization: {

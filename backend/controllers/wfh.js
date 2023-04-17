@@ -1,4 +1,4 @@
-import { WFHModel } from "../models/WFHSchema.js";
+import { WFHModel } from "../models/wfhSchema.js";
 import { UserModel } from '../models/userSchema.js'
 import { handleCatch, createNew, updateById, getById, deleteById } from '../utils/common.js'
 

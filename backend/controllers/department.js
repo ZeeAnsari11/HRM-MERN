@@ -98,6 +98,7 @@ export const updateDepartmentById = (req, res, next) => {
         if (!req.body.users) {
             updateById(req, res, next, DepartmentModel);
         }
+        if (req.body.users && Object.entries(req.body).length > 1) throw 'Invalid Body.'
     }
     catch (error) {
         res.status(404).json({
