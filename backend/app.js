@@ -36,6 +36,7 @@ import { probationEvaluationRoute } from "./routes/probationEvaluation.js";
 import { requestFlowRoute } from "./routes/requestFlow.js";
 import { requestTypeRoute } from "./routes/requestType.js";
 import { wfhRoute } from "./routes/wfh.js";
+import { requestRoute } from "./routes/request.js"; 
 
 
 import cookieParser from "cookie-parser";
@@ -88,6 +89,7 @@ app.use(apiVersion, probationEvaluationRoute)
 app.use(apiVersion, requestFlowRoute)
 app.use(apiVersion, requestTypeRoute)
 app.use(apiVersion, gradeRoute)
+app.use(apiVersion, requestRoute)
 app.use(errorHandler);
 
 export default app;

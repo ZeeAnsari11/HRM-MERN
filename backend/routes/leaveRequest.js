@@ -1,6 +1,6 @@
 import express from 'express'
 import {
-    addingLeaveRequest, updateLeaveRequest, getLeaveRequest, deleteLeaveRequest
+    addingLeaveRequest, updateLeaveRequest, getLeaveRequest, deleteLeaveRequest, rejectLeaveRequest
 } from '../controllers/leaveRequest.js';
 
 
@@ -8,6 +8,7 @@ export const leaveRequestRoute = express.Router();
 
 leaveRequestRoute.route('/leave-request/new').post(addingLeaveRequest)
 leaveRequestRoute.route('/leave-request/update/:id').put(updateLeaveRequest)
+leaveRequestRoute.route('/leave-request/reject/:id').get(rejectLeaveRequest)
 leaveRequestRoute.route('/leave-request/:id').get(getLeaveRequest)
 leaveRequestRoute.route('/leave-request/delete/:id').delete(deleteLeaveRequest)
 
