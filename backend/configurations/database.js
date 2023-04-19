@@ -4,8 +4,7 @@ export const connectDatabase = () => {
     mongoose.set('strictQuery', false);
     mongoose.connect(process.env.DB_URL, {
         useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false 
+        useUnifiedTopology: true
     })
     .then(() => {
         console.log("Connection Established with database.");
