@@ -1,0 +1,25 @@
+version: "3"
+services:
+  backend:
+    container_name: node-mern-docker-boilerplate
+    build:
+      context: ./backend
+      dockerfile: docker-setup/node/production/Dockerfile
+    networks:
+      - default
+      - frontend
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - ./backend/.env.production
+    tty: true
+    stdin_open: true
+    depends_on:
+      - mongo
+    ports:
+      - "4000"
+
+networks:
+  default:
+    name: backend-network-mern-docker-boilerplate
+  
