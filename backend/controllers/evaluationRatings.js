@@ -1,4 +1,4 @@
-import { EvaluationRatingseModel } from '../models/evaluationRatingsSchema.js'
+import { EvaluationRatingseModel } from '../models/evaluationratingsSchema.js'
 import { OrganizationModel } from '../models/organizationSchema.js'
 import { createNew, deleteById, updateById, getById, handleCatch } from '../utils/common.js'
 
