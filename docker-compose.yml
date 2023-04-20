@@ -5,6 +5,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
+    ports:
+      - "4000:4000"
     environment:
       - MONGO_URI=mongodb+srv://admin:admin123@hrms.2xytput.mongodb.net/?retryWrites=true&w=majority
     volumes:
@@ -16,6 +18,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.prod
+    ports:
+      - "4000:4000"
     environment:
       - MONGO_URI=mongodb+srv://admin:admin123@hrms.2xytput.mongodb.net/?retryWrites=true&w=majority
     volumes:
