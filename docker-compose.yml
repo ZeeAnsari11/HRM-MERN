@@ -6,7 +6,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile.dev
     ports:
-      - "4000:4000"
+      - "4000:5000"
     environment:
       - MONGO_URI=mongodb+srv://admin:admin123@hrms.2xytput.mongodb.net/?retryWrites=true&w=majority
     volumes:
@@ -19,7 +19,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile.prod
     ports:
-      - "4000:4000"
+      - "4000:5000"
     environment:
       - MONGO_URI=mongodb+srv://admin:admin123@hrms.2xytput.mongodb.net/?retryWrites=true&w=majority
     volumes:
@@ -30,7 +30,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:3000"
+      - "3000:6000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
