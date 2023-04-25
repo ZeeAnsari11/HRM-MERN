@@ -346,6 +346,10 @@ const userSchema = mongoose.Schema({
             type: Number
         }
     }],
+    baseSalary: {
+        type: Number,
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now

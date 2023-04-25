@@ -401,7 +401,7 @@ export const updateUserById = (req, res, next) => {
                     updateById(req, res, next, UserModel);
                 }
                 else {
-                        updateById(req, res, next, UserModel)
+                    updateById(req, res, next, UserModel)
                 };
             })
             .catch((error) => {
