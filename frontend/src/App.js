@@ -19,6 +19,7 @@ import WorkFromHome from "./screens/WorkFromHome";
 import LeaveRequest from "./screens/LeaveRequest";
 import Error from "./screens/Error/404";
 import FirstUser from "./screens/FirstUser";
+import User from "./screens/User";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
       <Route path="/reset-password" element={<ResetPassword/>}/>
       <Route path="/dashboard" element={<Dashboard/>}>
         <Route path="/dashboard/home" element={<Skeleton />}/>
+        <Route path="/dashboard/employee" element={<User/>}/>
         <Route path="/dashboard/probation" element={<Probation />}/>
         <Route path="/dashboard/roaster" element={<Roaster />}/>
         <Route path="/dashboard/chart" element={<Chart />}/>
