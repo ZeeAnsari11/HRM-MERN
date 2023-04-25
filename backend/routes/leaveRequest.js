@@ -1,10 +1,6 @@
 import express from 'express'
 import {
-<<<<<<< HEAD
-    addingLeaveRequest, updateLeaveRequest, getLeaveRequest, deleteLeaveRequest, rejectLeaveRequest
-=======
-    addingLeaveRequest, updateLeaveRequest, getLeaveRequest, deleteLeaveRequest, userLeaveRequests
->>>>>>> HRMD-740
+    addingLeaveRequest, updateLeaveRequest, getLeaveRequest, deleteLeaveRequest, rejectLeaveRequest, userLeaveRequests
 } from '../controllers/leaveRequest.js';
 
 
