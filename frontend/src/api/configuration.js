@@ -12,3 +12,21 @@ export const userRoutes = {
 export const organizationRoutes = {
     getUserById: baseUrl+'/organization/',
 }
+
+export const leaveRequestRoutes = {
+    getLeaveTypes: baseUrl+'/leaveTypes/filter/?active=true&&active=false&&organization=',
+    setUserLeave: baseUrl+'/leave-request/new'
+}
+
+export const shortLeaveRoutes = {
+    getShortLeaveTypes: baseUrl+'/short-leave/organization/'
+}
+
+export const userLeaveRoute = {
+    getUserLeaves: baseUrl+'/leave-request/user-leaves/'
+}
+
+export const leaveType = {
+    getLeaveType: baseUrl+'/leaveType/'
+}
+

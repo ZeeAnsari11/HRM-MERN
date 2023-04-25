@@ -2,7 +2,7 @@ import { faBuilding, faDriversLicense, faEnvelope, faIdBadge, faIdCard, faLocati
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentUser } from "../../states/reducers/slices/backend/UserSlice";
+import { selectCurrentUser, selectUID } from "../../states/reducers/slices/backend/UserSlice";
 import { getCurrentUser } from "../../api/user";
 
 const UserProfile = () => {
@@ -12,7 +12,8 @@ const UserProfile = () => {
     getCurrentUser( dispatcher, setLoaded);
   }, [])
   const currentUser = useSelector(selectCurrentUser)
-
+  
+  console.log(currentUser._id);
   if (loaded === true) return <h1>Loading</h1>
   return (
     <>

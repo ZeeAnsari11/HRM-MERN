@@ -12,6 +12,7 @@ import { QualificationReducer } from "./slices/backend/QualificationSlice";
 import { RelativeReducer } from "./slices/backend/RelativesSlice";
 import { SalaryReducer } from "./slices/backend/SalarySlice";
 import { UserReducer } from "./slices/backend/UserSlice";
+import { LeaveRequestReducer } from "./slices/backend/LeaveRequest";
 import { NavbarReducer } from "./slices/frontend/Navbar";
 
 // Combining resucers in a root reducer
@@ -30,4 +31,5 @@ export const rootReducer = combineReducers({
     experiences: ExperiencesReducer,
     loan: LoanReducer,
     navbar: NavbarReducer,
+    leaverequest: LeaveRequestReducer,
 })
