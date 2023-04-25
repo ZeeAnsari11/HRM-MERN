@@ -29,13 +29,15 @@ export const UserSlice = createSlice({
 // Action Methods
 export const { 
   setCurrentUser, setAuth, logout,
-  setOrganization
+  setOrganization,
 } = UserSlice.actions;
 
 // Selector Methods
 export const selectCurrentUser = (state) => state.user.currentUser;
 export const selectAuth = (state) => state.user.userAuthToken;
-export const selectUID = (state) => state.user.userId;
+export const selectUID = (state) => state.user.currentUser._id;
+export const selectOrgId = (state) => state.user.currentUser.organization._id;
+export const selectUserLeaveTypes = (state) => state.user.currentUser.leaveTypeDetails
 
 // Reducer
 export const UserReducer = UserSlice.reducer;

@@ -99,6 +99,7 @@ export const createRequestFlowNode = async (req, res, next) => {
             filter = { lineManager: req.body.lineManager }
         } else if (req.body.department) {
             const department = await DepartmentModel.findById(req.body.department)
+            if (!department) throw "Department not found"
             if (requestFlow.requestType.organization.toString() != department.organization.toString()) {
                 throw 'You are not authorized to perform this action'
             }
@@ -106,9 +107,10 @@ export const createRequestFlowNode = async (req, res, next) => {
         } else {
             throw 'Either lineManager or department is required'
         }
-
+        const temp = requestFlow.requestType
         const existingNode = await RequestFlowNodeModel.findOne({
-            ...filter
+            ...filter,
+            temp
         })
         if (existingNode) {
             throw 'Node already exists in the Request Flow'

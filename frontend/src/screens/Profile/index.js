@@ -2,7 +2,7 @@ import { faBuilding, faDriversLicense, faEnvelope, faIdBadge, faIdCard, faLocati
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentUser } from "../../states/reducers/slices/backend/UserSlice";
+import { selectCurrentUser, selectUID } from "../../states/reducers/slices/backend/UserSlice";
 import { getCurrentUser } from "../../api/user";
 
 const UserProfile = () => {
@@ -12,11 +12,12 @@ const UserProfile = () => {
     getCurrentUser( dispatcher, setLoaded);
   }, [])
   const currentUser = useSelector(selectCurrentUser)
-
+  
+  console.log(currentUser._id);
   if (loaded === true) return <h1>Loading</h1>
   return (
     <>
-      <div className="flex justify-between p-4 h-26 bg-lightBgColor bg-opacity-20 backdrop-blur-md drop-shadow shadow-lg rounded-xl">
+      <div className="flex justify-between p-4 h-26 border rounded-xl">
         <div className="flex items-center space-x-6">
           <img className="w-24 h-24 rounded-xl" src="https://randomuser.me/api/portraits/men/1.jpg" alt="Avatar" />
           <div className="flex flex-col">
@@ -31,14 +32,14 @@ const UserProfile = () => {
             <span className="text-base font-medium">Profile Complete</span>
             <span className="text-sm font-medium">45%</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+          <div className="w-full bg-gray-200 rounded-full h-2.5">
             <div className="bg-green-500 h-2.5 rounded-full" style={{ width: "45%" }}></div>
           </div>
         </div>
       </div>
 
       <div className="flex w-full space-x-4 mt-4">
-        <div className="py-4 flex-[0.5] bg-lightBgColor bg-opacity-20 backdrop-blur-md drop-shadow shadow-lg rounded-xl">
+        <div className="py-4 flex-[0.5] border rounded-xl">
           <div className="border-l-8 border-backgroundDark font-bold text-lg">
             <h1 className="px-4 text-2xl">Personal Information</h1>
           </div>
@@ -57,7 +58,7 @@ const UserProfile = () => {
             </span>
           </div>
         </div>
-        <div className="py-4 flex-[0.5] bg-lightBgColor bg-opacity-20 backdrop-blur-md drop-shadow shadow-lg rounded-xl">
+        <div className="py-4 flex-[0.5] border rounded-xl">
           <div className="border-l-8 border-backgroundDark font-bold text-lg">
             <h1 className="px-4 text-2xl">Contact Information</h1>
           </div>
@@ -79,7 +80,7 @@ const UserProfile = () => {
       </div>
 
       <div className="flex w-full space-x-4 mt-4">
-      <div className="py-4 flex-1 bg-lightBgColor bg-opacity-20 backdrop-blur-md drop-shadow shadow-lg rounded-xl">
+      <div className="py-4 flex-1 border rounded-xl">
           <div className="border-l-8 border-backgroundDark font-bold text-lg">
             <h1 className="px-4 text-2xl">Organization Information</h1>
           </div>
@@ -97,7 +98,7 @@ const UserProfile = () => {
       </div>
 
       <div className="flex flex-1 space-x-4 mt-4">
-        <div className="py-4 flex-[0.5] bg-lightBgColor bg-opacity-20 backdrop-blur-md drop-shadow shadow-lg rounded-xl">
+        <div className="py-4 flex-[0.5]     border rounded-xl">
           <div className="border-l-8 border-backgroundDark w-full font-bold text-lg">
             <h1 className="w-full px-4 text-2xl">Address</h1>
           </div>
@@ -113,7 +114,7 @@ const UserProfile = () => {
           </div>
         </div>
 
-        <div className="py-4 flex-[0.5] bg-lightBgColor bg-opacity-20 backdrop-blur-md drop-shadow shadow-lg rounded-xl">
+        <div className="py-4 flex-[0.5]     border rounded-xl">
           <div className="border-l-8 border-backgroundDark w-full font-bold text-lg">
             <h1 className="w-full px-4 text-2xl">Skills</h1>
           </div>

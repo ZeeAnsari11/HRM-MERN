@@ -269,3 +269,18 @@ export const getLeaveRequest = (req, res, next) => {
 export const deleteLeaveRequest = (req, res, next) => {
     deleteById(req.params.id, res, next, LeaveRequestModel, 'LeaveRequest')
 }
+
+export const userLeaveRequests = (req, res, next) => {
+    LeaveRequestModel.find({ user: req.params.id })
+        .then((leaves) => {
+            if (leaves.length == 0) throw 'User did not request any leave'
+            res.status(200).json({
+                success: true,
+                leaves
+            })
+        })
+        .catch((error) => {
+            handleCatch(`${error}`, res, 401, next)
+        }
+    )
+}
