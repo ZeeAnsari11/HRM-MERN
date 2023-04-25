@@ -26,7 +26,7 @@ export const Menus = [
         access:"admin",
         font: faUsers,
         child: [
-            { title: "Create Employee", font: faCalendarTimes, to:"/dashboard/timesheet" },
+            { title: "Create Employee", font: faCalendarTimes, to:"/dashboard/employee" },
             { title: "View Employees", font: faFileAlt, to:"/dashboard/attendence" },
         ]
     },
