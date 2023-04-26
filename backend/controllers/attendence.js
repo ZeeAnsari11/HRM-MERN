@@ -1,5 +1,5 @@
 import { AttendanceModel } from "../models/attendenceSchema.js";
-import { createNew, handleCatch } from "../utils/common.js"
+import { handleCatch } from "../utils/common.js"
 import moment from "moment";
 import { UserModel } from "../models/userSchema.js";
 import { TimeSlotsModel } from "../models/timeSlotsSchema.js";
@@ -169,9 +169,9 @@ const generateOrUpdateAttendenceWhileCheckOut = (res, next, body) => {
   AttendanceModel.findOne(query)
     .then((doc) => {
       if (doc) {
-        body.workedHours = (new Date(placeHolder + body.checkOut) - new Date(placeHolder + doc.checkIn)) / (60 * 1000);
+        body.workedMinutes = (new Date(placeHolder + body.checkOut) - new Date(placeHolder + doc.checkIn)) / (60 * 1000);
         body.isPresent = true
-        console.log("-------------------workedHoues-------", body.workedHours);
+        console.log("-------------------workedMinutes-------", body.workedMinutes);
         AttendanceModel.findByIdAndUpdate(doc._id, body, { runValidators: true })
           .then((response) => {
             res.status(200).json({
@@ -198,7 +198,6 @@ const generateAttendence = (res, next, body) => {
     })
     .catch(err => handleCatch(err, res, 401, next))
 }
-
 
 export const markAbsent = (req, res, next) => {
   console.log("======called===");
@@ -236,7 +235,6 @@ export const markAbsent = (req, res, next) => {
     .catch(err => handleCatch(err, res, 401, next))
 }
 
-
 // Filter on the basis of missing-punches, early-left, late-left, early-arrival, late-arrival, present, absent
 export const filterAttendence = (req, res, next) => {
   try {
@@ -263,7 +261,7 @@ export const filterAttendence = (req, res, next) => {
                   }
                 },
                 {
-                  isAbsent : false
+                  isAbsent: false
                 }
               ]
             }
@@ -302,7 +300,57 @@ export const filterAttendence = (req, res, next) => {
     }
     else throw "Invalid request body"
   }
-  catch (err) {
+  catch (err) { handleCatch(err, res, 401, next) }
+}
 
+export const updateAttendence = (req, res, next) => {
+  try {
+    if ((req.body.checkIn || req.body.checkOut) && req.body.user && req.body.date) {
+      AttendanceModel.find({ user: req.body.user, date: new Date(req.body.date + "T00:00:00.000+00:00") })
+        .then((attendence) => {
+          console.log("========attendene========", attendence);
+          if (attendence.length == 0) throw "No Missing punche for attendece available for this date"
+          if (req.body.checkIn && attendence[0].checkIn !== "false") { throw "Already checkedIn can not checkedIn again" }
+          if (req.body.checkOut && attendence[0].checkOut !== "false") { throw "Already checkOut can not checkOut again" }
+          if (req.body.checkIn) {
+            if (attendence[0].checkOut != "false") {
+              attendence[0].workedMinutes = (new Date(placeHolder + attendence[0].checkOut) - new Date(placeHolder + req.body.checkIn)) / (60 * 1000);
+              console.log("====checkin====wh===", attendence[0].workedMinutes);
+              attendence[0].isPresent = true
+            }
+            attendence[0].checkIn = req.body.checkIn;
+            attendence[0].isAbsent = false   
+          }
+          if (req.body.checkOut) {
+            if (attendence[0].checkIn != "false") {
+              attendence[0].workedMinutes = (new Date(placeHolder + req.body.checkOut) - new Date(placeHolder + attendence[0].checkIn)) / (60 * 1000);
+              console.log("====checkOut====wh===", attendence[0].workedMinutes);
+              attendence[0].isPresent = true
+            }
+            attendence[0].checkOut = req.body.checkOut;
+            attendence[0].isAbsent = false     
+          }
+          attendence[0].save()
+            .then((result) => {
+              res.status(200).json({
+                success: true,
+                result
+              })
+            })
+            .catch(err => {
+              console.log("=====ererer========", err);
+              handleCatch(err, res, 401, next)
+            })
+        })
+        .catch(err => {
+          console.log("====err=========", err);
+          handleCatch(err, res, 401, next)
+        })
+    }
+
+  }
+  catch (err) {
+    console.log("==========r========", err);
+    handleCatch(err, res, 401, next)
   }
 }
