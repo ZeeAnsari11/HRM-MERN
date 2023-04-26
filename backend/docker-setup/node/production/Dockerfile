@@ -26,8 +26,8 @@ RUN npm --global config set user "${USER}"
 
 USER node
 
-RUN npm install --loglevel=warn;
+RUN npm install --loglevel=warn --force;
 
-RUN npm i --location=global pm2
+RUN npm i --location=global pm2 --force;
 
-CMD [ "pm2-runtime", "--no-autorestart", "npm", "--", "run", "start-prod" ]
+CMD [ "pm2-runtime", "--no-autorestart", "npm", "--", "run", "prod" ]
