@@ -1,7 +1,6 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
 
-const missingPunchesSchema = new Schema({
+const missingPunchesSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -12,10 +11,12 @@ const missingPunchesSchema = new Schema({
         required: true
     },
     expectedCheckInTime : {
-        type : String
+        type : String,
+        required: true
     },
     expectedCheckOutTime : {
-        type : String
+        type : String,
+        required: true
     },
     punchType:{
         type: String,
@@ -26,7 +27,8 @@ const missingPunchesSchema = new Schema({
                 'checkOut'
             ],
             messsage: 'Please Enter The Punch Type'
-        }
+        },
+        required: true
     },
     status: {
         type: String,
