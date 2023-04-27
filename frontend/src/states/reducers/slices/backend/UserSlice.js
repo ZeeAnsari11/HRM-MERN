@@ -34,6 +34,7 @@ export const {
 
 // Selector Methods
 export const selectCurrentUser = (state) => state.user.currentUser;
+export const selectCurrentUserOrg = (state) => state.user.currentUser.organization._id;
 export const selectAuth = (state) => state.user.userAuthToken;
 export const selectUID = (state) => state.user.currentUser._id;
 export const selectOrgId = (state) => state.user.currentUser.organization._id;

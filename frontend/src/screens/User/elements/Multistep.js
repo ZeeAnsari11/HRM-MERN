@@ -1,30 +1,16 @@
 import React from 'react'
+import Success from './Success'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faIdBadge, faInfo, faPersonBooth, faPersonCane } from '@fortawesome/free-solid-svg-icons'
 
-const Multistep = () => {
+const Multistep = ({index}) => {
+
     return (
         <ol className="relative text-gray-500 border-l border-gray-200">
             <li className="mb-10 ml-6">
-                <span className="absolute flex items-center justify-center w-8 h-8 bg-green-200 rounded-full -left-4 ring-4 ring-white">
-                    <svg
-                        aria-hidden="true"
-                        className="w-6 h-6 text-green-500"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                        />
-                    </svg>
-                </span>
-                <h3 className="font-medium leading-tight">Personal Info</h3>
-                <p className="text-sm">Step details here</p>
-            </li>
-            <li className="mb-10 ml-6">
-                <span className="absolute flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -left-4 ring-4 ring-white">
-                    <svg
+                <span className={`absolute flex items-center justify-center w-8 h-8 ${(index > 1)?'bg-green-200 text-green-500':null} bg-gray-100 rounded-full -left-4 ring-4 ring-white`}>
+                    {
+                        (index === 1) ? <svg
                         aria-hidden="true"
                         className="w-6 h-6 text-gray-500"
                         fill="currentColor"
@@ -36,29 +22,54 @@ const Multistep = () => {
                             d="M10 2a1 1 0 00-1 1v1a1 1 0 002 0V3a1 1 0 00-1-1zM4 4h3a3 3 0 006 0h3a2 2 0 012 2v9a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm2.5 7a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm2.45 4a2.5 2.5 0 10-4.9 0h4.9zM12 9a1 1 0 100 2h3a1 1 0 100-2h-3zm-1 4a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z"
                             clipRule="evenodd"
                         />
-                    </svg>
+                    </svg>:<Success />
+                    }
                 </span>
-                <h3 className="font-medium leading-tight">Account Info</h3>
+                <h3 className="font-bold leading-tight">Personal Info</h3>
                 <p className="text-sm">Step details here</p>
             </li>
             <li className="mb-10 ml-6">
-                <span className="absolute flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -left-4 ring-4 ring-white">
-                    <svg
+                <span className={`absolute flex items-center justify-center w-8 h-8 ${(index > 2)?'bg-green-200 text-green-500':null} bg-gray-100 rounded-full -left-4 ring-4 ring-white`}>
+                    {
+                        (index <= 2) ?                     
+                        <svg
                         aria-hidden="true"
                         className="w-6 h-6 text-gray-500"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
                     >
-                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
                         <path
                             fillRule="evenodd"
-                            d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                            d="M10 2a1 1 0 00-1 1v1a1 1 0 002 0V3a1 1 0 00-1-1zM4 4h3a3 3 0 006 0h3a2 2 0 012 2v9a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm2.5 7a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm2.45 4a2.5 2.5 0 10-4.9 0h4.9zM12 9a1 1 0 100 2h3a1 1 0 100-2h-3zm-1 4a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z"
                             clipRule="evenodd"
                         />
-                    </svg>
+                    </svg> : <Success />
+                    }
                 </span>
-                <h3 className="font-medium leading-tight">Review</h3>
+                <h3 className="font-bold leading-tight">Organization Info</h3>
+                <p className="text-sm">Step details here</p>
+            </li>
+            <li className="mb-10 ml-6">
+                <span className={`absolute flex items-center justify-center w-8 h-8 ${(index > 3)?'bg-green-200 text-green-500':null} bg-gray-100 rounded-full -left-4 ring-4 ring-white`}>
+                    {
+                        (index <= 3) ? <svg
+                            aria-hidden="true"
+                            className="w-6 h-6 text-gray-500"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                            <path
+                                fillRule="evenodd"
+                                d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                                clipRule="evenodd"
+                            />
+                        </svg> : <Success />
+                    }
+                </span>
+                <h3 className="font-medium leading-tight">Confirguration</h3>
                 <p className="text-sm">Step details here</p>
             </li>
             <li className="ml-6">
