@@ -37,7 +37,7 @@ import { requestFlowRoute } from "./routes/requestFlow.js";
 import { requestTypeRoute } from "./routes/requestType.js";
 import { wfhRoute } from "./routes/wfh.js";
 import { requestRoute } from "./routes/request.js"; 
-
+import { missingPunchesRequestRoute } from "./routes/missingPunches.js";
 
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandler.js";
@@ -90,6 +90,8 @@ app.use(apiVersion, requestFlowRoute)
 app.use(apiVersion, requestTypeRoute)
 app.use(apiVersion, gradeRoute)
 app.use(apiVersion, requestRoute)
+app.use(apiVersion, missingPunchesRequestRoute)
+
 app.use(errorHandler);
 
 export default app;
