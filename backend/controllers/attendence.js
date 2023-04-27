@@ -272,7 +272,6 @@ export const filterAttendence = (req, res, next) => {
             console.log("==subQuery====", subQuery);
             query = {
               $and: [
-
                 subQuery
                 ,
                 { user: req.body.user },
@@ -319,7 +318,7 @@ export const updateAttendence = (req, res, next) => {
               attendence[0].isPresent = true
             }
             attendence[0].checkIn = req.body.checkIn;
-            attendence[0].isAbsent = false   
+            attendence[0].isAbsent = false
           }
           if (req.body.checkOut) {
             if (attendence[0].checkIn != "false") {
@@ -328,7 +327,7 @@ export const updateAttendence = (req, res, next) => {
               attendence[0].isPresent = true
             }
             attendence[0].checkOut = req.body.checkOut;
-            attendence[0].isAbsent = false     
+            attendence[0].isAbsent = false
           }
           attendence[0].save()
             .then((result) => {
@@ -347,7 +346,6 @@ export const updateAttendence = (req, res, next) => {
           handleCatch(err, res, 401, next)
         })
     }
-
   }
   catch (err) {
     console.log("==========r========", err);

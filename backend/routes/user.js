@@ -2,7 +2,7 @@ import express from "express";
 import {
     addingUser, getAllUsersByOrganizationId, getAllUsersByBranchId, updateUserById,
     deleteUserById, getUserById, updateUserEmployment, addSkillsToUser, deleteSkillFromUser, 
-    getActiveNonActiveUsersByOrganizationId, getLineManagerByuserId, getHODByDepartmentId,
+    filterUserByOrganizationId, getLineManagerByuserId, getHODByDepartmentId,
     getAttendanceExemptUsers, getEmployeeTypeByOrganizationId, getRoleTypeByOrganizationId,
     getChildsByUserId, validateUserToken
 } from '../controllers/user.js'
@@ -18,7 +18,7 @@ userRoute.route('/user/:id').get(getUserById)
 userRoute.route('/user/employment/update/:id').put(updateUserEmployment)
 userRoute.route('/user/skill/:id').post(validateUserToken, addSkillsToUser).delete(deleteSkillFromUser)
 userRoute.route('/user/lineManager/:id').get(getLineManagerByuserId)
-userRoute.route('/user/active/organization/:id').get(getActiveNonActiveUsersByOrganizationId)
+userRoute.route('/user/filterUser/organization').get(filterUserByOrganizationId)
 userRoute.route('/user/lineManager/:id').get(getLineManagerByuserId)
 userRoute.route('/user/hod/:id').get(getHODByDepartmentId)
 userRoute.route('/exempt/user/organization/:id').get(getAttendanceExemptUsers)

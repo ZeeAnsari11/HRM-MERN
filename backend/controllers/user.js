@@ -184,19 +184,19 @@ const addingUserLeaves = (req, res, next, organizationRef) => {
                 req.body.leaveTypeDetails.push(x)
             })
             UserModel.create(req.body)
-                    .then((response) => {
-                        organizationRef.userCode.currentCode = organizationRef.userCode.currentCode + 1;
-                        res.status(200).json({
-                            success: true,
-                            response
-                        })
+                .then((response) => {
+                    organizationRef.userCode.currentCode = organizationRef.userCode.currentCode + 1;
+                    res.status(200).json({
+                        success: true,
+                        response
                     })
-                    .catch((error) => {
-                        handleCatch(`${error}`, res, 401, next)
-                    })
-                    .finally(() => {
-                        organizationRef.save();
-                    })
+                })
+                .catch((error) => {
+                    handleCatch(`${error}`, res, 401, next)
+                })
+                .finally(() => {
+                    organizationRef.save();
+                })
         })
         .catch((error) => {
             handleCatch(`${error}`, res, 401, next)
@@ -545,12 +545,12 @@ const updateUserEOERehireReason = (req, res, next, user) => {
 }
 
 
-//// get All Active / Non-Active Users of an Organization By Id ////
-export const getActiveNonActiveUsersByOrganizationId = (req, res, next) => {
+//// get All Active / Non-Active Users of an Organization By Id or all other field filters ////
+export const filterUserByOrganizationId = (req, res, next) => {
     try {
-        if (Object.keys(req.body).length == 0) throw "Request Body is empty"
-        if (req.body.isActive !== undefined) {
-            UserModel.find({ organization: req.params.id, isActive: req.body.isActive })
+        if (!req.body.organization) throw "Organization not specified";
+        if (Object.keys(req.body).length > 1) {
+            UserModel.find(req.body).select('_id firstName lastName')
                 .then((users) => {
                     if (users.length === 0) throw `No users are there in this organization with status: ${req.body.isActive}`
                     res.status(200).json({
@@ -559,20 +559,9 @@ export const getActiveNonActiveUsersByOrganizationId = (req, res, next) => {
                         active_users: users
                     })
                 })
-                .catch((err) => {
-                    res.status(404).json({
-                        success: false,
-                        message: `${err}`
-                    })
-                })
+                .catch((err) => handleCatch(err,res, 401, next))
         }
-        else throw 'invalid body'
-    } catch (error) {
-        res.status(404).json({
-            success: false,
-            message: `${error}`
-        })
-    }
+    } catch (error) { handleCatch(err,res, 401, next) }
 }
 
 export const getEmployeeTypeByOrganizationId = (req, res, next) => {
@@ -801,7 +790,7 @@ export const getChildsByUserId = (req, res, next) => {
 }
 
 export const validateUserToken = (req, res, next) => {
-    if ( req.body.resetPasswordToken || req.body.resetPasswordExpire ) {
+    if (req.body.resetPasswordToken || req.body.resetPasswordExpire) {
         return handleCatch("Can't add/update reset password token", res, 401, next);
     }
     else return next();
