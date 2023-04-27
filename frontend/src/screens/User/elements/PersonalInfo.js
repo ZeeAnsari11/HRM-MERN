@@ -1,9 +1,13 @@
 import React from 'react'
 import Countries from './Countries'
 
-const PersonalInfo = ({changePageNumber}) => {
-  return (
-    <div className="lg:col-span-2">
+const PersonalInfo = ({changePageNumber, handleInputChange}) => {
+
+    return (
+    <form className="lg:col-span-2" onSubmit={(e) => {
+        e.preventDefault();
+        changePageNumber();
+    }}>
             <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
                 <div className="md:col-span-5">
                     <label htmlFor="full_name">Full Name</label>
@@ -14,7 +18,8 @@ const PersonalInfo = ({changePageNumber}) => {
                             id="first_name"
                             placeholder="First Name"
                             className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                            defaultValue=""
+                            onChange={handleInputChange}
+                            required
                         />
                         <input
                             type="text"
@@ -22,7 +27,8 @@ const PersonalInfo = ({changePageNumber}) => {
                             id="last_name"
                             placeholder="Last Name"
                             className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                            defaultValue=""
+                            onChange={handleInputChange}
+                            required
                         />
                     </div>
 
@@ -34,19 +40,21 @@ const PersonalInfo = ({changePageNumber}) => {
                         name="email"
                         id="email"
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        defaultValue=""
+                        onChange={handleInputChange}
                         placeholder="email@domain.com"
+                        required
                     />
                 </div>
                 <div className="md:col-span-3">
-                    <label htmlFor="address">Address / Street</label>
+                    <label htmlFor="address">Full Address</label>
                     <input
                         type="text"
                         name="address"
                         id="address"
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        defaultValue=""
-                        placeholder=""
+                        placeholder="Full Address"
+                        onChange={handleInputChange}
+                        required
                     />
                 </div>
                 <div className="md:col-span-2">
@@ -54,9 +62,11 @@ const PersonalInfo = ({changePageNumber}) => {
                     <select
                         name="gender"
                         id="gender"
+                        onChange={handleInputChange}
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                        required
                     >
-                        <option value='' disabled>Select Gender</option>
+                        <option value=''>Select Gender</option>
                         <option value='male'>Male</option>
                         <option value='female'>Female</option>
                         <option value='others'>Others</option>
@@ -69,9 +79,11 @@ const PersonalInfo = ({changePageNumber}) => {
                             name="country"
                             id="country"
                             placeholder="Country"
+                            onChange={handleInputChange}
                             className="px-4 outline-none text-gray-800 w-full bg-transparent"
+                            required
                         >
-                            <option value='' disabled>Select Country</option>
+                            <option value=''>Select Country</option>
                             <Countries />
                         </select>
 
@@ -83,9 +95,10 @@ const PersonalInfo = ({changePageNumber}) => {
                         <input
                             name="state"
                             id="state"
+                            onChange={handleInputChange}
                             placeholder="State"
                             className="px-4 outline-none text-gray-800 w-full bg-transparent"
-                            defaultValue=""
+                            required
                         />
                     </div>
                 </div>
@@ -93,11 +106,11 @@ const PersonalInfo = ({changePageNumber}) => {
                     <label htmlFor="zipcode">Zipcode</label>
                     <input
                         type="text"
+                        onChange={handleInputChange}
                         name="zipcode"
                         id="zipcode"
                         className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        placeholder=""
-                        defaultValue=""
+                        placeholder="Zipcode"
                     />
                 </div>
                 <div className="md:col-span-2">
@@ -105,10 +118,10 @@ const PersonalInfo = ({changePageNumber}) => {
                     <input
                         type="date"
                         name="dob"
+                        onChange={handleInputChange}
                         id="dob"
-                        className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        placeholder=""
-                        defaultValue=""
+                        required
+                        className="transition-all h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                     />
                 </div>
                 <div className="md:col-span-1">
@@ -116,6 +129,7 @@ const PersonalInfo = ({changePageNumber}) => {
                     <input
                         type="text"
                         name="blood-group"
+                        onChange={handleInputChange}
                         id="blood-group"
                         className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                         placeholder="Blood Group"
@@ -127,6 +141,7 @@ const PersonalInfo = ({changePageNumber}) => {
                     <input
                         type="text"
                         name="religion"
+                        onChange={handleInputChange}
                         id="religion"
                         className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                         placeholder="Religion"
@@ -138,7 +153,9 @@ const PersonalInfo = ({changePageNumber}) => {
                     <input
                         type="text"
                         name="nationality"
+                        onChange={handleInputChange}
                         id="nationality"
+                        required
                         className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                         placeholder="Nationality"
 
@@ -149,22 +166,24 @@ const PersonalInfo = ({changePageNumber}) => {
                     <input
                         type="text"
                         name="contact"
+                        onChange={handleInputChange}
                         id="contact"
                         className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                         placeholder="Contact Number"
+                        required
 
                     />
                 </div>
 
                 <div className="md:col-span-5 text-right">
                     <div className="inline-flex items-end">
-                        <button onClick={changePageNumber} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             Next
                         </button>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
   )
 }
 
