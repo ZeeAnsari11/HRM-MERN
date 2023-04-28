@@ -519,8 +519,7 @@ const updateUserEOERehireReason = (req, res, next, user) => {
     }
 }
 
-
-//// get All Active / Non-Active Users of an Organization By Id ////
+//// get All Active / Non-Active Users of an Organization By Id or all other field filters ////
 export const filterUserByOrganizationId = (req, res, next) => {
     try {
         if (!req.body.organization) throw "Organization not specified";
