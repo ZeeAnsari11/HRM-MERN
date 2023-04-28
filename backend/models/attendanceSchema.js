@@ -26,7 +26,7 @@ const attendanceSchema = mongoose.Schema({
         type: Boolean
     },
     earlyArrivalTime: {
-        type: Number
+        type: Number,
     },
     isEarlyLeft: {
         type: Boolean

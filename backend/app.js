@@ -36,7 +36,7 @@ import { probationEvaluationRoute } from "./routes/probationEvaluation.js";
 import { requestFlowRoute } from "./routes/requestFlow.js";
 import { requestTypeRoute } from "./routes/requestType.js";
 import { wfhRoute } from "./routes/wfh.js";
-import { attendenceRoute } from "./routes/attendence.js";
+import { attendenceRoute } from "./routes/attendance.js";
 
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandler.js";
