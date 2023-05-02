@@ -1,7 +1,7 @@
 const errorHandler = (err, req, res, next) => {
     let errStatusCode = err.statusCode || 500;
-    let errMsg = err.error.message || err.error || 'Something went wrong';
-    let stack = err.error.stack | {}
+    let errMsg =  err.error || err.error?.message || 'Something went wrong';
+    let stack = err.error?.stack | {}
     
     if (process.env.NODE_ENV === 'production') {
         stack = {};

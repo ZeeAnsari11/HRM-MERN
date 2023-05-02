@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { authentication, userRoutes } from './configuration';
+import { authentication, organizationRoutes, userRoutes } from './configuration';
 import { setAuth, setCurrentUser } from '../states/reducers/slices/backend/UserSlice';
 
 export const loginAuth = (dispatcher, body, navigation) => {
@@ -40,4 +40,12 @@ export const getCurrentUser = (dispatcher, setLoaded=null) => {
         }).catch((error) => {
             console.log(error)
         })
+}
+
+export const loadAllOrganizationsInfo = (dispatcher, orgId) => {
+    console.log(orgId)
+    //axios.get(organizationRoutes.getBranchesByOrgId + orgId).then((rsp) => console.log(rsp)).catch((e) => console.log(e))
+    //axios.get(organizationRoutes.getDepartmentsByOrgId + orgId).then((rsp) => console.log(rsp))
+    //axios.get(organizationRoutes.getDesignationsByOrgId + orgId).then((rsp) => console.log(rsp))
+    //axios.get(organizationRoutes.getUsersByFilter+orgId).then((rsp) => console.log(rsp))
 }

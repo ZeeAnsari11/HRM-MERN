@@ -1,8 +1,10 @@
 import { createNew, handleCatch, getById, deleteById, updateById } from "../utils/common.js"
 import { MissingPunchesModel } from "../models/missingPunchesSchema.js"
+
 export const createMissingPunchRequest = (req, res, next) => {
     try {
         if (req.body.status) throw "Status is not required"
+        
         createNew(req, res, next, MissingPunchesModel)
     }
     catch (err) { handleCatch(err, res, 401, next) }

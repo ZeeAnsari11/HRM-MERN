@@ -1,20 +1,11 @@
-import { faBuilding, faDriversLicense, faEnvelope, faIdBadge, faIdCard, faLocation, faMailBulk, faPassport, faPhoneSquare } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../states/reducers/slices/backend/UserSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentUser, selectUID } from "../../states/reducers/slices/backend/UserSlice";
-import { getCurrentUser } from "../../api/user";
+import { faBuilding, faDriversLicense, faEnvelope, faIdBadge, faIdCard, faLocation, faMailBulk, faPassport, faPhoneSquare } from "@fortawesome/free-solid-svg-icons";
 
 const UserProfile = () => {
-  const [loaded, setLoaded] = React.useState(true);
-  const dispatcher = useDispatch();
-  useEffect(() => {
-    getCurrentUser( dispatcher, setLoaded);
-  }, [])
   const currentUser = useSelector(selectCurrentUser)
-  
-  console.log(currentUser._id);
-  if (loaded === true) return <h1>Loading</h1>
   return (
     <>
       <div className="flex justify-between p-4 h-26 border rounded-xl">

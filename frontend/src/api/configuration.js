@@ -11,6 +11,10 @@ export const userRoutes = {
 
 export const organizationRoutes = {
     getUserById: baseUrl+'/organization/',
+    getBranchesByOrgId: baseUrl+'/organization/branch/',
+    getDepartmentsByOrgId: baseUrl+'/organization/department/',
+    getDesignationsByOrgId: baseUrl+'/designations/organization/',
+    getUsersByFilter: baseUrl+'/user/filterUser/organization',
 }
 
 export const leaveRequestRoutes = {
@@ -29,4 +33,3 @@ export const userLeaveRoute = {
 export const leaveType = {
     getLeaveType: baseUrl+'/leaveType/'
 }
-
