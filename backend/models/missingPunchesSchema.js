@@ -6,6 +6,11 @@ const missingPunchesSchema = new mongoose.Schema({
         ref: 'User',
         required: [true, "Please Enter the UserId"]
     },
+    organization: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization',
+        required: true,
+    },
     date: {
         type: Date,
         required: true
