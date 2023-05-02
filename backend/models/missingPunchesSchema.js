@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-
 const missingPunchesSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -53,4 +52,3 @@ const missingPunchesSchema = new mongoose.Schema({
 });
 
 export const MissingPunchesModel = mongoose.model('MissingPunches', missingPunchesSchema, 'MissingPunches Collection');
-
