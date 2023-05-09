@@ -57,7 +57,8 @@ const getfirstNodeUser = async (req, res, next, node, user, request, requestType
 }
 
 
-const addingRequest = (req, res, next, obj) => {
+const addingRequest = (req, res, next, obj, show = true) => {
+    console.log("=============show=======");
     const senderId = obj.senderId;
     console.log("========obj=======", obj);
     RequestModel.findOne({ "requests.requestDetails.senderId": senderId })
@@ -70,7 +71,15 @@ const addingRequest = (req, res, next, obj) => {
                 }
                 req.body.requests.requestDetails.push(obj)
                 RequestModel.create(req.body)
-                    .then()
+                    .then(() => {
+                        if (show) {
+                            res.status(200).json({
+                                success: true,
+                                message: "Your Rquest created successfully"
+                            })
+                        }
+                        else return
+                    })
                     .catch((error) => {
                         handleCatch(`${error}`, res, 401, next)
                     })
@@ -79,6 +88,14 @@ const addingRequest = (req, res, next, obj) => {
                 console.log("================else=================");
                 userFound.requests.requestDetails.push(obj);
                 userFound.save()
+                    .then(() => {
+                        if (show) {
+                            res.status(200).json({
+                                success: true,
+                                message: "Your Rquest created successfully"
+                            })
+                        }
+                    })
                     .catch((error) => { handleCatch(`${error}`, res, 401, next) })
             }
         })
@@ -101,8 +118,8 @@ export const requestToNextNode = (req, res, next) => {
                             UserModel.findById(req.body.senderId)
                                 .then((user) => {
                                     if (!user) throw 'No such user'
+                                    getNodeUser(node, user, req, res, next, false);
                                     settingStatus(req, res, next)
-                                    getNodeUser(node, user, req, res, next);
                                 })
                                 .catch((error) => {
                                     handleCatch(`${error}`, res, 401, next)
@@ -118,29 +135,19 @@ export const requestToNextNode = (req, res, next) => {
                             settingStatus(req, res, next, "approvedByAll")
                             break;
                         }
-                        case 'MissingPunches': {
+                        case 'Leave': {
+                            settingStatus(req, res, next, "approvedByAll")
+                            break;
+                        }
+                        case 'Loan': {
+                            settingStatus(req, res, next, "approvedByAll")
+                            break;
+                        }
+                        case 'WFH': {
                             settingStatus(req, res, next, "approvedByAll")
                             break;
                         }
                     }
-                    LeaveRequestModel.findById(req.body.requestId)
-                        .then((leave) => {
-                            if (leave) {
-                                updateRequestStatus(req, res, next, leave)
-                            }
-                        })
-                        .catch((error) => {
-                            handleCatch(`${error}`, res, 401, next)
-                        })
-                    WFHModel.findById(req.body.requestId)
-                        .then((wfh) => {
-                            if (wfh) {
-                                updateRequestStatus(req, res, next, wfh)
-                            }
-                        })
-                        .catch((error) => {
-                            handleCatch(`${error}`, res, 401, next)
-                        })
                 }
             })
             .catch((error) => {
@@ -154,6 +161,7 @@ export const requestToNextNode = (req, res, next) => {
 const settingStatus = (req, res, next, requestStatus = null) => {
     const requestId = req.body.notificationId;
     const type = req.body.type
+    console.log("=================typeeeeee================", type);
     RequestModel.findOne({ "requests.requestDetails._id": requestId })
         .then((request) => {
             request.requests.requestDetails.forEach(previousRequest => {
@@ -165,57 +173,19 @@ const settingStatus = (req, res, next, requestStatus = null) => {
                 .then(() => {
                     switch (type) {
                         case 'MissingPunches': {
-                            console.log("========missing punch case==========");
-                            MissingPunchesModel.findById(req.body.requestId)
-                                .then((missingPunches) => {
-                                    console.log("==============missingPunches=======", missingPunches);
-                                    if (!missingPunches) throw "Request for missing Punches is not found"
-                                    requestStatus == "approvedByAll" ? missingPunches.status = "approved" : missingPunches.status = "processing"
-                                    return missingPunches.save()
-                                        .then((missingPunchesRequest) => {
-                                            console.log("==============saved=================", missingPunchesRequest);
-                                            if (requestStatus == "approvedByAll") {
-                                                console.log("=============final request======", req);
-                                                console.log("=========missing======", missingPunchesRequest);
-                                                let request = {};
-                                                request.body = {
-                                                    user: missingPunchesRequest.user,
-                                                    date: missingPunchesRequest.date.toISOString().slice(0, 10),
-                                                    [missingPunchesRequest.punchType]: missingPunchesRequest.expectedTime
-                                                }
-                                                updateAttendance(request, res, next);
-                                                console.log("============final body=====", request.body)
-                                            }
-                                            else {
-                                                res.status(200).json({
-                                                    success: true,
-                                                    message: "Request Approved by Node"
-                                                })
-                                            }
-                                        })
-                                })
-                                .catch(err => handleCatch(err, res, 401, next))
+                            commonModels(req, res, next, MissingPunchesModel, requestStatus, 'MissingPunches')
                             break;
                         }
                         case 'Loan': {
-                            LoanModel.findById(req.body.requestId)
-                                .then((loan) => {
-                                    console.log("==============loan=======", loan);
-                                    if (!loan) throw "Request for loan is not found"
-                                    requestStatus == "approvedByAll" ? loan.status = "approved" : loan.status = "processing"
-                                    return loan.save()
-                                        .then((loan) => {
-                                            if (requestStatus == "approvedByAll") {
-
-                                            }
-                                            else {
-                                                res.status(200).json({
-                                                    success: true,
-                                                    message: "Request Approved by Node"
-                                                })
-                                            }
-                                        })
-                                })
+                            commonModels(req, res, next, LoanModel, requestStatus, 'Loan')
+                            break;
+                        }
+                        case 'Leave': {
+                            commonModels(req, res, next, LeaveRequestModel, requestStatus, 'Leave')
+                        }
+                            break;
+                        case 'WFH': {
+                            commonModels(req, res, next, WFHModel, requestStatus, 'WFH')
                             break;
                         }
                     }
@@ -226,7 +196,7 @@ const settingStatus = (req, res, next, requestStatus = null) => {
         })
 }
 
-const getNodeUser = async (node, user, req, res, next) => {
+const getNodeUser = async (node, user, req, res, next, show) => {
     try {
         let nodeUser = ''
         if (node.lineManager) nodeUser = user.lineManager
@@ -246,29 +216,75 @@ const getNodeUser = async (node, user, req, res, next) => {
             createdAt: req.body.createdAt
         }
         console.log("===========x22==========", x);
-        addingRequest(req, res, next, x)
+        addingRequest(req, res, next, x, show)
     } catch (error) {
         handleCatch(`${error}`, res, 401, next)
     }
 }
 
-export const updateRequestStatus = (req, res, next, request) => {
-    try {
-        if (request.status == 'pending') {
-            settingStatus(req, res, next)
-            request.status = 'approved'
-            
-            request.save()
-            res.status(200).json({
-                success: true,
-                Message: 'Request Approved Successfully.'
-            })
-        }
-        else throw 'Cannot Update this Request'
-    } catch (error) {
-        handleCatch(`${error}`, res, 401, next)
-    }
+export const commonModels = (req, res, next, model, requestStatus = null, msg) => {
+    console.log("==========modellllllaaaaaaaaaa==============", model);
+    model.findById(req.body.requestId)
+        .then((Obj) => {
+            if (!Obj) throw `Request for ${msg} is not found`
+            requestStatus == "approvedByAll" ? Obj.status = "approved" : Obj.status = "processing"
+            Obj.save()
+                .then((Obj) => {
+                    if (requestStatus == "approvedByAll") {
+                        console.log("===============approved by all you leave request ");
+                        switch (msg) {
+                            case 'MissingPunches': {
+                                let request = {};
+                                request.body = {
+                                    user: Obj.user,
+                                    date: Obj.date.toISOString().slice(0, 10),
+                                    [Obj.punchType]: Obj.expectedTime
+                                }
+                                updateAttendance(request, res, next);
+                            }
+                                break;
+                            case 'Loan': {
+                                console.log("=======Your Loan Request is Approved");
+                            }
+                                break;
+                            case 'Leave': {
+                                updateAttendance(req, res, next, true);
+                            }
+                                break;
+                            case 'WFH': {
+                                console.log("===============Your WFH Request is Approved ");
+                            }
+                                break;
+                        }
+                    }
+                    else {
+                        res.status(200).json({
+                            success: true,
+                            message: "Request Approved by Node"
+                        })
+                    }
+                })
+        })
+        .catch(err => handleCatch(err, res, 401, next))
 }
+
+// export const updateRequestStatus = (req, res, next, request) => {
+//     try {
+//         if (request.status == 'pending') {
+//             settingStatus(req, res, next)
+//             request.status = 'approved'
+
+//             request.save()
+//             res.status(200).json({
+//                 success: true,
+//                 Message: 'Request Approved Successfully.'
+//             })
+//         }
+//         else throw 'Cannot Update this Request'
+//     } catch (error) {
+//         handleCatch(`${error}`, res, 401, next)
+//     }
+// }
 
 export const rejectRequest = (req, res, next) => {
     console.log("===========1==================", req.body);

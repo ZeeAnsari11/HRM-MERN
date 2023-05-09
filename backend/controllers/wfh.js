@@ -12,7 +12,7 @@ export const creatingWFH = (req, res, next) => {
             if (new Date(req.body.startDate) > new Date(req.body.endDate)) throw 'Invalid Date.'
             WFHModel.create(req.body)
                 .then((wfh) => {
-                    creatingRequest(req, res, next, user, wfh, '643d274ecb47b0a176489073', '643d271bcb47b0a17648906f')
+                    creatingRequest(req, res, next, user, wfh, '643d274ecb47b0a176489073', '643d271bcb47b0a17648906f', 'WFH')
                 })
                 .catch((error) => {
                     handleCatch(`${error}`, res, 401, next)

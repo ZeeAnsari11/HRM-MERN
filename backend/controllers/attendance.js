@@ -3,6 +3,7 @@ import { handleCatch } from "../utils/common.js"
 import moment from "moment";
 import { UserModel } from "../models/userSchema.js";
 import { TimeSlotsModel } from "../models/timeSlotsSchema.js";
+import { LeaveRequestModel } from "../models/leaveRequestSchema.js";
 const placeHolder = '1970-01-01T';
 
 export const createAttendance = (req, res, next) => {
@@ -255,8 +256,31 @@ export const filterAttendance = (req, res, next) => {
   catch (err) { handleCatch(err, res, 401, next) }
 }
 
-export const updateAttendance = (req, res, next) => {
+export const updateAttendance = (req, res, next, leave = null) => {
   try {
+    if (leave) {
+      LeaveRequestModel.findById(req.body.requestId)
+        .then((leave) => {
+          return AttendanceModel.find({
+            user: req.body.senderId, date: {
+              $gte: new Date(leave.startDate),
+              $lte: new Date(leave.endDate)
+            }, isAbsent: true
+          })
+            .then((attendances) => {
+              attendances.forEach(attendance => {
+                attendance.isAbsent = false;
+                attendance.onLeave = true
+                attendance.save()
+              })
+              res.status(200).json({
+                success: true,
+                msg: 'Leave request is approved successfully and attendance is updated.'
+              })
+            })
+        })
+        .catch(error => { handleCatch(error, res, 401, next) })
+    }
     if ((req.body.checkIn || req.body.checkOut) && req.body.user && req.body.date) {
       AttendanceModel.find({ user: req.body.user, date: new Date(req.body.date + "T00:00:00.000+00:00") })
         .then((attendance) => {

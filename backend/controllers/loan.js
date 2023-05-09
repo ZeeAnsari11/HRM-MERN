@@ -49,10 +49,6 @@ const createRepaymentSchedules = (req, res, next, user) => {
                     LoanModel.create(req.body)
                         .then((loan) => {
                             creatingRequest(req, res, next, user, loan, "6458b0acf54c3eb58e8bfad8", "6458b00ef54c3eb58e8bfad4", "Loan")
-                            res.status(200).json({
-                                success: true,
-                                message: "Your Rquest for Loan created successfully"
-                            })
                         })
                         .catch(err => handleCatch(err, res, 401, next))
                 }

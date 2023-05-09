@@ -28,10 +28,6 @@ export const createMissingPunchRequest = (req, res, next) => {
                                 .select("_id lineManager organization branch firstName lastName")
                                 .then((user) => {
                                     creatingRequest(req, res, next, user, missingPunchesRequest, "64552238be486f2a383ff532", "645251d7c62b8094627d8aa1", "MissingPunches");
-                                    res.status(200).json({
-                                         success: true,
-                                        message : "Your Rquest for missingPunches created successfully"
-                                    })
                                 });
                         })
                         .catch((err) => {

@@ -51,6 +51,10 @@ const attendanceSchema = mongoose.Schema({
     workedMinutes: {
         type: Number,
     },
+    onLeave: {
+        type: Boolean,
+        default: false
+    },
     createdAt: {
         type: Date,
         default: Date.now,

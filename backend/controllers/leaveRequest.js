@@ -13,6 +13,7 @@ export const addingLeaveRequest = (req, res, next) => {
         if (req.body.count) throw 'Please remove count.'
         if (!req.body.startDate) throw 'Kindly Provide Start Date.'
         if (!req.body.organization) throw 'Kindly Provide Organization.'
+        let leaveDaysIndex = []
         LeaveTypeModel.findById(req.body.leaveType)
             .then((leaveType) => {
                 if (!leaveType) throw `No such leave type ${req.body.leaveType}`
@@ -20,11 +21,23 @@ export const addingLeaveRequest = (req, res, next) => {
                 UserModel.findById(req.body.user)
                     .then((user) => {
                         if (!user) throw `No such user ${req.body.user}`
-                        user.leaveTypeDetails.forEach(userLeaveType => {
-                            if (userLeaveType.leaveType.toString() == req.body.leaveType) {
-                                leaveRequestType(req, res, next, leaveType, user, userLeaveType.count)
-                            }
-                        })
+                        const startDate = new Date(req.body.startDate);
+                        const endDate = new Date(req.body.endDate);
+                        for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
+                            const index = new Date(date);
+                            const dayIndex = index.getDay();
+                            leaveDaysIndex.push(dayIndex)
+                        }
+                        console.log("leaveDaysIndex", leaveDaysIndex);
+                        console.log("!user.userRoster.restDays.includes(leaveDaysIndex)", !user.userRoster.restDays.includes(leaveDaysIndex));
+                        // if (!user.Roster.restDays.includes(leaveDaysIndex)) {
+                        //     user.leaveTypeDetails.forEach(userLeaveType => {
+                        //         if (userLeaveType.leaveType.toString() == req.body.leaveType) {
+                        //             leaveRequestType(req, res, next, leaveType, user, userLeaveType.count)
+                        //         }
+                        //     })
+                        // }
+                        // else throw 'Invalid leave Days.'
                     })
                     .catch((error) => {
                         handleCatch(`${error}`, res, 401, next)
@@ -128,7 +141,7 @@ const calculateCount = (req) => {
 const creatingLeaveRequest = (req, res, next, user) => {
     LeaveRequestModel.create(req.body)
         .then((leaveRequest) => {
-            creatingRequest(req, res, next, user, leaveRequest, '64351dbe9e45310b2991aaf3', '64351d4e9e45310b2991aaef')
+            creatingRequest(req, res, next, user, leaveRequest, '64351dbe9e45310b2991aaf3', '64351d4e9e45310b2991aaef', 'Leave')
         })
         .catch((error) => {
             handleCatch(`${error}`, res, 401, next)

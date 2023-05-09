@@ -27,6 +27,7 @@ const wfhSchema = mongoose.Schema({
         type: String,
         enum: [
             'pending',
+            'processing',
             'approved',
             'rejected'
         ],
