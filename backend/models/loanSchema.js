@@ -28,6 +28,7 @@ const loanSchema = mongoose.Schema({
         enum: {
             values: [
                 'pending',
+                'processing',
                 'approved',
                 'rejected'
             ],

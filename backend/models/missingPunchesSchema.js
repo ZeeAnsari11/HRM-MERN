@@ -10,17 +10,11 @@ const missingPunchesSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    expectedCheckInTime : {
+    expectedTime : {
         type : String,
-        required: true
-    },
-    expectedCheckOutTime : {
-        type : String,
-        required: true
     },
     punchType:{
         type: String,
-        lowercase: true,
         enum: {
             values: [
                 'checkIn',
@@ -37,6 +31,7 @@ const missingPunchesSchema = new mongoose.Schema({
         enum: {
             values: [
                 'pending',
+                'processing',
                 'approved',
                 'rejected'
             ],

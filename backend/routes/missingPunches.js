@@ -1,5 +1,5 @@
 import express from 'express'
-import { createMissingPunchRequest, getMissingPunchRequest, deleteMissingPunchRequest, updateMissingPunchRequest } from '../controllers/missingPunches.js';
+import { createMissingPunchRequest, getMissingPunchRequest, deleteMissingPunchRequest, updateMissingPunchRequest} from '../controllers/missingPunches.js';
 export const missingPunchesRequestRoute = express.Router();
 
 missingPunchesRequestRoute.route('/missing-punch/new').post(createMissingPunchRequest);
