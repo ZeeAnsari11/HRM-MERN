@@ -33,6 +33,7 @@ const getfirstNodeUser = async (req, res, next, node, user, request, requestType
             if (!departmentUser) throw "ERROR"
             nodeUser = departmentUser._id;
         }
+        console.log("nodeUser", nodeUser);
         let x = {
             nodeId: node[0]._id,
             senderId: request.user,
@@ -183,6 +184,7 @@ export const updateRequestStatus = (req, res, next, request) => {
         if (request.status == 'pending') {
             settingStatus(req, res, next)
             request.status = 'approved'
+            
             request.save()
             res.status(200).json({
                 success: true,

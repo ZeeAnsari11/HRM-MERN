@@ -326,7 +326,7 @@ const userSchema = mongoose.Schema({
             trim: true,
             validate: /^[0-9]+$/,
             unique: [true, 'Driving Lisence already in use'],
-            
+
         },
         attachment: {
             type: String,
@@ -346,6 +346,10 @@ const userSchema = mongoose.Schema({
             type: Number
         }
     }],
+    grossSalary: {
+        type: Number,
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now

@@ -8,8 +8,8 @@ export const createEmploymentType = (req, res, next) => {
         OrganizationModel.findById(req.body.organization)
             .then((organization) => {
                 if (!organization) throw `No such organization ${req.body.organization}`
-                req.body.employmentType = req.body.employmentType.replace(/\s/g, "")
-                req.body.unique_id = req.body.organization + req.body.employmentType.toLowerCase()
+                req.body.employmentType = req.body.employmentType?.replace(/\s/g, "")
+                req.body.unique_id = req.body.organization + req.body.employmentType?.toLowerCase()
                 createNew(req, res, next, EmploymentModel)
             })
             .catch((error) => {
@@ -24,16 +24,18 @@ export const updateEmploymentTypeById = (req, res, next) => {
     try {
         if (Object.keys(req.body).length == 0) throw "Request Body is empty."
         if (req.body.organization || req.body.unique_id || req.body.createdAt) throw "Invalid Body."
-        EmploymentModel.findById(req.params.id)
-            .then((response) => {
-                if (!response) throw 'No Such EmploymentType'
-                req.body.employmentType = req.body.employmentType.replace(/\s/g, "")
-                req.body.unique_id = response.organization + req.body.employmentType.toLowerCase()
-                updateById(req, res, next, EmploymentModel, 'EmploymentType')
-            })
-            .catch((error) => {
-                handleCatch(`${error}`, res, 401, next)
-            })
+        if (req.body.employmentType) {
+            EmploymentModel.findById(req.params.id)
+                .then((response) => {
+                    if (!response) throw 'No Such EmploymentType'
+                    req.body.employmentType = req.body.employmentType.replace(/\s/g, "")
+                    req.body.unique_id = response.organization + req.body.employmentType.toLowerCase()
+                    updateById(req, res, next, EmploymentModel, 'EmploymentType')
+                })
+                .catch((error) => {
+                    handleCatch(`${error}`, res, 401, next)
+                })
+        } else updateById(req, res, next, EmploymentModel, 'EmploymentType')
     } catch (error) {
         handleCatch(`${error}`, res, 401, next)
     }
