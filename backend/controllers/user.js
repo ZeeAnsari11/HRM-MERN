@@ -83,9 +83,7 @@ const checkingProbation = (req, res, next, organization) => {
                 userCreate(req, res, next, organization)
             }
             else {
-                if (req.body.probation.isOnProbation == false && req.body.probation.durationOfProbation) {
-                    if (req.body.probation.durationOfProbation) throw 'kindly provide isOnProbation as true'
-                }
+                if (req.body.probation.isOnProbation == false && req.body.probation.durationOfProbation) throw 'Invalid Body.'
                 else {
                     userRoster(req, res, next)
                     userCreate(req, res, next, organization)

@@ -1,6 +1,12 @@
 import mongoose from "mongoose";
 
 const taxRuleSchema = mongoose.Schema({
+    ruleNo: {
+        type: Number,
+        required: true,
+        trim: true,
+        unique: true,
+    },
     fromAmount: {
         type: Number,
         required: true,
@@ -20,12 +26,6 @@ const taxRuleSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
         required: true,
-    },
-    unique_id: {
-        type: String,
-        trim: true,
-        unique: true,
-        required: true
     },
     createdAt: {
         type: Date,

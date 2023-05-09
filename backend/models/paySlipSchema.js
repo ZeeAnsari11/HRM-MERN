@@ -3,12 +3,21 @@ import mongoose from "mongoose";
 //  Schema to Create PaySlip 
 
 const paySlipSchema = mongoose.Schema({
+    organization: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization',
+        required: true
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
     basicSalary: {
+        type: Number,
+        required: true
+    },
+    grossSalary: {
         type: Number,
         required: true
     },
@@ -28,8 +37,29 @@ const paySlipSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+    tax: {
+        type: Number,
+        required: true
+    },
     month: {
-        type: Date,
+        type: Number,
+        required: true
+    },
+    year: {
+        type: Number,
+        required: true
+    },
+    status: {
+        type: String,
+        default: 'open',
+        lowercase: true,
+        enum: {
+            values: [
+                'open',
+                'close'
+            ],
+            messsage: 'Enter a valid status'
+        },
         required: true
     },
     createdAt: {

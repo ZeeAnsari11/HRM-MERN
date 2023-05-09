@@ -4,12 +4,17 @@ import { createNew, handleCatch, updateById, getById, getAll, deleteById } from 
 
 export const creatingTaxRule = (req, res, next) => {
     try {
-        if (!req.body.organization || req.body.unique_id) throw "Invalid Body."
-        OrganizationModel.findById(req.body.organization)
-            .then((organization) => {
-                if (!organization) throw `No such organization ${req.body.organization}`
-                req.body.unique_id = organization._id + req.body.fromAmount + req.body.toAmount
-                createNew(req, res, next, TaxRuleModel)
+        if (!req.body.ruleNo) throw "Invalid Body."
+        TaxRuleModel.find({ ruleNo: req.body.ruleNo })
+            .then((ruleNo) => {
+                console.log("ruleNo", ruleNo);
+                if(ruleNo.length == 0){
+                    if (!req.body.fixRate) {
+                        req.body.fixRate = 0
+                    }
+                    createNew(req, res, next, TaxRuleModel)
+                }
+                else throw "Rule no. already exists."
             })
             .catch((error) => {
                 handleCatch(`${error}`, res, 401, next)
