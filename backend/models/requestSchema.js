@@ -27,9 +27,20 @@ const requestSchema = mongoose.Schema({
                 type: String,
                 required: true
             },
+            type: {
+                type: String,
+            },
             state: {
-                type: Boolean,
-                default: false
+                type: String,
+                enum: {
+                    values: [
+                        'pending',
+                        'approved',
+                        'rejected'
+                    ],
+                    messsage: 'Please Enter Action Type'
+                },
+                default: "pending"
             },
             createdAt: {
                 type: Date,

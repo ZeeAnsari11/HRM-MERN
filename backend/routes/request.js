@@ -1,6 +1,7 @@
 import express from 'express'
-import { requestToNextNode } from '../utils/request.js';
+import { requestToNextNode, rejectRequest} from '../utils/request.js';
 
 export const requestRoute = express.Router();
 
-requestRoute.route('/request/nextNode').get(requestToNextNode);
+requestRoute.route('/request/nextNode').post(requestToNextNode);
+requestRoute.route('/request-reject').post(rejectRequest);
