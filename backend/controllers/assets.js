@@ -1,4 +1,4 @@
-import { createNew, getById, deleteById, updateById, getAll } from "../utils/common.js"
+import { createNew, updateById, getAll } from "../utils/common.js"
 import { AssetsModel } from "../models/assetsSchema.js"
 import { UserModel } from "../models/userSchema.js"
 import { AssetTypeModel } from "../models/assetTypeSchema.js"
@@ -22,7 +22,7 @@ export const createAsset = (req, res, next) => {
 
 // Update assets all fields except the fields related to the allocation and deallocation of an asset
 export const UpdateAssetById = (req, res, next) => {
-    let condition = (req.body.organization || req.body.user || req.body.previousHolders || (req.body.isAllocated == true) || req.body.isAllocated == false || req.body.type || (req.body.isActive == true) || req.body.isActive == false);
+    let condition = (req.body.organization || req.body.user || req.body.previousHolders || req.body.isAllocated !== undefined || req.body.type || req.body.isActive !== undefined );
     try {
         if (condition) {
             throw 'You can not update the owner/holder of an asset please user AssetManagment of this'

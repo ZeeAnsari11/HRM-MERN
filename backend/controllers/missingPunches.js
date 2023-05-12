@@ -11,15 +11,13 @@ export const createMissingPunchRequest = (req, res, next) => {
         if (req.body.expectedTime) {
             AttendanceModel.findOne({ user: req.body.user, date: req.body.date })
                 .then((attendanceFound) => {
-                    console.log("=======attendanceFound===", attendanceFound);
+                    if(!attendanceFound) throw "It might be the off day for which you are generating the request"
                     if (attendanceFound.isPresent) throw ("Your attendance is already marked");
                     if ((req.body.punchType == "checkIn" && attendanceFound.checkIn != "false") || (req.body.punchType == "checkOut" && attendanceFound.checkOut != "false")) {
                         throw ("Already result found, cannot do this action now");
                     }
-                    console.log("======", { user: req.body.user, date: req.body.date, punchType: req.body.punchType });
                     MissingPunchesModel.find({ user: req.body.user, date: req.body.date, punchType: req.body.punchType })
                         .then((alreadyRequested) => {
-                            console.log("=====alreadyRequested===", alreadyRequested);
                             if (alreadyRequested.length > 0) throw ("Already generated request for that");
                             return MissingPunchesModel.create(req.body);
                         })
@@ -27,8 +25,10 @@ export const createMissingPunchRequest = (req, res, next) => {
                             UserModel.findById(req.body.user)
                                 .select("_id lineManager organization branch firstName lastName")
                                 .then((user) => {
+                                    if(!user) throw 'user not found'
                                     creatingRequest(req, res, next, user, missingPunchesRequest, "64552238be486f2a383ff532", "645251d7c62b8094627d8aa1", "MissingPunches");
-                                });
+                                })
+                                .catch(err => handleCatch(err, res, 401, next))
                         })
                         .catch((err) => {
                             handleCatch(err, res, 401, next);

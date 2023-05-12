@@ -1,7 +1,7 @@
 import { BankModel } from "../models/bankSchema.js";
 import { OrganizationModel } from "../models/organizationSchema.js";
 import { UserModel } from "../models/userSchema.js";
-import { createNew, deleteInBulk, updateById, getAll, deleteById } from "../utils/common.js"
+import { createNew, deleteInBulk, updateById, getAll, deleteById, handleCatch } from "../utils/common.js"
 
 export const createBank= (req, res, next)=>{
     OrganizationModel.findById(req.body.organization)
@@ -13,20 +13,10 @@ export const createBank= (req, res, next)=>{
             if(user.organization.toString() !== organization._id.toString()) throw "User not belong to that organization"
             createNew(req,res,next, BankModel)
         })
-        .catch((err)=>{
-            res.status(404).json({
-                success: false,
-                error: err
-            })
-        })
+        .catch((err)=>{ handleCatch (err, res, 401, next)})
 
     })
-    .catch((err)=>{
-        res.status(404).json({
-            success: false,
-            error: err
-        })
-    })
+    .catch((err)=>{ handleCatch (err, res, 401, next)})
 }
 
 export const getBanksByUserId = (req, res, next)=>{
@@ -39,12 +29,7 @@ export const updateBankById = (req, res, next)=>{
         if(req.body.organization || req.body.user) throw "You can not update organization or user of a Bank Account"
         updateById(req, res, next, BankModel, "Bank Details")
     }
-    catch(err){
-        res.status(404).json({
-            success: false,
-            error: err
-        })
-    }
+    catch(err){ handleCatch(err, res, 401, next)}
 }
 
 export const deleteBanksByUserId = (req, res, next)=>{

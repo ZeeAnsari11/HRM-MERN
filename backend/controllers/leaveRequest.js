@@ -13,7 +13,8 @@ export const addingLeaveRequest = (req, res, next) => {
         if (req.body.count) throw 'Please remove count.'
         if (!req.body.startDate) throw 'Kindly Provide Start Date.'
         if (!req.body.organization) throw 'Kindly Provide Organization.'
-        let leaveDaysIndex = []
+        let leaveDaysIndexes = []
+        let dates = []
         LeaveTypeModel.findById(req.body.leaveType)
             .then((leaveType) => {
                 if (!leaveType) throw `No such leave type ${req.body.leaveType}`
@@ -25,19 +26,28 @@ export const addingLeaveRequest = (req, res, next) => {
                         const endDate = new Date(req.body.endDate);
                         for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
                             const index = new Date(date);
+                            dates.push(index)
                             const dayIndex = index.getDay();
-                            leaveDaysIndex.push(dayIndex)
+                            leaveDaysIndexes.push(dayIndex)
                         }
-                        console.log("leaveDaysIndex", leaveDaysIndex);
-                        console.log("!user.userRoster.restDays.includes(leaveDaysIndex)", !user.userRoster.restDays.includes(leaveDaysIndex));
-                        // if (!user.Roster.restDays.includes(leaveDaysIndex)) {
-                        //     user.leaveTypeDetails.forEach(userLeaveType => {
-                        //         if (userLeaveType.leaveType.toString() == req.body.leaveType) {
-                        //             leaveRequestType(req, res, next, leaveType, user, userLeaveType.count)
-                        //         }
-                        //     })
-                        // }
-                        // else throw 'Invalid leave Days.'
+                        leaveDaysIndexes.forEach(leaveDaysIndex => {
+                            console.log("leaveDaysIndex", leaveDaysIndex);
+                            if (user.userRoster.restDays.includes(leaveDaysIndex)) {
+                                throw 'invalid leave days'
+                            }
+                        })
+                        //check kro k khn phly is date ki koi leave to nae apply nae ki hoi
+                        // dates.forEach(date => {
+                        //     LeaveRequestModel.find({})
+                        //         .then((leaves) => {
+
+                        //         })
+                        // })
+                        user.leaveTypeDetails.forEach(userLeaveType => {
+                            if (userLeaveType.leaveType.toString() == req.body.leaveType) {
+                                leaveRequestType(req, res, next, leaveType, user, userLeaveType.count)
+                            }
+                        })
                     })
                     .catch((error) => {
                         handleCatch(`${error}`, res, 401, next)

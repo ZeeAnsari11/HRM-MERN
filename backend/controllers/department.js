@@ -2,7 +2,7 @@ import { DepartmentModel } from '../models/departmentSchema.js'
 import { BranchModel } from '../models/branchSchema.js'
 import { OrganizationModel } from '../models/organizationSchema.js'
 import { UserModel } from '../models/userSchema.js'
-import { createNew, updateById } from '../utils/common.js'
+import { createNew, handleCatch, updateById } from '../utils/common.js'
 
 //// Creating New Department ////
 export const createDepartment = (req, res, next) => {
@@ -18,19 +18,9 @@ export const createDepartment = (req, res, next) => {
                     }
                     else throw "branch not found in organization"
                 })
-                .catch((err) => {
-                    res.status(404).json({
-                        success: false,
-                        message: err
-                    })
-                })
+                .catch((err) => handleCatch(err, res, 401, next))
         })
-        .catch((err) => {
-            res.status(404).json({
-                success: false,
-                message: err
-            })
-        })
+        .catch((err) => handleCatch(err, res, 401, next))
 }
 
 //// Get All Departments By Branch Id ////
@@ -45,7 +35,6 @@ export const getAllDepartmentsByBranchId = (req, res, next) => {
         .catch((error) => {
             next({ error: error, statusCode: 404 })
         })
-
 }
 
 export const getAllDepartmentsByOrganizationId = (req, res, next) => {
@@ -135,29 +124,14 @@ export const updateDepartmentById = (req, res, next) => {
                                                 NotFoundUsers: `User(s) not found ${notExistUser}`
                                             })
                                         })
-                                        .catch((err) => {
-                                            res.status(404).json({
-                                                success: false,
-                                                message: `${err}`
-                                            })
-                                        })
+                                        .catch((err) => handleCatch(err, res, 401, next))
                                 }
                             }
                         })
-                        .catch((err) => {
-                            res.status(404).json({
-                                success: false,
-                                message: `${err}`
-                            })
-                        })
+                        .catch((err) => handleCatch(err, res, 401, next))
                 })
             })
-            .catch((error) => {
-                res.status(404).json({
-                    success: false,
-                    message: `${error}`
-                })
-            })
+            .catch((err) => handleCatch(err, res, 401, next))
     }
 }
 

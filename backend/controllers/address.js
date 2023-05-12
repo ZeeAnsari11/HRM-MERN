@@ -20,12 +20,7 @@ export const UpdateAddressById = (req, res, next) => {
         if (req.body.user) throw "You can not update the user of an Address";
         updateById(req, res,next , AddressModel, "Addresss")
     }
-    catch (err) {
-        res.status(401).json({
-            success: false,
-            error: err
-        })
-    }
+    catch (err)  { handleCatch(err, res, 401, next) }
 }
 
 export const getAllAddressesByUserId = (req, res, next) => {

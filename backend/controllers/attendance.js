@@ -26,6 +26,7 @@ export const createAttendance = (req, res, next) => {
     }
     else handleCatch("Invalid request bodyxxx", res, 401, next)
   }
+ 
   catch (err) { handleCatch(err, res, 401, next) }
 }
 
@@ -46,6 +47,7 @@ const checkAlreadyExists = (req, res, next, query) => {
 const fetchUserRosterDetails = (req, res, next) => {
   UserModel.findById(req.body.user).select("roster userRoster organization")
     .then(user => {
+      if (!user) throw "User not found"
       const roster = user.roster.employeeRosterDetails.find(r => {
         return r.date.toDateString() === new Date(req.body.date).toDateString()
       });
@@ -222,6 +224,19 @@ export const filterAttendance = (req, res, next) => {
               ]
             }
           }
+          else if ('my-sheet') {
+            query = {
+              $and: [
+                { user: req.body.user },
+                {
+                  date: {
+                    $gte: new Date(req.body.startDate + "T00:00:00.000+00:00"),
+                    $lte: new Date(req.body.endDate + "T00:00:00.000+00:00")
+                  }
+                }
+              ]
+            }
+          }
           else {
             let x = req.body.filter
             subQuery[x] = true;
@@ -284,7 +299,6 @@ export const updateAttendance = (req, res, next, leave = null) => {
     if ((req.body.checkIn || req.body.checkOut) && req.body.user && req.body.date) {
       AttendanceModel.find({ user: req.body.user, date: new Date(req.body.date + "T00:00:00.000+00:00") })
         .then((attendance) => {
-          console.log("===========attedndece=========", attendance);
           if (attendance.length == 0) throw "No Missing punche for attendece available for this date"
           if (req.body.checkIn && attendance[0].checkIn !== "false") { throw "Already checkedIn can not checkedIn again" }
           if (req.body.checkOut && attendance[0].checkOut !== "false") { throw "Already checkOut can not checkOut again" }
@@ -312,7 +326,6 @@ export const updateAttendance = (req, res, next, leave = null) => {
               })
             })
             .catch(err => {
-              console.log("==========err=============", err);
               handleCatch(err, res, 401, next)
             })
         })

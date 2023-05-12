@@ -1,6 +1,6 @@
 import { BranchModel } from "../models/branchSchema.js"
 import { OrganizationModel } from "../models/organizationSchema.js"
-import { createNew, getById, deleteById as DeleteByID, getAll, updateById } from "../utils/common.js"
+import { createNew, getById, deleteById as DeleteByID, getAll, updateById, handleCatch } from "../utils/common.js"
 
 
 export const createBranch = (req, res, next) => {
@@ -27,12 +27,7 @@ export const getBranchesByOrganization = (req, res, next) => {
             branches: response
         })
     })
-    .catch((error) => {
-        res.status(401).json({
-            success: false,
-            error: error
-        })
-    })
+    .catch((error) => handleCatch(error, res, 401, next))
 }
 
 export const updateBranch = (req, res, next) => {

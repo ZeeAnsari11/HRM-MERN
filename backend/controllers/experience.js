@@ -1,5 +1,5 @@
 import { ExperienceModel } from "../models/experienceSchema.js";
-import { createNew, deleteById, getAll, updateById } from "../utils/common.js";
+import { createNew, deleteById, getAll, handleCatch, updateById } from "../utils/common.js";
 import { UserModel } from "../models/userSchema.js";
 
 export const createExperience = (req, res, next) => {
@@ -26,12 +26,7 @@ export const updateExperiences = (req, res, next) => {
         if (req.body.user) throw "Can not assign experience to another user."
         updateById(req, res, next, ExperienceModel, 'Experience');
     }
-    catch (error) {
-        res.status(401).json({
-            success: false,
-            message: error
-        })
-    }
+    catch (error) { handleCatch(error, res, 401, next)}
 }
 
 export const deleteExperiences = (req, res, next) => {
@@ -43,12 +38,7 @@ export const deleteExperiences = (req, res, next) => {
             message: "Experience deleted successfully!"
         })
     })
-    .catch((error) => {
-        res.status(404).json({
-            success: false,
-            error: error
-        })
-    })
+    .catch((error) => { handleCatch(error, res, 401, next) })
 }
 
 export const deleteExperienceById = (req, res, next) => {

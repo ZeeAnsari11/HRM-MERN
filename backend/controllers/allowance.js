@@ -11,12 +11,8 @@ export const createAllowance = (req, res, next) => {
                 req.body.unique_id = req.body.organization + req.body.allowanceName?.replace(/\s/g, "").toLowerCase()
                 createNew(req, res, next, AllowanceModel)
             })
-            .catch((error) => {
-                handleCatch(`${error}`, res, 401, next)
-            })
-    } catch (error) {
-        handleCatch(`${error}`, res, 401, next)
-    }
+            .catch((error) => { handleCatch(`${error}`, res, 401, next) })
+    } catch (error) { handleCatch(`${error}`, res, 401, next) }
 }
 
 export const updateAllowanceById = (req, res, next) => {
@@ -31,13 +27,9 @@ export const updateAllowanceById = (req, res, next) => {
                     req.body.unique_id = response.organization + req.body.allowanceName.toLowerCase()
                     updateById(req, res, next, AllowanceModel, 'Allowance')
                 })
-                .catch((error) => {
-                    handleCatch(`${error}`, res, 401, next)
-                })
+                .catch((error) => { handleCatch(`${error}`, res, 401, next) })
         } else updateById(req, res, next, AllowanceModel, 'Allowance')
-    } catch (error) {
-        handleCatch(`${error}`, res, 401, next)
-    }
+    } catch (error) { handleCatch(`${error}`, res, 401, next) }
 }
 
 export const deleteAllowanceById = (req, res, next) => {

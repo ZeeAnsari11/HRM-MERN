@@ -5,7 +5,6 @@ import { getById, createNew, updateById, deleteById, handleCatch } from "../util
 // Create a new grade
 //api/v1/grade/new
 export const createGrade = (req, res, next) => {
-
     try {
         const { name, organization } = req.body;
         if (req.body.createdAt) throw "You can't Provide CreatedAt"
@@ -49,7 +48,6 @@ export const getAllGrades = (req, res, next) => {
                 success: true,
                 grades
             });
-
         })
         .catch((error) => {
             handleCatch(error, res, 404, next)

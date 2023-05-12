@@ -1,6 +1,7 @@
 import { AssetTypeModel } from "../models/assetTypeSchema.js";
 import { deleteInBulk, getAll, deleteById, checkIsExistAndCreate, updateById, handleCatch } from "../utils/common.js";
 import { OrganizationModel } from "../models/organizationSchema.js";
+
 export const createAssetType = (req, res, next) => {
     checkIsExistAndCreate(req, res, next, req.body.organization, OrganizationModel, AssetTypeModel, "AssetType");
 }

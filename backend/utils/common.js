@@ -9,23 +9,13 @@ export const createNew = (req, res, next, model) => {
                         response
                     })
                 })
-                .catch((error) => {
-                    res.status(401).json({
-                        success: false,
-                        error: error
-                    })
-                })
+                .catch((err) => { handleCatch(err, res, 401, next) })
         }
         else {
             throw "Request Body is empty"
         }
     }
-    catch (error) {
-        res.status(401).json({
-            success: false,
-            error: error
-        })
-    }
+    catch (err) { handleCatch(err, res, 401, next) }
 
 }
 
@@ -41,13 +31,7 @@ export const getAll = (res, next, model, query = {}, message = 'Result') => {
                 })
             }
         })
-        .catch((error) => {
-            console.log(error);
-            res.status(401).json({
-                success: false,
-                error: error
-            })
-        })
+        .catch((err) => { handleCatch(err, res, 401, next) })
 }
 
 export const getById = (id, res, next, model, message = 'Result') => {
@@ -61,12 +45,7 @@ export const getById = (id, res, next, model, message = 'Result') => {
                 })
             }
         })
-        .catch((error) => {
-            res.status(401).json({
-                success: false,
-                error: error
-            })
-        })
+        .catch((err) => { handleCatch(err, res, 401, next) })
 }
 
 export const deleteById = (id, res, next, model, message = 'Result') => {
@@ -78,12 +57,7 @@ export const deleteById = (id, res, next, model, message = 'Result') => {
                 Message: `${message} Deleted Successfully`
             })
         })
-        .catch((error) => {
-            res.status(401).json({
-                success: false,
-                error: error
-            })
-        })
+        .catch((err) => { handleCatch(err, res, 401, next) })
 }
 
 
@@ -101,25 +75,15 @@ export const updateById = (req, res, next, model, message = 'Result', inject = n
                 if (!response) {
                     throw (`${message} Not Found`);
                 }
-                if(inject) inject();
+                if (inject) inject();
                 res.status(200).json({
                     success: true,
                     Message: `${message} Updated Successfully`
                 })
             })
-            .catch((error) => {
-                res.status(404).json({
-                    success: false,
-                    error: error
-                })
-            })
+            .catch((err) => { handleCatch(err, res, 401, next) })
     }
-    catch (error) {
-        res.status(404).json({
-            success: false,
-            error: error
-        })
-    }
+    catch (err) { handleCatch(err, res, 401, next) }
 }
 
 export const deleteInBulk = (res, next, model, query, message = "Result") => {
@@ -132,12 +96,8 @@ export const deleteInBulk = (res, next, model, query, message = "Result") => {
                 message: `${message} Deleted Successfully`
             })
         })
-        .catch((error) => {
-            res.status(404).json({
-                success: false,
-                error: error
-            })
-        })
+        .catch((err) => { handleCatch(err, res, 401, next) })
+
 }
 export const checkIsExistAndCreate = (req, res, next, id, findInModel, createForModel, message = "Result") => {
     findInModel.findById(id)
@@ -145,16 +105,11 @@ export const checkIsExistAndCreate = (req, res, next, id, findInModel, createFor
             if (!response) throw `${message} not Found`;
             createNew(req, res, next, createForModel);
         })
-        .catch((err) => {
-            res.status(401).json({
-                success: false,
-                error: err
-            })
-        })
+        .catch((err) => { handleCatch(err, res, 401, next) })
+
 }
 
-export const handleCatch = (err, res,  statusCode, next)=>{
-    console.log("======common err=========",err);
+export const handleCatch = (err, res, statusCode, next) => {
     res.status(statusCode).json({
         success: false,
         error: err

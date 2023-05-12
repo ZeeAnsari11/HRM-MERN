@@ -10,23 +10,20 @@ export const createAssetRevision = (organization, date, action, reason, user, co
         user,
         condition
     };
-   return AssetsRevisionsModel.create(body)
+    return AssetsRevisionsModel.create(body)
         .then((res) => {
             return res;
         })
-        .catch((err) => console.log("==========error while creating a new AssetsRevision======",err));
+        .catch((err) => console.log("==========error while creating a new AssetsRevision======", err));
 }
 
 
 export const updateAssetRevisionById = (req, res, next) => {
     try {
         if (req.body.reason || req.body.description) updateById(req, res, next, AssetsRevisionsModel, 'AssetRevision')
-        else{throw 'You can not update the reason and description'}
-        
+        else { throw 'You can only update the reason and description' }
     }
-    catch (err) {
-        handleCatch(err, res, 401, next);
-    }
+    catch (err) { handleCatch(err, res, 401, next) }
 }
 
 export const deleteAllAssetsRevisions = (orgId) => {
