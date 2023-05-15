@@ -525,7 +525,7 @@ export const filterUserByOrganizationId = (req, res, next) => {
     try {
         if (!req.body.organization) throw "Organization not specified";
         if (Object.keys(req.body).length > 1) {
-            UserModel.find(req.body).select('_id firstName lastName')
+            UserModel.find(req.body).select('_id firstName lastName email')
                 .then((users) => {
                     if (users.length === 0) throw `No users are there in this organization with status: ${req.body.isActive}`
                     res.status(200).json({

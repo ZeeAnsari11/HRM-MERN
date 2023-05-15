@@ -43,7 +43,7 @@ export const getOrganizationByBranchId = (req, res, next) => {
     BranchModel.findById(req.params.id)
     .then((response) => {
         OrganizationModel.findById(response.organization)
-        .then((organization) => {
+        .then((organization) => {ß
             res.status(200).json({
                 success: true,
                 organization: organization
