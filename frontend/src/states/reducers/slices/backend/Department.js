@@ -4,11 +4,11 @@ import { createSlice } from '@reduxjs/toolkit';
 export const DepartmentSlice = createSlice({
     name: 'Department',
     initialState: {
-        department: {}
+        departments: []
     },
     reducers: {
         setUserDepartment: (state, action) => {
-            state = action.payload;
+            state.departments = action.payload;
         }
     }
 });
@@ -17,7 +17,7 @@ export const DepartmentSlice = createSlice({
 export const { setUserDepartment } = DepartmentSlice.actions;
 
 // Selector Methods
-export const selectUserDepartment = (state) => state.department;
+export const selectUserDepartment = (state) => state.department.departments;
 
 // Reducer
 export const DepartmentReducer = DepartmentSlice.reducer;

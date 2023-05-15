@@ -1,7 +1,5 @@
 import React from 'react'
 import Success from './Success'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faIdBadge, faInfo, faPersonBooth, faPersonCane } from '@fortawesome/free-solid-svg-icons'
 
 const Multistep = ({index}) => {
 

@@ -1,10 +1,12 @@
 import React from 'react'
+import { Toggler } from '../../../components/FormItems/Toggler'
 
-const Configuration = ({ changePageNumber }) => {
+const Configuration = ({ changePageNumber, handleInputChange }) => {
   return (
     <div>
-      Config
-      <button onClick={changePageNumber}>Next</button>
+      <Toggler title="Is Line Manager" name="isLineManager" handleInputChange={handleInputChange}/>
+      <Toggler title="Is Head Of Department" name="isHOD" handleInputChange={handleInputChange}/>
+      <button onClick={changePageNumber}>Submit</button>
     </div>
   )
 }

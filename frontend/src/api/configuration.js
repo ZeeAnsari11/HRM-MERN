@@ -6,15 +6,16 @@ export const authentication = {
 }
 
 export const userRoutes = {
+    createUser: baseUrl+'/user/new',
     getUserById: baseUrl+'/user/',
 }
 
 export const organizationRoutes = {
     getUserById: baseUrl+'/organization/',
-    getBranchesByOrgId: baseUrl+'/organization/branch/',
-    getDepartmentsByOrgId: baseUrl+'/organization/department/',
+    getBranchesByOrgId: baseUrl+'/branch/organization/',
+    getDepartmentsByOrgId: baseUrl+'/departments/organization/',
     getDesignationsByOrgId: baseUrl+'/designations/organization/',
-    getUsersByFilter: baseUrl+'/user/filterUser/organization',
+    getUsersByFilter: baseUrl+'/user/filterUser/organization/',
 }
 
 export const leaveRequestRoutes = {
@@ -32,4 +33,8 @@ export const userLeaveRoute = {
 
 export const leaveType = {
     getLeaveType: baseUrl+'/leaveType/'
+}
+
+export const timeSlots = {
+    getTimeSlotsByOrganization: baseUrl+'/time-slot/organization/',
 }

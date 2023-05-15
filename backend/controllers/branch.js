@@ -60,15 +60,14 @@ export const updateBranch = (req, res, next) => {
 
 export const getOrganizationByBranchId = (req, res, next) => {
     BranchModel.findById(req.params.id)
-        .then((response) => {
-            OrganizationModel.findById(response.organization)
-                .then((organization) => {
-                    res.status(200).json({
-                        success: true,
-                        organization: organization
-                    })
-                })
-                .catch((e) => { throw e })
+    .then((response) => {
+        OrganizationModel.findById(response.organization)
+        .then((organization) => {ß
+            res.status(200).json({
+                success: true,
+                organization: organization
+            })
         })
         .catch((e) => console.log(e))
+    })
 }
