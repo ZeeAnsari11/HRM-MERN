@@ -62,6 +62,14 @@ const paySlipSchema = mongoose.Schema({
         },
         required: true
     },
+    absentCost: {
+        type: Number,
+        required: true
+    },
+    updatedByAdmin: {
+        type: Boolean,
+        default: false
+    },
     createdAt: {
         type: Date,
         default: Date.now
