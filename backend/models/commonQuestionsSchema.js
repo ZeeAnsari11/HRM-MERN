@@ -21,6 +21,8 @@ const commonQuestionsSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
         required: true,
+        unique: true,
+        index : true
     },
     createdAt: {
         type: Date,

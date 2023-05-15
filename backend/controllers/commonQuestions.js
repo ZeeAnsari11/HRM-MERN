@@ -122,3 +122,14 @@ export const getCommnQuestionById = (req, res, next) => {
         handleCatch(`${error}`, res, 401, next)
     }
 }
+
+export const getCommnQuestionByOrganizationId = (req, res, next) => {
+    CommonQuestionsModel.findById(req.params.id).select('commonQuestion')
+    .then((commonQuestions) => {
+        res.status(200).json({
+            success: true,
+            commonQuestions
+        })
+    })
+    .catch(err => handleCatch(err, res, 401, next))
+}

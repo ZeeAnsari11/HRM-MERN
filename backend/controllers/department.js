@@ -6,21 +6,26 @@ import { createNew, handleCatch, updateById } from '../utils/common.js'
 
 //// Creating New Department ////
 export const createDepartment = (req, res, next) => {
-    if (Object.keys(req.body).length == 0) throw "Request Body is empty"
-    OrganizationModel.findById(req.body.organization)
-        .then((organization) => {
-            if (!organization) throw "organization dont exist"
-            BranchModel.findById(req.body.branch)
-                .then((branch) => {
-                    if (!branch) throw "branch dont exist"
-                    if (req.body.organization == branch.organization) {
-                        createNew(req, res, next, DepartmentModel)
-                    }
-                    else throw "branch not found in organization"
-                })
-                .catch((err) => handleCatch(err, res, 401, next))
-        })
-        .catch((err) => handleCatch(err, res, 401, next))
+    try {
+        if (Object.keys(req.body).length == 0) throw "Request Body is empty"
+        if (req.body.unique_id) throw "unique_id is not required in body"
+        OrganizationModel.findById(req.body.organization)
+            .then((organization) => {
+                if (!organization) throw "organization dont exist"
+                BranchModel.findById(req.body.branch)
+                    .then((branch) => {
+                        if (!branch) throw "branch dont exist"
+                        if (req.body.organization == branch.organization) {
+                            req.body.unique_id = req.body.organization + req.body.name?.replace(/\s/g, "").toLowerCase()
+                            createNew(req, res, next, DepartmentModel)
+                        }
+                        else throw "branch not found in organization"
+                    })
+                    .catch((err) => handleCatch(err, res, 401, next))
+            })
+            .catch((err) => handleCatch(err, res, 401, next))
+    }
+    catch (err) { handleCatch(err, res, 401, next) }
 }
 
 //// Get All Departments By Branch Id ////
@@ -85,7 +90,18 @@ export const updateDepartmentById = (req, res, next) => {
             throw 'Cannot Update the Organization or branch of the Department.'
         }
         if (!req.body.users) {
-            updateById(req, res, next, DepartmentModel);
+            if (req.body.name) {
+                DepartmentModel.findById(req.params.id)
+                    .then((department) => {
+                        if (!department) throw "Department Not Found"
+                        req.body.unique_id = department.organization + req.body.name?.replace(/\s/g, "").toLowerCase()
+                        updateById(req, res, next, DepartmentModel, "Department Details")
+                    })
+                    .catch((err) => { handleCatch(err, res, 401, next) })
+            }
+            else {
+                updateById(req, res, next, DepartmentModel);
+            }
         }
         if (req.body.users && Object.entries(req.body).length > 1) throw 'Invalid Body.'
     }
@@ -162,29 +178,17 @@ export const deleteDepartmentById = (req, res, next) => {
 export const getBranchByDepartmentId = (req, res, next) => {
     DepartmentModel.findById(req.params.id)
         .then((department) => {
-            if (department) {
-                BranchModel.find({ _id: department.branch })
-                    .then((branch) => {
-                        if (branch) {
-                            res.status(200).json({
-                                success: true,
-                                branch
-                            })
-                        }
-                        else {
-                            res.status(404).json({
-                                success: false,
-                                message: `No Branch with this id ${req.params.id}`
-                            })
-                        }
-                    })
-            }
-            else {
-                res.status(404).json({
-                    success: false,
-                    message: `No Department with this id ${req.params.id}`
+            if (!department) throw "Department not found"
+            BranchModel.find({ _id: department.branch })
+                .then((branch) => {
+                    if (branch) {
+                        if (!branch) throw "Branch not found"
+                        res.status(200).json({
+                            success: true,
+                            branch
+                        })
+                    }
                 })
-            }
         })
         .catch((error) => {
             next({ error: error, statusCode: 404 })
@@ -196,20 +200,16 @@ export const getOrganizationByDepartmentId = (req, res, next) => {
     DepartmentModel.findById(req.params.id)
         .then((department) => {
             if (!department) throw `No Department with this id ${req.params.id}`
-            BranchModel.findById(department.branch)
-                .then((branch) => {
-                    if (!branch) throw `No Branch with this id ${req.params.id}`
-                    OrganizationModel.find({ _id: branch.organization })
-                        .then((organization) => {
-                            if (!organization) throw `No Organization with this id ${req.params.id}`
-                            res.status(201).json({
-                                success: true,
-                                organization
-                            })
-                        })
-                        .catch((error) => {
-                            next({ error: error, statusCode: 404 })
-                        })
+            OrganizationModel.find({ _id: department.organization })
+                .then((organization) => {
+                    if (!organization) throw `No Organization with this id ${req.params.id}`
+                    res.status(201).json({
+                        success: true,
+                        organization
+                    })
+                })
+                .catch((error) => {
+                    next({ error: error, statusCode: 404 })
                 })
                 .catch((error) => {
                     next({ error: error, statusCode: 404 })
@@ -239,37 +239,17 @@ export const getUsersByDepartmentId = (req, res, next) => {
 
 //// Get User Department By Id ////
 export const getUserDepartmentById = (req, res, next) => {
-    UserModel.findById(req.params.id)
-        .then((user) => {
-            if (!user) throw "No Such User"
-            DepartmentModel.find()
-                .then((departments) => {
-                    let userDepartment = {};
-                    departments.forEach((department) => {
-                        if (department.users.includes(req.params.id)) {
-                            userDepartment = department;
-                        }
-                    })
-                    if (Object.keys(userDepartment).length === 0) throw "No department have been assign to this user."
-                    userDepartment.users = undefined;
-                    res.status(200).json({
-                        success: true,
-                        department: userDepartment
-                    })
+    DepartmentModel.find({ users: { $elemMatch: { $in: [req.params.id] } } })
+        .then((department) => {
+            if (department.length == 0) throw "Department is not assigned to user"
+            if (department) {
+                res.status(200).json({
+                    succes: true,
+                    department
                 })
-                .catch((error) => {
-                    res.status(404).json({
-                        success: false,
-                        message: `${error}`
-                    })
-                })
+            }
         })
-        .catch((error) => {
-            res.status(404).json({
-                success: false,
-                message: `${error}`
-            })
-        })
+        .catch(err => handleCatch(err, res, 401, next));
 }
 
 //// Delete User Department By Id ////

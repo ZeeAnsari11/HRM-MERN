@@ -29,11 +29,17 @@ const departmentSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    unique_id: {
+        type: String,
+        trim: true,
+        unique: true,
+        required: true,
+        index: true,
+    },
     createdAt: {
         type: Date,
         default: Date.now
     }
-
 })
 
 export const DepartmentModel = mongoose.model('Department', departmentSchema, 'Department Collection')

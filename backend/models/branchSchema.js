@@ -5,7 +5,7 @@ const branchSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please enter branch name'],
         maxlength: [45, 'Branch name is too long'],
-        trim : true
+        trim: true
     },
     city: {
         type: String,
@@ -22,24 +22,31 @@ const branchSchema = new mongoose.Schema({
         required: [true, 'Please enter branch description'],
     },
     manager: {
-        type : mongoose.Schema.ObjectId,
+        type: mongoose.Schema.ObjectId,
         ref: 'User',
-        required : false
+        required: false
     },
     location: {
         type: {
-            type:String,
-            default:'point'
+            type: String,
+            default: 'point'
         },
         coordinates: {
             type: Array,
-            required:[true, 'Please Enter the Longititude and latitude of the Organization']
+            required: [true, 'Please Enter the Longititude and latitude of the Organization']
         }
     },
     organization: {
-        type : mongoose.Schema.ObjectId,
+        type: mongoose.Schema.ObjectId,
         ref: 'Organization',
         required: true
+    },
+    unique_id: {
+        type: String,
+        trim: true,
+        unique: true,
+        required: true,
+        index: true,
     },
     createdAt: {
         type: Date,

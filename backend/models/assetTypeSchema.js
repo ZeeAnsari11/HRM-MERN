@@ -13,6 +13,13 @@ const assetTypeSchema = mongoose.Schema({
         ref: 'Organization',
         required: [true, "Please Enter the Organization"]
     },
+    unique_id : {
+        type: String,
+        trim : true,
+        unique : true,
+        required : true,
+        index: true, 
+    },
     createdAt: {
         type: Date,
         default: Date.now
