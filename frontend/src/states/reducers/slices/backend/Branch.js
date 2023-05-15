@@ -4,11 +4,11 @@ import { createSlice } from '@reduxjs/toolkit';
 export const BranchSlice = createSlice({
     name: 'Branch',
     initialState: {
-        branch: {}
+        branches: []
     },
     reducers: {
         setUserBranch: (state, action) => {
-            state = action.payload;
+            state.branches = action.payload;
         }
     }
 });
@@ -17,7 +17,7 @@ export const BranchSlice = createSlice({
 export const { setUserBranch } = BranchSlice.actions;
 
 // Selector Methods
-export const selectUserBranch = (state) => state.branch;
+export const selectUserBranch = (state) => state.branch.branches;
 
 // Reducer
 export const BranchReducer = BranchSlice.reducer;

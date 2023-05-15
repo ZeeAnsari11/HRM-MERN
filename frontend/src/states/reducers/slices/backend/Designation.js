@@ -2,13 +2,13 @@ import { createSlice } from '@reduxjs/toolkit';
 
 // Slice for Storing User Relatives
 export const DesignationSlice = createSlice({
-    name: 'Designation',
+    name: 'designation',
     initialState: {
-        designations: {}
+        designations: []
     },
     reducers: {
         setUserDesignation: (state, action) => {
-            state = action.payload;
+            state.designations = action.payload;
         }
     }
 });
@@ -17,7 +17,7 @@ export const DesignationSlice = createSlice({
 export const { setUserDesignation } = DesignationSlice.actions;
 
 // Selector Methods
-export const selectUserDesignation = (state) => state.designations;
+export const selectUserDesignation = (state) => state.designation.designations;
 
 // Reducer
 export const DesignationReducer = DesignationSlice.reducer;

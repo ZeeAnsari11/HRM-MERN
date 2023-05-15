@@ -9,6 +9,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@headlessui/react": "^1.7.14",
     "@material-ui/icons": "^4.11.3",
     "@mui/icons-material": "^5.11.16",
     "@reduxjs/toolkit": "^1.9.3",
