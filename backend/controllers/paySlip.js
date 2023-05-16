@@ -6,15 +6,14 @@ import { SalaryModel } from "../models/salarySchema.js";
 import { OrganizationModel } from "../models/organizationSchema.js";
 import { TaxRuleModel } from "../models/taxRuleSchema.js";
 import { AttendanceModel } from "../models/attendanceSchema.js"
-
+const days = 30;
 let count = 0;
 let resp = []
 
 export const createPaySlipsByOrganizationById = (req, res, next) => {
     try {
         if (!req.body.month || !req.body.year) throw 'Invalid Body.'
-        let month = new Date('1900:' + req.body.month + ':01').getMonth + 1
-        if (!month) throw 'Invalid Month.'
+        if (req.body.month < 1 && req.body.month > 12) throw 'Invalid Month.'
         PaySlipModel.find({ organization: req.params.id, month: req.body.month, year: req.body.year })
             .then((paySlip) => {
                 if (paySlip.length > 0) throw 'Payslips of the provided month and year already exists.'
@@ -32,14 +31,13 @@ const common = (req, res, next) => {
     let userCurrentSalary;
     let userPromises = []
     let monthDateStart = new Date(req.body.year, req.body.month - 1, 1)
+    console.log("=======monthDateStart=", monthDateStart);
     let monthDateEnd = new Date(req.body.year, req.body.month, 0);
+    console.log("=======monthDateEnd=", monthDateEnd);
     let daysInMonth = new Date(req.body.year, req.body.month, 0).getDate();
-    OrganizationModel.findById(req.params.id)
-        .then((organization) => {
-            if (!organization) throw 'No Such Organization'
-            //return UserModel.find({ organization: organization._id })
-            return UserModel.find({ _id: "642ea68e2decd5ff96a07d49"})
-        })
+    console.log("=======daysInMonth=", daysInMonth);
+    // return UserModel.find({ organization: organization._id })
+    return UserModel.find({ _id: "645cd8c654f94c09815d4e1d" })
         .then((users) => {
             if (users.length == 0) throw 'No users in the provided organization'
             req.body.organization = req.params.id
@@ -47,7 +45,7 @@ const common = (req, res, next) => {
                 let allowancePromise = AllowanceModel.find({ organization: user.organization }).exec()
                 let userSalaryPromise = SalaryModel.find({ user: user._id }).sort({ createdAt: -1 }).limit(1).exec()
                 let paySlipPromise = PaySlipModel.find({ user: user._id }).exec()
-                let taxRulesPromise = TaxRuleModel.find().exec()
+                let taxRulesPromise = TaxRuleModel.find({organization : user.organization}).exec()
                 let attedencesPromise = AttendanceModel.find({
                     user: user._id, isAbsent: true,
                     date: {
@@ -58,15 +56,9 @@ const common = (req, res, next) => {
                 userPromises.push(
                     Promise.all([allowancePromise, userSalaryPromise, paySlipPromise, taxRulesPromise, attedencesPromise])
                         .then(([allowances, userSalaries, paySlips, taxRules, attedences]) => {
-                            if (userSalaries.length == 0) {
-                                userCurrentSalary = user.grossSalary
-                            } else {
-                                userSalaries.forEach(userSalary => {
-                                    userCurrentSalary = userSalary.currentSalary
-                                })
-                            }
-                            console.log("7u23y9attedences", attedences);
-                            let value = handleAbsents(userCurrentSalary, attedences, daysInMonth)
+                            // console.log("==========attedences====", attedences);
+                            userCurrentSalary = userSalaries.length == 0 ? user.grossSalary : userSalaries[0].currentSalary
+                            let value = handleAbsents(userCurrentSalary, attedences, days)
                             createPaySlip(req, res, next, user, userCurrentSalary, allowances, paySlips, taxRules, users.length, value)
                         })
                         .catch((error) => { handleCatch(error, res, 401, next) })
@@ -95,7 +87,7 @@ const createPaySlip = (req, res, next, user, userCurrentSalary, allowances, payS
         allowances.forEach(allowance => {
             console.log("======else===========", allowance);
             let x = {
-                name: allowance.allowanceName,
+                name: allowance.allowanceName, 
                 amount: user.grossSalary * (allowance.percrentageOfBaseSalary / 100)
             }
             req.body.basicSalary = req.body.basicSalary - (req.body.grossSalary * (allowance.percrentageOfBaseSalary / 100))
@@ -343,16 +335,12 @@ const handleAbsents = (userCurrentSalary, attedences, daysInMonth) => {
     let absentCost = 0
     console.log("====attedences===", attedences);
     if (attedences.length >= 1) {
-        attedences.forEach(attedence => {
-            absentCost = absentCost + calculatePerUserSalary(daysInMonth, userCurrentSalary)
-        })
+        let oneDayAbsentCost = userCurrentSalary / daysInMonth;
+        absentCost = oneDayAbsentCost * attedences.length;
+        console.log("=====absentCost==if=",absentCost);
         return absentCost
     }
     else return absentCost
-}
-
-const calculatePerUserSalary = (daysInMonth, userCurrentSalary) => {
-    return userCurrentSalary / daysInMonth
 }
 
 export const updatePaySlips = (req, res, next) => {

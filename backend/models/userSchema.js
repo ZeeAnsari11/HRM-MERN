@@ -45,6 +45,10 @@ const userSchema = mongoose.Schema({
         maxLength: [100, 'Cannot exceeds from 100 characters'],
         validate: /^[a-zA-Z ][a-zA-Z ]+$/
     },
+    avatar:{
+        type: String,
+        trim: true
+    },
     lastName: {
         type: String,
         required: [true, 'Please enter last name'],

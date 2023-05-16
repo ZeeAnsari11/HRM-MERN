@@ -744,8 +744,7 @@ export const deleteSkillFromUser = (req, res, next) => {
 
 export const getChildsByUserId = (req, res, next) => {
     try {
-        if (!req.body.id) throw "Please provide the Id for which you want to retrieve childs"
-        UserModel.find({ lineManager: req.body.id, isActive: true })
+        UserModel.find({ lineManager: req.params.id, isActive: true }).select('firstName lastName roleType')
             .then((childs) => {
                 if (childs.length == 0) {
                     throw "No childs found"

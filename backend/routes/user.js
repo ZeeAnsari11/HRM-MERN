@@ -24,4 +24,4 @@ userRoute.route('/user/hod/:id').get(getHODByDepartmentId)
 userRoute.route('/exempt/user/organization/:id').get(getAttendanceExemptUsers)
 userRoute.route('/user/type/organization/:id').get(getEmployeeTypeByOrganizationId)
 userRoute.route('/user/role/type/organization/:id').get(getRoleTypeByOrganizationId)
-userRoute.route('/user/my-chart').get(getChildsByUserId);
+userRoute.route('/user/my-chart/:id').get(getChildsByUserId);
