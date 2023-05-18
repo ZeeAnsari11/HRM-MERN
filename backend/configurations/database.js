@@ -9,5 +9,5 @@ export const connectDatabase = () => {
     .then(() => {
         console.log("Connection Established with database.");
     })
-    .catch((e) => console.log('Database connection Failed!'))
+    .catch((e) => console.log('Database connection Failed!============'))
 }

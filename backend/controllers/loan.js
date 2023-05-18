@@ -132,7 +132,18 @@ export const updateLoanById = (req, res, next) => {
 }
 
 export const getAllLoansByUserId = (req, res, next) => {
-    getAll(res, next, LoanModel, { user: req.params.id }, "Loan");
+    LoanModel.find({ user: req.params.id }).populate({
+        path: 'loan_type',
+        select: 'type'
+    })
+        .populate('repaymentSchedules')
+        .then((loans) => {
+            res.status(200).json({
+                success: true,
+                loans
+            })
+        })
+        .catch(err => handleCatch(err, res, 401, next));
 }
 
 export const chanegeLoanStatus = (new_Status, loanId) => {
@@ -150,5 +161,5 @@ export const chanegeLoanStatus = (new_Status, loanId) => {
 }
 
 export const LoanApproved = () => {
-console.log("========= Your Loan is Approved=======");
+    console.log("========= Your Loan is Approved=======");
 }

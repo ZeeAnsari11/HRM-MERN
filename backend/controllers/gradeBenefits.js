@@ -36,7 +36,7 @@ export const getGradeBenefitsByGradeId = (req, res, next) => {
 };
 
 export const getAllGradeBenefits = (req, res, next) => {
-  getAll(res, next, GradeBenefitsModel, {organization: req.params.id}, "Grade Benefits");
+  getAll(res, next, GradeBenefitsModel, { organization: req.params.id }, "Grade Benefits");
 }
 
 export const getGradeBenefitsById = (req, res, next) => {
@@ -57,7 +57,10 @@ export const createGradeBenefits = (req, res, next) => {
             if (benefitsExists) {
               throw "Benefits already exists in the Organization"
             }
-            else createNew(req, res, next, GradeBenefitsModel);
+            else {
+              req.body.unique_id = name.replace(/\s/g, "")
+              createNew(req, res, next, GradeBenefitsModel);
+            }
           })
           .catch((error) => {
             handleCatch(error, res, 404, next)
@@ -73,23 +76,15 @@ export const createGradeBenefits = (req, res, next) => {
 };
 
 export const updateGradeBenefits = (req, res, next) => {
-
   try {
-    if (req.body.createAt || req.body.organization) throw "You can not change the Organization Or Created At"
-    GradeBenefitsModel.findByIdAndUpdate(req.params.id, req.body)
-      .then((gradeBenefits) => {
-        if (!gradeBenefits) throw 'Grade benefits not found'
-        res.status(200).json({
-          success: true,
-          gradeBenefits
-        });
-      })
-      .catch((error) => {
-        handleCatch(error, res, 404, next);
-      });
+    if (req.body.createAt || req.body.organization || req.body.unique_id) throw "You can not change the Organization Or Created At"
+    if (req.body.name) {
+      req.body.unique_id = req.body.name.replace(/\s/g, "")
+    }
+    updateById(req, res, next, GradeBenefitsModel, "Grade Benifits")
   }
   catch (error) {
-    handleCatch(error, res, 404, next);
+    handleCatch(error, res, 404, next)
   }
 
 };

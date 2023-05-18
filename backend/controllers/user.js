@@ -6,6 +6,7 @@ import { EmploymentModel } from '../models/employmentSchema.js'
 import { TimeSlotsModel } from "../models/timeSlotsSchema.js";
 import { handleCatch, updateById } from '../utils/common.js'
 import { LeaveTypeModel } from '../models/leaveTypeSchema.js'
+import { EOETypeModel } from '../models/eoeTypeSchema.js'
 
 //// Create User ////
 export const addingUser = (req, res, next) => {
@@ -531,9 +532,9 @@ export const filterUserByOrganizationId = (req, res, next) => {
                         active_users: users
                     })
                 })
-                .catch((err) => handleCatch(err,res, 401, next))
+                .catch((err) => handleCatch(err, res, 401, next))
         }
-    } catch (error) { handleCatch(err,res, 401, next) }
+    } catch (error) { handleCatch(err, res, 401, next) }
 }
 
 export const getEmployeeTypeByOrganizationId = (req, res, next) => {
@@ -622,44 +623,49 @@ export const updateUserEmployment = (req, res, next) => {
 
 //// local method for de-activating user's account ////
 const userActivationStatus = (req, res, next, toggler, msg) => {
-    UserModel.findById(req.params.id)
-        .then((user) => {
-            if (!user) throw "user does not exist"
-            if (user.isActive == toggler) throw msg
-            user.isActive = toggler;
-            let date = req.body.lastWorkingDate || req.body.resignationDate
-            let lastEOE = user.EOE.details.length > 0 ? user.EOE.details.at(-1).data.lastWorkingDate : new Date('0001-01-01')
-            let lastrehire = user.rehire.at(-1)?.date || new Date('0001-01-01');
+    EOETypeModel.findById(req.body.eoeType)
+        .then((eoeType) => {
+            if (!eoeType) throw "User and EOE type not belong to same organization"
+            UserModel.findById(req.params.id)
+                .then((user) => {
+                    if (!user) throw "user does not exist"
+                    if (user.isActive == toggler) throw msg
+                    user.isActive = toggler;
+                    let date = req.body.lastWorkingDate || req.body.resignationDate
+                    let lastEOE = user.EOE.details.length > 0 ? user.EOE.details.at(-1).data.lastWorkingDate : new Date('0001-01-01')
+                    let lastrehire = user.rehire.at(-1)?.date || new Date('0001-01-01');
 
-            //// EOE Case ////
-            if (toggler == false) {
-                let details = {
-                    eoeType: req.body.eoeType,
-                    data: {
-                        reason: req.body.reason,
-                        resignationDate: req.body.resignationDate,
-                        lastWorkingDate: req.body.lastWorkingDate || req.body.resignationDate,
-                        noticePeriod: req.body.noticePeriod || false
+                    //// EOE Case ////
+                    if (toggler == false) {
+                        let details = {
+                            eoeType: req.body.eoeType,
+                            data: {
+                                reason: req.body.reason,
+                                resignationDate: req.body.resignationDate,
+                                lastWorkingDate: req.body.lastWorkingDate || req.body.resignationDate,
+                                noticePeriod: req.body.noticePeriod || false
+                            }
+                        }
+                        userActivation(req, res, details, lastrehire, user.EOE.details, date, user, "User EOE must be greater than last rehire date")
                     }
-                }
-                userActivation(req, res, details, lastrehire, user.EOE.details, date, user, "User EOE must be greater than last rehire date")
-            }
 
-            //// Rehire Case ////
-            else {
-                let type = {
-                    date: req.body.date,
-                    reason: req.body.reason
-                }
-                userActivation(req, res, type, lastEOE, user.rehire, req.body.date, user, 'User EOE must be define first in order to rehire Or rehire date must be greater than EOE date')
-            }
+                    //// Rehire Case ////
+                    else {
+                        let type = {
+                            date: req.body.date,
+                            reason: req.body.reason
+                        }
+                        userActivation(req, res, type, lastEOE, user.rehire, req.body.date, user, 'User EOE must be define first in order to rehire Or rehire date must be greater than EOE date')
+                    }
+                })
+                .catch((err) => {
+                    res.status(404).json({
+                        success: false,
+                        message: `${err}`
+                    })
+                })
         })
-        .catch((err) => {
-            res.status(404).json({
-                success: false,
-                message: `${err}`
-            })
-        })
+        .catch(err =>handleCatch(err, res, 401, next));
 }
 
 const userActivation = (req, res, details, date, arr, statusDate, user, msg) => {

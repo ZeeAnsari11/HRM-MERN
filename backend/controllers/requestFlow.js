@@ -92,7 +92,6 @@ export const createRequestFlowNode = async (req, res, next) => {
         if (!requestFlow) {
             throw 'Request flow not found'
         }
-
         let filter = {}
         if (req.body.lineManager && req.body.department) throw "Provide Line Manager or Department Only"
         if (req.body.lineManager ) {

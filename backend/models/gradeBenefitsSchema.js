@@ -4,11 +4,11 @@ import mongoose from "mongoose";
 const gradeBenefitsSchema = mongoose.Schema({
     name: {
         type: String,
-        validate: /^[a-zA-Z ][a-zA-Z ]+$/,
-        required: [true, "Please Enter the Name of the Benefit"],
-        maxlength: [100, "Benefit Name Can't Exceed 100 Characters"],
+        validate: /^[a-zA-Z0-9\s]+$/,
+        required: [true, "Please Enter the Name of the Grade"],
+        maxlength: [100, "Grade Benefits Name Can't Exceed 100 Characters"],
         trim: true,
-        lowercase: true
+        lowercase: true,
     },
     grade: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -22,7 +22,15 @@ const gradeBenefitsSchema = mongoose.Schema({
     description: {
         type: String,
         trim: true
-    },    
+    },
+    unique_id: {
+        type: String,
+        trim: true,
+        unique: true,
+        required: true,
+        index: true,
+        lowercase: true
+    },
     createdAt: {
         type: Date,
         default: Date.now

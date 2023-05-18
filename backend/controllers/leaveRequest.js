@@ -13,7 +13,6 @@ export const addingLeaveRequest = (req, res, next) => {
         if (req.body.count) throw 'Please remove count.'
         if (!req.body.startDate) throw 'Kindly Provide Start Date.'
         if (!req.body.organization) throw 'Kindly Provide Organization.'
-        let leaveDaysIndexes = []
         let dates = []
         LeaveTypeModel.findById(req.body.leaveType)
             .then((leaveType) => {
@@ -22,27 +21,6 @@ export const addingLeaveRequest = (req, res, next) => {
                 UserModel.findById(req.body.user)
                     .then((user) => {
                         if (!user) throw `No such user ${req.body.user}`
-                        const startDate = new Date(req.body.startDate);
-                        const endDate = new Date(req.body.endDate);
-                        for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
-                            const index = new Date(date);
-                            dates.push(index)
-                            const dayIndex = index.getDay();
-                            leaveDaysIndexes.push(dayIndex)
-                        }
-                        leaveDaysIndexes.forEach(leaveDaysIndex => {
-                            console.log("leaveDaysIndex", leaveDaysIndex);
-                            if (user.userRoster.restDays.includes(leaveDaysIndex)) {
-                                throw 'invalid leave days'
-                            }
-                        })
-                        //check kro k khn phly is date ki koi leave to nae apply nae ki hoi
-                        // dates.forEach(date => {
-                        //     LeaveRequestModel.find({})
-                        //         .then((leaves) => {
-
-                        //         })
-                        // })
                         user.leaveTypeDetails.forEach(userLeaveType => {
                             if (userLeaveType.leaveType.toString() == req.body.leaveType) {
                                 leaveRequestType(req, res, next, leaveType, user, userLeaveType.count)
@@ -123,7 +101,8 @@ const formatTime = (time) => {
 const fullLeaveRequest = (req, res, next, user, availableLeaves) => {
     try {
         if (!req.body.endDate) throw 'Kindly Provide End Date.'
-        req.body.count = calculateCount(req);
+        req.body.count = calculateCount(req, user);
+        console.log("========count=========", req.body.count);
         req.body.availableLeaves = availableLeaves - req.body.count
         if (availableLeaves >= req.body.count) {
             req.body.status = 'pending'
@@ -136,15 +115,20 @@ const fullLeaveRequest = (req, res, next, user, availableLeaves) => {
     }
 }
 
-const calculateCount = (req) => {
+const calculateCount = (req, user = null) => {
     if (req.body.short == false) {
-        let count = 0
+        let count;
+        let leaveDaysIndexes =[];
         const startDate = new Date(req.body.startDate);
         const endDate = new Date(req.body.endDate);
         for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
-            count++
+            const index = new Date(date);
+            const dayIndex = index.getDay();
+            leaveDaysIndexes.push(dayIndex)
         }
-        return count;
+        count = leaveDaysIndexes.filter(leaveDaysIndex => !(user.userRoster.restDays.includes(leaveDaysIndex)))
+        console.log("=======count array===", count);;
+        return count.length;
     }
 }
 
@@ -221,7 +205,7 @@ export const updateLeaveRequest = (req, res, next) => {
 
 const updateLeaveRequestFromFullToFull = (req, res, next, user, leaveRequest) => {
     if (!req.body.endDate) throw 'Kindly Provide End Date.'
-    req.body.count = calculateCount(req);
+    req.body.count = calculateCount(req, user);
     if (leaveRequest.count > req.body.count) {
         let count = leaveRequest.count - req.body.count
         userLeaveCountReduction(req, user, -count)
@@ -251,7 +235,7 @@ const updateLeaveRequestFromShortToFull = (req, res, next, user, leaveRequest) =
         .then((shrstLeaveType) => {
             req.body.shortleaveDetails = {}
             if (!req.body.endDate) throw 'Kindly Provide End Date.'
-            req.body.count = calculateCount(req);
+            req.body.count = calculateCount(req, user);
             let count = req.body.count - shrstLeaveType.balance
             userLeaveCountReduction(req, user, count)
             user.leaveTypeDetails.forEach(leaveType => {

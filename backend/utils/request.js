@@ -8,6 +8,7 @@ import { WFHModel } from "../models/wfhSchema.js";
 import { MissingPunchesModel } from "../models/missingPunchesSchema.js";
 import { updateAttendance } from "../controllers/attendance.js"
 import { LoanModel } from "../models/loanSchema.js";
+let errorOccurred = false
 
 export const creatingRequest = (req, res, next, user, request, requestFlow, requestType, type = null) => {
     RequestFlowModel.findById(requestFlow)
@@ -33,7 +34,10 @@ const getfirstNodeUser = async (req, res, next, node, user, request, requestType
         if (node[0].lineManager) nodeUser = user.lineManager
         else {
             const departmentUser = await UserModel.findOne({ HOD: { isHOD: true, department: node[0].department } }).select('_id');
-            if (!departmentUser) throw "ERROR"
+            if (!departmentUser) {
+                errorOccurred = true
+                throw "Department not Found"
+            }
             nodeUser = departmentUser._id;
         }
         let x = {
@@ -86,6 +90,7 @@ const addingRequest = (req, res, next, obj, show = true) => {
                                 message: "Your Rquest created successfully"
                             })
                         }
+                        else return;
                     })
                     .catch((error) => { handleCatch(`${error}`, res, 401, next) })
             }
@@ -196,8 +201,11 @@ const getNodeUser = async (node, user, req, res, next, show) => {
         let nodeUser = ''
         if (node.lineManager) nodeUser = user.lineManager
         else {
-            const departmentUser = await UserModel.findOne({ HOD: { isHOD: true, department: node.department } });
-            if (!departmentUser) throw "ERROR"
+            const departmentUser = await UserModel.findOne({ HOD: { isHOD: true, department: node.department } }).select('HOD firstName lastName');
+            if (!departmentUser) {
+                errorOccurred = true
+                throw "Department not found for use=========="
+            }
             nodeUser = departmentUser._id;
         }
         let x = {
@@ -213,6 +221,7 @@ const getNodeUser = async (node, user, req, res, next, show) => {
         addingRequest(req, res, next, x, show)
     } catch (error) {
         handleCatch(`${error}`, res, 401, next)
+        return;
     }
 }
 
@@ -250,11 +259,13 @@ export const commonModels = (req, res, next, model, requestStatus = null, msg) =
                         }
                     }
                     else {
+                        if (errorOccurred) return;
                         let message = requestStatus == 'rejected' ? `Your Request for ${msg} is Rejected` : `Your Request for ${msg} Approved by Node`
                         res.status(200).json({
                             success: true,
                             message
                         })
+                        return;
                     }
                 })
         })
