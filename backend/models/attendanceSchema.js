@@ -52,8 +52,17 @@ const attendanceSchema = mongoose.Schema({
         type: Number,
     },
     onLeave: {
-        type: Boolean,
-        default: false
+        type: String,
+        required: [true, "Please Select Leave Type"],
+        enum: {
+            values: [
+                'full-paid',
+                'full-unpaid',
+                'short-paid',
+                'short-unpaid',   
+            ],
+            messsage: 'Please Select Leave Type'
+        }
     },
     createdAt: {
         type: Date,

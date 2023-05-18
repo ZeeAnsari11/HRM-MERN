@@ -52,15 +52,12 @@ const getfirstNodeUser = async (req, res, next, node, user, request, requestType
         }
         addingRequest(req, res, next, x)
     } catch (error) {
-        console.log("===================elseeeee=====111===========");
         handleCatch(`${error}`, res, 401, next)
     }
 }
 
 
 const addingRequest = (req, res, next, obj, show = true) => {
-    console.log("===================5================");
-
     const senderId = obj.senderId;
     RequestModel.findOne({ "requests.requestDetails.senderId": senderId })
         .then((userFound) => {
@@ -105,7 +102,6 @@ const addingRequest = (req, res, next, obj, show = true) => {
 
 export const requestToNextNode = (req, res, next) => {
     try {
-        console.log("===================1================");
         if (!req.body.nodeId || !req.body.notificationId || !req.body.senderId || !req.body.flowRequestType || !req.body.requestId || !req.body.createdAt || !req.body.type) throw 'Invalid Body.'
         RequestFlowNodeModel.findById(req.body.nodeId)
             .then((previousNode) => {
@@ -117,8 +113,6 @@ export const requestToNextNode = (req, res, next) => {
                             UserModel.findById(req.body.senderId)
                                 .then((user) => {
                                     if (!user) throw 'No such user'
-                                    console.log("===================2================");
-
                                     settingStatus(req, res, next, '', node, user)
                                 })
                                 .catch((error) => {
@@ -169,7 +163,6 @@ const settingStatus = (req, res, next, requestStatus = null, node = null, user =
                     if (previousRequest.state != "pending") throw "This request already approved/rejected by you"
                     previousRequest.state = requestStatus == 'rejected' ? "rejected" : "approved"
                     if (node && user) {
-                        console.log("===================3================");
                         getNodeUser(node, user, req, res, next, false);
                     }
                 }
@@ -205,21 +198,14 @@ const settingStatus = (req, res, next, requestStatus = null, node = null, user =
 
 const getNodeUser = async (node, user, req, res, next, show) => {
     try {
-        console.log("===================4================");
-        console.log('=========errorOccurred=====1======',errorOccurred);
-
         let nodeUser = ''
         if (node.lineManager) nodeUser = user.lineManager
         else {
-            console.log("==show 1======", show);
-            console.log("======{ HOD: { isHOD: true, department: node.department } }=====", { HOD: { isHOD: true, department: node.department } });
             const departmentUser = await UserModel.findOne({ HOD: { isHOD: true, department: node.department } }).select('HOD firstName lastName');
-            console.log("=========departmentUser=", departmentUser);
             if (!departmentUser) {
                 errorOccurred = true
                 throw "Department not found for use=========="
             }
-            console.log('=========errorOccurred=====2======',errorOccurred);
             nodeUser = departmentUser._id;
         }
         let x = {
@@ -234,7 +220,6 @@ const getNodeUser = async (node, user, req, res, next, show) => {
         }
         addingRequest(req, res, next, x, show)
     } catch (error) {
-        console.log("================elseeeee=====2=====");
         handleCatch(`${error}`, res, 401, next)
         return;
     }
@@ -274,7 +259,6 @@ export const commonModels = (req, res, next, model, requestStatus = null, msg) =
                         }
                     }
                     else {
-                        console.log("===================elseeeee=====2===========", errorOccurred);
                         if (errorOccurred) return;
                         let message = requestStatus == 'rejected' ? `Your Request for ${msg} is Rejected` : `Your Request for ${msg} Approved by Node`
                         res.status(200).json({
