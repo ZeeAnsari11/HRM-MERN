@@ -87,9 +87,22 @@ const createPaySlip = (req, res, next, user, userCurrentSalary, allowances, payS
     }
     if (allowances.length == 0) {
         console.log("======if===========");
-        req.body.tax = taxCalculation(req, res, next, user, userCurrentSalary, paySlips, taxRules)
+        taxCalculation(req, res, next, user, userCurrentSalary, paySlips, taxRules)
+        req.body.finalSalary = getCurrentMonthSalary(user, userCurrentSalary)
         req.body.finalSalary = req.body.finalSalary - req.body.tax
-        createNew(req, res, next, PaySlipModel)
+        req.body.finalSalary = req.body.finalSalary - req.body.absentCost
+        req.body.user = user._id
+        PaySlipModel.create(req.body).then((response) => {
+            resp.push(response)
+            count = count + 1;
+            console.log(count, "===", length);
+            if (count === length) {
+                res.status(200).json({
+                    success: true,
+                    response: resp
+                })
+            }
+        })
     }
     else {
         allowances.forEach(allowance => {
