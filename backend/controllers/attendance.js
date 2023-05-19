@@ -4,8 +4,10 @@ import moment from "moment";
 import { UserModel } from "../models/userSchema.js";
 import { TimeSlotsModel } from "../models/timeSlotsSchema.js";
 import { LeaveRequestModel } from "../models/leaveRequestSchema.js";
+import { LeaveTypeModel } from "../models/leaveTypeSchema.js";
 const placeHolder = '1970-01-01T';
-
+let onLeave;
+let isAbsent;
 export const createAttendance = (req, res, next) => {
   try {
     if (req.body.user && req.body.date && (req.body.checkIn || req.body.checkOut) && Object.keys(req.body).length == 3) {
@@ -26,7 +28,7 @@ export const createAttendance = (req, res, next) => {
     }
     else handleCatch("Invalid request bodyxxx", res, 401, next)
   }
- 
+
   catch (err) { handleCatch(err, res, 401, next) }
 }
 
@@ -50,7 +52,11 @@ const fetchUserRosterDetails = (req, res, next) => {
       if (!user) throw "User not found"
       const roster = user.roster.employeeRosterDetails.find(r => {
         return r.date.toDateString() === new Date(req.body.date).toDateString()
+        // if(r.date.toDateString() === new Date(req.body.date).toDateString()){
+        //   console.log("==============r.date.toDateString() === new Date(req.body.date).toDateString()======",r.date.toDateString(),"===========", new Date(req.body.date).toDateString());
+        // }
       });
+      console.log("=======roster==",roster);
       if (!roster) throw "No work details found for this date."
       TimeSlotsModel.find({ _id: user.userRoster.timeSlots, organization: user.organization }).select("startTime endTime punchBufferStart punchBufferEnd")
         .then((timeslot) => {
@@ -177,7 +183,7 @@ export const markAbsent = (req, res, next) => {
             count++;
             if (attendance.length == 0) {
               if (!user.userRoster.restDays.includes(prevDate.day())) {
-                AttendanceModel.create({ user: req.body.user, date: prevDate.format('YYYY-MM-DD'), isAbsent: true })
+                AttendanceModel.create({ user: req.body.user, date: prevDate.format('YYYY-MM-DD'), isAbsent: true , onLeave : "full-unpaid"})
               }
             }
             if (count == 7) {
@@ -274,18 +280,47 @@ export const filterAttendance = (req, res, next) => {
 export const updateAttendance = (req, res, next, leave = null) => {
   try {
     if (leave) {
-      LeaveRequestModel.findById(req.body.requestId)
-        .then((leave) => {
-          return AttendanceModel.find({
+      console.log('===============77============');
+
+      return LeaveRequestModel.findById(req.body.requestId)
+        .then((leaveRequest) => {
+          return Promise.all([leaveRequest, LeaveTypeModel.findById(leaveRequest.leaveType)]);
+        })
+        .then(([leaveRequest, leaveType]) => {
+          console.log("========leave==", leaveRequest);
+          console.log("========leaveType==", leaveType);
+          if (leaveType.name === "unpaid" && leaveRequest.short == true) {
+            onLeave = "short-unpaid"
+          }
+          else if (leaveType.name === "unpaid" && leaveRequest.short == false) {
+            onLeave = "full-unpaid"
+            isAbsent = true;
+          }
+          else if (leaveType.name !== "unpaid" && leaveRequest.short == true) {
+            onLeave = "short-paid"
+          }
+          else {
+            onLeave = "full-paid"
+            isAbsent = true
+          }
+          console.log("========", ({
             user: req.body.senderId, date: {
-              $gte: new Date(leave.startDate),
-              $lte: new Date(leave.endDate)
-            }, isAbsent: true
+              $gte: new Date(leaveRequest.startDate),
+              $lte: new Date(leaveRequest.endDate)
+            }, $or: [{ isAbsent: true }, { onLeave: "no" }]
+          }));
+          AttendanceModel.find({
+            user: req.body.senderId, date: {
+              $gte: new Date(leaveRequest.startDate),
+              $lte: new Date(leaveRequest.endDate)
+            }, $or: [{ isAbsent: true }, { onLeave: "no" }]
           })
             .then((attendances) => {
+              console.log("=========attendances=========",attendances);
+              if (attendances.length == 0) throw "No attendance record found"
               attendances.forEach(attendance => {
-                attendance.isAbsent = false;
-                attendance.onLeave = true
+                attendance.isAbsent = isAbsent;
+                attendance.onLeave = onLeave
                 attendance.save()
               })
               res.status(200).json({
@@ -293,8 +328,47 @@ export const updateAttendance = (req, res, next, leave = null) => {
                 msg: 'Leave request is approved successfully and attendance is updated.'
               })
             })
+            .catch(err => {
+              console.log("===========21212=======", err);
+              handleCatch(err, res, 401, next)
+            });
         })
-        .catch(error => { handleCatch(error, res, 401, next) })
+        .catch(err => {
+          console.log("===========2121sadsadasd2=======", err);
+          handleCatch(err, res, 401, next)
+        });
+
+
+      // LeaveRequestModel.findById(req.body.requestId)
+      //   .then((leave) => {
+      //     return LeaveTypeModel.findById(leave.leaveType)
+      //       .then((leaveType) => {
+      //         console.log("========leave==", leave);
+      //         console.log("========leaveType==", leaveType);
+      //         return AttendanceModel.find({
+      //           user: req.body.senderId, date: {
+      //             $gte: new Date(leave.startDate),
+      //             $lte: new Date(leave.endDate)
+      //           }, isAbsent: true
+      //         })
+      //       })
+      //       .then((attendances) => {
+      //         attendances.forEach(attendance => {
+      //           attendance.isAbsent = false;
+      //           attendance.onLeave = true
+      //           attendance.save()
+      //         })
+      //         res.status(200).json({
+      //           success: true,
+      //           msg: 'Leave request is approved successfully and attendance is updated.'
+      //         })
+      //       })
+      //   })
+      //   .catch(error => {
+      //     console.log("=============sadasdas========", error);
+      //     handleCatch(error, res, 401, next)
+      //   }
+      //   )
     }
     if ((req.body.checkIn || req.body.checkOut) && req.body.user && req.body.date) {
       AttendanceModel.find({ user: req.body.user, date: new Date(req.body.date + "T00:00:00.000+00:00") })

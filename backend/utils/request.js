@@ -8,6 +8,7 @@ import { WFHModel } from "../models/wfhSchema.js";
 import { MissingPunchesModel } from "../models/missingPunchesSchema.js";
 import { updateAttendance } from "../controllers/attendance.js"
 import { LoanModel } from "../models/loanSchema.js";
+import { rejectLeaveRequest } from "../controllers/leaveRequest.js";
 let errorOccurred = false
 
 export const creatingRequest = (req, res, next, user, request, requestFlow, requestType, type = null) => {
@@ -102,6 +103,7 @@ const addingRequest = (req, res, next, obj, show = true) => {
 
 export const requestToNextNode = (req, res, next) => {
     try {
+        console.log('===============11============');
         if (!req.body.nodeId || !req.body.notificationId || !req.body.senderId || !req.body.flowRequestType || !req.body.requestId || !req.body.createdAt || !req.body.type) throw 'Invalid Body.'
         RequestFlowNodeModel.findById(req.body.nodeId)
             .then((previousNode) => {
@@ -116,10 +118,13 @@ export const requestToNextNode = (req, res, next) => {
                                     settingStatus(req, res, next, '', node, user)
                                 })
                                 .catch((error) => {
+                                    console.log("=========1========", error);
                                     handleCatch(`${error}`, res, 401, next)
                                 })
                         })
                         .catch((error) => {
+                            console.log("=========2========", error);
+
                             handleCatch(`${error}`, res, 401, next)
                         })
                 }
@@ -130,6 +135,8 @@ export const requestToNextNode = (req, res, next) => {
                             break;
                         }
                         case 'Leave': {
+                            console.log('===============22============');
+
                             settingStatus(req, res, next, "approvedByAll")
                             break;
                         }
@@ -145,14 +152,20 @@ export const requestToNextNode = (req, res, next) => {
                 }
             })
             .catch((error) => {
+                console.log("========3========", error);
+
                 handleCatch(`${error}`, res, 401, next)
             })
     } catch (error) {
+        console.log("=========4========", error);
+
         handleCatch(`${error}`, res, 401, next)
     }
 }
 
 const settingStatus = (req, res, next, requestStatus = null, node = null, user = null) => {
+    console.log('===============33============');
+
     const requestId = req.body.notificationId;
     const type = req.body.type
     RequestModel.findOne({ "requests.requestDetails._id": requestId })
@@ -163,6 +176,7 @@ const settingStatus = (req, res, next, requestStatus = null, node = null, user =
                     if (previousRequest.state != "pending") throw "This request already approved/rejected by you"
                     previousRequest.state = requestStatus == 'rejected' ? "rejected" : "approved"
                     if (node && user) {
+                        console.log("-------geting node user=======");
                         getNodeUser(node, user, req, res, next, false);
                     }
                 }
@@ -179,6 +193,8 @@ const settingStatus = (req, res, next, requestStatus = null, node = null, user =
                             break;
                         }
                         case 'Leave': {
+                            console.log('===============44============');
+
                             commonModels(req, res, next, LeaveRequestModel, requestStatus, 'Leave')
                         }
                             break;
@@ -188,9 +204,14 @@ const settingStatus = (req, res, next, requestStatus = null, node = null, user =
                         }
                     }
                 })
-                .catch(err => handleCatch(err, res, 401, next))
+                .catch((err) => {
+                    console.log("=========5========", error);
+                    handleCatch(err, res, 401, next)
+                })
         })
         .catch((error) => {
+            console.log("=========6========", error);
+
             handleCatch(`${error}`, res, 401, next)
         })
 }
@@ -198,10 +219,15 @@ const settingStatus = (req, res, next, requestStatus = null, node = null, user =
 
 const getNodeUser = async (node, user, req, res, next, show) => {
     try {
+        console.log("========node========",node);
         let nodeUser = ''
-        if (node.lineManager) nodeUser = user.lineManager
+        if (node.lineManager) {
+            console.log("--------if called========");
+            nodeUser = user.lineManager}
         else {
             const departmentUser = await UserModel.findOne({ HOD: { isHOD: true, department: node.department } }).select('HOD firstName lastName');
+            console.log("==========departmentUser========",departmentUser
+            );
             if (!departmentUser) {
                 errorOccurred = true
                 throw "Department not found for use=========="
@@ -226,6 +252,7 @@ const getNodeUser = async (node, user, req, res, next, show) => {
 }
 
 export const commonModels = (req, res, next, model, requestStatus = null, msg) => {
+    console.log('===============55============');
     model.findById(req.body.requestId)
         .then((Obj) => {
             if (!Obj) throw `Request for ${msg} is not found`
@@ -249,6 +276,8 @@ export const commonModels = (req, res, next, model, requestStatus = null, msg) =
                             }
                                 break;
                             case 'Leave': {
+                                console.log('===============66============');
+
                                 updateAttendance(req, res, next, true);
                             }
                                 break;
@@ -260,6 +289,7 @@ export const commonModels = (req, res, next, model, requestStatus = null, msg) =
                     }
                     else {
                         if (errorOccurred) return;
+                        console.log("=======errorOccurred==", errorOccurred);
                         let message = requestStatus == 'rejected' ? `Your Request for ${msg} is Rejected` : `Your Request for ${msg} Approved by Node`
                         res.status(200).json({
                             success: true,
@@ -274,6 +304,17 @@ export const commonModels = (req, res, next, model, requestStatus = null, msg) =
 
 export const rejectRequest = (req, res, next) => {
     settingStatus(req, res, next, 'rejected')
+    switch (req.body.type) {
+        case 'Leave': {
+            const request = {
+                params: {
+                  id: req.body.requestId
+                }
+              };
+              rejectLeaveRequest(request, res, next, false)
+        }
+            break;
+    }
 }
 
 

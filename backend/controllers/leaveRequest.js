@@ -3,7 +3,7 @@ import { LeaveTypeModel } from "../models/leaveTypeSchema.js";
 import { UserModel } from "../models/userSchema.js"
 import { ShortLeaveTypeModel } from "../models/shortLeaveTypeSchema.js";
 import { creatingRequest } from "../utils/request.js";
-import { handleCatch, updateById, deleteById, getById } from '../utils/common.js'
+import { createNew, handleCatch, updateById, deleteById, getById } from '../utils/common.js'
 
 const placeHolder = '0001-01-01T';
 
@@ -40,6 +40,7 @@ export const addingLeaveRequest = (req, res, next) => {
 }
 
 const leaveRequestType = (req, res, next, leaveType, user, availableLeaves) => {
+    console.log("==============L1===availableLeaves====", availableLeaves);
     if (req.body.short == true && leaveType.shortLeave == true) {
         shortLeaveRequest(req, res, next, user, availableLeaves)
     }
@@ -58,7 +59,7 @@ const shortLeaveRequest = (req, res, next, user, availableLeaves) => {
                     req.body.endDate = req.body.startDate
                     userShortLeaveHours(req, shrtLeaveType, user, null)
                     req.body.status = 'pending'
-                    createNew(req, res, next, LeaveRequestModel)
+                    creatingLeaveRequest(req, res, next, user)
                 }
                 else throw 'Invalid Leave.'
             })
@@ -84,6 +85,8 @@ const userShortLeaveHours = (req, shrtLeaveType, user, update = null) => {
 }
 
 const userLeaveCountReduction = (req, user, count) => {
+    console.log("==============L2===count====", count);
+
     user.leaveTypeDetails.forEach(leaveType => {
         if (leaveType.leaveType.toString() == req.body.leaveType) {
             leaveType.count = leaveType.count - count
@@ -100,6 +103,8 @@ const formatTime = (time) => {
 
 const fullLeaveRequest = (req, res, next, user, availableLeaves) => {
     try {
+        console.log("==============L2===availableLeaves====", availableLeaves);
+
         if (!req.body.endDate) throw 'Kindly Provide End Date.'
         req.body.count = calculateCount(req, user);
         console.log("========count=========", req.body.count);
@@ -118,7 +123,7 @@ const fullLeaveRequest = (req, res, next, user, availableLeaves) => {
 const calculateCount = (req, user = null) => {
     if (req.body.short == false) {
         let count;
-        let leaveDaysIndexes =[];
+        let leaveDaysIndexes = [];
         const startDate = new Date(req.body.startDate);
         const endDate = new Date(req.body.endDate);
         for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
@@ -288,36 +293,38 @@ export const deleteLeaveRequest = (req, res, next) => {
     deleteById(req.params.id, res, next, LeaveRequestModel, 'LeaveRequest')
 }
 
-export const rejectLeaveRequest = (req, res, next) => {
+export const rejectLeaveRequest = (req, res, next, show = true) => {
     try {
         LeaveRequestModel.findById(req.params.id)
             .then((userLeaveRequests) => {
                 if (!userLeaveRequests) throw 'No such Leave.'
-                if (userLeaveRequests.status !== 'rejected') {
-                    UserModel.findById(userLeaveRequests.user)
-                        .then((user) => {
-                            user.leaveTypeDetails.forEach(leaveType => {
-                                if (leaveType.leaveType.toString() == userLeaveRequests.leaveType.toString()) {
-                                    leaveType.count = leaveType.count + userLeaveRequests.count
-                                }
-                            })
-                            user.save()
-                                .then(() => {
-                                    userLeaveRequests.status = 'rejected'
-                                    userLeaveRequests.save()
-                                        .then(() => {
+                if (userLeaveRequests.status !== 'rejected' && show) throw "Leave is already rejected."
+                UserModel.findById(userLeaveRequests.user)
+                    .then((user) => {
+                        user.leaveTypeDetails.forEach(leaveType => {
+                            if (leaveType.leaveType.toString() == userLeaveRequests.leaveType.toString()) {
+                                leaveType.count = leaveType.count + userLeaveRequests.count
+                            }
+                        })
+                        user.save()
+                            .then(() => {
+                                userLeaveRequests.status = 'rejected'
+                                userLeaveRequests.save()
+                                    .then(() => {
+                                        if (show) {
                                             res.status(200).json({
                                                 success: true,
                                                 Message: 'Leave Rejected Successfully.'
                                             })
-                                        })
-                                })
+                                        }
+                                        else return
+                                    })
+                            })
 
-                        })
-                        .catch((error) => {
-                            handleCatch(`${error}`, res, 401, next)
-                        })
-                } else throw 'Leave is already rejected.'
+                    })
+                    .catch((error) => {
+                        handleCatch(`${error}`, res, 401, next)
+                    })
             })
             .catch((error) => {
                 handleCatch(`${error}`, res, 401, next)

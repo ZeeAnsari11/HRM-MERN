@@ -60,9 +60,11 @@ const attendanceSchema = mongoose.Schema({
                 'full-unpaid',
                 'short-paid',
                 'short-unpaid',   
+                'no'
             ],
             messsage: 'Please Select Leave Type'
-        }
+        },
+        default : "no"
     },
     createdAt: {
         type: Date,
