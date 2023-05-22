@@ -2,8 +2,8 @@ import { LoanModel } from "../models/loanSchema.js"
 import { LoanTypeModel } from "../models/loanTypeSchema.js"
 import { LoanRepaymentModel } from "../models/loanRepaymentSchema.js"
 import { UserModel } from "../models/userSchema.js"
-import { handleCatch, updateById, getAll } from "../utils/common.js"
 import { creatingRequest } from "../utils/request.js"
+import { createNew, handleCatch, updateById, getAll } from "../utils/common.js"
 
 export const createLoan = (req, res, next) => {
     try {

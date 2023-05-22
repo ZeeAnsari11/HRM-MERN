@@ -4,20 +4,27 @@ import { createSlice } from '@reduxjs/toolkit';
 export const DesignationSlice = createSlice({
     name: 'designation',
     initialState: {
-        designations: []
+        designations: [],
+        designation: {},
+        name: {}
     },
     reducers: {
         setUserDesignation: (state, action) => {
-            state.designations = action.payload;
+            state = action.payload;
+        },
+        setDesignationName: (state, action) => {
+            state.name = action.payload;
         }
     }
 });
 
 // Action Methods
-export const { setUserDesignation } = DesignationSlice.actions;
+export const { setUserDesignation, setDesignationName } = DesignationSlice.actions;
 
 // Selector Methods
 export const selectUserDesignation = (state) => state.designation.designations;
+
+export const selectDesignationName = (state) => state.designation.name;
 
 // Reducer
 export const DesignationReducer = DesignationSlice.reducer;

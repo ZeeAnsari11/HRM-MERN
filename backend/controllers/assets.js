@@ -42,6 +42,7 @@ export const UpdateAssetById = (req, res, next) => {
 export const AssetManagment = (req, res, next) => {
     let condition = (Object.keys(req.body).length > 6 || !req.body.user || !req.body.asset || !req.body.action || !req.body.reason || !req.body.date || !req.body.condition);
     try {
+        console.log(condition);
         if (condition) throw "You can only perform Allocation and deallocation operations here with all necessary information"
         UserModel.findById(req.body.user)
             .then(user => {
