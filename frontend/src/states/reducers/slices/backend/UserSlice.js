@@ -6,6 +6,7 @@ export const UserSlice = createSlice({
   initialState: {
     currentUser: {},
     userAuthToken: null,
+    allUsers: []
   },
   reducers: {
     setCurrentUser: (state, action) => {
@@ -22,6 +23,9 @@ export const UserSlice = createSlice({
     },
     setOrganization: (state, action) => {
       state.currentUser.organization = action.payload;
+    },
+    setAllUsers: (state, action) => {
+      state.allUsers = action.payload;
     }
   }
 });
@@ -30,6 +34,7 @@ export const UserSlice = createSlice({
 export const { 
   setCurrentUser, setAuth, logout,
   setOrganization,
+  setAllUsers,
 } = UserSlice.actions;
 
 // Selector Methods
@@ -38,6 +43,7 @@ export const selectAuth = (state) => state.user.userAuthToken;
 export const selectUID = (state) => state.user.currentUser._id;
 export const selectOrgId = (state) => state.user.currentUser.organization._id;
 export const selectUserLeaveTypes = (state) => state.user.currentUser.leaveTypeDetails
+export const selectAllUsers = (state) => state.user.allUsers
 
 // Reducer
 export const UserReducer = UserSlice.reducer;

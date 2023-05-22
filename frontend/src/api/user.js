@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { authentication, userRoutes } from './configuration';
-import { setAuth, setCurrentUser } from '../states/reducers/slices/backend/UserSlice';
+import { authentication, getAllUsers, userRoutes } from './configuration';
+import { setAllUsers, setAuth, setCurrentUser } from '../states/reducers/slices/backend/UserSlice';
 
 export const loginAuth = (dispatcher, body, navigation) => {
     axios.post(authentication.login, body)
@@ -37,6 +37,16 @@ export const getCurrentUser = (dispatcher, setLoaded=null) => {
         .then((user) => {
             dispatcher(setCurrentUser(user.data.user));
             if (setLoaded !== null) setLoaded(false);
+        }).catch((error) => {
+            console.log(error)
+        })
+}
+
+export const getAllUsersByOrganization = (organizationId, dispatcher) => {
+    axios.get(getAllUsers.byOrganization + organizationId)
+        .then((response) => {
+            console.log(response.data.users);
+            dispatcher(setAllUsers(response.data.users));
         }).catch((error) => {
             console.log(error)
         })

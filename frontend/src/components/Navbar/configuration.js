@@ -17,8 +17,8 @@ export const Menus = [
         access:"admin",
         font: faCalendarDay,
         child: [
-            { title: "Add Asset", font: faCodePullRequest, to:"/dashboard/leaverequest" },
-            { title: "Manage Assets", font: faCalendarCheck, to:"/dashboard/leaves"},
+            { title: "Add Asset", font: faCodePullRequest, to:"/dashboard/add-asset" },
+            { title: "Manage Assets", font: faCalendarCheck, to:"/dashboard/manage-assets"},
         ]
     },
     {
@@ -27,7 +27,7 @@ export const Menus = [
         font: faUsers,
         child: [
             { title: "Create Employee", font: faCalendarTimes, to:"/dashboard/employee" },
-            { title: "View Employees", font: faFileAlt, to:"/dashboard/attendence" },
+            { title: "View Employees", font: faFileAlt, to:"/dashboard/view-employees" },
         ]
     },
     {

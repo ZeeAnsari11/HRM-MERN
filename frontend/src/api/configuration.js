@@ -30,3 +30,38 @@ export const leaveType = {
     getLeaveType: baseUrl+'/leaveType/'
 }
 
+export const asset = {
+    setAsset: baseUrl+'/asset/new'
+}
+
+export const assetType = {
+    getAssetType: baseUrl+'/asset-type/organization/'
+}
+
+export const assetManagment = {
+    manageAsset: baseUrl+'/asset/management'
+}
+
+export const  allAssets = {
+    getAssets: baseUrl+'/assets/organization/'
+}
+
+export const  getAllUsers = {
+    byOrganization: baseUrl+'/user/organization/'
+}
+
+export const  getDesignation = {
+    byId: baseUrl+'/designation/'
+}
+
+export const  getAsset = {
+    byId: baseUrl+'/asset/'
+}
+
+export const  getUserLoan = {
+    byId: baseUrl+'/loan/user/'
+}
+
+export const  getLoanTypeBy = {
+    organization: baseUrl+'/loan-type/organization/'
+}

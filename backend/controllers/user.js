@@ -296,7 +296,7 @@ export const getAllUsersByOrganizationId = (req, res, next) => {
     OrganizationModel.findById(req.params.id)
         .then((organization) => {
             if (!organization) throw "organization dont exist"
-            UserModel.find({ organization: req.params.id })
+            UserModel.find({ organization: req.params.id }).populate('designation')
                 .then((users) => {
                     if (users.length === 0) throw "No users are there for this org."
                     users.forEach((user) => {

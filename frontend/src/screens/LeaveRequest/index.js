@@ -5,7 +5,7 @@ import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getLeaveRequestByOrganizationId, getShortLeaveTypesByOrganizationId, saveFormData } from "../../api/leaverequest";
 import { useDispatch, useSelector } from "react-redux";
-import { selectOrgId, selectUserLeaveTypes } from "../../states/reducers/slices/backend/UserSlice";
+import { selectOrgId, selectUID, selectUserLeaveTypes } from "../../states/reducers/slices/backend/UserSlice";
 import { selectLeaveTypes, selectShortLeaveTypes } from "../../states/reducers/slices/backend/LeaveRequest";
 
 const LeaveRequest = () => {
@@ -13,7 +13,7 @@ const LeaveRequest = () => {
   const [endDate, setEndDate] = useState("");
   const [leaveType, setLeaveType] = useState("");
   const [reason, setReason] = useState("");
-  const [short, setShort] = useState("");
+  const [short, setShort] = useState(false);
   const [availableLeaves, setAvailableLeaves] = useState("");
   const [count, setCount] = useState("");
   const [attachment, setAttachment] = useState("");
@@ -21,15 +21,14 @@ const LeaveRequest = () => {
   const [endTime, setEndTime] = useState('');
   const [shortLeaveType, setShortLeaveType] = useState('');
   const [attachmentPreview, setAttachmentPreview] = useState(null);
-  const [formData, setFormData] = useState({});
   
   const dispatcher = useDispatch();
   const org_id = useSelector(selectOrgId);
   const leaveTypes = useSelector(selectLeaveTypes);
   const shortLeaveTypes = useSelector(selectShortLeaveTypes);
   const leavesCount = useSelector(selectUserLeaveTypes);
+  const user = useSelector(selectUID)
 
-  console.log(leavesCount);
   useEffect(() => {
     getLeaveRequestByOrganizationId(org_id, dispatcher);
     getShortLeaveTypesByOrganizationId(org_id, dispatcher)
@@ -90,19 +89,20 @@ const LeaveRequest = () => {
     e.preventDefault();
     const organization = org_id
     const newFormData = {
+      user,
       leaveType,
       short,
       shortLeaveType,
       startTime,
       endTime,
-      availableLeaves,
       startDate,
       endDate,
-      count,
-      organization
+      organization,
+      reason
     };
-    setFormData(newFormData);
-    saveFormData(formData)
+    // // setFormData(newFormData);
+    console.log(newFormData);
+    saveFormData(newFormData)
   };
 
   return (

@@ -2,7 +2,7 @@ import { LoanModel } from "../models/loanSchema.js"
 import { LoanTypeModel } from "../models/loanTypeSchema.js"
 import { LoanRepaymentModel } from "../models/loanRepaymentSchema.js"
 import { UserModel } from "../models/userSchema.js"
-import { createNew, handleCatch, updateById, getAll } from "../utils/common.js"
+import { createNew, handleCatch, updateById } from "../utils/common.js"
 
 export const createLoan = (req, res, next) => {
     try {
@@ -127,7 +127,18 @@ export const updateLoanById = (req, res, next) => {
 }
 
 export const getAllLoansByUserId = (req, res, next) => {
-    getAll(res, next, LoanModel, { user: req.params.id }, "Loan");
+    LoanModel.find({ user: req.params.id }).populate({
+        path: 'loan_type',
+        select: 'type'
+    })
+        .populate('repaymentSchedules')
+        .then((loans) => {
+            res.status(200).json({
+                success: true,
+                loans
+            })
+        })
+        .catch(err => handleCatch(err, res, 401, next));
 }
 
 export const chanegeLoanStatus = (new_Status, loanId) => {

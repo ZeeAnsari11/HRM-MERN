@@ -12,7 +12,6 @@ import {
   Box,
   Typography,
 } from '@material-ui/core';
-import { Search } from '@material-ui/icons';
 import { selectLeaveType, selectUserLeaves } from '../../states/reducers/slices/backend/LeaveRequest';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUID } from '../../states/reducers/slices/backend/UserSlice';
