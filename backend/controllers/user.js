@@ -103,7 +103,7 @@ const checkingProbation = (req, res, next, organization) => {
 const userRoster = (req, res, next) => {
     if (!req.body.userRoster || !req.body.userRoster?.timeSlots || !req.body.userRoster?.restDays) throw 'Kindly Provide Data for Roster'
     req.body.userRoster.restDays.forEach(restDay => {
-        if (restDay < 1 || restDay > 7) throw 'Invalid Rest Days.'
+        if (restDay < 0 || restDay > 6) throw 'Invalid Rest Days.'
     });
     TimeSlotsModel.findById(req.body.userRoster.timeSlots)
         .then((timeSlot) => {
@@ -117,28 +117,27 @@ const userRoster = (req, res, next) => {
 }
 
 const creatingRoster = (req, res, next, user = null, timeSlot = null) => {
-    var startDate = new Date(user ? user.joiningDate : req.body.joiningDate);
-    var endDate = new Date(startDate.getFullYear(), 11, 32);
-    var slotTimeStart = timeSlot.startTime.getHours() + ":" + timeSlot.startTime.getMinutes()
-    var slotTimeEnd = timeSlot.endTime.getHours() + ":" + timeSlot.endTime.getMinutes();
-    user ? user.roster.employeeRosterDetails = []
-        :
-        req.body.roster = {
-            employeeRosterDetails: []
-        }
+    let startDate = user ? new Date(user.joiningDate) : new Date(req.body.joiningDate);
+    startDate.setUTCHours(0, 0, 0, 0); // Set time to midnight in UTC
+    startDate.setDate(startDate.getDate() + 1);
+    let endDate = new Date(startDate.getFullYear(), 11, 32);
+    let slotTimeStart = timeSlot.startTime.getHours() + ":" + timeSlot.startTime.getMinutes();
+    let slotTimeEnd = timeSlot.endTime.getHours() + ":" + timeSlot.endTime.getMinutes();
+    user ? (user.roster.employeeRosterDetails = []) : (req.body.roster = { employeeRosterDetails: [] });
+
     for (let i = startDate; i <= endDate; i.setDate(i.getDate() + 1)) {
         if (!req.body.userRoster.restDays.includes(i.getDay())) {
             let x = {
-                day: i.getDay(),
-                date: i.toUTCString(),
+                day: i.getUTCDay(),
+                date: i.toISOString(),
                 workingHours: slotTimeStart + " - " + slotTimeEnd,
-                plannedHours: Math.abs(new Date(timeSlot.endTime) - new Date(timeSlot.startTime)) / (60 * 60 * 1000)
-            }
-            user ? user.roster.employeeRosterDetails.push(x) : req.body.roster.employeeRosterDetails.push(x)
+                plannedHours: Math.abs(new Date(timeSlot.endTime) - new Date(timeSlot.startTime)) / (60 * 60 * 1000),
+            };
+            user ? user.roster.employeeRosterDetails.push(x) : req.body.roster.employeeRosterDetails.push(x);
         }
     }
-    user ? userSave(res, next, user) : ''
-}
+    user ? userSave(res, next, user) : '';
+};
 
 const userCreate = (req, res, next, organization) => {
     try {
@@ -413,10 +412,11 @@ export const updateUserById = (req, res, next) => {
 
 const updateUserRoster = (req, res, next, user) => {
     try {
+        console.log("==============eq.body.userRoster.restDays==============",req.body.userRoster.restDays);
         if (!req.body.userRoster.timeSlots && req.body.userRoster.restDays) {
             user.userRoster.restDays = [];
             req.body.userRoster.restDays.forEach(restDay => {
-                if (restDay < 1 || restDay > 7) throw 'Invalid Rest Days.'
+                if (restDay < 0 || restDay > 6) throw 'Invalid Rest Days.'
                 user.userRoster.restDays.push(restDay)
             });
             TimeSlotsModel.findById(user.userRoster.timeSlots)
@@ -431,7 +431,7 @@ const updateUserRoster = (req, res, next, user) => {
         else if (req.body.userRoster.timeSlots && req.body.userRoster.restDays) {
             user.userRoster.restDays = [];
             req.body.userRoster.restDays.forEach(restDay => {
-                if (restDay < 1 || restDay > 7) throw 'Invalid Rest Days.'
+                if (restDay < 0 || restDay > 6) throw 'Invalid Rest Days.'
                 user.userRoster.restDays.push(restDay)
             });
             TimeSlotsModel.findById(req.body.userRoster.timeSlots)
