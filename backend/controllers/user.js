@@ -294,7 +294,7 @@ export const getAllUsersByOrganizationId = (req, res, next) => {
     OrganizationModel.findById(req.params.id)
         .then((organization) => {
             if (!organization) throw "organization dont exist"
-            UserModel.find({ organization: req.params.id })
+            UserModel.find({ organization: req.params.id }).populate('designation')
                 .then((users) => {
                     if (users.length === 0) throw "No users are there for this org."
                     users.forEach((user) => {
@@ -776,4 +776,67 @@ export const validateUserToken = (req, res, next) => {
 
 export const updateUserProbation = (req, res, next) => {
 
+}
+
+export const addNewLeavesToUsers = (req, res, next) => {
+    let count = 0
+    LeaveTypeModel.findById(req.body.leaveType)
+        .then((leave) => {
+            if (!leave) throw 'No Such Leave Type.';
+            let x = {
+                leaveType: leave._id,
+                count: leave.accumulativeCount
+            };
+            if (req.body.users) {
+                addingLeaves(req, res, leave, x)
+            }
+            else {
+                UserModel.find({ organization: req.params.id, firstUser: false })
+                    .then((dbUsers) => {
+                        dbUsers.forEach(dbUser => {
+                            count = count + 1;
+                            common(res, leave, x, dbUser, count, dbUsers.length)
+                        })
+                    })
+            }
+        })
+        .catch(err => handleCatch(err, res, 401, next));
+};
+
+const addingLeaves = (req, res, leave, obj) => {
+    let notFoundUser = [];
+    let count = 0
+    console.log("req.body.users", req.body.users.length);
+    req.body.users.forEach(bodyUserId => {
+        UserModel.find({ _id: bodyUserId, organization: req.params.id, firstUser: false })
+            .then((dbUser) => {
+                if (dbUser.length == 0) {
+                    count = count + 1;
+                    notFoundUser.push(bodyUserId)
+                }
+                else {
+                    dbUser.forEach(user => {
+                        count = count + 1;
+                        common(res, leave, obj, user, count, req.body.users.length, notFoundUser)
+                    })
+                }
+            })
+    })
+}
+
+const common = (res, leave, obj, user, count, length, notFoundUser = null) => {
+    let leaveTypeExists = user.leaveTypeDetails.some((detail) => {
+        return detail.leaveType.toString() === leave._id.toString();
+    });
+    if (!leaveTypeExists) {
+        user.leaveTypeDetails.push(obj);
+        user.save();
+    }
+    console.log("count", count);
+    if (length == count) {
+        res.status(200).json({
+            success: true,
+            notFoundUser
+        });
+    }
 }

@@ -8,8 +8,6 @@ import Skeleton from "./screens/Skeleton";
 import Profile from "./screens/Profile";
 import Settings from "./screens/Settings";
 import Probation from "./screens/Probation";
-import Roaster from "./screens/Roaster";
-import Chart from "./screens/Chart";
 import Loan from "./screens/Loan";
 import Leave from "./screens/Leave";
 import LeavePolicy from "./screens/LeavePolicy";
@@ -20,6 +18,12 @@ import LeaveRequest from "./screens/LeaveRequest";
 import Error from "./screens/Error/404";
 import FirstUser from "./screens/FirstUser";
 import User from "./screens/User";
+import Asset from "./screens/AddAsset";
+import ManageAsset from "./screens/ManageAsset";
+import ViewEmployees from "./screens/ViewEmployees";
+import Roaster from "./screens/Roaster/src";
+// import ChartPage from "./screens/Chart/src";
+// import ChartPage from "./screens/Chart";
 
 function App() {
   return (
@@ -31,9 +35,10 @@ function App() {
       <Route path="/dashboard" element={<Dashboard/>}>
         <Route path="/dashboard/home" element={<Skeleton />}/>
         <Route path="/dashboard/employee" element={<User/>}/>
+        <Route path="/dashboard/view-employees" element={<ViewEmployees/>}/>
         <Route path="/dashboard/probation" element={<Probation />}/>
         <Route path="/dashboard/roaster" element={<Roaster />}/>
-        <Route path="/dashboard/chart" element={<Chart />}/>
+        {/* <Route path="/dashboard/chart" element={<ChartPage />}/> */}
         <Route path="/dashboard/loan" element={<Loan />}/>
         <Route path="/dashboard/leaverequest" element={<LeaveRequest />}/>
         <Route path="/dashboard/leaves" element={<Leave />}/>
@@ -43,6 +48,8 @@ function App() {
         <Route path="/dashboard/wfh" element={<WorkFromHome />}/>
         <Route path="/dashboard/profile" element={<Profile />}/>
         <Route path="/dashboard/settings" element={<Settings />}/>
+        <Route path="/dashboard/add-asset" element={<Asset />}/>
+        <Route path="/dashboard/manage-assets" element={<ManageAsset />}/>
       </Route>
       <Route path="/*" element={<Error />}/>
     </Routes>

@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { authentication, organizationRoutes, timeSlots, userRoutes } from './configuration';
-import { setAuth, setCurrentUser, setFinalAuthority, setTimeSLots } from '../states/reducers/slices/backend/UserSlice';
+import { setAuth, setCurrentUser, setFinalAuthority, setTimeSLots, setAllUsers } from '../states/reducers/slices/backend/UserSlice';
 import { setUserBranch } from '../states/reducers/slices/backend/Branch';
 import { setUserDepartment } from '../states/reducers/slices/backend/Department';
 import { setUserDesignation } from '../states/reducers/slices/backend/Designation';
+import { getAllUsers } from './configuration';
 
 export const loginAuth = (dispatcher, body, navigation) => {
     axios.post(authentication.login, body)
@@ -69,4 +70,14 @@ export const createUser = (data) => {
     .catch((error) => {
         console.log(error)
     })
+}
+
+export const getAllUsersByOrganization = (organizationId, dispatcher) => {
+    axios.get(getAllUsers.byOrganization + organizationId)
+        .then((response) => {
+            console.log(response.data.users);
+            dispatcher(setAllUsers(response.data.users));
+        }).catch((error) => {
+            console.log(error)
+        })
 }

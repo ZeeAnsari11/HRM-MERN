@@ -8,7 +8,8 @@ export const UserSlice = createSlice({
     userAuthToken: null,
     teamLeads: [],
     finalAuthority: [],
-    timeSlots: []
+    timeSlots: [],
+    allUsers: []
   },
   reducers: {
     setCurrentUser: (state, action) => {
@@ -34,6 +35,9 @@ export const UserSlice = createSlice({
     },
     setTimeSLots: (state, action) => {
       state.timeSlots = action.payload;
+    },
+    setAllUsers: (state, action) => {
+      state.allUsers = action.payload;
     }
   }
 });
@@ -42,7 +46,8 @@ export const UserSlice = createSlice({
 export const {
   setCurrentUser, setAuth, logout,
   setOrganization, setTeamLeadList, 
-  setFinalAuthority, setTimeSLots
+  setFinalAuthority, setTimeSLots,
+  setAllUsers,
 } = UserSlice.actions;
 
 // Selector Methods
@@ -56,6 +61,7 @@ export const selectTimeSlots = (state) => state.user.timeSlots;
 export const selectFinalAuthority = (state) => state.user.finalAuthority;
 export const selectOrgId = (state) => state.user.currentUser.organization._id;
 export const selectUserLeaveTypes = (state) => state.user.currentUser.leaveTypeDetails
+export const selectAllUsers = (state) => state.user.allUsers
 
 // Reducer
 export const UserReducer = UserSlice.reducer;
