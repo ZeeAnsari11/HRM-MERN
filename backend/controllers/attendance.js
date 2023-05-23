@@ -56,7 +56,7 @@ const fetchUserRosterDetails = (req, res, next) => {
         //   console.log("==============r.date.toDateString() === new Date(req.body.date).toDateString()======",r.date.toDateString(),"===========", new Date(req.body.date).toDateString());
         // }
       });
-      console.log("=======roster==",roster);
+      // console.log("=======roster==",roster);
       if (!roster) throw "No work details found for this date."
       TimeSlotsModel.find({ _id: user.userRoster.timeSlots, organization: user.organization }).select("startTime endTime punchBufferStart punchBufferEnd")
         .then((timeslot) => {

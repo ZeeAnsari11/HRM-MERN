@@ -7,7 +7,7 @@ export const createOrganization = (req, res, next) => {
         if (!req.body.restDays) { throw "Rest days are required and must be in between 1 and 7 " }
         const restDays = [...new Set(req.body.restDays)];
         restDays.forEach(restDay => {
-            if (restDay < 1 || restDay > 7) { throw "Rest days must be in between 1 and 7 " }
+            if (restDay < 0 || restDay > 6) { throw "Rest days must be in between 0 and 6" }
         })
         createNew(req, res, next, OrganizationModel)
     }
