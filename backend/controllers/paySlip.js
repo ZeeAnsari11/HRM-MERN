@@ -48,13 +48,9 @@ const common = (req, res, next) => {
                 let userSalaryPromise = SalaryModel.find({ user: user._id }).sort({ createdAt: -1 }).limit(1).exec()
                 let paySlipPromise = PaySlipModel.find({ user: user._id }).exec()
                 let taxRulesPromise = TaxRuleModel.find().exec()
-                
-								let attedencesPromise = AttendanceModel.find({  
+					let attedencesPromise = AttendanceModel.find({  
                     user: user._id,
-                    $or: [
-                        { $and: [{ isAbsent: true }, { onLeave: "full-unpaid" }] },
-                        { $and: [{ isPresent: true }, { onLeave: "short-unpaid" }] }
-                    ],
+                    isAbsent : true,
                     date: {
                         $gte: new Date(monthDateStart.toISOString().slice(0, 10) + "T00:00:00.000+00:00"),
                         $lte: new Date(monthDateEnd.toISOString().slice(0, 10) + "T00:00:00.000+00:00")
@@ -346,24 +342,10 @@ const getFinancialYearDates = (month, year) => {
 
 const handleAbsents = (userCurrentSalary, attedences, daysInMonth) => {
     let absentCost = 0
-    console.log("===========userCurrentSalary=============", userCurrentSalary);
-    console.log("===========daysInMonth=============", daysInMonth);
-    let perDaySalary = userCurrentSalary / daysInMonth;
-    let halfDaySalary = perDaySalary / 2;
-    let halfLeavesDeduction = 0;
-    let fullLeavesDeduction = 0;
-
     console.log("====attedences===", attedences);
     if (attedences.length >= 1) {
-        const halfDayLeaves = attedences.filter(obj => obj.onLeave === 'short-unpaid');
-        if (halfDayLeaves.length >= 1) {
-            halfLeavesDeduction = halfDayLeaves.length * halfDaySalary
-        }
-        fullLeavesDeduction = (attedences.length - halfDayLeaves.length) * perDaySalary
-        return absentCost = halfLeavesDeduction + fullLeavesDeduction
-
-        // absentCost = attedences.length * calculatePerUserSalary(daysInMonth, userCurrentSalary)
-        // return absentCost
+        absentCost = attedences.length * calculatePerUserSalary(daysInMonth, userCurrentSalary)
+        return absentCost
     }
     else return absentCost
 }

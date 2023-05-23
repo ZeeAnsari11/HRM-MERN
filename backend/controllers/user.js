@@ -103,7 +103,7 @@ const checkingProbation = (req, res, next, organization) => {
 const userRoster = (req, res, next) => {
     if (!req.body.userRoster || !req.body.userRoster?.timeSlots || !req.body.userRoster?.restDays) throw 'Kindly Provide Data for Roster'
     req.body.userRoster.restDays.forEach(restDay => {
-        if (restDay < 1 || restDay > 7) throw 'Invalid Rest Days.'
+        if (restDay < 0 || restDay > 6) throw 'Invalid Rest Days.'
     });
     TimeSlotsModel.findById(req.body.userRoster.timeSlots)
         .then((timeSlot) => {
@@ -117,28 +117,27 @@ const userRoster = (req, res, next) => {
 }
 
 const creatingRoster = (req, res, next, user = null, timeSlot = null) => {
-    var startDate = new Date(user ? user.joiningDate : req.body.joiningDate);
-    var endDate = new Date(startDate.getFullYear(), 11, 32);
-    var slotTimeStart = timeSlot.startTime.getHours() + ":" + timeSlot.startTime.getMinutes()
-    var slotTimeEnd = timeSlot.endTime.getHours() + ":" + timeSlot.endTime.getMinutes();
-    user ? user.roster.employeeRosterDetails = []
-        :
-        req.body.roster = {
-            employeeRosterDetails: []
-        }
+    let startDate = user ? new Date(user.joiningDate) : new Date(req.body.joiningDate);
+    startDate.setUTCHours(0, 0, 0, 0); // Set time to midnight in UTC
+    startDate.setDate(startDate.getDate() + 1);
+    let endDate = new Date(startDate.getFullYear(), 11, 32);
+    let slotTimeStart = timeSlot.startTime.getHours() + ":" + timeSlot.startTime.getMinutes();
+    let slotTimeEnd = timeSlot.endTime.getHours() + ":" + timeSlot.endTime.getMinutes();
+    user ? (user.roster.employeeRosterDetails = []) : (req.body.roster = { employeeRosterDetails: [] });
+
     for (let i = startDate; i <= endDate; i.setDate(i.getDate() + 1)) {
         if (!req.body.userRoster.restDays.includes(i.getDay())) {
             let x = {
-                day: i.getDay(),
-                date: i.toUTCString(),
+                day: i.getUTCDay(),
+                date: i.toISOString(),
                 workingHours: slotTimeStart + " - " + slotTimeEnd,
-                plannedHours: Math.abs(new Date(timeSlot.endTime) - new Date(timeSlot.startTime)) / (60 * 60 * 1000)
-            }
-            user ? user.roster.employeeRosterDetails.push(x) : req.body.roster.employeeRosterDetails.push(x)
+                plannedHours: Math.abs(new Date(timeSlot.endTime) - new Date(timeSlot.startTime)) / (60 * 60 * 1000),
+            };
+            user ? user.roster.employeeRosterDetails.push(x) : req.body.roster.employeeRosterDetails.push(x);
         }
     }
-    user ? userSave(res, next, user) : ''
-}
+    user ? userSave(res, next, user) : '';
+};
 
 const userCreate = (req, res, next, organization) => {
     try {
@@ -295,7 +294,7 @@ export const getAllUsersByOrganizationId = (req, res, next) => {
     OrganizationModel.findById(req.params.id)
         .then((organization) => {
             if (!organization) throw "organization dont exist"
-            UserModel.find({ organization: req.params.id })
+            UserModel.find({ organization: req.params.id }).populate('designation')
                 .then((users) => {
                     if (users.length === 0) throw "No users are there for this org."
                     users.forEach((user) => {
@@ -413,10 +412,11 @@ export const updateUserById = (req, res, next) => {
 
 const updateUserRoster = (req, res, next, user) => {
     try {
+        console.log("==============eq.body.userRoster.restDays==============",req.body.userRoster.restDays);
         if (!req.body.userRoster.timeSlots && req.body.userRoster.restDays) {
             user.userRoster.restDays = [];
             req.body.userRoster.restDays.forEach(restDay => {
-                if (restDay < 1 || restDay > 7) throw 'Invalid Rest Days.'
+                if (restDay < 0 || restDay > 6) throw 'Invalid Rest Days.'
                 user.userRoster.restDays.push(restDay)
             });
             TimeSlotsModel.findById(user.userRoster.timeSlots)
@@ -431,7 +431,7 @@ const updateUserRoster = (req, res, next, user) => {
         else if (req.body.userRoster.timeSlots && req.body.userRoster.restDays) {
             user.userRoster.restDays = [];
             req.body.userRoster.restDays.forEach(restDay => {
-                if (restDay < 1 || restDay > 7) throw 'Invalid Rest Days.'
+                if (restDay < 0 || restDay > 6) throw 'Invalid Rest Days.'
                 user.userRoster.restDays.push(restDay)
             });
             TimeSlotsModel.findById(req.body.userRoster.timeSlots)
@@ -776,4 +776,67 @@ export const validateUserToken = (req, res, next) => {
 
 export const updateUserProbation = (req, res, next) => {
 
+}
+
+export const addNewLeavesToUsers = (req, res, next) => {
+    let count = 0
+    LeaveTypeModel.findById(req.body.leaveType)
+        .then((leave) => {
+            if (!leave) throw 'No Such Leave Type.';
+            let x = {
+                leaveType: leave._id,
+                count: leave.accumulativeCount
+            };
+            if (req.body.users) {
+                addingLeaves(req, res, leave, x)
+            }
+            else {
+                UserModel.find({ organization: req.params.id, firstUser: false })
+                    .then((dbUsers) => {
+                        dbUsers.forEach(dbUser => {
+                            count = count + 1;
+                            common(res, leave, x, dbUser, count, dbUsers.length)
+                        })
+                    })
+            }
+        })
+        .catch(err => handleCatch(err, res, 401, next));
+};
+
+const addingLeaves = (req, res, leave, obj) => {
+    let notFoundUser = [];
+    let count = 0
+    console.log("req.body.users", req.body.users.length);
+    req.body.users.forEach(bodyUserId => {
+        UserModel.find({ _id: bodyUserId, organization: req.params.id, firstUser: false })
+            .then((dbUser) => {
+                if (dbUser.length == 0) {
+                    count = count + 1;
+                    notFoundUser.push(bodyUserId)
+                }
+                else {
+                    dbUser.forEach(user => {
+                        count = count + 1;
+                        common(res, leave, obj, user, count, req.body.users.length, notFoundUser)
+                    })
+                }
+            })
+    })
+}
+
+const common = (res, leave, obj, user, count, length, notFoundUser = null) => {
+    let leaveTypeExists = user.leaveTypeDetails.some((detail) => {
+        return detail.leaveType.toString() === leave._id.toString();
+    });
+    if (!leaveTypeExists) {
+        user.leaveTypeDetails.push(obj);
+        user.save();
+    }
+    console.log("count", count);
+    if (length == count) {
+        res.status(200).json({
+            success: true,
+            notFoundUser
+        });
+    }
 }
