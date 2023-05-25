@@ -40,7 +40,7 @@ export const addingLeaveRequest = (req, res, next) => {
 }
 
 const leaveRequestType = (req, res, next, leaveType, user, availableLeaves) => {
-    console.log("==============L1===availableLeaves====", availableLeaves);
+    // console.log("==============L1===availableLeaves====", availableLeaves);
     if (req.body.short == true && leaveType.shortLeave == true) {
         shortLeaveRequest(req, res, next, user, availableLeaves)
     }
@@ -85,7 +85,7 @@ const userShortLeaveHours = (req, shrtLeaveType, user, update = null) => {
 }
 
 const userLeaveCountReduction = (req, user, count) => {
-    console.log("==============L2===count====", count);
+    // console.log("==============L2===count====", count);
 
     user.leaveTypeDetails.forEach(leaveType => {
         if (leaveType.leaveType.toString() == req.body.leaveType) {
@@ -103,11 +103,11 @@ const formatTime = (time) => {
 
 const fullLeaveRequest = (req, res, next, user, availableLeaves) => {
     try {
-        console.log("==============L2===availableLeaves====", availableLeaves);
+        // console.log("==============L2===availableLeaves====", availableLeaves);
 
         if (!req.body.endDate) throw 'Kindly Provide End Date.'
         req.body.count = calculateCount(req, user);
-        console.log("========count=========", req.body.count);
+        // console.log("========count=========", req.body.count);
         req.body.availableLeaves = availableLeaves - req.body.count
         if (availableLeaves >= req.body.count) {
             req.body.status = 'pending'
@@ -132,7 +132,7 @@ const calculateCount = (req, user = null) => {
             leaveDaysIndexes.push(dayIndex)
         }
         count = leaveDaysIndexes.filter(leaveDaysIndex => !(user.userRoster.restDays.includes(leaveDaysIndex)))
-        console.log("=======count array===", count);;
+        // console.log("=======count array===", count);;
         return count.length;
     }
 }

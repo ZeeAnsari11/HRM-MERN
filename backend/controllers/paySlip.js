@@ -70,7 +70,7 @@ const common = (req, res, next) => {
                                     userCurrentSalary = userSalary.currentSalary
                                 })
                             }
-                            console.log("==============attedences==========", attedences);
+                            // console.log("==============attedences==========", attedences);
                             let value = handleAbsents(userCurrentSalary, attedences, daysInMonth)
                             createPaySlip(req, res, next, user, userCurrentSalary, allowances, paySlips, taxRules, users.length, value)
                         })
@@ -83,7 +83,7 @@ const common = (req, res, next) => {
 }
 
 const createPaySlip = (req, res, next, user, userCurrentSalary, allowances, paySlips, taxRules, length, value) => {
-    console.log("======user ======", user._id);
+    // console.log("======user ======", user._id);
     req.body.tax = 0
     req.body.absentCost = value
     req.body.basicSalary = req.body.grossSalary = req.body.finalSalary = userCurrentSalary
@@ -91,14 +91,14 @@ const createPaySlip = (req, res, next, user, userCurrentSalary, allowances, payS
         allowanceDetails: []
     }
     if (allowances.length == 0) {
-        console.log("======if===========");
+        // console.log("======if===========");
         req.body.tax = taxCalculation(req, res, next, user, userCurrentSalary, paySlips, taxRules)
         req.body.finalSalary = req.body.finalSalary - req.body.tax
         createNew(req, res, next, PaySlipModel)
     }
     else {
         allowances.forEach(allowance => {
-            console.log("======else===========", allowance);
+            // console.log("======else===========", allowance);
             let x = {
                 name: allowance.allowanceName,
                 amount: user.grossSalary * (allowance.percrentageOfBaseSalary / 100)
@@ -106,19 +106,19 @@ const createPaySlip = (req, res, next, user, userCurrentSalary, allowances, payS
             req.body.basicSalary = req.body.basicSalary - (req.body.grossSalary * (allowance.percrentageOfBaseSalary / 100))
             req.body.allowance.allowanceDetails.push(x)
         })
-        console.log("=====going for tax======");
+        // console.log("=====going for tax======");
         taxCalculation(req, res, next, user, userCurrentSalary, paySlips, taxRules)
-        console.log('=======after tax======');
-        console.log("======req.body.tax=====", req.body.tax);
+        // console.log('=======after tax======');
+        // console.log("======req.body.tax=====", req.body.tax);
         req.body.finalSalary = getCurrentMonthSalary(user, userCurrentSalary)
-        console.log("getCurrentMonthSalary(user, userCurrentSalary)", getCurrentMonthSalary(user, userCurrentSalary));
+        // console.log("getCurrentMonthSalary(user, userCurrentSalary)", getCurrentMonthSalary(user, userCurrentSalary));
         req.body.finalSalary = req.body.finalSalary - req.body.tax
         req.body.finalSalary = req.body.finalSalary - req.body.absentCost
         req.body.user = user._id
         PaySlipModel.create(req.body).then((response) => {
             resp.push(response)
             count = count + 1;
-            console.log(count, "===", length);
+            // console.log(count, "===", length);
             if (count === length) {
                 res.status(200).json({
                     success: true,
@@ -130,9 +130,9 @@ const createPaySlip = (req, res, next, user, userCurrentSalary, allowances, payS
 }
 
 const taxCalculation = (req, res, next, user, userCurrentSalary, paySlips, taxRules) => {
-    console.log("======herer=======tax=====");
+    // console.log("======herer=======tax=====");
     let previousFiscalTaxableEarning = calculatingPreviousFiscalTaxableEarning(req, res, next, user, userCurrentSalary, paySlips)
-    console.log("======previousFiscalTaxableEarning=======tax=====", previousFiscalTaxableEarning);
+    // console.log("======previousFiscalTaxableEarning=======tax=====", previousFiscalTaxableEarning);
     taxRules.forEach(taxRule => {
         if (previousFiscalTaxableEarning > taxRule.fromAmount && previousFiscalTaxableEarning <= taxRule.toAmount) {
             let currentTax = currentMonthTax(req, previousFiscalTaxableEarning, taxRule, paySlips)
@@ -143,75 +143,75 @@ const taxCalculation = (req, res, next, user, userCurrentSalary, paySlips, taxRu
 }
 
 const currentMonthTax = (req, previousFiscalTaxableEarning, taxRule, paySlips) => {
-    console.log("=======currentMonthTax==here=");
+    // console.log("=======currentMonthTax==here=");
     let totalTax = 0
     if (taxRule.percentage == 0 && taxRule.fixRate == 0) {
-        console.log("======if========");
+        // console.log("======if========");
         totalTax = 0
     }
     else if (taxRule.percentage != 0) {
-        console.log("3rywghbfuc", taxRule.fixRate);
+        // console.log("3rywghbfuc", taxRule.fixRate);
         let totalSalaryIncreasesFromMinimumThreShold = previousFiscalTaxableEarning - taxRule.fromAmount
-        console.log("totalSalaryIncreasesFromMinimumThreShold", totalSalaryIncreasesFromMinimumThreShold);
+        // console.log("totalSalaryIncreasesFromMinimumThreShold", totalSalaryIncreasesFromMinimumThreShold);
         totalTax = taxRule.fixRate + (totalSalaryIncreasesFromMinimumThreShold * taxRule.percentage / 100)
-        console.log("======else if ======totalTax==", totalTax);
+        // console.log("======else if ======totalTax==", totalTax);
     }
     if (paySlips.length == 0) {
-        console.log("====== if ======totapaySlips.length == 0lTax==");
+        // console.log("====== if ======totapaySlips.length == 0lTax==");
         return newJoinerTaxCase(req, totalTax)
     }
     else {
-        console.log("======else======totapaySlips.length == 0lTax==");
+        // console.log("======else======totapaySlips.length == 0lTax==");
         return atLeastOneSlipExistTaxCase(req, totalTax, paySlips)
     }
 }
 
 const newJoinerTaxCase = (req, totalTax) => {
-    console.log("=====newJoinerTaxCase======here=======",);
+    // console.log("=====newJoinerTaxCase======here=======",);
     let financialYear = getFinancialYearDates(req.body.month, req.body.year)
-    console.log('=======financialYear==', financialYear);
+    // console.log('=======financialYear==', financialYear);
     if (financialYear.monthsSinceFinancialYearStart >= 1) {
-        console.log("=====newJoinerTaxCase======if=======");
+        // console.log("=====newJoinerTaxCase======if=======");
         /// New Employee coming in month other than july
         let perMonthTax = totalTax / 12
         let taxPaidTillNow = financialYear.monthsSinceFinancialYearStart * perMonthTax
         let remainingTax = totalTax - taxPaidTillNow
         let monthlyTax = remainingTax / (financialYear.remainingMonths + 1)
-        console.log("=======perMonthTax=====", perMonthTax);
-        console.log("=======taxPaidTillNow=====", taxPaidTillNow);
-        console.log("=======remainingTax=====", remainingTax);
-        console.log("====monthlyTax==", monthlyTax);
+        // console.log("=======perMonthTax=====", perMonthTax);
+        // console.log("=======taxPaidTillNow=====", taxPaidTillNow);
+        // console.log("=======remainingTax=====", remainingTax);
+        // console.log("====monthlyTax==", monthlyTax);
         return monthlyTax
     }
     else {
-        console.log("=====newJoinerTaxCase======else=======");
+        // console.log("=====newJoinerTaxCase======else=======");
         /// New Employee coming in july month
         let perMonthTax = totalTax / 12
-        console.log("=====perMonthTax    else=====", perMonthTax);
+        // console.log("=====perMonthTax    else=====", perMonthTax);
         return perMonthTax
     }
 }
 
 const atLeastOneSlipExistTaxCase = (req, totalTax, paySlips) => {
     let financialYear = getFinancialYearDates(req.body.month, req.body.year)
-    console.log("======>financialYear.remainingMonths", financialYear.remainingMonths);
+    // console.log("======>financialYear.remainingMonths", financialYear.remainingMonths);
     let foundSlipsTotalTax = 0
     let currentMonthTax = 0
     let paySlipsFromFinancialYearStarts
     let noOfPreviousMonthsTaxPaid = 0
     if (paySlips.length >= financialYear.monthsSinceFinancialYearStart) {
-        console.log("========if=======paySlips.length >= financialYear.monthsSinceFinancialYearStart");
+        // console.log("========if=======paySlips.length >= financialYear.monthsSinceFinancialYearStart");
         paySlipsFromFinancialYearStarts = getPayObjects(req, paySlips, financialYear.monthsSinceFinancialYearStart)
-        console.log("======-paySlipsFromFinancialYearStarts", paySlipsFromFinancialYearStarts);
+        // console.log("======-paySlipsFromFinancialYearStarts", paySlipsFromFinancialYearStarts);
         paySlipsFromFinancialYearStarts.forEach(month => {
             foundSlipsTotalTax = foundSlipsTotalTax + month.tax
         })
-        console.log("-------foundSlipsTotalTax", foundSlipsTotalTax);
-        console.log("financialYear.remainingMonths + 1", (financialYear.remainingMonths + 1));
+        // console.log("-------foundSlipsTotalTax", foundSlipsTotalTax);
+        // console.log("financialYear.remainingMonths + 1", (financialYear.remainingMonths + 1));
         return currentMonthTax = (totalTax - foundSlipsTotalTax) / (financialYear.remainingMonths + 1)
     }
     else if (financialYear.monthsSinceFinancialYearStart > paySlips.length) {
-        console.log("========else if=======financialYear.monthsSinceFinancialYearStart > paySlips.length");
+        // console.log("========else if=======financialYear.monthsSinceFinancialYearStart > paySlips.length");
         noOfPreviousMonthsTaxPaid = financialYear.monthsSinceFinancialYearStart - paySlips.length
         let previousSlaryTax = noOfPreviousMonthsTaxPaid * paySlips[0].tax
         paySlips.forEach(paySlip => {
@@ -219,18 +219,18 @@ const atLeastOneSlipExistTaxCase = (req, totalTax, paySlips) => {
         })
 
         currentMonthTax = (totalTax - previousSlaryTax - foundSlipsTotalTax) / (financialYear.remainingMonths + 1)
-        console.log("previousSlaryTax", previousSlaryTax);
-        console.log("foundSlipsTotalTax", foundSlipsTotalTax);
-        console.log("currentMonthTax");
-        console.log("financialYear.remainingMonths", financialYear.remainingMonths);
-        console.log("currentMonthTax", currentMonthTax);
+        // console.log("previousSlaryTax", previousSlaryTax);
+        // console.log("foundSlipsTotalTax", foundSlipsTotalTax);
+        // console.log("currentMonthTax");
+        // console.log("financialYear.remainingMonths", financialYear.remainingMonths);
+        // console.log("currentMonthTax", currentMonthTax);
         return currentMonthTax
     }
 }
 
 const calculatingPreviousFiscalTaxableEarning = (req, res, next, user, userCurrentSalary, paySlips) => {
     if (paySlips.length == 0) {
-        console.log("going for newJoinerCase");
+        // console.log("going for newJoinerCase");
         return newJoinerCase(req, user, userCurrentSalary)
     }
     else return atLeastOneSlipExist(req, res, next, user, paySlips, userCurrentSalary)
@@ -258,7 +258,7 @@ const newJoinerCase = (req, user, userCurrentSalary) => {
 }
 
 const atLeastOneSlipExist = (req, res, next, user, paySlips, userCurrentSalary) => {
-    console.log("going for atLeastOneSlipExist");
+    // console.log("going for atLeastOneSlipExist");
     let foundSlipsTotalSalary = 0
     let previousFiscalTaxableEarning = 0
     let paySlipsFromFinancialYearStarts = 0
@@ -266,7 +266,7 @@ const atLeastOneSlipExist = (req, res, next, user, paySlips, userCurrentSalary) 
     let noOfAheadMonthsSalaryRemains = 0
     let financialYear = getFinancialYearDates(req.body.month, req.body.year)
     if (paySlips.length >= financialYear.monthsSinceFinancialYearStart) {
-        console.log("========paySlips.length >= financialYear.monthsSinceFinancialYearStart");
+        // console.log("========paySlips.length >= financialYear.monthsSinceFinancialYearStart");
         paySlipsFromFinancialYearStarts = getPayObjects(req, paySlips, financialYear.monthsSinceFinancialYearStart)
         paySlipsFromFinancialYearStarts.forEach(month => {
             noOfPreviousMonthsSalaryRemains = noOfPreviousMonthsSalaryRemains + month.grossSalary
@@ -275,7 +275,7 @@ const atLeastOneSlipExist = (req, res, next, user, paySlips, userCurrentSalary) 
         return previousFiscalTaxableEarning = noOfPreviousMonthsSalaryRemains + noOfAheadMonthsSalaryRemains + userCurrentSalary
     }
     else if (financialYear.monthsSinceFinancialYearStart > paySlips.length) {
-        console.log("============financialYear.monthsSinceFinancialYearStart", financialYear.monthsSinceFinancialYearStart);
+        // console.log("============financialYear.monthsSinceFinancialYearStart", financialYear.monthsSinceFinancialYearStart);
         noOfPreviousMonthsSalaryRemains = financialYear.monthsSinceFinancialYearStart - paySlips.length
         noOfAheadMonthsSalaryRemains = financialYear.remainingMonths
         let previousSlary = noOfPreviousMonthsSalaryRemains * paySlips[0].grossSalary
@@ -346,14 +346,14 @@ const getFinancialYearDates = (month, year) => {
 
 const handleAbsents = (userCurrentSalary, attedences, daysInMonth) => {
     let absentCost = 0
-    console.log("===========userCurrentSalary=============", userCurrentSalary);
-    console.log("===========daysInMonth=============", daysInMonth);
+    // console.log("===========userCurrentSalary=============", userCurrentSalary);
+    // console.log("===========daysInMonth=============", daysInMonth);
     let perDaySalary = userCurrentSalary / daysInMonth;
     let halfDaySalary = perDaySalary / 2;
     let halfLeavesDeduction = 0;
     let fullLeavesDeduction = 0;
 
-    console.log("====attedences===", attedences);
+    // console.log("====attedences===", attedences);
     if (attedences.length >= 1) {
         const halfDayLeaves = attedences.filter(obj => obj.onLeave === 'short-unpaid');
         if (halfDayLeaves.length >= 1) {
@@ -384,7 +384,7 @@ export const updatePaySlips = (req, res, next) => {
                     })
                     return PaySlipModel.deleteMany({ organization: req.params.id })
                         .then((response) => {
-                            console.log("previous payslips deleted");
+                            // console.log("previous payslips deleted");
                             common(req, res, next);
                         });
                 }

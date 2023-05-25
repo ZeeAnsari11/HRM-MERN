@@ -128,7 +128,7 @@ export const addGradeToBenefits = (req, res, next) => {
                 throw "The grade already exists in the Benefits"
               }
               benefit.grade.push(req.body.grade);
-              console.log('------BG', benefit.grade)
+              // console.log('------BG', benefit.grade)
               benefit.save()
             })
             .catch((error) => {

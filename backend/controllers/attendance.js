@@ -56,7 +56,7 @@ const fetchUserRosterDetails = (req, res, next) => {
         //   console.log("==============r.date.toDateString() === new Date(req.body.date).toDateString()======",r.date.toDateString(),"===========", new Date(req.body.date).toDateString());
         // }
       });
-      console.log("=======roster==", roster);
+      // console.log("=======roster==", roster);
       if (!roster) throw "No work details found for this date."
       TimeSlotsModel.find({ _id: user.userRoster.timeSlots, organization: user.organization }).select("startTime endTime punchBufferStart punchBufferEnd")
         .then((timeslot) => {
@@ -280,15 +280,15 @@ export const filterAttendance = (req, res, next) => {
 export const updateAttendance = (req, res, next, leave = null) => {
   try {
     if (leave) {
-      console.log('===============77============');
+      // console.log('===============77============');
 
       return LeaveRequestModel.findById(req.body.requestId)
         .then((leaveRequest) => {
           return Promise.all([leaveRequest, LeaveTypeModel.findById(leaveRequest.leaveType)]);
         })
         .then(([leaveRequest, leaveType]) => {
-          console.log("========leave==", leaveRequest);
-          console.log("========leaveType==", leaveType);
+          // console.log("========leave==", leaveRequest);
+          // console.log("========leaveType==", leaveType);
           if (leaveType.name === "unpaid" && leaveRequest.short == true) {
             onLeave = "short-unpaid"
           }
@@ -303,12 +303,12 @@ export const updateAttendance = (req, res, next, leave = null) => {
             onLeave = "full-paid"
             isAbsent = true
           }
-          console.log("========", ({
-            user: req.body.senderId, date: {
-              $gte: new Date(leaveRequest.startDate),
-              $lte: new Date(leaveRequest.endDate)
-            }, $or: [{ isAbsent: true }, { onLeave: "no" }]
-          }));
+          // console.log("========", ({
+          //   user: req.body.senderId, date: {
+          //     $gte: new Date(leaveRequest.startDate),
+          //     $lte: new Date(leaveRequest.endDate)
+          //   }, $or: [{ isAbsent: true }, { onLeave: "no" }]
+          // }));
           AttendanceModel.find({
             user: req.body.senderId, date: {
               $gte: new Date(leaveRequest.startDate),
@@ -316,7 +316,7 @@ export const updateAttendance = (req, res, next, leave = null) => {
             }, $or: [{ isAbsent: true }, { onLeave: "no" }]
           })
             .then((attendances) => {
-              console.log("=========attendances=========", attendances);
+              // console.log("=========attendances=========", attendances);
               if (attendances.length == 0) throw "No attendance record found"
               attendances.forEach(attendance => {
                 attendance.isAbsent = isAbsent;
@@ -329,12 +329,12 @@ export const updateAttendance = (req, res, next, leave = null) => {
               })
             })
             .catch(err => {
-              console.log("===========21212=======", err);
+              // console.log("===========21212=======", err);
               handleCatch(err, res, 401, next)
             });
         })
         .catch(err => {
-          console.log("===========2121sadsadasd2=======", err);
+          // console.log("===========2121sadsadasd2=======", err);
           handleCatch(err, res, 401, next)
         });
 
