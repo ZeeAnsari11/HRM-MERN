@@ -38,7 +38,7 @@ const common = (req, res, next) => {
         .then((organization) => {
             if (!organization) throw 'No Such Organization'
             //return UserModel.find({ organization: organization._id })
-            return UserModel.find({ _id: "642ea68e2decd5ff96a07d49"})
+            return UserModel.find({ _id: "645cd91054f94c09815d4fbb" })
         })
         .then((users) => {
             if (users.length == 0) throw 'No users in the provided organization'
@@ -47,9 +47,14 @@ const common = (req, res, next) => {
                 let allowancePromise = AllowanceModel.find({ organization: user.organization }).exec()
                 let userSalaryPromise = SalaryModel.find({ user: user._id }).sort({ createdAt: -1 }).limit(1).exec()
                 let paySlipPromise = PaySlipModel.find({ user: user._id }).exec()
-                let taxRulesPromise = TaxRuleModel.find().exec()
-                let attedencesPromise = AttendanceModel.find({
-                    user: user._id, isAbsent: true,
+                let taxRulesPromise = TaxRuleModel.find({organization : user.organization}).exec()
+                
+					let attedencesPromise = AttendanceModel.find({  
+                    user: user._id,
+                    $or: [
+                        { $and: [{ isAbsent: true }, { onLeave: "full-unpaid" }] },
+                        { $and: [{ isPresent: true }, { onLeave: "short-unpaid" }] }
+                    ],
                     date: {
                         $gte: new Date(monthDateStart.toISOString().slice(0, 10) + "T00:00:00.000+00:00"),
                         $lte: new Date(monthDateEnd.toISOString().slice(0, 10) + "T00:00:00.000+00:00")
@@ -65,7 +70,7 @@ const common = (req, res, next) => {
                                     userCurrentSalary = userSalary.currentSalary
                                 })
                             }
-                            console.log("7u23y9attedences", attedences);
+                            console.log("==============attedences==========", attedences);
                             let value = handleAbsents(userCurrentSalary, attedences, daysInMonth)
                             createPaySlip(req, res, next, user, userCurrentSalary, allowances, paySlips, taxRules, users.length, value)
                         })
@@ -87,22 +92,9 @@ const createPaySlip = (req, res, next, user, userCurrentSalary, allowances, payS
     }
     if (allowances.length == 0) {
         console.log("======if===========");
-        taxCalculation(req, res, next, user, userCurrentSalary, paySlips, taxRules)
-        req.body.finalSalary = getCurrentMonthSalary(user, userCurrentSalary)
+        req.body.tax = taxCalculation(req, res, next, user, userCurrentSalary, paySlips, taxRules)
         req.body.finalSalary = req.body.finalSalary - req.body.tax
-        req.body.finalSalary = req.body.finalSalary - req.body.absentCost
-        req.body.user = user._id
-        PaySlipModel.create(req.body).then((response) => {
-            resp.push(response)
-            count = count + 1;
-            console.log(count, "===", length);
-            if (count === length) {
-                res.status(200).json({
-                    success: true,
-                    response: resp
-                })
-            }
-        })
+        createNew(req, res, next, PaySlipModel)
     }
     else {
         allowances.forEach(allowance => {
@@ -354,12 +346,24 @@ const getFinancialYearDates = (month, year) => {
 
 const handleAbsents = (userCurrentSalary, attedences, daysInMonth) => {
     let absentCost = 0
+    console.log("===========userCurrentSalary=============", userCurrentSalary);
+    console.log("===========daysInMonth=============", daysInMonth);
+    let perDaySalary = userCurrentSalary / daysInMonth;
+    let halfDaySalary = perDaySalary / 2;
+    let halfLeavesDeduction = 0;
+    let fullLeavesDeduction = 0;
+
     console.log("====attedences===", attedences);
     if (attedences.length >= 1) {
-        attedences.forEach(attedence => {
-            absentCost = absentCost + calculatePerUserSalary(daysInMonth, userCurrentSalary)
-        })
-        return absentCost
+        const halfDayLeaves = attedences.filter(obj => obj.onLeave === 'short-unpaid');
+        if (halfDayLeaves.length >= 1) {
+            halfLeavesDeduction = halfDayLeaves.length * halfDaySalary
+        }
+        fullLeavesDeduction = (attedences.length - halfDayLeaves.length) * perDaySalary
+        return absentCost = halfLeavesDeduction + fullLeavesDeduction
+
+        // absentCost = attedences.length * calculatePerUserSalary(daysInMonth, userCurrentSalary)
+        // return absentCost
     }
     else return absentCost
 }

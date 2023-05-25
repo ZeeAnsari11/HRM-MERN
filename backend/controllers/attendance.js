@@ -56,7 +56,7 @@ const fetchUserRosterDetails = (req, res, next) => {
         //   console.log("==============r.date.toDateString() === new Date(req.body.date).toDateString()======",r.date.toDateString(),"===========", new Date(req.body.date).toDateString());
         // }
       });
-      console.log("=======roster==",roster);
+      console.log("=======roster==", roster);
       if (!roster) throw "No work details found for this date."
       TimeSlotsModel.find({ _id: user.userRoster.timeSlots, organization: user.organization }).select("startTime endTime punchBufferStart punchBufferEnd")
         .then((timeslot) => {
@@ -183,7 +183,7 @@ export const markAbsent = (req, res, next) => {
             count++;
             if (attendance.length == 0) {
               if (!user.userRoster.restDays.includes(prevDate.day())) {
-                AttendanceModel.create({ user: req.body.user, date: prevDate.format('YYYY-MM-DD'), isAbsent: true , onLeave : "full-unpaid"})
+                AttendanceModel.create({ user: req.body.user, date: prevDate.format('YYYY-MM-DD'), isAbsent: true, onLeave: "full-unpaid" })
               }
             }
             if (count == 7) {
@@ -316,7 +316,7 @@ export const updateAttendance = (req, res, next, leave = null) => {
             }, $or: [{ isAbsent: true }, { onLeave: "no" }]
           })
             .then((attendances) => {
-              console.log("=========attendances=========",attendances);
+              console.log("=========attendances=========", attendances);
               if (attendances.length == 0) throw "No attendance record found"
               attendances.forEach(attendance => {
                 attendance.isAbsent = isAbsent;
