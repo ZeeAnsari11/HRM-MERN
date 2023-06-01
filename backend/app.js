@@ -42,6 +42,7 @@ import { attendenceRoute } from "./routes/attendance.js";
 import { allowanceRoute } from "./routes/allowance.js"; 
 import { paySlipRoute } from "./routes/paySlip.js"; 
 import { taxRuleRoute } from "./routes/taxRule.js";
+import { holidayRoute } from "./routes/holiday.js";
 
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandler.js";
@@ -99,8 +100,8 @@ app.use(apiVersion, attendenceRoute)
 app.use(apiVersion, allowanceRoute)
 app.use(apiVersion, paySlipRoute)
 app.use(apiVersion, taxRuleRoute)
+app.use(apiVersion, holidayRoute)
 
-app.use((err, req, res, next) => {
-    errorHandler(err, res, next); // Call the errorHandler with the error object
-  });
+app.use(errorHandler);
+
 export default app;
