@@ -28,18 +28,22 @@ export const updateSalary = (req, res, next) => {
                                 req.body.user = req.params.id;
                                 createNew(req, res, next, SalaryModel)
                             }
-                            else throw 'same as previous curernt salary.'
+                            else {
+                                const alreadyExist = new Error('same as previous curernt salary.')
+                                alreadyExist.statusCode = 409;
+                                throw alreadyExist;
+                            }
                         }
                     })
                     .catch((error) => {
-                        handleCatch(error, res, 401, next)
+                        handleCatch(error, res, error.statusCode || 400, next);
                     })
             })
             .catch((error) => {
-                handleCatch(error, res, 401, next)
+                handleCatch(error, res, 404, next)
             })
     }
     catch (error) {
-        handleCatch(error, res, 401, next)
+        handleCatch(error, res, 400, next)
     }
 }

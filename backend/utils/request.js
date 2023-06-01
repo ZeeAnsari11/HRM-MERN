@@ -14,18 +14,18 @@ let errorOccurred = false
 export const creatingRequest = (req, res, next, user, request, requestFlow, requestType, type = null) => {
     RequestFlowModel.findById(requestFlow)
         .then((requestFlow) => {
-            if (!requestFlow) throw 'No such request flow'
+            if (!requestFlow) throw new Error ('No such request flow')
             RequestFlowNodeModel.find(requestFlow.head)
                 .then((node) => {
-                    if (node.length == 0) throw 'No such node'
+                    if (node.length == 0) throw new Error ('No such node')
                     getfirstNodeUser(req, res, next, node, user, request, requestType, type);
                 })
                 .catch((error) => {
-                    handleCatch(`${error}`, res, 401, next)
+                    handleCatch(error, res, 404, next)
                 })
         })
         .catch((error) => {
-            handleCatch(`${error}`, res, 401, next)
+            handleCatch(error, res, 404, next)
         })
 }
 
@@ -37,7 +37,7 @@ const getfirstNodeUser = async (req, res, next, node, user, request, requestType
             const departmentUser = await UserModel.findOne({ HOD: { isHOD: true, department: node[0].department } }).select('_id');
             if (!departmentUser) {
                 errorOccurred = true
-                throw "Department not Found"
+                throw new Error ("Department not Found")
             }
             nodeUser = departmentUser._id;
         }
@@ -53,7 +53,7 @@ const getfirstNodeUser = async (req, res, next, node, user, request, requestType
         }
         addingRequest(req, res, next, x)
     } catch (error) {
-        handleCatch(`${error}`, res, 401, next)
+        handleCatch(error, res, 404, next)
     }
 }
 
@@ -78,7 +78,7 @@ const addingRequest = (req, res, next, obj, show = true) => {
                         else return
                     })
                     .catch((error) => {
-                        handleCatch(`${error}`, res, 401, next)
+                        handleCatch(error, res, 500, next)
                     })
             }
             else {
@@ -93,39 +93,38 @@ const addingRequest = (req, res, next, obj, show = true) => {
                         }
                         else return;
                     })
-                    .catch((error) => { handleCatch(`${error}`, res, 401, next) })
+                    .catch((error) => { handleCatch(error, res, 500, next) })
             }
         })
         .catch((error) => {
-            handleCatch(`${error}`, res, 401, next)
+            handleCatch(error, res, 404, next)
         })
 }
 
 export const requestToNextNode = (req, res, next) => {
     try {
-        console.log('===============11============');
-        if (!req.body.nodeId || !req.body.notificationId || !req.body.senderId || !req.body.flowRequestType || !req.body.requestId || !req.body.createdAt || !req.body.type) throw 'Invalid Body.'
+        // console.log('===============11============');
+        if (!req.body.nodeId || !req.body.notificationId || !req.body.senderId || !req.body.flowRequestType || !req.body.requestId || !req.body.createdAt || !req.body.type) throw new Error ('Invalid Body.')
         RequestFlowNodeModel.findById(req.body.nodeId)
             .then((previousNode) => {
-                if (!previousNode) throw 'No such node'
+                if (!previousNode) throw new Error ('No such node')
                 if (previousNode.nextNode !== null) {
                     RequestFlowNodeModel.findById(previousNode.nextNode)
                         .then((node) => {
-                            if (!node) throw 'No such node available.'
+                            if (!node) throw new Error ('No such node available.')
                             UserModel.findById(req.body.senderId)
                                 .then((user) => {
-                                    if (!user) throw 'No such user'
+                                    if (!user) throw new Error ('No such user')
                                     settingStatus(req, res, next, '', node, user)
                                 })
                                 .catch((error) => {
-                                    console.log("=========1========", error);
-                                    handleCatch(`${error}`, res, 401, next)
+                                    // console.log("=========1========", error);
+                                    handleCatch(error, res, 404, next)
                                 })
                         })
                         .catch((error) => {
-                            console.log("=========2========", error);
-
-                            handleCatch(`${error}`, res, 401, next)
+                            // console.log("=========2========", error);
+                            handleCatch(error, res, 401, next)
                         })
                 }
                 else {
@@ -135,8 +134,7 @@ export const requestToNextNode = (req, res, next) => {
                             break;
                         }
                         case 'Leave': {
-                            console.log('===============22============');
-
+                            // console.log('===============22============');
                             settingStatus(req, res, next, "approvedByAll")
                             break;
                         }
@@ -152,28 +150,27 @@ export const requestToNextNode = (req, res, next) => {
                 }
             })
             .catch((error) => {
-                console.log("========3========", error);
-
-                handleCatch(`${error}`, res, 401, next)
+                // console.log("========3========", error);
+                handleCatch(error, res, 404, next)
             })
     } catch (error) {
-        console.log("=========4========", error);
+        // console.log("=========4========", error);
 
-        handleCatch(`${error}`, res, 401, next)
+        handleCatch(error, res, 400, next)
     }
 }
 
 const settingStatus = (req, res, next, requestStatus = null, node = null, user = null) => {
-    console.log('===============33============');
+    // console.log('===============33============');
 
     const requestId = req.body.notificationId;
     const type = req.body.type
     RequestModel.findOne({ "requests.requestDetails._id": requestId })
         .then((request) => {
-            if (!request) throw "Request Object in Request Collection not found"
+            if (!request) throw new Error ("Request Object in Request Collection not found")
             request.requests.requestDetails.forEach(previousRequest => {
                 if (previousRequest._id.toString() == req.body.notificationId) {
-                    if (previousRequest.state != "pending") throw "This request already approved/rejected by you"
+                    if (previousRequest.state != "pending") throw new Error ("This request already approved/rejected by you")
                     previousRequest.state = requestStatus == 'rejected' ? "rejected" : "approved"
                     if (node && user) {
                         console.log("-------geting node user=======");
@@ -206,31 +203,30 @@ const settingStatus = (req, res, next, requestStatus = null, node = null, user =
                 })
                 .catch((err) => {
                     console.log("=========5========", error);
-                    handleCatch(err, res, 401, next)
+                    handleCatch(err, res, 500, next)
                 })
         })
         .catch((error) => {
-            console.log("=========6========", error);
+            // console.log("=========6========", error);
 
-            handleCatch(`${error}`, res, 401, next)
+            handleCatch(error, res, 404, next)
         })
 }
 
 
 const getNodeUser = async (node, user, req, res, next, show) => {
     try {
-        console.log("========node========",node);
+        // console.log("========node========",node);
         let nodeUser = ''
         if (node.lineManager) {
-            console.log("--------if called========");
+            // console.log("--------if called========");
             nodeUser = user.lineManager}
         else {
             const departmentUser = await UserModel.findOne({ HOD: { isHOD: true, department: node.department } }).select('HOD firstName lastName');
-            console.log("==========departmentUser========",departmentUser
-            );
+            // console.log("==========departmentUser========",departmentUser );
             if (!departmentUser) {
                 errorOccurred = true
-                throw "Department not found for use=========="
+                throw new Error ("Department not found for user")
             }
             nodeUser = departmentUser._id;
         }
@@ -246,16 +242,16 @@ const getNodeUser = async (node, user, req, res, next, show) => {
         }
         addingRequest(req, res, next, x, show)
     } catch (error) {
-        handleCatch(`${error}`, res, 401, next)
+        handleCatch(error, res, 404, next)
         return;
     }
 }
 
 export const commonModels = (req, res, next, model, requestStatus = null, msg) => {
-    console.log('===============55============');
+    // console.log('===============55============');
     model.findById(req.body.requestId)
         .then((Obj) => {
-            if (!Obj) throw `Request for ${msg} is not found`
+            if (!Obj) throw new Error (`Request for ${msg} is not found`)
             Obj.status = requestStatus == "approvedByAll" ? "approved" : requestStatus == "rejected" ? "rejected" : "processing"
             Obj.save()
                 .then((Obj) => {
@@ -299,7 +295,7 @@ export const commonModels = (req, res, next, model, requestStatus = null, msg) =
                     }
                 })
         })
-        .catch(err => handleCatch(err, res, 401, next))
+        .catch(err => handleCatch(err, res, 404, next))
 }
 
 export const rejectRequest = (req, res, next) => {

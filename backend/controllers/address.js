@@ -1,7 +1,6 @@
 import { AddressModel } from "../models/addressSchema.js";
 import { UserModel } from "../models/userSchema.js";
-import { checkIsExistAndCreate, getById, deleteById, getAll, deleteInBulk, updateById } from "../utils/common.js";
-
+import { checkIsExistAndCreate, getById, deleteById, getAll, deleteInBulk, updateById, handleCatch } from "../utils/common.js";
 
 export const createAddress = (req, res, next) => {
     checkIsExistAndCreate(req, res, next, req.body.user, UserModel, AddressModel, 'User')
@@ -17,10 +16,10 @@ export const deleteAddressById = (req, res, next) => {
 
 export const UpdateAddressById = (req, res, next) => {
     try {
-        if (req.body.user) throw "You can not update the user of an Address";
+        if (req.body.user) throw new Error ("You can not update the user of an Address");
         updateById(req, res,next , AddressModel, "Addresss")
     }
-    catch (err)  { handleCatch(err, res, 401, next) }
+    catch (err)  { handleCatch(err, res, 400, next) }
 }
 
 export const getAllAddressesByUserId = (req, res, next) => {

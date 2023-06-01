@@ -4,11 +4,11 @@ import { OrganizationModel } from "../models/organizationSchema.js";
 
 export const createUserRole = (req, res, next) => {
     try {
-        if (req.body.unique_id) throw "unique_id is not required";
+        if (req.body.unique_id) throw new Error ("unique_id is not required");
         req.body.unique_id = (req.body.organization + (req.body.type).toLowerCase())
         checkIsExistAndCreate(req, res, next, req.body.organization, OrganizationModel, UserRoleModel, 'User Role');
     }
-    catch (err) { handleCatch(err, res, 401, next) }
+    catch (err) { handleCatch(err, res, 400, next) }
 }
 
 export const getAllUserRolesByOrganizationId = (req, res, next) => {
@@ -17,19 +17,19 @@ export const getAllUserRolesByOrganizationId = (req, res, next) => {
 
 export const updateUserRoleById = (req, res, next) => {
     try {
-        if (req.body.organization || req.body.unique_id) throw "You can not change the organization or unique id of any user role.";
+        if (req.body.organization || req.body.unique_id) throw new Error ("You can not change the organization or unique id of any user role.");
         if (req.body.type) {
             UserRoleModel.findById(req.params.id)
             .then((role=>{
-               if(!role) throw "User Role not exist that you want to update.";
+               if(!role) throw new Error ("User Role not exist that you want to update.");
                 req.body.unique_id = (role.organization + (req.body.type).toLowerCase())
                 updateById(req, res, next, UserRoleModel, 'User Role');
             }))
-            .catch(err=> {handleCatch(err, res, 410 ,next)})
+            .catch(err=> {handleCatch(err, res, 404 ,next)})
         }
         else{ updateById(req, res, next, UserRoleModel, 'User Role') }
     }
-    catch (err) { handleCatch(err, res, 401, next) }
+    catch (err) { handleCatch(err, res, 403, next) }
 }
 
 export const getUserRoleById = (req, res, next) => {

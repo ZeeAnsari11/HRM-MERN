@@ -7,20 +7,18 @@ export const createRequestType = (req, res, next) => {
     const { name, organization } = req.body;
     OrganizationModel.findById(organization)
         .then((org) => {
-            if (!org) throw "Organization not Found"
+            if (!org) throw new Error ("Organization not Found")
             RequestTypeModel.exists({ name: name, organization: organization })
                 .then((requestExists) => {
                     if (requestExists) {
-                        res.status(400).json({
-                            message: "Request Type already exists in the organization"
-                        });
+                        throw new Error ("Request Type already exists in the organization")
                     }
                     else {
                         createNew(req, res, next, RequestTypeModel);
                     }
                 })
                 .catch((error) => {
-                    handleCatch(error, res, 404, next)
+                    handleCatch(error, res, 409, next)
                 })
         })
         .catch((error) => {
@@ -42,11 +40,11 @@ export const getRequestTypeById = (req, res, next) => {
 export const updateRequestType = (req, res, next) => {
     try {
         if (req.body.organization) {
-            throw "You cannot Change the organization"
+            throw new Error ("You cannot Change the organization")
         }
         updateById(req, res, next, RequestTypeModel, 'RequestType')
     } catch (error) {
-        handleCatch(error, res, 404, next)
+        handleCatch(error, res, 400, next)
     }
 };
 

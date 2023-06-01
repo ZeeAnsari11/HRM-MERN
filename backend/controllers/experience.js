@@ -5,14 +5,11 @@ import { UserModel } from "../models/userSchema.js";
 export const createExperience = (req, res, next) => {
     UserModel.findById(req.body.user)
         .then((user) => {
-            if (!user) throw "user does not exists.";
+            if (!user) throw new Error ("user does not exists.");
             createNew(req, res, next, ExperienceModel);
         })
         .catch((error) => {
-            res.status(401).json({
-                success: false,
-                error: error
-            })
+            handleCatch(error, res, 404, next)
         })
 }
 
@@ -23,22 +20,22 @@ export const getAllExperiencesByUserID = (req, res, next) => {
 
 export const updateExperiences = (req, res, next) => {
     try {
-        if (req.body.user) throw "Can not assign experience to another user."
+        if (req.body.user) throw new Error ("Can not assign experience to another user.")
         updateById(req, res, next, ExperienceModel, 'Experience');
     }
-    catch (error) { handleCatch(error, res, 401, next)}
+    catch (error) { handleCatch(error, res, 404, next)}
 }
 
 export const deleteExperiences = (req, res, next) => {
     ExperienceModel.deleteMany({user:req.params.id})
     .then((response) => {
-        if (!response.deletedCount) throw "user does not exists!"
+        if (!response.deletedCount) throw new Error ("user does not exists!")
         res.status(200).json({
             success: true,
             message: "Experience deleted successfully!"
         })
     })
-    .catch((error) => { handleCatch(error, res, 401, next) })
+    .catch((error) => { handleCatch(error, res, 404, next) })
 }
 
 export const deleteExperienceById = (req, res, next) => {

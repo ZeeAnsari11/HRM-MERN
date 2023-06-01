@@ -9,31 +9,28 @@ import { AssetsRevisionsModel } from "../models/assetsRevisionsSchema.js"
 // Create a new asset
 export const createAsset = (req, res, next) => {
     try {
-        if (req.body.user || req.body.isAllocated == true || req.body.isAllocated == false || req.body.previousHolders) throw 'You can not assign an asset to any user while creating an asset'
+        if (req.body.user || req.body.isAllocated == true || req.body.isAllocated == false || req.body.previousHolders) throw new Error ('You can not assign an asset to any user while creating an asset')
         AssetTypeModel.find({ _id: req.body.type, organization: req.body.organization })
             .then((assetTypes) => {
-                if (assetTypes.length == 0) { throw 'Organization Don not have your given asset type' }
+                if (assetTypes.length == 0) { throw new Error ('Organization Don not have your given asset type') }
                 createNew(req, res, next, AssetsModel)
             })
-            .catch((err) => { handleCatch(err, res, 401, next) })
+            .catch((err) => { handleCatch(err, res, 404, next) })
     }
-    catch (err) { handleCatch(err, res, 401, next) }
+    catch (err) { handleCatch(err, res, 422, next) }
 }
 
 // Update assets all fields except the fields related to the allocation and deallocation of an asset
 export const UpdateAssetById = (req, res, next) => {
-    let condition = (req.body.organization || req.body.user || req.body.previousHolders || req.body.isAllocated !== undefined || req.body.type || req.body.isActive !== undefined );
+    let condition = (req.body.organization || req.body.user || req.body.previousHolders || req.body.isAllocated !== undefined || req.body.type || req.body.isActive !== undefined);
     try {
         if (condition) {
-            throw 'You can not update the owner/holder of an asset please user AssetManagment of this'
+            throw new Error ('You can not update the owner/holder of an asset please use AssetManagment of this')
         }
         updateById(req, res, next, AssetsModel, "Asset")
     }
     catch (err) {
-        res.status(401).json({
-            success: false,
-            error: err
-        })
+        handleCatch(err, res, 422, next)
     }
 }
 
@@ -42,15 +39,15 @@ export const UpdateAssetById = (req, res, next) => {
 export const AssetManagment = (req, res, next) => {
     let condition = (Object.keys(req.body).length > 6 || !req.body.user || !req.body.asset || !req.body.action || !req.body.reason || !req.body.date || !req.body.condition);
     try {
-        if (condition) throw "You can only perform Allocation and deallocation operations here with all necessary information"
+        if (condition) throw new Error ("You can only perform Allocation and deallocation operations here with all necessary information")
         UserModel.findById(req.body.user)
             .then(user => {
-                if (!user) throw "User Not Found"
+                if (!user) throw new Error( "User Not Found")
                 AssetsModel.findById(req.body.asset)
                     .then(asset => {
-                        if (!asset) throw "Asset Not Found"
-                        if (asset.organization.toString() !== user.organization.toString()) throw "User and Asset not belong to same organization"
-                        if (asset.isActive === false) throw "You can not allocate / deallocate a destroyed asset";
+                        if (!asset) throw new Error ("Asset Not Found")
+                        if (asset.organization.toString() !== user.organization.toString()) throw new Error ("User and Asset not belong to same organization")
+                        if (asset.isActive === false) throw new Error ("You can not allocate / deallocate a destroyed asset");
                         if (req.body.action.toLowerCase() === "allocate" && asset.isAllocated === false) {
                             asset.isAllocated = true;
                             asset.user = user._id;
@@ -62,39 +59,40 @@ export const AssetManagment = (req, res, next) => {
                             createAssetRevisionAndUpdateAssetStatus(res, next, user.organization.toString(), new Date(req.body.date), req.body.action.toLowerCase(), req.body.reason, req.body.condition, req.body.user, asset, "DeAllocated")
                         }
                         else {
-                            throw "Invalid Action"
+                            throw new Error ("Invalid Action")
                         }
                     })
-                    .catch((err) => { handleCatch(err, res, 401, next) })
+                    .catch((err) => { handleCatch(err, res, 422, next) })
             })
+            .catch((error) => { handleCatch(error, res, 404, next) })
     }
     catch (err) {
-        handleCatch(err, res, 401, next)
+        handleCatch(err, res, 400, next)
     }
 }
 
 // Filter assets on the basis of IsAllocated : true/false or isTaxable : true/false    or isActive  :  true/false
 export const filterAssets = (req, res, next) => {
     try {
-        if (!req.query.organization) throw "Organization not specified";
+        if (!req.query.organization) throw new Error ("Organization not specified");
         if (Object.keys(req.query).length > 1) {
             AssetsModel.find(req.query)
                 .then((assets) => {
-                    if (assets.length == 0) throw "No such asset/organization found"
+                    if (assets.length == 0) throw new Error ("No such asset/organization found")
                     res.status(200).json({
                         success: true,
                         count: assets.length,
                         data: assets
                     })
                 })
-                .catch(err => handleCatch(err, res, 401, next))
+                .catch(err => handleCatch(err, res, 404, next))
         }
         else {
-            throw "Please Specifiy the filter type too"
+            throw new Error ("Please Specifiy the filter type too")
         }
     }
     catch (err) {
-        handleCatch(err, res, 401, next)
+        handleCatch(err, res, 400, next)
     }
 }
 
@@ -110,7 +108,7 @@ export const getPreviousHolderByAssetId = (req, res, next) => {
     let result = [];
     AssetsModel.findById(req.params.id)
         .then(asset => {
-            if (!asset) throw "Asset not found"
+            if (!asset) throw new Error ("Asset not found")
             asset.previousHolders.forEach((revisionId) => {
                 AssetsRevisionsModel.find({ _id: revisionId, organization: asset.organization }).populate('user')
                     .then((assetRevision) => {
@@ -126,10 +124,10 @@ export const getPreviousHolderByAssetId = (req, res, next) => {
                             })
                         }
                     })
-                    .catch(err => handleCatch(err, res, 200, next))
+                    .catch(err => handleCatch(err, res, 404, next))
             })
         })
-        .catch(err => handleCatch(err, res, 200, next))
+        .catch(err => handleCatch(err, res, 404, next))
 }
 
 //  Retunt the List of users that are non-active but still owns an asset
@@ -141,7 +139,7 @@ export const getAssetsAllocatedToNonActiveUsers = (req, res, next) => {
         }
     })
         .then((assets) => {
-            if (assets.length == 0) throw 'You such Asset Found'
+            if (assets.length == 0) throw new Error ('No such Asset Found')
             let result = assets.filter((asset) => {
                 if (asset.user != null) {
                     return asset.user
@@ -153,7 +151,7 @@ export const getAssetsAllocatedToNonActiveUsers = (req, res, next) => {
                 data: result
             })
         })
-        .catch(err => handleCatch(err, res, 200, next))
+        .catch(err => handleCatch(err, res, 404, next))
 }
 
 // Return all the assets in occupation of an organization
@@ -166,7 +164,7 @@ export const getAssetById = (req, res, next) => {
 
     AssetsModel.findById(req.params.id).populate('user')
         .then((asset) => {
-            if (!asset) { throw (`Asset Not Found`) }
+            if (!asset) { throw new Error (`Asset Not Found`) }
             else {
                 res.status(200).json({
                     success: true,
@@ -174,29 +172,24 @@ export const getAssetById = (req, res, next) => {
                 })
             }
         })
-        .catch((error) => {
-            res.status(401).json({
-                success: false,
-                error: error
-            })
-        })
+        .catch((error) => {handleCatch(error, res, 404, next)})
 }
 
 // Delete an asset 
 export const setAssetToNonActive = (req, res, next) => {
     try {
-        if (!req.body.date || !req.body.reason) throw " Date and Reason of Asset Destruction is required"
+        if (!req.body.date || !req.body.reason) throw new Error("Date and Reason of Asset Destruction is required")
         AssetsModel.findById(req.params.id)
             .then((asset) => {
-                if (!asset) throw (`Asset Not Found`)
+                if (!asset) throw new Error (`Asset Not Found`)
                 createAssetRevisionAndUpdateAssetStatus(res, next, asset.organization, new Date(req.body.date), "deallocate", req.body.reason, "Asset is Destroyed", asset.user, asset, "Asset Set to Non Active")
                 asset.user = null;
                 asset.isAllocated = false;
                 asset.isActive = false;
             })
-            .catch(err => handleCatch(err, res, 401, next));
+            .catch(err => handleCatch(err, res, 404, next));
     }
-    catch(err){handleCatch(err, res, 401, next)}
+    catch (err) { handleCatch(err, res, 400, next) }
 }
 
 // export const deleteAllAssets = (req, res, next) => {
@@ -220,6 +213,6 @@ const createAssetRevisionAndUpdateAssetStatus = (res, next, organization, date, 
                 })
         })
         .catch(err => {
-            handleCatch(err, res, 401, next)
+            handleCatch(err, res, 400, next)
         })
 }

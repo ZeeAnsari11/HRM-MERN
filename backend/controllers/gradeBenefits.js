@@ -9,14 +9,14 @@ export const getGradeBenefitsByGradeId = (req, res, next) => {
   try {
     OrganizationModel.findById(req.body.organization)
       .then((organization) => {
-        if (!organization) throw "Organization not found"
+        if (!organization) throw new Error ("Organization not found")
         GradeModel.findById(req.params.id)
           .then((grade) => {
-            if (!grade) throw "Grade not found"
+            if (!grade) throw new Error ("Grade not found")
             GradeBenefitsModel.find({ grade: req.params.id, organization: req.body.organization })
               .then((benefits) => {
-                if (benefits.length === 0) throw "No Benefits found"
-                if (grade.organization.toString() !== req.body.organization) throw "Invalid organization"
+                if (benefits.length === 0) throw new Error ("No Benefits found")
+                if (grade.organization.toString() !== req.body.organization) throw new Error ("Invalid organization")
                 res.status(200).json({
                   success: true,
                   benefits
@@ -30,6 +30,9 @@ export const getGradeBenefitsByGradeId = (req, res, next) => {
             handleCatch(error, res, 404, next);
           });
       })
+      .catch((error) => {
+        handleCatch(error, res, 404, next);
+      });
   } catch (error) {
     handleCatch(error, res, 404, next);
   }
@@ -46,16 +49,16 @@ export const getGradeBenefitsById = (req, res, next) => {
 export const createGradeBenefits = (req, res, next) => {
   try {
     const { name, organization, grade } = req.body
-    if (req.body.createdAt) throw "You can't Provide CreatedAt"
+    if (req.body.createdAt) throw new Error ("You can't Provide CreatedAt")
     const uniqueGrade = [...new Set(grade)];
     req.body.grade = uniqueGrade
     OrganizationModel.findById(req.body.organization)
       .then((org) => {
-        if (!org) throw "Invalid Organization ID"
+        if (!org) throw new Error ("Invalid Organization ID")
         GradeBenefitsModel.exists({ name, organization })
           .then((benefitsExists) => {
             if (benefitsExists) {
-              throw "Benefits already exists in the Organization"
+              throw new Error ("Benefits already exists in the Organization")
             }
             else {
               req.body.unique_id = name.replace(/\s/g, "")
@@ -77,7 +80,7 @@ export const createGradeBenefits = (req, res, next) => {
 
 export const updateGradeBenefits = (req, res, next) => {
   try {
-    if (req.body.createAt || req.body.organization || req.body.unique_id) throw "You can not change the Organization Or Created At"
+    if (req.body.createAt || req.body.organization || req.body.unique_id) throw new Error ("You can not change the Organization Or Created At")
     if (req.body.name) {
       req.body.unique_id = req.body.name.replace(/\s/g, "")
     }
@@ -86,7 +89,6 @@ export const updateGradeBenefits = (req, res, next) => {
   catch (error) {
     handleCatch(error, res, 404, next)
   }
-
 };
 
 export const deleteGradeBenefits = (req, res, next) => {
@@ -94,11 +96,8 @@ export const deleteGradeBenefits = (req, res, next) => {
   GradeBenefitsModel.findByIdAndDelete(req.params.id)
     .then((gradeBenefits) => {
       if (!gradeBenefits) {
-        return res.status(404).json({
-          success: false,
-          message: 'Grade benefits not found'
-        });
-      }
+        throw new Error ('Grade benefits not found')
+      };
       res.status(200).json({
         success: true,
         message: 'Grade benefits deleted successfully'
@@ -120,15 +119,14 @@ export const addGradeToBenefits = (req, res, next) => {
         .populate("organization")
         .then((grade) => {
           if (benefit.organization._id.toString() !== grade.organization._id.toString()) {
-            throw "The grade and benefit do not belong to the same organization"
+            throw new Error ("The grade and benefit do not belong to the same organization")
           }
           GradeBenefitsModel.exists({ gradeId, benefitId })
             .then((gradeExists) => {
               if (gradeExists) {
-                throw "The grade already exists in the Benefits"
+                throw new Error ("The grade already exists in the Benefits")
               }
               benefit.grade.push(req.body.grade);
-              // console.log('------BG', benefit.grade)
               benefit.save()
             })
             .catch((error) => {

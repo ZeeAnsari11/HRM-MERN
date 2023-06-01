@@ -1,5 +1,5 @@
 import { ProbEvalAttributesModel } from "../models/probEvalAttributesSchema.js";
-import {checkIsExistAndCreate, updateById, deleteById, getAll, createNew, handleCatch} from "../utils/common.js"
+import { updateById, deleteById, getAll, createNew, handleCatch} from "../utils/common.js"
 
 
 export const createProbEvalAttribute = (req, res, next) => {
@@ -8,12 +8,15 @@ export const createProbEvalAttribute = (req, res, next) => {
 }
 
 export const updateProbEvalAttribute = (req, res, next)=>{
-    if((req.body.overAllEval || req.body.performance) && Object.keys(req.body).length <= 2){
-        updateById(req, res, next, ProbEvalAttributesModel);
+    try{
+        if((req.body.overAllEval || req.body.performance) && Object.keys(req.body).length <= 2){
+            updateById(req, res, next, ProbEvalAttributesModel);
+        }
+        else{
+            throw new Error ("You can only update Over All Evaluation and Performance")
+        }
     }
-    else{
-        handleCatch("You can only update Over All Evaluation and Performance", res, 401, next)
-    }
+    catch(err){handleCatch(err, res, 400, next)}
 }
 
 export const deleteProbEvalAttribute = (req, res, next)=>{

@@ -100,6 +100,7 @@ app.use(apiVersion, allowanceRoute)
 app.use(apiVersion, paySlipRoute)
 app.use(apiVersion, taxRuleRoute)
 
-app.use(errorHandler);
-
+app.use((err, req, res, next) => {
+    errorHandler(err, res, next); // Call the errorHandler with the error object
+  });
 export default app;

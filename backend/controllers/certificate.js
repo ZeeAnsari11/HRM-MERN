@@ -5,10 +5,10 @@ import { CertificateModel } from "../models/certificateSchema.js";
 export const createCertification = (req, res, next) => {
     UserModel.findById(req.body.user)
         .then((user) => {
-            if (!user) throw "user does not exists.";
+            if (!user) throw new Error ("user does not exists.");
             createNew(req, res, next, CertificateModel);
         })
-        .catch(err => handleCatch(err, res, 401, next))
+        .catch(err => handleCatch(err, res, 404, next))
 }
 
 export const getAllCertificationByUserID = (req, res, next) => {
@@ -17,10 +17,10 @@ export const getAllCertificationByUserID = (req, res, next) => {
 
 export const updateCertification = (req, res, next) => {
     try {
-        if (req.body.user) throw "Can not assign certification to another user."
+        if (req.body.user) throw new Error ("Can not assign certification to another user.")
         updateById(req, res, next, CertificateModel);
     }
-    catch (error) { handleCatch(error, res, 401, next) }
+    catch (error) { handleCatch(error, res, 404, next) }
 }
 
 export const deleteAllCertifications = (req, res, next) => {

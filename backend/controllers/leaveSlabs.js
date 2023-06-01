@@ -8,28 +8,26 @@ export const createLeaveSlab = (req, res, next) => {
 
 export const getLeaveSlabById = (req, res, next) => {
     try {
-        if (!req.body.id) { throw "Id is required" }
+        if (!req.body.id) { throw new Error ("Id is required")}
         getById(req.body.id, res, next, LeaveSlabsModel, "LeaveSlab")
     }
-    catch (err) { handleCatch(err, res, 401, next) }
+    catch (err) { handleCatch(err, res, 400, next) }
 }
 
 export const updateLeaveSlabById = (req, res, next) => {
     try {
-        if (!req.body.id) { throw "Id is required" }
+        if (!req.body.id) { throw new Error ("Id is required") }
         req.params.id = req.body.id;
-        console.log("=================req.params.id========", req.params.id);
         req.body.id = undefined;
-        console.log("=================req.bod========", req.body);
         updateById(req, res, next, LeaveSlabsModel, "LeaveSlab")
     }
-    catch (err) { handleCatch(err, res, 401, next) }
+    catch (err) { handleCatch(err, res, 400, next) }
 }
 
 export const deleteLeaveSlabById = (req, res, next) => {
     try {
-        if (!req.body.id) { throw "Id is required" }
+        if (!req.body.id) { throw new Error ("Id is required") }
         deleteById(req.body.id, res, next, LeaveSlabsModel, "LeaveSlab")
     }
-    catch (err) { handleCatch(err, res, 401, next) }
+    catch (err) { handleCatch(err, res, 400, next) }
 }

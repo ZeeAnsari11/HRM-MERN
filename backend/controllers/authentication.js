@@ -10,10 +10,10 @@ export const login = (req, res, next) => {
     }
     UserModel.findOne({ email }).select('password')
         .then((response) => {
-            (!response) ? next({ statusCode: 401, error: "Invalid email or password." }) :
+            (!response) ? next({ error: "Invalid email or password." ,statusCode: 401,}) :
                 response.comparePassword(password)
                     .then((resp) => {
-                        (!resp) ? next({ statusCode: 401, error: "Invalid password" }) : sendToken(response, 200, res);
+                        (!resp) ? next({ error: "Invalid password",statusCode: 401, }) : sendToken(response, 200, res);
                     })
         })
 }

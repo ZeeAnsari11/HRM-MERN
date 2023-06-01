@@ -7,10 +7,10 @@ import { getById, createNew, updateById, deleteById, handleCatch } from "../util
 export const createGrade = (req, res, next) => {
     try {
         const { name, organization } = req.body;
-        if (req.body.createdAt) throw "You can't Provide CreatedAt"
+        if (req.body.createdAt) throw new Error ("You can't Provide CreatedAt")
         OrganizationModel.findById(organization)
             .then((org) => {
-                if (!org) throw "Invalid Organization ID"
+                if (!org) throw new Error ("Invalid Organization ID")
                 req.body.unique_id = name.replace(/\s/g, "")
                 createNew(req, res, next, GradeModel);
             })
@@ -26,10 +26,9 @@ export const createGrade = (req, res, next) => {
 //Get all the Grades of Organizationß
 // /api/v1/grade/organization/:id
 export const getAllGrades = (req, res, next) => {
-
     GradeModel.find({ organization: req.params.id })
         .then((grades) => {
-            if (grades.length === 0) throw "No grades found"
+            if (grades.length === 0) throw new Error ("No grades found")
             res.status(200).json({
                 success: true,
                 grades
@@ -50,7 +49,7 @@ export const getGradeById = (req, res, next) => {
 //api/v1/grade/update/:id
 export const updateGrade = (req, res, next) => {
     try {
-        if (req.body.createAt || req.body.organization || req.body.unique_id) throw "You can not change the Organization Or Created At"
+        if (req.body.createAt || req.body.organization || req.body.unique_id) throw new Error ("You can not change the Organization Or Created At")
         if(req.body.name){
             req.body.unique_id = req.body.name.replace(/\s/g, "") 
         }

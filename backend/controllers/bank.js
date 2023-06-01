@@ -6,17 +6,17 @@ import { createNew, deleteInBulk, updateById, getAll, deleteById, handleCatch } 
 export const createBank= (req, res, next)=>{
     OrganizationModel.findById(req.body.organization)
     .then((organization)=>{
-        if(!organization) throw 'Organization do not exist'
+        if(!organization) throw new Error ('Organization do not exist')
         UserModel.findById(req.body.user)
         .then((user)=>{
-            if(!user) throw "User Not Found"
-            if(user.organization.toString() !== organization._id.toString()) throw "User not belong to that organization"
+            if(!user) throw new Error ("User Not Found")
+            if(user.organization.toString() !== organization._id.toString()) throw new Error ("User not belong to that organization")
             createNew(req,res,next, BankModel)
         })
-        .catch((err)=>{ handleCatch (err, res, 401, next)})
+        .catch((err)=>{ handleCatch (err, res, 404, next)})
 
     })
-    .catch((err)=>{ handleCatch (err, res, 401, next)})
+    .catch((err)=>{ handleCatch (err, res, 404, next)})
 }
 
 export const getBanksByUserId = (req, res, next)=>{
@@ -26,10 +26,10 @@ export const getBanksByUserId = (req, res, next)=>{
 
 export const updateBankById = (req, res, next)=>{
     try{
-        if(req.body.organization || req.body.user) throw "You can not update organization or user of a Bank Account"
+        if(req.body.organization || req.body.user) throw new Error ("You can not update organization or user of a Bank Account")
         updateById(req, res, next, BankModel, "Bank Details")
     }
-    catch(err){ handleCatch(err, res, 401, next)}
+    catch(err){ handleCatch(err, res, 400, next)}
 }
 
 export const deleteBanksByUserId = (req, res, next)=>{

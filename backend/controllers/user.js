@@ -11,37 +11,37 @@ import { EOETypeModel } from '../models/eoeTypeSchema.js'
 //// Create User ////
 export const addingUser = (req, res, next) => {
     try {
-        if (req.body.isActive == true || req.body.isActive == false || req.body.isActive) throw 'you cannot provide the isActive status of the employee';
+        if (req.body.isActive == true || req.body.isActive == false || req.body.isActive) throw new Error('you cannot provide the isActive status of the employee');
         OrganizationModel.findById(req.body.organization)
             .then((organization) => {
-                if (!organization) throw "organization dont exist"
+                if (!organization) throw new Error("organization dont exist")
                 BranchModel.findById(req.body.branch)
                     .then((branch) => {
-                        if (!branch) throw "branch dont exist"
-                        else if (req.body.organization !== branch.organization.toString()) throw "branch not found in organization"
-                        else if (req.body.areaBounded?.isBounded == true && !req.body.areaBounded.addArea) throw 'Kindly Add the area'
-                        else if (req.body.HOD?.isHOD == true && !req.body.HOD.department) throw 'Kindly provide the department name of HOD'
+                        if (!branch) throw new Error("branch dont exist")
+                        else if (req.body.organization !== branch.organization.toString()) throw new Error("branch not found in organization")
+                        else if (req.body.areaBounded?.isBounded == true && !req.body.areaBounded.addArea) throw new Error('Kindly Add the area')
+                        else if (req.body.HOD?.isHOD == true && !req.body.HOD.department) throw new Error('Kindly provide the department name of HOD')
                         else if (req.body.HOD?.isHOD == true && req.body.HOD.department) {
                             DepartmentModel.findById(req.body.HOD.department)
                                 .then((department) => {
-                                    if (!department) throw 'No Such Department'
-                                    if (department.organization.toString() !== req.body.organization.toString()) throw `Department does not match with org.`
+                                    if (!department) throw new Error('No Such Department')
+                                    if (department.organization.toString() !== req.body.organization.toString()) throw new Error(`Department does not match with org.`)
                                     injection(req, res, next, organization);
                                 })
                                 .catch((error) => {
-                                    handleCatch(`${error}`, res, 401, next)
+                                    handleCatch(error, res, 404, next)
                                 })
                         }
                         else injection(req, res, next, organization);
                     })
                     .catch((error) => {
-                        handleCatch(`${error}`, res, 401, next)
+                        handleCatch(error, res, 404, next)
                     })
             })
-            .catch((err) => { handleCatch(err, res, 401, next) })
+            .catch((err) => { handleCatch(err, res, 404, next) })
     }
     catch (error) {
-        handleCatch(`${error}`, res, 401, next)
+        handleCatch(error, res, 400, next)
     }
 }
 
@@ -57,14 +57,14 @@ const injection = (req, res, next, organization) => {
 const checkLineManager = (req, res, next, organization) => {
     UserModel.findById(req.body.lineManager)
         .then((user) => {
-            if (!user) throw `No Such Line Manager ${req.body.lineManager}`
-            if (user.organization.toString() !== req.body.organization.toString()) throw `Line Manager does not match with org.`
-            if (user.branch.toString() !== req.body.branch.toString()) { throw "Line Manager does not match with branch of newly creating user" }
-            if (user.isLineManager !== true) throw `Provided Line Manager is not Line Manager.`
+            if (!user) throw new Error(`No Such Line Manager ${req.body.lineManager}`)
+            if (user.organization.toString() !== req.body.organization.toString()) throw new Error(`Line Manager does not match with org.`)
+            if (user.branch.toString() !== req.body.branch.toString()) { throw new Error("Line Manager does not match with branch of newly creating user") }
+            if (user.isLineManager !== true) throw new Error(`Provided Line Manager is not Line Manager.`)
             checkingProbation(req, res, next, organization)
         })
         .catch((error) => {
-            handleCatch(`${error}`, res, 401, next)
+            handleCatch(error, res, 400, next)
         })
 }
 
@@ -72,8 +72,8 @@ const checkingProbation = (req, res, next, organization) => {
     try {
         if (req.body.probation) {
             if (req.body.probation.isOnProbation == true) {
-                if (!req.body.probation.durationOfProbation) throw 'Kindly Add the duration of probation period'
-                if (req.body.probation.durationOfProbation < 0 || req.body.probation.durationOfProbation > 12) throw 'duration must be in range of 0-12'
+                if (!req.body.probation.durationOfProbation) throw new Error('Kindly Add the duration of probation period')
+                if (req.body.probation.durationOfProbation < 0 || req.body.probation.durationOfProbation > 12) throw new Error('duration must be in range of 0-12')
                 req.body.probation.status = "pending";
                 let joiningMonth = new Date(req.body.joiningDate).getMonth()
                 let completionMonth = Number(joiningMonth) + Number(req.body.probation.durationOfProbation)
@@ -84,7 +84,7 @@ const checkingProbation = (req, res, next, organization) => {
                 userCreate(req, res, next, organization)
             }
             else {
-                if (req.body.probation.isOnProbation == false && req.body.probation.durationOfProbation) throw 'Invalid Body.'
+                if (req.body.probation.isOnProbation == false && req.body.probation.durationOfProbation) throw new Error('Invalid Body.')
                 else {
                     userRoster(req, res, next)
                     userCreate(req, res, next, organization)
@@ -96,24 +96,27 @@ const checkingProbation = (req, res, next, organization) => {
             userCreate(req, res, next, organization)
         }
     } catch (error) {
-        handleCatch(`${error}`, res, 401, next)
+        handleCatch(error, res, 400, next)
     }
 }
 
 const userRoster = (req, res, next) => {
-    if (!req.body.userRoster || !req.body.userRoster?.timeSlots || !req.body.userRoster?.restDays) throw 'Kindly Provide Data for Roster'
-    req.body.userRoster.restDays.forEach(restDay => {
-        if (restDay < 0 || restDay > 6) throw 'Invalid Rest Days.'
-    });
-    TimeSlotsModel.findById(req.body.userRoster.timeSlots)
-        .then((timeSlot) => {
-            if (!timeSlot) throw `No such timeSlot ${req.body.userRoster.timeSlots}`
-            if (timeSlot.organization.toString() !== req.body.organization.toString()) throw 'No such timeSlot in Provided organization.'
-            creatingRoster(req, res, next, null, timeSlot)
-        })
-        .catch((error) => {
-            handleCatch(`${error}`, res, 401, next)
-        })
+    try {
+        if (!req.body.userRoster || !req.body.userRoster?.timeSlots || !req.body.userRoster?.restDays) throw new Error('Kindly Provide Data for Roster')
+        req.body.userRoster.restDays.forEach(restDay => {
+            if (restDay < 0 || restDay > 6) throw new Error('Invalid Rest Days.')
+        });
+        TimeSlotsModel.findById(req.body.userRoster.timeSlots)
+            .then((timeSlot) => {
+                if (!timeSlot) throw new Error`No such timeSlot ${req.body.userRoster.timeSlots}`
+                if (timeSlot.organization.toString() !== req.body.organization.toString()) throw new Error('No such timeSlot in Provided organization.')
+                creatingRoster(req, res, next, null, timeSlot)
+            })
+            .catch((error) => {
+                handleCatch(error, res, 404, next)
+            })
+    }
+    catch (err) { handleCatch(err, res, 400, next) }
 }
 
 const creatingRoster = (req, res, next, user = null, timeSlot = null) => {
@@ -143,8 +146,8 @@ const userCreate = (req, res, next, organization) => {
     try {
         EmploymentModel.findById(req.body.employmentType)
             .then((employmentType) => {
-                if (!employmentType) throw 'No Such Employment Type'
-                if (employmentType.organization.toString() !== req.body.organization.toString()) throw `Employment Type does not match with org.`
+                if (!employmentType) throw new Error('No Such Employment Type')
+                if (employmentType.organization.toString() !== req.body.organization.toString()) throw new Error(`Employment Type does not match with org.`)
                 req.body.userDefinedCode = (organization.userCode.currentCode + 1);
                 let skills = req.body.skills || []
                 skills.forEach((skill, index) => {
@@ -155,10 +158,10 @@ const userCreate = (req, res, next, organization) => {
                 addingUserLeaves(req, res, next, organization);
             })
             .catch((error) => {
-                handleCatch(`${error}`, res, 401, next)
+                handleCatch(error, res, 400, next)
             })
     } catch (error) {
-        handleCatch(`${error}`, res, 401, next)
+        handleCatch(error, res, 500, next)
     }
 }
 
@@ -166,6 +169,7 @@ const addingUserLeaves = (req, res, next, organizationRef) => {
     req.body.leaveTypeDetails = []
     LeaveTypeModel.find({ organization: req.body.organization })
         .then((leaveTypes) => {
+            if (leaveTypes.length == 0) throw new Error("No leave types found")
             leaveTypes.forEach(leaveType => {
                 let x = {
                     leaveType: leaveType._id,
@@ -182,33 +186,32 @@ const addingUserLeaves = (req, res, next, organizationRef) => {
                     })
                 })
                 .catch((error) => {
-                    handleCatch(`${error}`, res, 401, next)
+                    handleCatch(error, res, 500, next)
                 })
                 .finally(() => {
-                    organizationRef.save();
+                    organizationRef.save()
+                        .catch((error) => {
+                            handleCatch(error, res, 500, next)
+                        })
                 })
         })
         .catch((error) => {
-            handleCatch(`${error}`, res, 401, next)
+            handleCatch(error, res, 404, next)
         })
-
 }
 
 //// get line manager of user by id ////
 export const getLineManagerByuserId = (req, res, next) => {
     UserModel.findById(req.params.id).populate('lineManager')
         .then((user) => {
-            if (!user) throw `No Such User Exist ${req.params.id}`
+            if (!user) throw new Error(`No Such User Exist ${req.params.id}`)
             res.status(200).json({
                 success: true,
                 lineManager: user.lineManager
             })
         })
         .catch((error) => {
-            res.status(404).json({
-                success: false,
-                message: `${error}`
-            })
+            handleCatch(error, res, 404, next)
         })
 }
 
@@ -216,31 +219,29 @@ export const getLineManagerByuserId = (req, res, next) => {
 export const getHODByDepartmentId = (req, res, next) => {
     DepartmentModel.findById(req.params.id)
         .then((department) => {
-            if (!department) throw `No Such Department Exist ${req.params.id}`
+            if (!department) throw new Error(`No Such Department Exist ${req.params.id}`)
             UserModel.find({ "HOD.department": department._id })
                 .then((hod) => {
-                    if (hod.length <= 0) throw 'No Department Found'
+                    if (hod.length <= 0) throw new Error('No Department Found')
                     res.status(200).json({
                         success: true,
                         hod: hod
                     })
                 })
                 .catch((error) => {
-                    res.status(404).json({
-                        success: false,
-                        message: `${error}`
-                    })
+                    handleCatch(error, res, 404, next)
                 })
         })
+        .catch(err => handleCatch(err, res, 404, next))
 }
 
 export const getAttendanceExemptUsers = (req, res, next) => {
     try {
-        if (Object.keys(req.body).length == 0) throw "Request Body is empty"
+        if (Object.keys(req.body).length == 0) throw new Error("Request Body is empty")
         if (req.body.attendanceExempt !== undefined) {
             UserModel.find({ organization: req.params.id, attendanceExempt: req.body.attendanceExempt })
                 .then((users) => {
-                    if (users.length === 0) throw `No users are there in this organization with status: ${req.body.attendanceExempt}`
+                    if (users.length === 0) throw new Error(`No users are there in this organization with status: ${req.body.attendanceExempt}`)
                     res.status(200).json({
                         success: true,
                         count: users.length,
@@ -248,18 +249,12 @@ export const getAttendanceExemptUsers = (req, res, next) => {
                     })
                 })
                 .catch((err) => {
-                    res.status(404).json({
-                        success: false,
-                        message: `${err}`
-                    })
+                    handleCatch(err, res, 404, next)
                 })
         }
-        else throw 'invalid body'
+        else throw new Error('invalid body')
     } catch (error) {
-        res.status(404).json({
-            success: false,
-            message: `${error}`
-        })
+        handleCatch(error, res, 400, next)
     }
 }
 
@@ -267,10 +262,10 @@ export const getAttendanceExemptUsers = (req, res, next) => {
 export const getUserById = (req, res, next) => {
     UserModel.findById(req.params.id).populate('organization branch designation')
         .then((user) => {
-            if (!user) throw `No Such User Exist ${req.params.id}`
+            if (!user) throw new Error(`No Such User Exist ${req.params.id}`)
             OrganizationModel.findById(user.organization)
                 .then((organization) => {
-                    if (!organization) throw "organization dont exist"
+                    if (!organization) throw new Error("organization dont exist")
                     user.userDefinedCode = organization.userCode.prefix + user.userDefinedCode
                     res.status(200).json({
                         success: true,
@@ -278,14 +273,11 @@ export const getUserById = (req, res, next) => {
                     })
                 })
                 .catch((error) => {
-                    throw error
+                    handleCatch(error, res, 404, next);
                 })
         })
         .catch((error) => {
-            res.status(404).json({
-                success: false,
-                message: `${error}`
-            })
+            handleCatch(error, res, 404, next)
         })
 }
 
@@ -293,10 +285,10 @@ export const getUserById = (req, res, next) => {
 export const getAllUsersByOrganizationId = (req, res, next) => {
     OrganizationModel.findById(req.params.id)
         .then((organization) => {
-            if (!organization) throw "organization dont exist"
+            if (!organization) throw new Error("organization dont exist")
             UserModel.find({ organization: req.params.id }).populate('designation')
                 .then((users) => {
-                    if (users.length === 0) throw "No users are there for this org."
+                    if (users.length === 0) throw new Error("No users are there for this org.")
                     users.forEach((user) => {
                         user.userDefinedCode = organization.userCode.prefix + user.userDefinedCode
                     })
@@ -307,17 +299,11 @@ export const getAllUsersByOrganizationId = (req, res, next) => {
                     })
                 })
                 .catch((err) => {
-                    res.status(404).json({
-                        success: false,
-                        message: `${err}`
-                    })
+                    handleCatch(err, res, 404, next)
                 })
         })
         .catch((err) => {
-            res.status(404).json({
-                success: false,
-                message: `${err}`
-            })
+            handleCatch(err, res, 404, next)
         })
 }
 
@@ -325,10 +311,10 @@ export const getAllUsersByOrganizationId = (req, res, next) => {
 export const getAllUsersByBranchId = (req, res, next) => {
     BranchModel.findById(req.params.id)
         .then((branch) => {
-            if (!branch) throw "branch dont exist"
+            if (!branch) throw new Error("branch dont exist")
             UserModel.find({ branch: req.params.id })
                 .then((users) => {
-                    if (users.length === 0) throw "No users are there for this branch."
+                    if (users.length === 0) throw new Error("No users are there for this branch.")
                     res.status(200).json({
                         success: true,
                         total_users: users.length,
@@ -336,17 +322,11 @@ export const getAllUsersByBranchId = (req, res, next) => {
                     })
                 })
                 .catch((err) => {
-                    res.status(404).json({
-                        success: false,
-                        message: `${err}`
-                    })
+                    handleCatch(err, res, 404, next)
                 })
         })
         .catch((err) => {
-            res.status(404).json({
-                success: false,
-                message: `${err}`
-            })
+            handleCatch(err, res, 404, next)
         })
 }
 
@@ -358,21 +338,21 @@ export const deleteUserById = (req, res, next) => {
 //// Update User By Id ////
 export const updateUserById = (req, res, next) => {
     try {
-        if (req.body.organization) throw 'Cannot Update Org.'
+        if (req.body.organization) throw new Error('Cannot Update Org.')
         UserModel.findById(req.params.id)
             .then((user) => {
-                if (!user) throw `No Such User ${req.params.id}`;
+                if (!user) throw new Error`No Such User ${req.params.id}`;
                 if (req.body.userRoster && (req.body.userRoster?.timeSlots || req.body.userRoster?.restDays)) {
-                    if (Object.keys(req.body).length > 3) throw 'Cannot update roster'
+                    if (Object.keys(req.body).length > 3) throw new Error('Cannot update roster')
                     updateUserRoster(req, res, next, user)
                 }
                 else if (req.body.reason && req.body.id && req.body.action) {
-                    if (Object.keys(req.body).length > 3) throw 'Cannot update reason'
+                    if (Object.keys(req.body).length > 3) throw new Error('Cannot update reason')
                     updateUserEOERehireReason(req, res, next, user)
                 }
                 else if (req.body.duration !== undefined) {
-                    if (Object.keys(req.body).length > 1) throw 'Cannot update probation details'
-                    if (req.body.duration < 0 || req.body.duration > 12) throw 'duration must be in range of 0-12'
+                    if (Object.keys(req.body).length > 1) throw new Error('Cannot update probation details')
+                    if (req.body.duration < 0 || req.body.duration > 12) throw new Error('duration must be in range of 0-12')
                     if (req.body.duration == 0) {
                         user.probation.durationOfProbation = 0;
                         user.probation.status = "complete"
@@ -386,7 +366,7 @@ export const updateUserById = (req, res, next) => {
                     userSave(res, next, user)
                 }
                 else if (req.body.skills?.length > 0) {
-                    if (req.body.reason !== undefined > 0) throw 'Cannot update Skills'
+                    if (req.body.reason !== undefined > 0) throw new Error('Cannot update Skills')
                     let dbSkills = user.skills || []
                     let skills = req.body.skills
                     skills.forEach((skill) => {
@@ -403,52 +383,52 @@ export const updateUserById = (req, res, next) => {
                 };
             })
             .catch((error) => {
-                handleCatch(`${error}`, res, 401, next)
+                handleCatch(error, res, 400, next)
             })
     } catch (error) {
-        handleCatch(`${error}`, res, 401, next)
+        handleCatch(error, res, 403, next)
     }
 }
 
 const updateUserRoster = (req, res, next, user) => {
     try {
-        console.log("==============eq.body.userRoster.restDays==============",req.body.userRoster.restDays);
+        // console.log("==============eq.body.userRoster.restDays==============",req.body.userRoster.restDays);
         if (!req.body.userRoster.timeSlots && req.body.userRoster.restDays) {
             user.userRoster.restDays = [];
             req.body.userRoster.restDays.forEach(restDay => {
-                if (restDay < 0 || restDay > 6) throw 'Invalid Rest Days.'
+                if (restDay < 0 || restDay > 6) throw new Error('Invalid Rest Days.')
                 user.userRoster.restDays.push(restDay)
             });
             TimeSlotsModel.findById(user.userRoster.timeSlots)
                 .then((timeSlot) => {
-                    if (!timeSlot) throw `No such timeSlot ${user.userRoster.timeSlots}`
+                    if (!timeSlot) throw new Error(`No such timeSlot ${user.userRoster.timeSlots}`)
                     creatingRoster(req, res, next, user, timeSlot)
                 })
                 .catch((error) => {
-                    handleCatch(`${error}`, res, 401, next)
+                    handleCatch(error, res, 404, next)
                 })
         }
         else if (req.body.userRoster.timeSlots && req.body.userRoster.restDays) {
             user.userRoster.restDays = [];
             req.body.userRoster.restDays.forEach(restDay => {
-                if (restDay < 0 || restDay > 6) throw 'Invalid Rest Days.'
+                if (restDay < 0 || restDay > 6) throw new Error('Invalid Rest Days.')
                 user.userRoster.restDays.push(restDay)
             });
             TimeSlotsModel.findById(req.body.userRoster.timeSlots)
                 .then((timeSlot) => {
-                    if (!timeSlot) throw `No such timeSlot ${req.body.userRoster.timeSlots}`
-                    if (timeSlot.organization.toString() !== user.organization.toString()) throw 'No such timeSlot in Provided organization.'
+                    if (!timeSlot) throw new Error(`No such timeSlot ${req.body.userRoster.timeSlots}`)
+                    if (timeSlot.organization.toString() !== user.organization.toString()) throw new Error('No such timeSlot in Provided organization.')
                     user.userRoster.timeSlots = req.body.userRoster.timeSlots
                     creatingRoster(req, res, next, user, timeSlot)
                 })
                 .catch((error) => {
-                    handleCatch(`${error}`, res, 401, next)
+                    handleCatch(error, res, 404, next)
                 })
         }
         else if (req.body.date && req.body.userRoster.timeSlots) {
             TimeSlotsModel.findById(req.body.userRoster.timeSlots)
                 .then((timeSlot) => {
-                    if (!timeSlot) throw `No such timeSlot ${req.body.userRoster.timeSlots}`
+                    if (!timeSlot) throw new Error(`No such timeSlot ${req.body.userRoster.timeSlots}`)
                     user.roster.employeeRosterDetails.forEach(rosterDetail => {
                         if (rosterDetail.date.toString() == new Date(req.body.date).toString()) {
                             var slotTimeStart = timeSlot.startTime.getHours() + ":" + timeSlot.startTime.getMinutes()
@@ -462,13 +442,13 @@ const updateUserRoster = (req, res, next, user) => {
                     })
                 })
                 .catch((error) => {
-                    handleCatch(`${error}`, res, 401, next)
+                    handleCatch(error, res, 401, next)
                 })
         }
-        else throw 'Invalid Body.'
+        else throw new Error('Invalid Body.')
     }
     catch (error) {
-        handleCatch(`${error}`, res, 401, next)
+        handleCatch(error, res, 400, next)
     }
 }
 
@@ -481,7 +461,7 @@ const userSave = (res, next, user) => {
             })
         })
         .catch((error) => {
-            handleCatch(`${error}`, res, 401, next)
+            handleCatch(error, res, 500, next)
         })
 }
 
@@ -501,7 +481,7 @@ const updateUserEOERehireReason = (req, res, next, user) => {
                 }
             });
         }
-        else throw 'id did not exist'
+        else throw new Error('id did not exist')
         user.save()
             .then((response) => {
                 res.status(200).json({
@@ -510,40 +490,40 @@ const updateUserEOERehireReason = (req, res, next, user) => {
                 })
             })
             .catch((err) => {
-                handleCatch(`${err}`, res, 401, next)
+                handleCatch(err, res, 500, next)
             })
     }
     catch (error) {
-        handleCatch(`${error}`, res, 401, next)
+        handleCatch(error, res, 404, next)
     }
 }
 
 //// get All Active / Non-Active Users of an Organization By Id or all other field filters ////
 export const filterUserByOrganizationId = (req, res, next) => {
     try {
-        if (!req.body.organization) throw "Organization not specified";
+        if (!req.body.organization) throw new Error("Organization not specified");
         if (Object.keys(req.body).length > 1) {
             UserModel.find(req.body).select('_id firstName lastName email')
                 .then((users) => {
-                    if (users.length === 0) throw `No users are there in this organization with status: ${req.body.isActive}`
+                    if (users.length === 0) throw new Error(`No users are there in this organization with status: ${req.body.isActive}`)
                     res.status(200).json({
                         success: true,
                         count: users.length,
                         active_users: users
                     })
                 })
-                .catch((err) => handleCatch(err, res, 401, next))
+                .catch((err) => handleCatch(err, res, 404, next))
         }
-    } catch (error) { handleCatch(err, res, 401, next) }
+    } catch (error) { handleCatch(err, res, 400, next) }
 }
 
 export const getEmployeeTypeByOrganizationId = (req, res, next) => {
     try {
-        if (Object.keys(req.body).length == 0) throw "Request Body is empty"
+        if (Object.keys(req.body).length == 0) throw new Error("Request Body is empty")
         if (req.body.employeeType !== undefined) {
             UserModel.find({ organization: req.params.id, employeeType: req.body.employeeType })
                 .then((users) => {
-                    if (users.length === 0) throw `No users are there in this organization with type: ${req.body.employeeType}`
+                    if (users.length === 0) throw new Error(`No users are there in this organization with type: ${req.body.employeeType}`)
                     res.status(200).json({
                         success: true,
                         count: users.length,
@@ -551,28 +531,22 @@ export const getEmployeeTypeByOrganizationId = (req, res, next) => {
                     })
                 })
                 .catch((err) => {
-                    res.status(404).json({
-                        success: false,
-                        message: `${err}`
-                    })
+                    handleCatch(err, res, 404, next)
                 })
         }
-        else throw 'invalid body'
+        else throw new Error('invalid body')
     } catch (error) {
-        res.status(404).json({
-            success: false,
-            message: `${error}`
-        })
+        handleCatch(error, res, 400, next)
     }
 }
 
 export const getRoleTypeByOrganizationId = (req, res, next) => {
     try {
-        if (Object.keys(req.body).length == 0) throw "Request Body is empty"
+        if (Object.keys(req.body).length == 0) throw new Error("Request Body is empty")
         if (req.body.roleType !== undefined) {
             UserModel.find({ organization: req.params.id, roleType: req.body.roleType })
                 .then((users) => {
-                    if (users.length === 0) throw `No users are there in this organization with type: ${req.body.roleType}`
+                    if (users.length === 0) throw new Error(`No users are there in this organization with type: ${req.body.roleType}`)
                     res.status(200).json({
                         success: true,
                         count: users.length,
@@ -580,44 +554,35 @@ export const getRoleTypeByOrganizationId = (req, res, next) => {
                     })
                 })
                 .catch((err) => {
-                    res.status(404).json({
-                        success: false,
-                        message: `${err}`
-                    })
+                    handleCatch(err, res, 404, next)
                 })
         }
-        else throw 'invalid body'
+        else throw new Error('invalid body')
     } catch (error) {
-        res.status(404).json({
-            success: false,
-            message: `${error}`
-        })
+        handleCatch(error, res, 400, next)
     }
 }
 
 //// update End of Employment of user By Id ////
 export const updateUserEmployment = (req, res, next) => {
     try {
-        if (Object.keys(req.body).length == 0) throw "Request Body is empty"
+        if (Object.keys(req.body).length == 0) throw new Error("Request Body is empty")
         if (req.body.isActive == false) {
-            if (!req.body.resignationDate) throw "Kindly Provide resignation date"
-            else if (!req.body.noticePeriod && req.body.lastWorkingDate !== undefined) throw "You cannot provide the Last Working Date while the notice period is not been served"
-            else if (req.body.noticePeriod !== undefined && !req.body.lastWorkingDate) throw "Kindly provide the Last Working Date"
-            else if (!req.body.reason) throw "Kindly Provide the Reason"
+            if (!req.body.resignationDate) throw new Error("Kindly Provide resignation date")
+            else if (!req.body.noticePeriod && req.body.lastWorkingDate !== undefined) throw new Error("You cannot provide the Last Working Date while the notice period is not been served")
+            else if (req.body.noticePeriod !== undefined && !req.body.lastWorkingDate) throw new Error("Kindly provide the Last Working Date")
+            else if (!req.body.reason) throw new Error("Kindly Provide the Reason")
             userActivationStatus(req, res, next, false, "User is already de-actiavted")
         }
         else if (req.body.isActive == true) {
-            if (!req.body.date) throw "Kindly Provide the Rehire Date"
-            else if (req.body.eoeType !== undefined) throw "EOE type must not be defined while rehiring"
-            else if (!req.body.reason) throw "Kindly Provide the Reason"
+            if (!req.body.date) throw new Error("Kindly Provide the Rehire Date")
+            else if (req.body.eoeType !== undefined) throw new Error("EOE type must not be defined while rehiring")
+            else if (!req.body.reason) throw new Error("Kindly Provide the Reason")
             userActivationStatus(req, res, next, true, "User is already Activated")
         }
-        else throw "state is not defined."
+        else throw new Error("state is not defined.")
     } catch (error) {
-        res.status(404).json({
-            success: false,
-            message: `${error}`
-        })
+        handleCatch(error, res, 400, next)
     }
 }
 
@@ -625,11 +590,11 @@ export const updateUserEmployment = (req, res, next) => {
 const userActivationStatus = (req, res, next, toggler, msg) => {
     EOETypeModel.findById(req.body.eoeType)
         .then((eoeType) => {
-            if (!eoeType) throw "User and EOE type not belong to same organization"
+            if (!eoeType) throw new Error("User and EOE type not belong to same organization")
             UserModel.findById(req.params.id)
                 .then((user) => {
-                    if (!user) throw "user does not exist"
-                    if (user.isActive == toggler) throw msg
+                    if (!user) throw new Error("user does not exist")
+                    if (user.isActive == toggler) throw new Error(msg)
                     user.isActive = toggler;
                     let date = req.body.lastWorkingDate || req.body.resignationDate
                     let lastEOE = user.EOE.details.length > 0 ? user.EOE.details.at(-1).data.lastWorkingDate : new Date('0001-01-01')
@@ -659,39 +624,36 @@ const userActivationStatus = (req, res, next, toggler, msg) => {
                     }
                 })
                 .catch((err) => {
-                    res.status(404).json({
-                        success: false,
-                        message: `${err}`
-                    })
+                    handleCatch(err, res, 404, next)
                 })
         })
-        .catch(err =>handleCatch(err, res, 401, next));
+        .catch(err => handleCatch(err, res, 400, next));
 }
 
 const userActivation = (req, res, details, date, arr, statusDate, user, msg) => {
-    if (new Date(statusDate) >= date) {
-        arr.push(details)
-        user.save()
-            .then((response) => {
-                res.status(200).json({
-                    success: true,
-                    response: response
+    try{
+        if (new Date(statusDate) >= date) {
+            arr.push(details)
+            user.save()
+                .then((response) => {
+                    res.status(200).json({
+                        success: true,
+                        response: response
+                    })
                 })
-            })
-            .catch((err) => {
-                res.status(404).json({
-                    success: false,
-                    message: `${err}`
+                .catch((err) => {
+                    handleCatch(err, res, 400, next)
                 })
-            })
+        }
+        else throw new Error(msg)
     }
-    else throw msg
+    catch(err){ handleCatch(err, res, 400, next) };
 }
 
 export const addSkillsToUser = (req, res, next) => {
     UserModel.findById(req.params.id)
         .then((user) => {
-            if (!user) throw 'user dies not exist';
+            if (!user) throw new Error('user dies not exist');
             if (req.body.skills.length > 0) {
                 let skills = req.body.skills || [];
                 skills.forEach((skill, index) => {
@@ -708,15 +670,12 @@ export const addSkillsToUser = (req, res, next) => {
                     })
                 })
                     .catch((err) => {
-                        throw err;
+                        handleCatch(err, res, 500, next) 
                     });
             }
         })
         .catch((err) => {
-            res.status(401).json({
-                success: false,
-                message: err
-            })
+            handleCatch(err, res, 400, next) 
         })
 
 }
@@ -724,9 +683,9 @@ export const addSkillsToUser = (req, res, next) => {
 export const deleteSkillFromUser = (req, res, next) => {
     UserModel.findById(req.params.id)
         .then((user) => {
-            if (!user) throw 'user does not exist';
+            if (!user) throw new Error('user does not exist');
             if (req.body.skill) {
-                if (!user.skills.includes(req.body.skill.toLowerCase())) throw "Skill not found";
+                if (!user.skills.includes(req.body.skill.toLowerCase())) throw new Error("Skill not found");
                 let skills = user.skills.filter((skill) => skill !== req.body.skill.toLowerCase());
                 user.skills = skills;
                 user.save().then(() => {
@@ -736,25 +695,22 @@ export const deleteSkillFromUser = (req, res, next) => {
                     })
                 })
                     .catch((err) => {
-                        throw err;
+                        handleCatch(err, res, 500, next) 
                     });
             }
         })
         .catch((err) => {
-            res.status(401).json({
-                success: false,
-                message: err
-            })
+            handleCatch(err, res, 400, next) 
         })
 }
 
 export const getChildsByUserId = (req, res, next) => {
     try {
-        if (!req.body.id) throw "Please provide the Id for which you want to retrieve childs"
+        if (!req.body.id) throw new Error("Please provide the Id for which you want to retrieve childs")
         UserModel.find({ lineManager: req.body.id, isActive: true })
             .then((childs) => {
                 if (childs.length == 0) {
-                    throw "No childs found"
+                    throw new Error("No childs found")
                 }
                 res.status(200).json({
                     success: true,
@@ -762,9 +718,9 @@ export const getChildsByUserId = (req, res, next) => {
                     childs
                 })
             })
-            .catch(err => handleCatch(err, res, 401, next))
+            .catch(err => handleCatch(err, res, 404, next))
     }
-    catch (err) { handleCatch(err, res, 401, next) }
+    catch (err) { handleCatch(err, res, 400, next) }
 }
 
 export const validateUserToken = (req, res, next) => {
@@ -782,7 +738,7 @@ export const addNewLeavesToUsers = (req, res, next) => {
     let count = 0
     LeaveTypeModel.findById(req.body.leaveType)
         .then((leave) => {
-            if (!leave) throw 'No Such Leave Type.';
+            if (!leave) throw new Error('No Such Leave Type.');
             let x = {
                 leaveType: leave._id,
                 count: leave.accumulativeCount
@@ -800,13 +756,13 @@ export const addNewLeavesToUsers = (req, res, next) => {
                     })
             }
         })
-        .catch(err => handleCatch(err, res, 401, next));
+        .catch(err => handleCatch(err, res, 404, next));
 };
 
 const addingLeaves = (req, res, leave, obj) => {
     let notFoundUser = [];
     let count = 0
-    console.log("req.body.users", req.body.users.length);
+    // console.log("req.body.users", req.body.users.length);
     req.body.users.forEach(bodyUserId => {
         UserModel.find({ _id: bodyUserId, organization: req.params.id, firstUser: false })
             .then((dbUser) => {
@@ -821,6 +777,7 @@ const addingLeaves = (req, res, leave, obj) => {
                     })
                 }
             })
+            .catch(err => handleCatch(err, res, 400, next) )
     })
 }
 

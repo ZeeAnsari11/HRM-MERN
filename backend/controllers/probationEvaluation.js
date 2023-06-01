@@ -7,23 +7,29 @@ import { createNew, deleteById, getById, handleCatch, updateById } from "../util
 // CREATE 
 export const createProbationEvaluation = (req, res, next) => {
     try {
-        if (req.body.createdAt) throw "You can't Provide CreatedAt"
+        if (req.body.createdAt) throw new Error ("You can't Provide CreatedAt")
         OrganizationModel.findById(req.body.organization)
             .then((organization) => {
-                if (!organization) throw "Invalid Organization ID"
+                if (!organization) throw new Error ("Invalid Organization ID")
                 UserModel.findById(req.body.user)
                     .then((user) => {
-                        if (!user) throw "Invalid User or Organization"
-                        if (req.body.organization != user.organization.toString()) throw "User Does Not belong to this organization"
+                        if (!user) throw new Error ("Invalid User or Organization")
+                        if (req.body.organization != user.organization.toString()) throw new Error ("User Does Not belong to this organization")
                         ProbationEvaluationModel.exists({ user: req.body.user })
                             .then((formExists) => {
-                                if (formExists) throw "Probation Form Already Exists for this user"
+                                if (formExists){
+                                    {
+                                        const alreadyExist = new Error("Probation Form Already Exists for this user");
+                                        alreadyExist.statusCode = 409;
+                                        throw alreadyExist;
+                                    }
+                                } 
                                 else {
                                     if (req.body.commonQuestions) {
                                         let commonLength = req.body.dynamicQuestions.length
                                         for (let i = 0; i < commonLength; i++) {
                                             if (req.body.commonQuestions[i].overAllEvaluation || req.body.commonQuestions[i].performance) {
-                                                throw "You cannot Provide Values for the Questions"
+                                                throw new Error ("You cannot Provide Values for the Questions")
                                             }
                                         }
                                     }
@@ -31,7 +37,7 @@ export const createProbationEvaluation = (req, res, next) => {
                                         let dynamicLength = req.body.dynamicQuestions.length;
                                         for (let i = 0; i < dynamicLength; i++) {
                                             if (req.body.dynamicQuestions[i].overAllEval || req.body.dynamicQuestions[i].performance) {
-                                                throw "You cannot Provide Values for the Questions"
+                                                throw new Error ("You cannot Provide Values for the Questions")
                                             }
                                         }
                                     }
@@ -39,7 +45,7 @@ export const createProbationEvaluation = (req, res, next) => {
                                 }
                             })
                             .catch((error) => {
-                                handleCatch(error, res, 404, next);
+                                handleCatch(error, res, error.statusCode || 400, next)
                             })
 
                     })
@@ -62,7 +68,7 @@ export const createProbationEvaluation = (req, res, next) => {
 export const getProbationEvaluationsByUserId = (req, res, next) => {
     ProbationEvaluationModel.find({ user: req.params.id })
         .then((probationEvaluations) => {
-            if (probationEvaluations.length === 0) throw "No Probation Evaluation Forms found"
+            if (probationEvaluations.length === 0) throw new Error ("No Probation Evaluation Forms found")
             res.status(200).json({
                 success: true,
                 probationEvaluations
@@ -80,16 +86,16 @@ export const getProbationEvaluationById = (req, res, next) => {
 // UPDATE 
 export const updateProbationEvaluationAdmin = (req, res, next) => {
     try {
-        if (req.body.createAt || req.body.organization || req.body.user) throw "You can not change the Organization, User or Created At"
+        if (req.body.createAt || req.body.organization || req.body.user) throw new Error ("You can not change the Organization, User or Created At")
         ProbationEvaluationModel.findById(req.params.id)
             .then((probationEval) => {
-                if (!probationEval) throw "Probation Evaluation Not Found";
+                if (!probationEval) throw new Error ("Probation Evaluation Not Found");
 
                 if (req.body.commonQuestions) {
                     let commonLength = req.body.dynamicQuestions.length
                     for (let i = 0; i < commonLength; i++) {
                         if (req.body.commonQuestions[i].overAllEvaluation || req.body.commonQuestions[i].performance) {
-                            throw "You cannot Provide Values for the Questions"
+                            throw new Error ("You cannot Provide Values for the Questions")
                         }
                     }
                     probationEval.commonQuestions.push(...req.body.commonQuestions);
@@ -98,7 +104,7 @@ export const updateProbationEvaluationAdmin = (req, res, next) => {
                     let dynamicLength = req.body.dynamicQuestions.length;
                     for (let i = 0; i < dynamicLength; i++) {
                         if (req.body.dynamicQuestions[i].overAllEval || req.body.dynamicQuestions[i].performance) {
-                            throw "You cannot Provide Values for the Questions"
+                            throw new Error ("You cannot Provide Values for the Questions")
                         }
                     }
                     probationEval.dynamicQuestions.push(...req.body.dynamicQuestions);
@@ -124,13 +130,13 @@ export const updateProbationEvaluationAdmin = (req, res, next) => {
             });
     }
     catch (error) {
-        handleCatch(error, res, 404, next)
+        handleCatch(error, res, 400, next)
     }
 };
 
 export const updateProbationEvaluation = (req, res, next) => {
     try {
-        if (req.body.createAt || req.body.organization || req.body.user) throw "You can not change the Organization, User or Created At"
+        if (req.body.createAt || req.body.organization || req.body.user) throw new Error ("You can not change the Organization, User or Created At")
         updateById(req, res, next, ProbationEvaluationModel, 'Probation Evaluation')
     }
     catch (error) {

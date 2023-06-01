@@ -8,12 +8,12 @@ export const createRequestFlow = (req, res, next) => {
     RequestFlowModel.exists({ name: name, requestType: requestType })
         .then((flowExists) => {
             if (flowExists) {
-                throw "Request Flow Name already exists for this Request Type"
+                throw new Error("Request Flow Name already exists for this Request Type")
             }
             RequestTypeModel.findById(requestType)
                 .then((request) => {
                     if (!request) {
-                        throw "Request type not found"
+                        throw new Error("Request type not found")
                     }
                     else {
                         const newRequestFlow = new RequestFlowModel({
@@ -23,26 +23,23 @@ export const createRequestFlow = (req, res, next) => {
                         newRequestFlow
                             .save()
                             .then((requestFlow) => {
-                                    res.status(201).json({
-                                        success: true,
-                                        message: "Request Flow created successfully",
-                                        requestFlow
-                                    });
+                                res.status(201).json({
+                                    success: true,
+                                    message: "Request Flow created successfully",
+                                    requestFlow
+                                });
                             })
                             .catch((error) => {
-                                console.log(error);
-                                handleCatch(error, res, 404, next)
+                                handleCatch(error, res, 500, next)
                             })
                     }
                 })
                 .catch((error) => {
-                    console.log(error);
                     handleCatch(error, res, 404, next)
                 })
         })
         .catch((error) => {
-            console.log(error);
-            handleCatch(error, res, 404, next)
+            handleCatch(error, res, 409, next)
         })
 };
 
@@ -52,11 +49,13 @@ export const getRequestFlowById = (req, res, next) => {
 
 export const updateRequestFlow = (req, res, next) => {
     try {
-        if (req.body.requestType) throw "You Can't Update the Request Type"
+        if (req.body.requestType) throw new Error("You Can't Update the Request Type")
         RequestFlowModel.findById(req.params.id)
             .then((requestFlow) => {
                 if (!requestFlow) {
-                    throw "Request flow not found"
+                    const notFoundError = new Error("Request flow not found");
+                    notFoundError.statusCode = 404;
+                    throw notFoundError;
                 }
                 if (req.body.name) {
                     requestFlow.name = req.body.name;
@@ -72,12 +71,12 @@ export const updateRequestFlow = (req, res, next) => {
                     updatedRequestFlow
                 });
             })
-            .catch((error) => {
-                handleCatch(error, res, 404, next)
+            .catch((err) => {
+                handleCatch(err, res, err.statusCode || 500, next);
             })
     }
     catch (error) {
-        handleCatch(error, res, 404, next)
+        handleCatch(error, res, 403, next)
     }
 }
 
@@ -90,21 +89,35 @@ export const createRequestFlowNode = async (req, res, next) => {
     try {
         const requestFlow = await RequestFlowModel.findById(req.params.id).populate('head').populate('requestType')
         if (!requestFlow) {
-            throw 'Request flow not found'
+            const notFoundError = new Error("Request flow not found");
+            notFoundError.statusCode = 404;
+            throw notFoundError;
         }
         let filter = {}
-        if (req.body.lineManager && req.body.department) throw "Provide Line Manager or Department Only"
-        if (req.body.lineManager ) {
+        if (req.body.lineManager && req.body.department) {
+            const badRequest = new Error("Provide Line Manager or Department Only")
+            badRequest.statusCode = 400;
+            throw badRequest
+        }
+        if (req.body.lineManager) {
             filter = { lineManager: req.body.lineManager }
         } else if (req.body.department) {
             const department = await DepartmentModel.findById(req.body.department)
-            if (!department) throw "Department not found"
+            if (!department) {
+                const notFoundError = new Error("Department not found");
+                notFoundError.statusCode = 404;
+                throw notFoundError
+            }
             if (requestFlow.requestType.organization.toString() != department.organization.toString()) {
-                throw 'You are not authorized to perform this action'
+                const unAuthorize = new Error("You are not authorized to perform this action")
+                unAuthorize.statusCode = 403;
+                throw unAuthorize
             }
             filter = { department: req.body.department }
         } else {
-            throw 'Either lineManager or department is required'
+            const badRequest = new Error("Either lineManager or department is required")
+            badRequest.statusCode = 400;
+            throw badRequest
         }
         const temp = requestFlow.requestType
         const existingNode = await RequestFlowNodeModel.findOne({
@@ -112,7 +125,9 @@ export const createRequestFlowNode = async (req, res, next) => {
             temp
         })
         if (existingNode) {
-            throw 'Node already exists in the Request Flow'
+            const alreadyExist = new Error("Node already exists in the Request Flow")
+            alreadyExist.statusCode = 409;
+            throw alreadyExist
         }
 
         const node = await RequestFlowNodeModel.create({
@@ -143,8 +158,7 @@ export const createRequestFlowNode = async (req, res, next) => {
             })
         }
     } catch (error) {
-        console.log(error);
-        handleCatch(error, res, 404, next)
+        handleCatch(error, res, error.statusCode || 500, next);
     }
 }
 
@@ -161,18 +175,18 @@ export const deleteRequestFlowNode = async (req, res, next) => {
         const requestFlow = await RequestFlowModel.findById(id);
 
         if (!requestFlow) {
-            throw "Request flow not found"
+            throw new Error("Request flow not found")
         }
 
         if (!requestFlow.head) {
-            throw "Linked list is empty"
+            throw new Error("Linked list is empty")
         }
 
         if (requestFlow.head.toString() === nodeId.toString()) {
             // If the node to be deleted is the head, set the head to the next node
             const nodeToDelete = await RequestFlowNodeModel.findById(nodeId);
             if (!nodeToDelete) {
-                throw "Request flow node not found"
+                throw new Error("Request flow node not found")
             }
 
             requestFlow.head = nodeToDelete.nextNode;
@@ -208,7 +222,7 @@ export const deleteRequestFlowNode = async (req, res, next) => {
                 currentNode = await RequestFlowNodeModel.findById(currentNode.nextNode);
             }
 
-            throw "Request flow node not found"
+            throw new Error("Request flow node not found")
         }
     } catch (error) {
         handleCatch(error, res, 404, next);
@@ -245,7 +259,7 @@ export const getAllRequestFlowNodes = (req, res, next) => {
         .populate('head')
         .then(requestFlow => {
             if (!requestFlow) {
-                throw 'Request Flow not found'
+                throw new Error('Request Flow not found')
             }
             const head = requestFlow.head;
             console.log(head);
@@ -260,7 +274,7 @@ export const getAllRequestFlowNodes = (req, res, next) => {
             });
         })
         .catch(error => {
-            handleCatch(error, res, 400, next)
+            handleCatch(error, res, 404, next)
         });
 };
 

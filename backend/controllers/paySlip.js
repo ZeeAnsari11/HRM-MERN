@@ -12,18 +12,18 @@ let resp = []
 
 export const createPaySlipsByOrganizationById = (req, res, next) => {
     try {
-        if (!req.body.month || !req.body.year) throw 'Invalid Body.'
+        if (!req.body.month || !req.body.year) throw new Error('Invalid Body.')
         let month = new Date('1900:' + req.body.month + ':01').getMonth + 1
-        if (!month) throw 'Invalid Month.'
+        if (!month) throw new Error('Invalid Month.')
         PaySlipModel.find({ organization: req.params.id, month: req.body.month, year: req.body.year })
             .then((paySlip) => {
-                if (paySlip.length > 0) throw 'Payslips of the provided month and year already exists.'
+                if (paySlip.length > 0) throw new Error('Payslips of the provided month and year already exists.')
                 common(req, res, next)
             })
-            .catch((error) => { handleCatch(error, res, 401, next) })
+            .catch((error) => { handleCatch(error, res, 409, next) })
     }
     catch (error) {
-        handleCatch(error, res, 401, next)
+        handleCatch(error, res, 400, next)
     }
 }
 
@@ -36,20 +36,20 @@ const common = (req, res, next) => {
     let daysInMonth = new Date(req.body.year, req.body.month, 0).getDate();
     OrganizationModel.findById(req.params.id)
         .then((organization) => {
-            if (!organization) throw 'No Such Organization'
+            if (!organization) throw new Error('No Such Organization')
             //return UserModel.find({ organization: organization._id })
             return UserModel.find({ _id: "645cd91054f94c09815d4fbb" })
         })
         .then((users) => {
-            if (users.length == 0) throw 'No users in the provided organization'
+            if (users.length == 0) throw new Error('No users in the provided organization')
             req.body.organization = req.params.id
             users.forEach(user => {
                 let allowancePromise = AllowanceModel.find({ organization: user.organization }).exec()
                 let userSalaryPromise = SalaryModel.find({ user: user._id }).sort({ createdAt: -1 }).limit(1).exec()
                 let paySlipPromise = PaySlipModel.find({ user: user._id }).exec()
-                let taxRulesPromise = TaxRuleModel.find({organization : user.organization}).exec()
-                
-					let attedencesPromise = AttendanceModel.find({  
+                let taxRulesPromise = TaxRuleModel.find({ organization: user.organization }).exec()
+
+                let attedencesPromise = AttendanceModel.find({
                     user: user._id,
                     $or: [
                         { $and: [{ isAbsent: true }, { onLeave: "full-unpaid" }] },
@@ -74,12 +74,12 @@ const common = (req, res, next) => {
                             let value = handleAbsents(userCurrentSalary, attedences, daysInMonth)
                             createPaySlip(req, res, next, user, userCurrentSalary, allowances, paySlips, taxRules, users.length, value)
                         })
-                        .catch((error) => { handleCatch(error, res, 401, next) })
+                        .catch((error) => { handleCatch(error, res, 500, next) })
                 )
             })
             return Promise.all(userPromises)
         })
-        .catch((error) => { handleCatch(error, res, 401, next) })
+        .catch((error) => { handleCatch(error, res, 404, next) })
 }
 
 const createPaySlip = (req, res, next, user, userCurrentSalary, allowances, paySlips, taxRules, length, value) => {
@@ -374,13 +374,21 @@ const calculatePerUserSalary = (daysInMonth, userCurrentSalary) => {
 
 export const updatePaySlips = (req, res, next) => {
     try {
-        if (req.body.updatedByAdmin && !req.body.month && !req.body.year && !req.body.status && (req.body.status != "open" || req.body.status != "close")) throw 'Invalid Body.'
+        if (req.body.updatedByAdmin && !req.body.month && !req.body.year && !req.body.status && (req.body.status != "open" || req.body.status != "close")) throw new Error('Invalid Body.')
         PaySlipModel.find({ organization: req.params.id, month: req.body.month, year: req.body.year })
             .then((paySlips) => {
-                if (paySlips.length == 0) throw 'No Payslips of the provided month and year.'
+                if (paySlips.length == 0) {
+                    const notFoundError = new Error('No Payslips of the provided month and year.');
+                    notFoundError.statusCode = 404;
+                    throw notFoundError;
+                }
                 if (req.body.status == "open") {
                     paySlips.forEach(paySlip => {
-                        if (paySlip.status != "open") throw 'Cannot update closed paySlips.'
+                        if (paySlip.status != "open") {
+                            const invalidAction = new Error('Cannot update closed paySlips.');
+                            invalidAction.statusCode = 403;
+                            throw invalidAction;
+                        }
                     })
                     return PaySlipModel.deleteMany({ organization: req.params.id })
                         .then((response) => {
@@ -390,7 +398,7 @@ export const updatePaySlips = (req, res, next) => {
                 }
                 else {
                     paySlips.forEach(paySlip => {
-                        if (paySlip.status != "open") throw 'Cannot update closed paySlips.'
+                        if (paySlip.status != "open") throw new Error('Cannot update closed paySlips.')
                         paySlip.status = "close"
                         paySlip.save()
                     })
@@ -399,19 +407,19 @@ export const updatePaySlips = (req, res, next) => {
                     })
                 }
             })
-            .catch((error) => { handleCatch(error, res, 401, next) })
+            .catch((error) => { handleCatch(error, res, error.statusCode || 500, next); })
     } catch (error) {
-        handleCatch(error, res, 401, next)
+        handleCatch(error, res, 400, next)
     }
 }
 
 export const updatePaySlipsById = (req, res, next) => {
     try {
-        if (req.body.organization || req.body.updatedByAdmin || req.body.user) throw 'invalid body.'
+        if (req.body.organization || req.body.updatedByAdmin || req.body.user) throw new Error('invalid body.')
         req.body.updatedByAdmin = true
         updateById(req, res, next, PaySlipModel, 'paySlip')
     }
     catch (error) {
-        handleCatch(error, res, 401, next)
+        handleCatch(error, res, 400, next)
     }
 }

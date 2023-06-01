@@ -1,26 +1,14 @@
-const errorHandler = (err, req, res, next) => {
-    let errStatusCode = err.statusCode || 500;
-    let errMsg =  err.error || err.error?.message || 'Something went wrong';
-    let stack = err.error?.stack | {}
-    
-    if (process.env.NODE_ENV === 'production') {
-        stack = {};
-        if (err.error.code === 11000) {
-            errMsg = "Duplicate Email Entered.";
-        }
-        if (err.error.name === 'CastError') {
-            errMsg = "Error: Resource Not found : Invalid ID";
-            errStatusCode = 404;
-        }
-        if (err.error.name === 'JsonWebTokenError') {
-            errMsg = "Json Web Token is invalid.";
-        }
+const errorHandler = (err, res, next) => {
+    const ErrorMessage = err.err.message || err.err || "Internal Server Error"
+    if(err.err.name == "CastError"){
+        err.statusCode = 400;
     }
-    res.status(errStatusCode).json({
-        success: false,
-        status: errStatusCode,
-        message: errMsg,
-        stack: stack,
+    res.status(err.statusCode).json({
+        succes: false,
+        Message: process.env.NODE_ENV === "DEVELOPMENT" ? err.err.name !== "CastError" ? ErrorMessage : `Invalid id ${err.err.path}` : ErrorMessage  ,
+        stack: process.env.NODE_ENV === "DEVELOPMENT" ? err.err.stack : {},
+        EmailError: process.env.NODE_ENV === "PRODUCTION" ? err.err.name === "JsonWebTokenError" ? `Invalid JWT Token` : '' : ''
+
     })
 }
 export default errorHandler

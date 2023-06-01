@@ -3,24 +3,24 @@ import { LeaveTypeModel } from "../models/leaveTypeSchema.js";
 import { UserModel } from "../models/userSchema.js"
 import { ShortLeaveTypeModel } from "../models/shortLeaveTypeSchema.js";
 import { creatingRequest } from "../utils/request.js";
-import { createNew, handleCatch, updateById, deleteById, getById } from '../utils/common.js'
+import { handleCatch, updateById, deleteById, getById } from '../utils/common.js'
 
 const placeHolder = '0001-01-01T';
 
 export const addingLeaveRequest = (req, res, next) => {
     try {
-        if (!req.body.leaveType) throw 'Kindly Provide Leave Type.'
-        if (req.body.count) throw 'Please remove count.'
-        if (!req.body.startDate) throw 'Kindly Provide Start Date.'
-        if (!req.body.organization) throw 'Kindly Provide Organization.'
+        if (!req.body.leaveType) throw new Error('Kindly Provide Leave Type.')
+        if (req.body.count) throw new Error('Please remove count.')
+        if (!req.body.startDate) throw new Error('Kindly Provide Start Date.')
+        if (!req.body.organization) throw new Error('Kindly Provide Organization.')
         let dates = []
         LeaveTypeModel.findById(req.body.leaveType)
             .then((leaveType) => {
-                if (!leaveType) throw `No such leave type ${req.body.leaveType}`
-                if (leaveType.organization.toString() !== req.body.organization) throw `No this leave type in this organization ${req.body.organization}`
+                if (!leaveType) throw new Error`No such leave type ${req.body.leaveType}`
+                if (leaveType.organization.toString() !== req.body.organization) throw new Error(`No this leave type in this organization ${req.body.organization}`)
                 UserModel.findById(req.body.user)
                     .then((user) => {
-                        if (!user) throw `No such user ${req.body.user}`
+                        if (!user) throw new Error(`No such user ${req.body.user}`)
                         user.leaveTypeDetails.forEach(userLeaveType => {
                             if (userLeaveType.leaveType.toString() == req.body.leaveType) {
                                 leaveRequestType(req, res, next, leaveType, user, userLeaveType.count)
@@ -28,14 +28,14 @@ export const addingLeaveRequest = (req, res, next) => {
                         })
                     })
                     .catch((error) => {
-                        handleCatch(`${error}`, res, 401, next)
+                        handleCatch(error, res, 404, next)
                     })
             })
             .catch((error) => {
-                handleCatch(`${error}`, res, 401, next)
+                handleCatch(error, res, 404, next)
             })
     } catch (error) {
-        handleCatch(`${error}`, res, 401, next)
+        handleCatch(error, res, 400, next)
     }
 }
 
@@ -49,25 +49,26 @@ const leaveRequestType = (req, res, next, leaveType, user, availableLeaves) => {
 
 const shortLeaveRequest = (req, res, next, user, availableLeaves) => {
     try {
-        if (!req.body.shortleaveDetails?.shortLeaveType || !req.body.shortleaveDetails?.startTime || req.body.shortleaveDetails?.endTime || req.body.endDate) throw 'Invalid Body.'
+        if (!req.body.shortleaveDetails?.shortLeaveType || !req.body.shortleaveDetails?.startTime || req.body.shortleaveDetails?.endTime || req.body.endDate) throw new Error('Invalid Body.')
         ShortLeaveTypeModel.findById(req.body.shortleaveDetails.shortLeaveType)
             .then((shrtLeaveType) => {
-                if (!shrtLeaveType) throw `No such short leave type ${req.body.shortleaveDetails.shortLeaveType}`
-                req.body.count = shrtLeaveType.balance
-                req.body.availableLeaves = availableLeaves - shrtLeaveType.balance
+                if (!shrtLeaveType) throw new Error({ message: `No such short leave type ${req.body.shortleaveDetails.shortLeaveType}`, statusCode: 404 });
+                req.body.count = shrtLeaveType.balance;
+                req.body.availableLeaves = availableLeaves - shrtLeaveType.balance;
                 if (req.body.availableLeaves >= req.body.count) {
-                    req.body.endDate = req.body.startDate
-                    userShortLeaveHours(req, shrtLeaveType, user, null)
-                    req.body.status = 'pending'
-                    creatingLeaveRequest(req, res, next, user)
+                    req.body.endDate = req.body.startDate;
+                    userShortLeaveHours(req, shrtLeaveType, user, null);
+                    req.body.status = 'pending';
+                    creatingLeaveRequest(req, res, next, user);
+                } else {
+                    throw { message: 'Invalid Leave.', statusCode: 400 };
                 }
-                else throw 'Invalid Leave.'
             })
             .catch((error) => {
-                handleCatch(`${error}`, res, 401, next)
-            })
+                handleCatch(error, res, error.statusCode || 401, next);
+            });
     } catch (error) {
-        handleCatch(`${error}`, res, 401, next)
+        handleCatch(error, res, 400, next)
     }
 }
 
@@ -105,7 +106,7 @@ const fullLeaveRequest = (req, res, next, user, availableLeaves) => {
     try {
         // console.log("==============L2===availableLeaves====", availableLeaves);
 
-        if (!req.body.endDate) throw 'Kindly Provide End Date.'
+        if (!req.body.endDate) throw new Error('Kindly Provide End Date.')
         req.body.count = calculateCount(req, user);
         // console.log("========count=========", req.body.count);
         req.body.availableLeaves = availableLeaves - req.body.count
@@ -114,9 +115,9 @@ const fullLeaveRequest = (req, res, next, user, availableLeaves) => {
             userLeaveCountReduction(req, user, req.body.count)
             creatingLeaveRequest(req, res, next, user)
         }
-        else throw 'Invalid Leave Number of Days.'
+        else throw new Error('Invalid Leave Number of Days.')
     } catch (error) {
-        handleCatch(`${error}`, res, 401, next)
+        handleCatch(error, res, 400, next)
     }
 }
 
@@ -143,22 +144,22 @@ const creatingLeaveRequest = (req, res, next, user) => {
             creatingRequest(req, res, next, user, leaveRequest, '64351dbe9e45310b2991aaf3', '64351d4e9e45310b2991aaef', 'Leave')
         })
         .catch((error) => {
-            handleCatch(`${error}`, res, 401, next)
+            handleCatch(error, res, 500, next)
         })
 }
 
 export const updateLeaveRequest = (req, res, next) => {
     try {
-        if (req.body.organization || !req.body.leaveType || !req.body.user || req.body.availableLeaves || req.body.count || req.body.createdAt || !req.body.startDate) throw 'Invalid Body.'
+        if (req.body.organization || !req.body.leaveType || !req.body.user || req.body.availableLeaves || req.body.count || req.body.createdAt || !req.body.startDate) throw new Error('Invalid Body.')
         LeaveTypeModel.findById(req.body.leaveType)
             .then((leaveType) => {
-                if (!leaveType) throw `No such leave type ${req.body.leaveType}`
+                if (!leaveType) throw new Error(`No such leave type ${req.body.leaveType}`)
                 LeaveRequestModel.find({ user: req.body.user, leaveType: leaveType._id })
                     .then((userLeaveRequests) => {
-                        if (!userLeaveRequests) throw `No such Leave Request`
+                        if (!userLeaveRequests) throw new Error(`No such Leave Request`)
                         UserModel.findById(req.body.user)
                             .then((user) => {
-                                if (!user) throw `No such user ${req.body.user}`
+                                if (!user) throw new Error(`No such user ${req.body.user}`)
                                 userLeaveRequests.forEach(userLeaveRequest => {
                                     if (userLeaveRequest._id.toString() == req.params.id.toString()) {
                                         if (req.body.short == undefined) {
@@ -196,39 +197,47 @@ export const updateLeaveRequest = (req, res, next) => {
                                 })
                             })
                             .catch((error) => {
-                                handleCatch(`${error}`, res, 401, next)
+                                handleCatch(error, res, 401, next)
                             })
                     })
                     .catch((error) => {
-                        handleCatch(`${error}`, res, 401, next)
+                        handleCatch(error, res, 400, next)
                     })
             })
+            .catch((error) => {
+                handleCatch(error, res, 404, next);
+            });
     } catch (error) {
-        handleCatch(`${error}`, res, 401, next)
+        handleCatch(error, res, 400, next)
     }
 }
 
 const updateLeaveRequestFromFullToFull = (req, res, next, user, leaveRequest) => {
-    if (!req.body.endDate) throw 'Kindly Provide End Date.'
-    req.body.count = calculateCount(req, user);
-    if (leaveRequest.count > req.body.count) {
-        let count = leaveRequest.count - req.body.count
-        userLeaveCountReduction(req, user, -count)
-    }
-    else if (leaveRequest.count < req.body.count) {
-        let count = req.body.count - leaveRequest.count
-        userLeaveCountReduction(req, user, count)
-    }
-    user.leaveTypeDetails.forEach(leaveType => {
-        if (leaveType.leaveType.toString() == leaveRequest.leaveType) {
-            req.body.availableLeaves = leaveType.count
-            if (req.body.availableLeaves >= req.body.count) {
-                req.body.status = leaveRequest.status
-                updateById(req, res, next, LeaveRequestModel, 'LeaveRequest')
-            }
-            else throw 'Invalid Leave Number of Days.'
+    try {
+        if (!req.body.endDate) throw new Error('Kindly Provide End Date.')
+        req.body.count = calculateCount(req, user);
+        if (leaveRequest.count > req.body.count) {
+            let count = leaveRequest.count - req.body.count
+            userLeaveCountReduction(req, user, -count)
         }
-    })
+        else if (leaveRequest.count < req.body.count) {
+            let count = req.body.count - leaveRequest.count
+            userLeaveCountReduction(req, user, count)
+        }
+        user.leaveTypeDetails.forEach(leaveType => {
+            if (leaveType.leaveType.toString() == leaveRequest.leaveType) {
+                req.body.availableLeaves = leaveType.count
+                if (req.body.availableLeaves >= req.body.count) {
+                    req.body.status = leaveRequest.status
+                    updateById(req, res, next, LeaveRequestModel, 'LeaveRequest')
+                }
+                else throw new Error('Invalid Leave Number of Days.')
+            }
+        })
+    }
+    catch (err) {
+        handleCatch(err, res, 400, next)
+    }
 }
 
 const updateLeaveRequestFromShortToShort = (req, res, next, user, leaveRequest) => {
@@ -239,7 +248,7 @@ const updateLeaveRequestFromShortToFull = (req, res, next, user, leaveRequest) =
     ShortLeaveTypeModel.findById(leaveRequest.shortleaveDetails.shortLeaveType)
         .then((shrstLeaveType) => {
             req.body.shortleaveDetails = {}
-            if (!req.body.endDate) throw 'Kindly Provide End Date.'
+            if (!req.body.endDate) throw new Error('Kindly Provide End Date.')
             req.body.count = calculateCount(req, user);
             let count = req.body.count - shrstLeaveType.balance
             userLeaveCountReduction(req, user, count)
@@ -250,39 +259,44 @@ const updateLeaveRequestFromShortToFull = (req, res, next, user, leaveRequest) =
                         req.body.status = leaveRequest.status
                         updateById(req, res, next, LeaveRequestModel, 'LeaveRequest')
                     }
-                    else throw 'Invalid Leave Number of Days.'
+                    else throw new Error('Invalid Leave Number of Days.')
                 }
             })
         })
         .catch((error) => {
-            handleCatch(`${error}`, res, 401, next)
+            handleCatch(error, res, 400, next)
         })
 }
 
 const updateLeaveRequestFromFullToShort = (req, res, next, user, leaveRequest) => {
-    if (!req.body.shortleaveDetails?.shortLeaveType || !req.body.shortleaveDetails?.startTime || req.body.shortleaveDetails?.endTime || req.body.endDate) throw 'Invalid Body.'
-    ShortLeaveTypeModel.findById(req.body.shortleaveDetails.shortLeaveType)
-        .then((shrtLeaveType) => {
-            if (!shrtLeaveType) throw `No such short leave type ${req.body.shortleaveDetails.shortLeaveType}`
-            req.body.count = shrtLeaveType.balance
-            req.body.endDate = req.body.startDate
-            let count = leaveRequest.count - shrtLeaveType.balance
-            userShortLeaveHours(req, shrtLeaveType, user, true)
-            userLeaveCountReduction(req, user, -count)
-            user.leaveTypeDetails.forEach(leaveType => {
-                if (leaveType.leaveType.toString() == leaveRequest.leaveType) {
-                    req.body.availableLeaves = leaveType.count
-                    if (req.body.availableLeaves >= req.body.count) {
-                        req.body.status = leaveRequest.status
-                        updateById(req, res, next, LeaveRequestModel, 'LeaveRequest')
+    try {
+        if (!req.body.shortleaveDetails?.shortLeaveType || !req.body.shortleaveDetails?.startTime || req.body.shortleaveDetails?.endTime || req.body.endDate) throw new Error('Invalid Body.')
+        ShortLeaveTypeModel.findById(req.body.shortleaveDetails.shortLeaveType)
+            .then((shrtLeaveType) => {
+                if (!shrtLeaveType) throw new Error(`No such short leave type ${req.body.shortleaveDetails.shortLeaveType}`)
+                req.body.count = shrtLeaveType.balance
+                req.body.endDate = req.body.startDate
+                let count = leaveRequest.count - shrtLeaveType.balance
+                userShortLeaveHours(req, shrtLeaveType, user, true)
+                userLeaveCountReduction(req, user, -count)
+                user.leaveTypeDetails.forEach(leaveType => {
+                    if (leaveType.leaveType.toString() == leaveRequest.leaveType) {
+                        req.body.availableLeaves = leaveType.count
+                        if (req.body.availableLeaves >= req.body.count) {
+                            req.body.status = leaveRequest.status
+                            updateById(req, res, next, LeaveRequestModel, 'LeaveRequest')
+                        }
+                        else throw new Error('Invalid Leave Number of Days.')
                     }
-                    else throw 'Invalid Leave Number of Days.'
-                }
+                })
             })
-        })
-        .catch((error) => {
-            handleCatch(`${error}`, res, 401, next)
-        })
+            .catch((error) => {
+                handleCatch(error, res, 404, next)
+            })
+    }
+    catch (err) {
+        handleCatch(err, res, 400, next)
+    }
 }
 
 export const getLeaveRequest = (req, res, next) => {
@@ -297,10 +311,11 @@ export const rejectLeaveRequest = (req, res, next, show = true) => {
     try {
         LeaveRequestModel.findById(req.params.id)
             .then((userLeaveRequests) => {
-                if (!userLeaveRequests) throw 'No such Leave.'
-                if (userLeaveRequests.status !== 'rejected' && show) throw "Leave is already rejected."
+                if (!userLeaveRequests) throw new Error('No such Leave.')
+                if (userLeaveRequests.status !== 'rejected' && show) throw new Error("Leave is already rejected.")
                 UserModel.findById(userLeaveRequests.user)
                     .then((user) => {
+                        if(!user) throw new Error("User not found")
                         user.leaveTypeDetails.forEach(leaveType => {
                             if (leaveType.leaveType.toString() == userLeaveRequests.leaveType.toString()) {
                                 leaveType.count = leaveType.count + userLeaveRequests.count
@@ -320,30 +335,32 @@ export const rejectLeaveRequest = (req, res, next, show = true) => {
                                         else return
                                     })
                             })
-
+                            .catch((error) => {
+                                handleCatch(error, res, 500, next)
+                            })
                     })
                     .catch((error) => {
-                        handleCatch(`${error}`, res, 401, next)
+                        handleCatch(error, res, 404, next)
                     })
             })
             .catch((error) => {
-                handleCatch(`${error}`, res, 401, next)
+                handleCatch(error, res, 404, next)
             })
     } catch (error) {
-        handleCatch(`${error}`, res, 401, next)
+        handleCatch(error, res, 400, next)
     }
 }
 
 export const userLeaveRequests = (req, res, next) => {
     LeaveRequestModel.find({ user: req.params.id })
         .then((leaves) => {
-            if (leaves.length == 0) throw 'User did not request any leave'
+            if (leaves.length == 0) throw new Error('User did not request any leave')
             res.status(200).json({
                 success: true,
                 leaves
             })
         })
         .catch((error) => {
-            handleCatch(`${error}`, res, 401, next)
+            handleCatch(error, res, 404, next)
         })
 }

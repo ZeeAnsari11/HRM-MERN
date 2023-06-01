@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "nodemon",
-    "dev": "cross-env NODE_ENV=development nodemon",
-    "prod": "cross-env NODE_ENV=production nodemon"
+    "dev": "cross-env NODE_ENV=DEVELOPMENT nodemon",
+    "prod": "cross-env NODE_ENV=PRODUCTION nodemon"
   },
   "author": "",
   "license": "",
