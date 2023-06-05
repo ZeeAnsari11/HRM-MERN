@@ -1,4 +1,4 @@
-import express  from "express";
+import express from "express";
 import cors from "cors";
 
 import { organizationRoute } from "./routes/organization.js";
@@ -21,14 +21,14 @@ import { employmentTypeRoute } from "./routes/employmentType.js";
 import { eoeTypeRoute } from "./routes/eoeType.js";
 import { probEvalAttributesRoute } from "./routes/probEvalAttributes.js";
 import { assetRevisionRoute } from "./routes/assetsRevisions.js";
-import { commonQuestionsRoute } from "./routes/commonQuestions.js"; 
-import { evaluationRatingRoute } from "./routes/evaluationRatings.js"; 
+import { commonQuestionsRoute } from "./routes/commonQuestions.js";
+import { evaluationRatingRoute } from "./routes/evaluationRatings.js";
 import { leaveSlabsRoute } from "./routes/leaveSlabs.js";
-import { leaveTypeRoute } from "./routes/leaveType.js"; 
+import { leaveTypeRoute } from "./routes/leaveType.js";
 import { gradeRoute } from "./routes/grade.js";
 import { gradeBenefitsRoute } from "./routes/gradeBenefits.js";
-import { shortLeaveTypeRoute } from "./routes/shortLeaveType.js"; 
-import { leaveRequestRoute } from "./routes/leaveRequest.js"; 
+import { shortLeaveTypeRoute } from "./routes/shortLeaveType.js";
+import { leaveRequestRoute } from "./routes/leaveRequest.js";
 import { userRoleRoute } from "./routes/userRole.js";
 import { timeSlotsRoute } from "./routes/timeSlots.js";
 import { loanRepaymentRoute } from "./routes/loanRepayment.js";
@@ -36,17 +36,18 @@ import { probationEvaluationRoute } from "./routes/probationEvaluation.js";
 import { requestFlowRoute } from "./routes/requestFlow.js";
 import { requestTypeRoute } from "./routes/requestType.js";
 import { wfhRoute } from "./routes/wfh.js";
-import { requestRoute } from "./routes/request.js"; 
+import { requestRoute } from "./routes/request.js";
 import { missingPunchesRequestRoute } from "./routes/missingPunches.js";
 import { attendenceRoute } from "./routes/attendance.js";
-import { allowanceRoute } from "./routes/allowance.js"; 
-import { paySlipRoute } from "./routes/paySlip.js"; 
+import { allowanceRoute } from "./routes/allowance.js";
+import { paySlipRoute } from "./routes/paySlip.js";
 import { taxRuleRoute } from "./routes/taxRule.js";
 import { holidayRoute } from "./routes/holiday.js";
 
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandler.js";
 import { authRoute } from "./routes/auth.js";
+import helmet from "helmet"
 
 
 const app = express();
@@ -54,6 +55,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+app.use(helmet())
 
 const apiVersion = '/api/v1';
 
@@ -102,6 +104,8 @@ app.use(apiVersion, paySlipRoute)
 app.use(apiVersion, taxRuleRoute)
 app.use(apiVersion, holidayRoute)
 
-app.use(errorHandler);
+app.use((err, req, res, next) => {
+    errorHandler(err, req, res, next)
+});
 
 export default app;

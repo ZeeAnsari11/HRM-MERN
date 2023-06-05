@@ -468,6 +468,7 @@ export const updatePaySlips = (req, res, next) => {
             })
             .catch((error) => { handleCatch(error, res, error.statusCode || 500, next); })
     } catch (error) {
+        console.log("=========error=======",error);
         handleCatch(error, res, 400, next)
     }
 }
