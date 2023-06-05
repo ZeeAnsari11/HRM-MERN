@@ -105,7 +105,7 @@ app.use(apiVersion, taxRuleRoute)
 app.use(apiVersion, holidayRoute)
 
 app.use((err, req, res, next) => {
-    errorHandler(err, req, res, next)
+    errorHandler(err, res, next)
 });
 
 export default app;
