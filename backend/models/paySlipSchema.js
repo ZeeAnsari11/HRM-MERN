@@ -66,7 +66,7 @@ const paySlipSchema = mongoose.Schema({
         type: Number,
         required: true
     },
-    updatedByAdmin: {
+    LeaveAdjustment : {
         type: Boolean,
         default: false
     },
