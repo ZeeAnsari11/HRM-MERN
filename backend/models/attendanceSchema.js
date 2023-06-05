@@ -59,7 +59,8 @@ const attendanceSchema = mongoose.Schema({
                 'full-paid',
                 'full-unpaid',
                 'short-paid',
-                'short-unpaid',   
+                'short-unpaid',  
+                'not-applied', 
                 'no'
             ],
             messsage: 'Please Select Leave Type'

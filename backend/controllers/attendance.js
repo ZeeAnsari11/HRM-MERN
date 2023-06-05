@@ -182,7 +182,7 @@ export const markAbsent = (req, res, next) => {
             count++;
             if (attendance.length == 0) {
               if (!user.userRoster.restDays.includes(prevDate.day())) {
-                AttendanceModel.create({ user: req.body.user, date: prevDate.format('YYYY-MM-DD'), isAbsent: true, onLeave: "full-unpaid" })
+                AttendanceModel.create({ user: req.body.user, date: prevDate.format('YYYY-MM-DD'), isAbsent: true, onLeave: "not-applied" })
               }
             }
             if (count == 7) {
@@ -294,6 +294,7 @@ export const updateAttendance = (req, res, next, leave = null) => {
           else if (leaveType.name === "unpaid" && leaveRequest.short == false) {
             onLeave = "full-unpaid"
             isAbsent = true;
+            isPresent = false;
           }
           else if (leaveType.name !== "unpaid" && leaveRequest.short == true) {
             onLeave = "short-paid"
@@ -301,6 +302,7 @@ export const updateAttendance = (req, res, next, leave = null) => {
           else {
             onLeave = "full-paid"
             isAbsent = true
+            isPresent = false;
           }
           // console.log("========", ({
           //   user: req.body.senderId, date: {
