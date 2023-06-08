@@ -107,7 +107,7 @@ export const deleteLoanById = (req, res, next) => {
                 throw notFoundError;
             }
             if (loan.status !== "pending") {
-                const forbiddenError = new Error("You cannot delete an approved or rejected loan request");
+                const forbiddenError = new Error("You cannot delete an approved or rejected or processing loan request");
                 forbiddenError.statusCode = 423;
                 throw forbiddenError;
             }
@@ -132,7 +132,7 @@ export const filterLoans = (req, res, next) => {
         if (!req.query.organization) throw new Error("Organization not specified");
         if (req.query.status && Object.keys(req.query).length == 2) {
             req.query.status = (req.query.status).toLowerCase()
-            if (req.query.status == "pending" || req.query.status == "approved" || req.query.status == "rejected") {
+            if (req.query.status == "pending" || req.query.status == "approved" || req.query.status == "rejected"|| req.query.status =="processing") {
                 LoanModel.find(req.query)
                     .then((loans) => {
                         if (loans.length == 0) throw new Error("No such loans/organization found")
@@ -144,7 +144,7 @@ export const filterLoans = (req, res, next) => {
                     })
                     .catch(err => handleCatch(err, res, 404, next))
             }
-            else { throw new Error(`You can only filter on the basis of "pending" "approved" or "rejected`) }
+            else { throw new Error(`You can only filter on the basis of "pending" "approved" or "rejected or "processing"`) }
         }
         else {
             throw new Error("Please Specifiy the filter type too and you can only filter on the basis of Loan Status")
@@ -166,7 +166,7 @@ export const updateLoanById = (req, res, next) => {
                     throw notFoundError;
                 }
                 if (loan.status !== "pending") {
-                    const forbiddenError = new Error("You cannot Updated an approved or rejected loan request");
+                    const forbiddenError = new Error("You cannot Updated an approved or rejected or processing loan request");
                     forbiddenError.statusCode = 423;
                     throw forbiddenError;
                 }
