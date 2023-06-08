@@ -4,6 +4,8 @@ import { LoanRepaymentModel } from "../models/loanRepaymentSchema.js"
 import { UserModel } from "../models/userSchema.js"
 import { creatingRequest } from "../utils/request.js"
 import { handleCatch, updateById } from "../utils/common.js"
+import { RequestFlowModel } from "../models/requestFlowSchema.js"
+import mongoose from "mongoose"
 
 export const createLoan = (req, res, next) => {
     try {
@@ -46,15 +48,40 @@ const createRepaymentSchedules = (req, res, next, user) => {
                     ids.push(loanRepayment._id);
                     if (index == req.body.repaymentSchedules.length) {
                         req.body.repaymentSchedules = ids;
-                        LoanModel.create(req.body)
-                            .then((loan) => {
-                                creatingRequest(req, res, next, user, loan, "6458b0acf54c3eb58e8bfad8", "6458b00ef54c3eb58e8bfad4", "Loan")
-                            })
-                            .catch(err => handleCatch(err, res, 500, next))
+                        mongoose.startSession().then((session) => {
+                            session.startTransaction();
+                            LoanModel.create([req.body], { session: session })
+                                .then((newLoan) => {
+                                    let loan = newLoan[0];
+                                    return RequestFlowModel.find({ name: "Loan Flow" }).populate({
+                                        path: "requestType",
+                                        match: {
+                                            organization: user.organization,
+                                        },
+                                    })
+                                        .then((flows) => {
+                                            let flow = flows.filter(flow => flow.requestType != null)
+                                            if (flow.length == 0) {
+                                                throw new Error("There is no flow defined for this type of request by organization.");
+                                            } else {
+                                                return Promise.resolve(flow[0]);
+                                            }
+                                        })
+                                        .then((flow) => {
+                                            creatingRequest(req, res, next, user, loan, flow._id, flow.requestType._id, "Loan");
+                                            session.commitTransaction()
+                                        })
+                                        .catch((err) => {
+                                            session.endSession();
+                                            handleCatch(err, res, 400, next);
+                                        });
+                                })
+                        })
+                            .catch((err) => handleCatch(err, res, 500, next));
                     }
                 })
                 .catch((err) => handleCatch(err, res, 500, next));
-        });
+        })
     }
     catch (err) { handleCatch(err, res, 400, next) }
 }

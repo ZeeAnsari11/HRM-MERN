@@ -3,6 +3,8 @@ import { MissingPunchesModel } from "../models/missingPunchesSchema.js"
 import { AttendanceModel } from "../models/attendanceSchema.js"
 import { creatingRequest } from "../utils/request.js";
 import { UserModel } from "../models/userSchema.js";
+import { RequestFlowModel } from "../models/requestFlowSchema.js";
+import mongoose from "mongoose";
 
 export const createMissingPunchRequest = (req, res, next) => {
     try {
@@ -15,23 +17,50 @@ export const createMissingPunchRequest = (req, res, next) => {
                     if ((req.body.punchType == "checkIn" && attendanceFound.checkIn != "false") || (req.body.punchType == "checkOut" && attendanceFound.checkOut != "false")) {
                         throw new Error("Already result found, cannot do this action now");
                     }
-                    MissingPunchesModel.find({ user: req.body.user, date: req.body.date, punchType: req.body.punchType })
-                        .then((alreadyRequested) => {
-                            if (alreadyRequested.length > 0) throw new Error("Already generated request for that");
-                            return MissingPunchesModel.create(req.body);
-                        })
-                        .then((missingPunchesRequest) => {
-                            UserModel.findById(req.body.user)
-                                .select("_id lineManager organization branch firstName lastName")
-                                .then((user) => {
-                                    if (!user) throw new Error('user not found')
-                                    creatingRequest(req, res, next, user, missingPunchesRequest, "64552238be486f2a383ff532", "645251d7c62b8094627d8aa1", "MissingPunches");
-                                })
-                                .catch(err => handleCatch(err, res, 404, next))
-                        })
-                        .catch((err) => {
-                            handleCatch(err, res, 202, next);
-                        });
+                    mongoose.startSession().then((session) => {
+                        session.startTransaction();
+                        MissingPunchesModel.find({ user: req.body.user, date: req.body.date, punchType: req.body.punchType })
+                            .then((alreadyRequested) => {
+                                if (alreadyRequested.length > 0) throw new Error("Already generated request for that");
+                                return MissingPunchesModel.create([req.body], { session: session });
+                            })
+                            .then((missingPunchesRequest) => {
+                                UserModel.findById(req.body.user)
+                                    .select("_id lineManager organization branch firstName lastName")
+                                    .then((user) => {
+                                        if (!user) throw new Error('user not found')
+                                        return RequestFlowModel.find({ name: "Missing Punches Flow" }).populate({
+                                            path: "requestType",
+                                            match: {
+                                                organization: user.organization,
+                                            },
+                                        })
+                                            .then((flows) => {
+                                                let flow = flows.filter(flow => flow.requestType != null)
+                                                if (flow.length == 0) {
+                                                    throw new Error("There is no flow defined for this type of request by organization.");
+                                                } else {
+                                                    return Promise.resolve(flow[0]);
+                                                }
+                                            })
+                                            .then((flow) => {
+                                                creatingRequest(req, res, next, user, missingPunchesRequest[0], flow._id, flow.requestType._id, "MissingPunches");
+                                                session.commitTransaction()
+
+                                            })
+                                            .catch((err) => {
+                                                session.endSession();
+                                                handleCatch(err, res, 400, next);
+                                            });
+                                    })
+                                    .catch((err) => {
+                                        handleCatch(err, res, 400, next);
+                                    });
+                            })
+                            .catch((err) => {
+                                handleCatch(err, res, 400, next);
+                            });
+                    })
                 })
                 .catch((err) => {
                     handleCatch(err, res, 400, next);

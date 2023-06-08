@@ -3,6 +3,7 @@ import timeZone from "mongoose-timezone";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import { handleCatch } from "../utils/common.js";
 
 
 //  Schema to Create User 
@@ -17,7 +18,8 @@ const userSchema = mongoose.Schema({
         trim: true,
         maxLength: [100, 'Email cannot exceeds from 100 characters'],
         // validate: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
-        unique: [true, 'Email already in use']
+        unique: [true, 'Email already in use'],
+        lowercase: true,
     },
     password: {
         type: String,
@@ -281,7 +283,8 @@ const userSchema = mongoose.Schema({
         trim: true,
         maxLength: [100, 'Cannot exceeds from 100 characters'],
         //validate: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
-        unique: [true, 'Email already in use']
+        unique: [true, 'Email already in use'],
+        lowercase: true,
     },
     nic: {
         number: {
@@ -359,18 +362,31 @@ const userSchema = mongoose.Schema({
 userSchema.plugin(timeZone, { paths: ['timeZone'] });
 
 userSchema.pre('save', function (next) {
-    var user = this;
+    try {
+        var user = this;
 
-    if (!user.isModified('password')) return next();
+        if (!user.isModified('password')) return next();
 
-    bcrypt.genSalt(10, function (err, salt) {
-        if (err) return next({ error: err, statusCode: 404 });
-        bcrypt.hash(user.password, salt, function (err, hash) {
-            if (err) return next({ error: err, statusCode: 404 });
-            user.password = hash;
-            next();
+        bcrypt.genSalt(10, function (err, salt) {
+            if (err) {
+                throw err = new Error(err);
+                err.statusCode = 400;
+                throw err;
+            }
+            bcrypt.hash(user.password, salt, function (err, hash) {
+                if (err) {
+                    throw err = new Error(err);
+                    err.statusCode = 400;
+                    throw err;
+                }
+                user.password = hash;
+                next();
+            });
         });
-    });
+    }
+    catch (err) {
+        handleCatch(err, res, err.statusCode || 400, next)
+    }
 })
 
 
@@ -379,6 +395,7 @@ userSchema.methods.getJwtToken = function () {
 }
 
 userSchema.methods.comparePassword = function (password) {
+    console.log("======response===2=", password);
     return bcrypt.compare(password, this.password)
 }
 

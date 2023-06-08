@@ -4,11 +4,16 @@ import { UserModel } from "../models/userSchema.js"
 import { ShortLeaveTypeModel } from "../models/shortLeaveTypeSchema.js";
 import { creatingRequest } from "../utils/request.js";
 import { handleCatch, updateById, deleteById, getById } from '../utils/common.js'
+import mongoose from "mongoose";
+import { RequestFlowModel } from "../models/requestFlowSchema.js";
 
 const placeHolder = '0001-01-01T';
 
 export const addingLeaveRequest = (req, res, next) => {
+    // console.log("=============1===================");
     try {
+        let exist = false;
+        let count = 0;
         if (!req.body.leaveType) throw new Error('Kindly Provide Leave Type.')
         if (req.body.count) throw new Error('Please remove count.')
         if (!req.body.startDate) throw new Error('Kindly Provide Start Date.')
@@ -21,9 +26,15 @@ export const addingLeaveRequest = (req, res, next) => {
                 UserModel.findById(req.body.user)
                     .then((user) => {
                         if (!user) throw new Error(`No such user ${req.body.user}`)
+                        if (user.organization.toString() !== leaveType.organization.toString()) throw new Error("user and leave not belog to the same ogranization")
                         user.leaveTypeDetails.forEach(userLeaveType => {
+                            count++;
                             if (userLeaveType.leaveType.toString() == req.body.leaveType) {
+                                exist = true;
                                 leaveRequestType(req, res, next, leaveType, user, userLeaveType.count)
+                            }
+                            if (user.leaveTypeDetails.length == count && exist == false) {
+                                throw new Error("The user does not have this leave type to apply")
                             }
                         })
                     })
@@ -85,15 +96,15 @@ const userShortLeaveHours = (req, shrtLeaveType, user, update = null) => {
     update ? '' : userLeaveCountReduction(req, user, shrtLeaveType.balance)
 }
 
-const userLeaveCountReduction = (req, user, count) => {
+const userLeaveCountReduction = (req, user, count, session) => {
     // console.log("==============L2===count====", count);
-
+// console.log("=============x==========",session);
     user.leaveTypeDetails.forEach(leaveType => {
         if (leaveType.leaveType.toString() == req.body.leaveType) {
             leaveType.count = leaveType.count - count
         }
     })
-    user.save();
+    user.save({session : session});
 }
 
 const formatTime = (time) => {
@@ -112,8 +123,13 @@ const fullLeaveRequest = (req, res, next, user, availableLeaves) => {
         req.body.availableLeaves = availableLeaves - req.body.count
         if (availableLeaves >= req.body.count) {
             req.body.status = 'pending'
-            userLeaveCountReduction(req, user, req.body.count)
-            creatingLeaveRequest(req, res, next, user)
+            mongoose.startSession().then((session) => {
+                session.startTransaction();
+                userLeaveCountReduction(req, user, req.body.count, session);
+                creatingLeaveRequest(req, res, next, user, session);
+            })
+            .catch(err=>{session.endSession()
+            handleCatch(err, res, 400, next)})
         }
         else throw new Error('Invalid Leave Number of Days.')
     } catch (error) {
@@ -138,14 +154,39 @@ const calculateCount = (req, user = null) => {
     }
 }
 
-const creatingLeaveRequest = (req, res, next, user) => {
-    LeaveRequestModel.create(req.body)
-        .then((leaveRequest) => {
-            creatingRequest(req, res, next, user, leaveRequest, '64351dbe9e45310b2991aaf3', '64351d4e9e45310b2991aaef', 'Leave')
+const creatingLeaveRequest = (req, res, next, user, session) => {
+    // console.log("===========y==========",session);
+    LeaveRequestModel.create([req.body], { session: session })
+        .then((newLeave) => {
+            let leave = newLeave[0];
+            return RequestFlowModel.find({ name: "Leave Flow" }).populate({
+                path: "requestType",
+                match: {
+                    organization: user.organization,
+                },
+            })
+                .then((flows) => {
+                    // console.log("======flow===1=====", flows);
+                    let flow = flows.filter(flow => flow.requestType != null)
+                    // console.log("======flow====2====", flow);
+                    if (flow.length == 0) {
+                        throw new Error("There is no flow defined for this type of request by organization.");
+                    } else {
+                        return Promise.resolve(flow[0]);
+                    }
+                })
+                .then((flow) => {
+                    // console.log("===========else=======", flow);
+                    creatingRequest(req, res, next, user, leave, flow._id, flow.requestType._id, "Leave");
+                    session.commitTransaction()
+
+                })
+                .catch((err) => {
+                    session.endSession();
+                    handleCatch(err, res, 400, next);
+                });
         })
-        .catch((error) => {
-            handleCatch(error, res, 500, next)
-        })
+        .catch((err) => handleCatch(err, res, 400, next));
 }
 
 export const updateLeaveRequest = (req, res, next) => {
@@ -315,7 +356,7 @@ export const rejectLeaveRequest = (req, res, next, show = true) => {
                 if (userLeaveRequests.status !== 'rejected' && show) throw new Error("Leave is already rejected.")
                 UserModel.findById(userLeaveRequests.user)
                     .then((user) => {
-                        if(!user) throw new Error("User not found")
+                        if (!user) throw new Error("User not found")
                         user.leaveTypeDetails.forEach(leaveType => {
                             if (leaveType.leaveType.toString() == userLeaveRequests.leaveType.toString()) {
                                 leaveType.count = leaveType.count + userLeaveRequests.count

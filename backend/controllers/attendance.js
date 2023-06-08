@@ -279,6 +279,7 @@ export const filterAttendance = (req, res, next) => {
 export const updateAttendance = (req, res, next, leave = null) => {
   try {
     if (leave) {
+      let onLeave, isAbsent, isPresent;
       // console.log('===============77============');
 
       return LeaveRequestModel.findById(req.body.requestId)

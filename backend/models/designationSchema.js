@@ -9,7 +9,7 @@ const designationSchema = new mongoose.Schema({
     shortForm : {
         type: String,
         required: [true, 'Please enter the ShortForm of designation'],
-        lowerercase: true,
+        lowercase: true,
         validate: /^[^\s]*$/,
         trim : true,
     },

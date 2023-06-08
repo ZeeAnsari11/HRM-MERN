@@ -15,6 +15,7 @@ export const creatingRequest = (req, res, next, user, request, requestFlow, requ
     RequestFlowModel.findById(requestFlow)
         .then((requestFlow) => {
             if (!requestFlow) throw new Error ('No such request flow')
+            if(requestFlow.head == null) throw "No such node for the flow"
             RequestFlowNodeModel.find(requestFlow.head)
                 .then((node) => {
                     if (node.length == 0) throw new Error ('No such node')
@@ -173,7 +174,7 @@ const settingStatus = (req, res, next, requestStatus = null, node = null, user =
                     if (previousRequest.state != "pending") throw new Error ("This request already approved/rejected by you")
                     previousRequest.state = requestStatus == 'rejected' ? "rejected" : "approved"
                     if (node && user) {
-                        console.log("-------geting node user=======");
+                        // console.log("-------geting node user=======");
                         getNodeUser(node, user, req, res, next, false);
                     }
                 }
@@ -190,7 +191,7 @@ const settingStatus = (req, res, next, requestStatus = null, node = null, user =
                             break;
                         }
                         case 'Leave': {
-                            console.log('===============44============');
+                            // console.log('===============44============');
 
                             commonModels(req, res, next, LeaveRequestModel, requestStatus, 'Leave')
                         }
@@ -202,7 +203,7 @@ const settingStatus = (req, res, next, requestStatus = null, node = null, user =
                     }
                 })
                 .catch((err) => {
-                    console.log("=========5========", error);
+                    // console.log("=========5========", error);
                     handleCatch(err, res, 500, next)
                 })
         })
@@ -272,7 +273,7 @@ export const commonModels = (req, res, next, model, requestStatus = null, msg) =
                             }
                                 break;
                             case 'Leave': {
-                                console.log('===============66============');
+                                // console.log('===============66============');
 
                                 updateAttendance(req, res, next, true);
                             }
@@ -285,7 +286,7 @@ export const commonModels = (req, res, next, model, requestStatus = null, msg) =
                     }
                     else {
                         if (errorOccurred) return;
-                        console.log("=======errorOccurred==", errorOccurred);
+                        // console.log("=======errorOccurred==", errorOccurred);
                         let message = requestStatus == 'rejected' ? `Your Request for ${msg} is Rejected` : `Your Request for ${msg} Approved by Node`
                         res.status(200).json({
                             success: true,
