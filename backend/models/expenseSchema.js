@@ -23,7 +23,8 @@ const expenseSchema = mongoose.Schema({
                 'pending',
                 'processing',
                 'approved',
-                'rejected'
+                'rejected',
+                'paid'
             ],
             messsage: 'Please Enter Action Type'
         }
