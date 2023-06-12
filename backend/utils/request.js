@@ -292,15 +292,19 @@ export const commonModels = (req, res, next, model, requestStatus = null, msg) =
                             }
                                 break;
                             case 'Expense': {
+                                if (!Obj.descriptionByApprover || !Obj.paymentMethod) {
+                                    Obj.descriptionByApprover = req.body.descriptionByApprover
+                                    Obj.paymentMethod = req.body.paymentMethod
+                                }
                                 if (Obj.paymentMethod == "manual") {
                                     Obj.status = "paid"
-                                    Obj.save()
                                 }
+
+                                Obj.save();
                                 res.status(200).json({
                                     success: true,
                                     message: "Your Expense Request Approved successfully"
                                 })
-
                             }
                                 break;
                         }
