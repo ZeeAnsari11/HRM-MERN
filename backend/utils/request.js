@@ -69,6 +69,7 @@ const addingRequest = (req, res, next, obj, show = true) => {
                     requestDetails: []
                 }
                 req.body.requests.requestDetails.push(obj)
+
                 RequestModel.create(req.body)
                     .then(() => {
                         if (show) {
@@ -111,8 +112,10 @@ export const requestToNextNode = (req, res, next) => {
             .then((previousNode) => {
                 if (!previousNode) throw new Error('No such node')
                 if (previousNode.nextNode !== null) {
+                    console.log("======if================");
                     RequestFlowNodeModel.findById(previousNode.nextNode)
                         .then((node) => {
+                            console.log("=========node==",node);
                             if (!node) throw new Error('No such node available.')
                             UserModel.findById(req.body.senderId)
                                 .then((user) => {
@@ -130,6 +133,7 @@ export const requestToNextNode = (req, res, next) => {
                         })
                 }
                 else {
+                    console.log("======else================");
                     switch (req.body.type) {
                         case 'MissingPunches': {
                             settingStatus(req, res, next, "approvedByAll")
@@ -168,6 +172,8 @@ export const requestToNextNode = (req, res, next) => {
 
 const settingStatus = (req, res, next, requestStatus = null, node = null, user = null) => {
     // console.log('===============33============');
+console.log("===========node 2============",node);
+console.log("===========user 2============",user);
 
     const requestId = req.body.notificationId;
     const type = req.body.type
@@ -179,7 +185,7 @@ const settingStatus = (req, res, next, requestStatus = null, node = null, user =
                     if (previousRequest.state != "pending") throw new Error("This request already approved/rejected by you")
                     previousRequest.state = requestStatus == 'rejected' ? "rejected" : "approved"
                     if (node && user) {
-                        // console.log("-------geting node user=======");
+                        console.log("-------geting node user=======");
                         getNodeUser(node, user, req, res, next, false);
                     }
                 }
@@ -229,7 +235,7 @@ const getNodeUser = async (node, user, req, res, next, show) => {
         // console.log("========node========",node);
         let nodeUser = ''
         if (node.lineManager) {
-            // console.log("--------if called========");
+            console.log("--------if called========");
             nodeUser = user.lineManager
         }
         else {
@@ -251,6 +257,7 @@ const getNodeUser = async (node, user, req, res, next, show) => {
             flowRequestType: req.body.flowRequestType,
             createdAt: req.body.createdAt
         }
+        console.log("=========going for adding request==========",x);
         addingRequest(req, res, next, x, show)
     } catch (error) {
         handleCatch(error, res, 404, next)

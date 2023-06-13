@@ -70,6 +70,9 @@ const paySlipSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
+    expenseAmount : {
+        type: Number
+    },
     createdAt: {
         type: Date,
         default: Date.now

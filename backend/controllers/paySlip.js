@@ -6,10 +6,11 @@ import { SalaryModel } from "../models/salarySchema.js";
 import { OrganizationModel } from "../models/organizationSchema.js";
 import { TaxRuleModel } from "../models/taxRuleSchema.js";
 import { AttendanceModel } from "../models/attendanceSchema.js"
+import { ExpenseModel } from "../models/expenseSchema.js";
 
 let count = 0;
 let resp = []
-
+let errorOccurred = false;
 export const createPaySlipsByOrganizationById = (req, res, next) => {
     try {
         if (!req.body.month || !req.body.year) throw new Error('Invalid Body.')
@@ -37,8 +38,8 @@ const common = (req, res, next) => {
     OrganizationModel.findById(req.params.id)
         .then((organization) => {
             if (!organization) throw new Error('No Such Organization')
-            return UserModel.find({ organization: organization._id, firstUser : false })
-            // return UserModel.find({ _id: "645cd91054f94c09815d4fbb" })
+            return UserModel.find({ organization: organization._id, firstUser: false })
+            // return UserModel.find({ _id: "647f0a13acdf3955d82a8a44" })
                 .populate({
                     path: 'leaveTypeDetails.leaveType',
                     select: ('name')
@@ -52,7 +53,6 @@ const common = (req, res, next) => {
                 let userSalaryPromise = SalaryModel.find({ user: user._id }).sort({ createdAt: -1 }).limit(1).exec()
                 let paySlipPromise = PaySlipModel.find({ user: user._id }).exec()
                 let taxRulesPromise = TaxRuleModel.find({ organization: user.organization }).exec()
-
                 let attedencesPromise = AttendanceModel.find({
                     user: user._id,
                     $or: [
@@ -65,9 +65,16 @@ const common = (req, res, next) => {
                         $lte: new Date(monthDateEnd.toISOString().slice(0, 10) + "T00:00:00.000+00:00")
                     }
                 }).exec()
+                let expensePromise = ExpenseModel.find({ organization: user.organization, user: user._id, paymentMethod: "salary", status: "approved" }).exec()
+
                 userPromises.push(
-                    Promise.all([allowancePromise, userSalaryPromise, paySlipPromise, taxRulesPromise, attedencesPromise])
-                        .then(([allowances, userSalaries, paySlips, taxRules, attedences]) => {
+                    Promise.all([allowancePromise, userSalaryPromise, paySlipPromise, taxRulesPromise, attedencesPromise, expensePromise])
+                        .then(([allowances, userSalaries, paySlips, taxRules, attedences, expenses]) => {
+                            if (taxRules.length == 0) {
+                                let notFound = new Error("taxRules are not defined by the organization")
+                                notFound.statusCode = 404;
+                                throw notFound;
+                            }
                             if (userSalaries.length == 0) {
                                 userCurrentSalary = user.grossSalary
                             } else {
@@ -76,23 +83,61 @@ const common = (req, res, next) => {
                                 })
                             }
                             // console.log("==============attedences==========", attedences);
-                            let { absentCost, LeaveAdjustment } = handleAbsents(userCurrentSalary, attedences, daysInMonth, user, req.body.status ?req.body.status : '' )
+                            let { absentCost, LeaveAdjustment } = handleAbsents(userCurrentSalary, attedences, daysInMonth, user, req.body.status ? req.body.status : '')
                             // console.log("==========LeaveAdjustment================", LeaveAdjustment);
                             if (LeaveAdjustment) {
                                 req.body.LeaveAdjustment = true;
                             }
-                            createPaySlip(req, res, next, user, userCurrentSalary, allowances, paySlips, taxRules, users.length, absentCost)
+                            if (expenses.length > 0) {
+                                // console.log("================ok=============");
+                                calculateExpenseAndUpdateExpenseRequest(expenses, req, res, next, user, userCurrentSalary, allowances, paySlips, taxRules, users.length, absentCost, req.body.status ? req.body.status : '')
+                            }
+                            else {
+                                req.body.expenseAmount = 0
+                                // console.log("================ok=========22====");
+                                createPaySlip(req, res, next, user, userCurrentSalary, allowances, paySlips, taxRules, users.length, absentCost)
+                            }
                         })
-                        .catch((error) => { handleCatch(error, res, 500, next) })
+                        .catch((error) => {
+                            if (!errorOccurred) {
+                                errorOccurred = true;
+                                handleCatch(error, res, error.statusCode || 500, next);
+                            }
+                        })
                 )
             })
             return Promise.all(userPromises)
         })
-        .catch((error) => { handleCatch(error, res, 404, next) })
+        .catch((error) => {
+            handleCatch(error, res, 404, next)
+        })
+}
+
+const calculateExpenseAndUpdateExpenseRequest = (expenses, req, res, next, user, userCurrentSalary, allowances, paySlips, taxRules, length, absentCost, status = '') => {
+    // console.log("======expenses==", expenses);
+    const totalAmount = expenses.reduce((sum, expense) => {
+        expense.status = "paid"
+        if (status == "close") {
+            expense.save();
+        }
+        return sum + expense.amount
+    }, 0);
+    // console.log("======totalAmount==", totalAmount);
+    req.body.expenseAmount = totalAmount
+    createPaySlip(req, res, next, user, userCurrentSalary, allowances, paySlips, taxRules, length, absentCost)
 }
 
 const createPaySlip = (req, res, next, user, userCurrentSalary, allowances, paySlips, taxRules, length, value) => {
     // // console.log("======user ======", user._id);
+    // console.log("=========user======", user);
+    // console.log("=========userCurrentSalary======", userCurrentSalary);
+    // console.log("=========allowances======", allowances);
+    // console.log("=========paySlips======", paySlips);
+    // console.log("=========taxRules======", taxRules);
+    // console.log("=========length======", length);
+    // console.log("=========value======", value);
+
+
     req.body.tax = 0
     req.body.absentCost = value
     req.body.basicSalary = req.body.grossSalary = req.body.finalSalary = userCurrentSalary
@@ -100,10 +145,27 @@ const createPaySlip = (req, res, next, user, userCurrentSalary, allowances, payS
         allowanceDetails: []
     }
     if (allowances.length == 0) {
-        // // console.log("======if===========");
-        req.body.tax = taxCalculation(req, res, next, user, userCurrentSalary, paySlips, taxRules)
+        // console.log("======if===========");
+        taxCalculation(req, res, next, user, userCurrentSalary, paySlips, taxRules)
+        // console.log("========req.body.tax=====", req.body.tax);
         req.body.finalSalary = req.body.finalSalary - req.body.tax
-        createNew(req, res, next, PaySlipModel)
+        // console.log("=======req.body.finalSalary===1=", req.body.finalSalary);
+        if (req.body.expenseAmount > 0) {
+            req.body.finalSalary = req.body.finalSalary + req.body.expenseAmount
+        }
+        // console.log("=======req.body.finalSalary===2=", req.body.finalSalary);
+        // console.log("========req.body.finalSalary=====", req.body.finalSalary);
+        req.body.user = user._id
+        PaySlipModel.create(req.body).then((response) => {
+            resp.push(response)
+            count = count + 1;
+            if (count === length) {
+                res.status(200).json({
+                    success: true,
+                    response: resp
+                })
+            }
+        })
     }
     else {
         allowances.forEach(allowance => {
@@ -123,6 +185,11 @@ const createPaySlip = (req, res, next, user, userCurrentSalary, allowances, payS
         // // console.log("getCurrentMonthSalary(user, userCurrentSalary)", getCurrentMonthSalary(user, userCurrentSalary));
         req.body.finalSalary = req.body.finalSalary - req.body.tax
         req.body.finalSalary = req.body.finalSalary - req.body.absentCost
+        // console.log("=======req.body.finalSalary===1=", req.body.finalSalary);
+        if (req.body.expenseAmount > 0) {
+            req.body.finalSalary = req.body.finalSalary + req.body.expenseAmount
+        }
+        // console.log("=======req.body.finalSalary===2=", req.body.finalSalary);
         req.body.user = user._id
         PaySlipModel.create(req.body).then((response) => {
             resp.push(response)
@@ -141,10 +208,11 @@ const createPaySlip = (req, res, next, user, userCurrentSalary, allowances, payS
 const taxCalculation = (req, res, next, user, userCurrentSalary, paySlips, taxRules) => {
     // // console.log("======herer=======tax=====");
     let previousFiscalTaxableEarning = calculatingPreviousFiscalTaxableEarning(req, res, next, user, userCurrentSalary, paySlips)
-    // // console.log("======previousFiscalTaxableEarning=======tax=====", previousFiscalTaxableEarning);
+    // console.log("======previousFiscalTaxableEarning=======tax=====", previousFiscalTaxableEarning);
     taxRules.forEach(taxRule => {
         if (previousFiscalTaxableEarning > taxRule.fromAmount && previousFiscalTaxableEarning <= taxRule.toAmount) {
             let currentTax = currentMonthTax(req, previousFiscalTaxableEarning, taxRule, paySlips)
+            // console.log("==============currentMonthTax============", currentTax);
             req.body.tax = currentTax;
             return;
         }
@@ -152,20 +220,29 @@ const taxCalculation = (req, res, next, user, userCurrentSalary, paySlips, taxRu
 }
 
 const currentMonthTax = (req, previousFiscalTaxableEarning, taxRule, paySlips) => {
-    // // console.log("=======currentMonthTax==here=");
+    // console.log("=======currentMonthTax==here=");
+    // console.log("=========previousFiscalTaxableEarning===", previousFiscalTaxableEarning);
+    // console.log("=========taxRule===", taxRule);
+    // console.log("=========paySlips===", paySlips);
+
+
     let totalTax = 0
     if (taxRule.percentage == 0 && taxRule.fixRate == 0) {
         // // console.log("======if========");
         totalTax = 0
     }
     else if (taxRule.percentage != 0) {
+        // console.log("======================11===================");
         // // console.log("3rywghbfuc", taxRule.fixRate);
         let totalSalaryIncreasesFromMinimumThreShold = previousFiscalTaxableEarning - taxRule.fromAmount
+        // console.log("======================11=============totalSalaryIncreasesFromMinimumThreShold======", totalSalaryIncreasesFromMinimumThreShold);
         // // console.log("totalSalaryIncreasesFromMinimumThreShold", totalSalaryIncreasesFromMinimumThreShold);
         totalTax = taxRule.fixRate + (totalSalaryIncreasesFromMinimumThreShold * taxRule.percentage / 100)
+        // console.log("======================11=============totalTax======", totalTax);
         // // console.log("======else if ======totalTax==", totalTax);
     }
     if (paySlips.length == 0) {
+        // console.log("======================22===================");
         // // console.log("====== if ======totapaySlips.length == 0lTax==");
         return newJoinerTaxCase(req, totalTax)
     }
@@ -190,6 +267,8 @@ const newJoinerTaxCase = (req, totalTax) => {
         // // console.log("=======taxPaidTillNow=====", taxPaidTillNow);
         // // console.log("=======remainingTax=====", remainingTax);
         // // console.log("====monthlyTax==", monthlyTax);
+        // console.log("======================22==========1=========", monthlyTax);
+
         return monthlyTax
     }
     else {
@@ -197,6 +276,8 @@ const newJoinerTaxCase = (req, totalTax) => {
         /// New Employee coming in july month
         let perMonthTax = totalTax / 12
         // // console.log("=====perMonthTax    else=====", perMonthTax);
+        // console.log("======================22==========2=========", monthlyTax);
+
         return perMonthTax
     }
 }
@@ -417,7 +498,7 @@ const handleAbsents = (userCurrentSalary, attedences, daysInMonth, userRef, stat
                 // console.log("============countToBeDeduct==", countToBeDeduct);
             }
         }
-        if(status == "close"){
+        if (status == "close") {
             userRef.save();
         }
 
@@ -438,20 +519,17 @@ const handleAbsents = (userCurrentSalary, attedences, daysInMonth, userRef, stat
     }
 }
 
-const calculatePerUserSalary = (daysInMonth, userCurrentSalary) => {
-    return userCurrentSalary / daysInMonth
-}
-
 export const updatePaySlips = (req, res, next) => {
     try {
-        if (!req.body.month || !req.body.year || !req.body.status || (req.body.status != "open" || req.body.status != "close")) throw new Error('Invalid Body.')
-        PaySlipModel.find({ organization: req.params.id, month: req.body.month, year: req.body.year })
-            .then((paySlips) => {
-                if (paySlips.length == 0) {
-                    const notFoundError = new Error('No Payslips of the provided month and year.');
-                    notFoundError.statusCode = 404;
-                    throw notFoundError;
-                }
+        if (!req.body.month || !req.body.year || !req.body.status) throw new Error('Invalid Body.')
+        if (req.body.status == "open" || req.body.status == "close") {
+            PaySlipModel.find({ organization: req.params.id, month: req.body.month, year: req.body.year })
+                .then((paySlips) => {
+                    if (paySlips.length == 0) {
+                        const notFoundError = new Error('No Payslips of the provided month and year.');
+                        notFoundError.statusCode = 404;
+                        throw notFoundError;
+                    }
                     paySlips.forEach(paySlip => {
                         if ((paySlip.status == "close" && req.body.status == "open") || (paySlip.status == "close" && req.body.status == "close")) {
                             const invalidAction = new Error('Cannot update already closed paySlips.');
@@ -461,12 +539,15 @@ export const updatePaySlips = (req, res, next) => {
                     })
                     return PaySlipModel.deleteMany({ organization: req.params.id, month: req.body.month, year: req.body.year })
                         .then((response) => {
-                            // // console.log("previous payslips deleted");
-                            // common(req, res, next);
-                            process.exit(1);
+                            // console.log("previous payslips deleted");
+                            common(req, res, next);
                         })
-            })
-            .catch((error) => { handleCatch(error, res, error.statusCode || 500, next); })
+                })
+                .catch((error) => { handleCatch(error, res, error.statusCode || 500, next); })
+        }
+        else {
+            throw new Error('Invalid Body.')
+        }
     } catch (error) {
         handleCatch(error, res, 400, next)
     }

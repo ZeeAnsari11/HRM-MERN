@@ -4,8 +4,7 @@ const taxRuleSchema = mongoose.Schema({
     ruleNo: {
         type: Number,
         required: true,
-        trim: true,
-        unique: true,
+        trim: true
     },
     fromAmount: {
         type: Number,

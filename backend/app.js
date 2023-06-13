@@ -44,7 +44,6 @@ import { paySlipRoute } from "./routes/paySlip.js";
 import { taxRuleRoute } from "./routes/taxRule.js";
 import { holidayRoute } from "./routes/holiday.js";
 import { expenseRoute } from "./routes/expense.js";
-
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandler.js";
 import { authRoute } from "./routes/auth.js";

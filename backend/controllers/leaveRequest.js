@@ -67,10 +67,13 @@ const shortLeaveRequest = (req, res, next, user, availableLeaves) => {
                 req.body.count = shrtLeaveType.balance;
                 req.body.availableLeaves = availableLeaves - shrtLeaveType.balance;
                 if (req.body.availableLeaves >= req.body.count) {
-                    req.body.endDate = req.body.startDate;
-                    userShortLeaveHours(req, shrtLeaveType, user, null);
-                    req.body.status = 'pending';
-                    creatingLeaveRequest(req, res, next, user);
+                    mongoose.startSession().then((session) => {
+                        session.startTransaction();
+                        req.body.endDate = req.body.startDate;
+                        userShortLeaveHours(req, shrtLeaveType, user, null);
+                        req.body.status = 'pending';
+                        creatingLeaveRequest(req, res, next, user, session);
+                    })
                 } else {
                     throw { message: 'Invalid Leave.', statusCode: 400 };
                 }

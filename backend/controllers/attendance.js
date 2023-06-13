@@ -290,7 +290,8 @@ export const updateAttendance = (req, res, next, leave = null) => {
           // console.log("========leave==", leaveRequest);
           // console.log("========leaveType==", leaveType);
           if (leaveType.name === "unpaid" && leaveRequest.short == true) {
-            onLeave = "short-unpaid"
+            onLeave = "short-unpaid",
+            isPresent = true;
           }
           else if (leaveType.name === "unpaid" && leaveRequest.short == false) {
             onLeave = "full-unpaid"
@@ -298,7 +299,8 @@ export const updateAttendance = (req, res, next, leave = null) => {
             isPresent = false;
           }
           else if (leaveType.name !== "unpaid" && leaveRequest.short == true) {
-            onLeave = "short-paid"
+            onLeave = "short-paid",
+            isPresent = true;
           }
           else {
             onLeave = "full-paid"
@@ -323,6 +325,8 @@ export const updateAttendance = (req, res, next, leave = null) => {
               attendances.forEach(attendance => {
                 attendance.isAbsent = isAbsent;
                 attendance.onLeave = onLeave
+                attendance.isPresent = isPresent
+
                 attendance.save()
               })
               res.status(200).json({
