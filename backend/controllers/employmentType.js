@@ -41,6 +41,8 @@ export const updateEmploymentTypeById = (req, res, next) => {
     }
 }
 
+
+
 export const deleteEmploymentTypeById = (req, res, next) => {
     deleteById(req.params.id, res, next, EmploymentModel, "EmploymentType")
 }

@@ -5,10 +5,10 @@ import { organizationRoute } from "./routes/organization.js";
 import { branchRoute } from "./routes/branch.js";
 import { assetsRoute } from "./routes/assets.js";
 import { relativesRoute } from "./routes/relatives.js";
-import { experienceRoute } from "./routes/experience.js"
+import { experienceRoute } from "./routes/experience.js";
 import { bankRoute } from "./routes/bank.js";
-import { departmentRoute } from './routes/department.js'
-import { userRoute } from './routes/user.js'
+import { departmentRoute } from './routes/department.js';
+import { userRoute } from './routes/user.js';
 import { qualificationRoute } from "./routes/qualification.js";
 import { addressRoute } from "./routes/address.js";
 import { certificateRoute } from "./routes/certificate.js";
@@ -44,11 +44,13 @@ import { paySlipRoute } from "./routes/paySlip.js";
 import { taxRuleRoute } from "./routes/taxRule.js";
 import { holidayRoute } from "./routes/holiday.js";
 import { expenseRoute } from "./routes/expense.js";
+import { PermssionsRoute } from "./routes/permissions.js";
+import { permissionsMiddlewre } from "./middlewares/permissions.js";
+
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandler.js";
 import { authRoute } from "./routes/auth.js";
-import helmet from "helmet"
-
+import helmet from "helmet";
 
 const app = express();
 
@@ -58,7 +60,7 @@ app.use(cookieParser());
 app.use(helmet())
 
 const apiVersion = '/api/v1';
-
+// app.use(permissionsMiddlewre);
 app.use(apiVersion, organizationRoute);
 app.use(apiVersion, branchRoute);
 app.use(apiVersion, assetsRoute);
@@ -104,6 +106,7 @@ app.use(apiVersion, paySlipRoute)
 app.use(apiVersion, taxRuleRoute)
 app.use(apiVersion, holidayRoute)
 app.use(apiVersion, expenseRoute)
+app.use(apiVersion, PermssionsRoute)
 
 
 app.use((err, req, res, next) => {

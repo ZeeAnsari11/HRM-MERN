@@ -29,8 +29,6 @@ gradeBenefitsRoute.put('/benefits/update/:id', updateGradeBenefits);
 gradeBenefitsRoute.delete('/benefits/delete/:id', deleteGradeBenefits);
 
 //get GradeBenefits by Id 
-gradeBenefitsRoute.get('/benefits/:id', getGradeBenefitsById);
+gradeBenefitsRoute.get('/benefits/:id', getGradeBenefitsById).put(addGradeToBenefits);
 
-//Add grades to Benefits
-gradeBenefitsRoute.put('/benefits/:id', addGradeToBenefits);
 
