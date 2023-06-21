@@ -5,12 +5,11 @@ export const DesignationSlice = createSlice({
     name: 'designation',
     initialState: {
         designations: [],
-        designation: {},
         name: {}
     },
     reducers: {
-        setUserDesignation: (state, action) => {
-            state = action.payload;
+        setOrganizationDesignation: (state, action) => {
+            state.designations = action.payload;
         },
         setDesignationName: (state, action) => {
             state.name = action.payload;
@@ -19,10 +18,10 @@ export const DesignationSlice = createSlice({
 });
 
 // Action Methods
-export const { setUserDesignation, setDesignationName } = DesignationSlice.actions;
+export const { setOrganizationDesignation, setDesignationName } = DesignationSlice.actions;
 
 // Selector Methods
-export const selectUserDesignation = (state) => state.designation.designations;
+export const selectOrganizationDesignation = (state) => state.designation.designations;
 
 export const selectDesignationName = (state) => state.designation.name;
 

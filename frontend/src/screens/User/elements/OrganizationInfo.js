@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentUserBranch, selectCurrentUserOrg, selectFinalAuthority, selectTimeSlots } from '../../../states/reducers/slices/backend/UserSlice';
 import { selectUserBranch } from '../../../states/reducers/slices/backend/Branch';
 import { selectUserDepartment } from '../../../states/reducers/slices/backend/Department';
-import { selectUserDesignation } from '../../../states/reducers/slices/backend/Designation';
+import { selectOrganizationDesignation } from '../../../states/reducers/slices/backend/Designation';
 import SelectForm from '../../../components/SelectForm';
 import RestDays from './RestDays';
 
@@ -14,7 +14,7 @@ const OrganizationInfo = ({ changePageNumber, handleInputChange }) => {
     const branchId = useSelector(selectCurrentUserBranch);
     const branches = useSelector(selectUserBranch);
     const departments = useSelector(selectUserDepartment);
-    const designations = useSelector(selectUserDesignation);
+    const designations = useSelector(selectOrganizationDesignation);
     const lineManager = useSelector(selectFinalAuthority);
     const timeSlots = useSelector(selectTimeSlots);
     

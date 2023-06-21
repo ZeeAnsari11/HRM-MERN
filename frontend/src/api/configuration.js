@@ -15,7 +15,7 @@ export const organizationRoutes = {
     getBranchesByOrgId: baseUrl+'/branch/organization/',
     getDepartmentsByOrgId: baseUrl+'/departments/organization/',
     getDesignationsByOrgId: baseUrl+'/designations/organization/',
-    getUsersByFilter: baseUrl+'/user/filterUser/organization/',
+    getUsersByFilter: baseUrl+'/user/filter-user/organization/',
 }
 
 export const leaveRequestRoutes = {
@@ -74,4 +74,8 @@ export const  getUserLoan = {
 
 export const  getLoanTypeBy = {
     organization: baseUrl+'/loan-type/organization/'
+}
+
+export const missingPunchesRoute = {
+    setUserMissingPunchesRquest: baseUrl+'/missing-punch/new',
 }

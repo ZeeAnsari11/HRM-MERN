@@ -3,7 +3,7 @@ import { authentication, organizationRoutes, timeSlots, userRoutes } from './con
 import { setAuth, setCurrentUser, setFinalAuthority, setTimeSLots, setAllUsers } from '../states/reducers/slices/backend/UserSlice';
 import { setUserBranch } from '../states/reducers/slices/backend/Branch';
 import { setUserDepartment } from '../states/reducers/slices/backend/Department';
-import { setUserDesignation } from '../states/reducers/slices/backend/Designation';
+import { setOrganizationDesignation } from '../states/reducers/slices/backend/Designation';
 import { getAllUsers } from './configuration';
 
 export const loginAuth = (dispatcher, body, navigation) => {
@@ -50,10 +50,8 @@ export const loadAllOrganizationsInfo = (dispatcher, orgId, branchId) => {
     axios.get(organizationRoutes.getBranchesByOrgId + orgId).then((rsp) => { dispatcher(setUserBranch(rsp.data.branches))}).catch((e) => console.log(e))
     axios.get(organizationRoutes.getDepartmentsByOrgId + orgId).then((rsp) => { dispatcher(setUserDepartment(rsp.data.departments)) }).catch((e) => console.log(e))
     axios.get(organizationRoutes.getDesignationsByOrgId + orgId).then((rsp) => { 
-        dispatcher(setUserDesignation(rsp.data.response))
-        console.log(rsp.data);
+        dispatcher(setOrganizationDesignation(rsp.data.response))
      }).catch((e) => console.log(e))
-    // axios.post(organizationRoutes.getUsersByFilter, {organization: orgId, isTeamLead:true, isActive: true}).then((rsp) => dispatcher(setTeamLeadList(rsp.data.active_users))).catch((e) => console.log(e))
     axios.post(organizationRoutes.getUsersByFilter, {organization: orgId, branch:branchId, isLineManager:true, isActive: true}).then((rsp) => {
         dispatcher(setFinalAuthority(rsp.data.active_users));
     }).catch((e) => console.log(e))
