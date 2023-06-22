@@ -33,8 +33,45 @@ export const creatingRequest = (req, res, next, user, request, requestFlow, requ
 
 const getfirstNodeUser = async (req, res, next, node, user, request, requestType, type = null) => {
     try {
+        let run = true;
         let nodeUser = ''
-        if (node[0].lineManager) nodeUser = user.lineManager
+        if (node[0].lineManager) {
+            nodeUser = user.lineManager
+            if (nodeUser == null) {
+                run = false;
+                let model;
+                switch (type) {
+                    case 'MissingPunches': { 
+                        model = MissingPunchesModel
+                        break;
+                    }
+                    case 'Leave': { 
+                        model = LeaveRequestModel
+                        break;
+                    }
+                    case 'Loan': {
+                        model = LoanModel
+                        break;
+                     }
+                    case 'WFH': { 
+                        model = WFHModel
+                        break;
+                    }
+                    case 'Expense': {
+                        model = ExpenseModel
+                        break;
+                     }
+                }
+                model.deleteOne({_id : request._id})
+                .then(()=>{
+                    throw new Error("There is not Line Manger for that user")
+                })
+                .catch((err)=>{
+                    handleCatch(err, res, 500, next)
+                })
+
+            }
+        }
         else {
             const departmentUser = await UserModel.findOne({ HOD: { isHOD: true, department: node[0].department } }).select('_id');
             if (!departmentUser) {
@@ -53,7 +90,7 @@ const getfirstNodeUser = async (req, res, next, node, user, request, requestType
             flowRequestType: requestType,
             createdAt: request.createdAt
         }
-        addingRequest(req, res, next, x)
+       if(run){ addingRequest(req, res, next, x)}
     } catch (error) {
         handleCatch(error, res, 404, next)
     }
@@ -115,7 +152,7 @@ export const requestToNextNode = (req, res, next) => {
                     console.log("======if================");
                     RequestFlowNodeModel.findById(previousNode.nextNode)
                         .then((node) => {
-                            console.log("=========node==",node);
+                            console.log("=========node==", node);
                             if (!node) throw new Error('No such node available.')
                             UserModel.findById(req.body.senderId)
                                 .then((user) => {
@@ -172,8 +209,8 @@ export const requestToNextNode = (req, res, next) => {
 
 const settingStatus = (req, res, next, requestStatus = null, node = null, user = null) => {
     // console.log('===============33============');
-console.log("===========node 2============",node);
-console.log("===========user 2============",user);
+    console.log("===========node 2============", node);
+    console.log("===========user 2============", user);
 
     const requestId = req.body.notificationId;
     const type = req.body.type
@@ -257,7 +294,7 @@ const getNodeUser = async (node, user, req, res, next, show) => {
             flowRequestType: req.body.flowRequestType,
             createdAt: req.body.createdAt
         }
-        console.log("=========going for adding request==========",x);
+        console.log("=========going for adding request==========", x);
         addingRequest(req, res, next, x, show)
     } catch (error) {
         handleCatch(error, res, 404, next)

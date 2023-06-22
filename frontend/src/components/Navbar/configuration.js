@@ -45,8 +45,8 @@ export const Menus = [
         font: faCalendarWeek,
         child: [
             { access:"admin", title: "Requests", font: faCalendarTimes, to:"/dashboard/timesheet" },
-            { title: "Request", font: faCalendarTimes, to:"/dashboard/timesheet" },
-            { title: "View WFH Requests", font: faFileAlt, to:"/dashboard/attendence" },
+            { title: "Request", font: faCalendarTimes, to:"/dashboard/wfh" },
+            { title: "View WFH Requests", font: faFileAlt, to:"/dashboard/*" },
         ]
     },
     {
