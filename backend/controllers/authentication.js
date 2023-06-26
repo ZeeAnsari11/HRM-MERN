@@ -29,6 +29,9 @@ export const login = (req, res, next) => {
                                 sendToken(response, 200, res)
                             }
                         })
+                        .catch((err) => {
+                            handleCatch(err, res, err.statusCode || 404, next)
+                        });
                 }
             })
             .catch((err) => {

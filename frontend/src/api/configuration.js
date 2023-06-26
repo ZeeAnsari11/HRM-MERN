@@ -78,4 +78,5 @@ export const  getLoanTypeBy = {
 
 export const missingPunchesRoute = {
     setUserMissingPunchesRquest: baseUrl+'/missing-punch/new',
+    getMissingPunchesHistoryByUserId : baseUrl+'/missing-punch/user/filter'
 }

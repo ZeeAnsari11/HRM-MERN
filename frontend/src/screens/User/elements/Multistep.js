@@ -1,12 +1,11 @@
 import React from 'react'
 import Success from './Success'
 
-const Multistep = ({index}) => {
-
+const Multistep = ({index, setIndex}) => {
     return (
-        <ol className="relative text-gray-500 border-l border-gray-200">
+        <ol className="flex text-gray-500">
             <li className="mb-10 ml-6">
-                <span className={`absolute flex items-center justify-center w-8 h-8 ${(index > 1)?'bg-green-200 text-green-500':null} bg-gray-100 rounded-full -left-4 ring-4 ring-white`}>
+                <span onClick={() => setIndex(1)} className={` flex items-center justify-center w-8 h-8 ${(index > 1)?'bg-green-200 text-green-500':null} bg-gray-100 rounded-full -left-4 ring-4 ring-white`}>
                     {
                         (index === 1) ? <svg
                         aria-hidden="true"
@@ -27,7 +26,7 @@ const Multistep = ({index}) => {
                 <p className="text-sm">Step details here</p>
             </li>
             <li className="mb-10 ml-6">
-                <span className={`absolute flex items-center justify-center w-8 h-8 ${(index > 2)?'bg-green-200 text-green-500':null} bg-gray-100 rounded-full -left-4 ring-4 ring-white`}>
+                <span onClick={() => setIndex(index>=2 ? 2 : index)} className={` flex items-center justify-center w-8 h-8 ${(index > 2)?'bg-green-200 text-green-500':null} bg-gray-100 rounded-full -left-4 ring-4 ring-white`}>
                     {
                         (index <= 2) ?                     
                         <svg
@@ -49,7 +48,7 @@ const Multistep = ({index}) => {
                 <p className="text-sm">Step details here</p>
             </li>
             <li className="mb-10 ml-6">
-                <span className={`absolute flex items-center justify-center w-8 h-8 ${(index > 3)?'bg-green-200 text-green-500':null} bg-gray-100 rounded-full -left-4 ring-4 ring-white`}>
+                <span onClick={() => setIndex(index>=3 ? 3 : index)} className={` flex items-center justify-center w-8 h-8 ${(index > 3)?'bg-green-200 text-green-500':null} bg-gray-100 rounded-full -left-4 ring-4 ring-white`}>
                     {
                         (index <= 3) ? <svg
                             aria-hidden="true"
@@ -71,7 +70,7 @@ const Multistep = ({index}) => {
                 <p className="text-sm">Step details here</p>
             </li>
             <li className="ml-6">
-                <span className="absolute flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -left-4 ring-4 ring-white">
+                <span className=" flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -left-4 ring-4 ring-white">
                     <svg
                         aria-hidden="true"
                         className="w-6 h-6 text-gray-500"
@@ -91,8 +90,6 @@ const Multistep = ({index}) => {
                 <p className="text-sm">Step details here</p>
             </li>
         </ol>
-
-
     )
 }
 
