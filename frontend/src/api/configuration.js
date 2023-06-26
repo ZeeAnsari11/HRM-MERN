@@ -79,3 +79,7 @@ export const  getLoanTypeBy = {
 export const missingPunchesRoute = {
     setUserMissingPunchesRquest: baseUrl+'/missing-punch/new',
 }
+
+export const desiginationsRoute = {
+    createDesigination: baseUrl+'/designation/new',
+}

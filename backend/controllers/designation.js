@@ -1,13 +1,13 @@
 import { DesignationModel } from "../models/designationSchema.js";
-import { UserModel } from "../models/userSchema.js";
+import { OrganizationModel } from "../models/organizationSchema.js";
 import { createNew, updateById, getAll, getById, deleteInBulk, handleCatch } from "../utils/common.js"
 
 export const createDesignation = (req, res, next) => {
     try{
         if(req.body.unique_id) throw new Error ("unique_id is not required in body")
-        UserModel.find({ _id: req.body.createdBy, organization: req.body.organization })
+        OrganizationModel.findById(req.body.organization)
         .then((response) => {
-            if (response.length == 0) throw new Error ("User and Organization not belong to each other")
+            if (!response) throw new Error ("Organization Not Found")
             req.body.unique_id = req.body.organization + req.body.shortForm;
             createNew(req, res, next, DesignationModel)
         })
@@ -21,7 +21,7 @@ export const createDesignation = (req, res, next) => {
 
 export const updateDesignationById = (req, res, next) => {
     try {
-        if (req.body.organization || req.body.createdBy || req.body.unique_id) throw new Error ("You can not update organization, Creater of Designation")
+        if (req.body.organization  || req.body.unique_id) throw new Error ("You can not update organization of Designation")
         if (req.body.shortForm) {
             DesignationModel.findById(req.params.id)
                 .then((designatin) => {
@@ -42,9 +42,9 @@ export const getDesignationById = (req, res, next) => {
     getById(req.params.id, res, next, DesignationModel, 'Designation');
 }
 
-export const getDesignationsBycreatorId = (req, res, next)=>{
-    getAll(res, next, DesignationModel, {createdBy : req.params.id}, "Designation");
-}
+// export const getDesignationsBycreatorId = (req, res, next)=>{
+//     getAll(res, next, DesignationModel, {createdBy : req.params.id}, "Designation");
+// }
 
 export const getAllDesignationsByOrgId = (req, res, next)=>{
     getAll(res, next, DesignationModel, {organization : req.params.id}, "Designation");
