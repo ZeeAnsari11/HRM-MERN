@@ -46,7 +46,7 @@ function App() {
         <Route path="/dashboard/policy" element={<LeavePolicy />}/>
         <Route path="/dashboard/timesheet" element={<TimeSheet />}/>
         <Route path="/dashboard/attendence-request" element={<Attendence />}/>
-        <Route path="/dashboard/attendence" element={<ViewAttendenceRequests />}/>
+        {/* <Route path="/dashboard/attendence" element={<ViewAttendenceRequests />}/> */}
         <Route path="/dashboard/wfh" element={<WorkFromHome />}/>
         <Route path="/dashboard/profile" element={<Profile />}/>
         <Route path="/dashboard/settings" element={<Settings />}/>
