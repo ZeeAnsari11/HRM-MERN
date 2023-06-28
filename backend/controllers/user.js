@@ -631,7 +631,7 @@ const userActivationStatus = (req, res, next, toggler, msg) => {
 }
 
 const userActivation = (req, res, details, date, arr, statusDate, user, msg) => {
-    try{
+    try {
         if (new Date(statusDate) >= date) {
             arr.push(details)
             user.save()
@@ -647,7 +647,7 @@ const userActivation = (req, res, details, date, arr, statusDate, user, msg) => 
         }
         else throw new Error(msg)
     }
-    catch(err){ handleCatch(err, res, 400, next) };
+    catch (err) { handleCatch(err, res, 400, next) };
 }
 
 export const addSkillsToUser = (req, res, next) => {
@@ -670,12 +670,12 @@ export const addSkillsToUser = (req, res, next) => {
                     })
                 })
                     .catch((err) => {
-                        handleCatch(err, res, 500, next) 
+                        handleCatch(err, res, 500, next)
                     });
             }
         })
         .catch((err) => {
-            handleCatch(err, res, 400, next) 
+            handleCatch(err, res, 400, next)
         })
 
 }
@@ -695,12 +695,12 @@ export const deleteSkillFromUser = (req, res, next) => {
                     })
                 })
                     .catch((err) => {
-                        handleCatch(err, res, 500, next) 
+                        handleCatch(err, res, 500, next)
                     });
             }
         })
         .catch((err) => {
-            handleCatch(err, res, 400, next) 
+            handleCatch(err, res, 400, next)
         })
 }
 
@@ -777,7 +777,7 @@ const addingLeaves = (req, res, leave, obj) => {
                     })
                 }
             })
-            .catch(err => handleCatch(err, res, 400, next) )
+            .catch(err => handleCatch(err, res, 400, next))
     })
 }
 
@@ -795,5 +795,25 @@ const common = (res, leave, obj, user, count, length, notFoundUser = null) => {
             success: true,
             notFoundUser
         });
+    }
+}
+export const getUserLeaveQuota = (req, res, next) => {
+    try {
+        UserModel.findOne({ _id: req.params.id }).select('firstName lastName leaveTypeDetails')
+            .populate({
+                path: 'leaveTypeDetails.leaveType',
+                select: 'name accumulativeCount'
+            })
+            .then((result) => {
+                if(!user) throw new Error("user not found")
+                res.status(200).json({
+                    success: true,
+                    result
+                })
+            })
+            .catch(err => handleCatch(err, res, 404, next))
+    }
+    catch (err) {
+        handleCatch(err, res, 400, next)
     }
 }

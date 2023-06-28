@@ -4,7 +4,7 @@ import {
     deleteUserById, getUserById, updateUserEmployment, addSkillsToUser, deleteSkillFromUser, 
     filterUserByOrganizationId, getLineManagerByuserId, getHODByDepartmentId,
     getAttendanceExemptUsers, getEmployeeTypeByOrganizationId, getRoleTypeByOrganizationId,
-    getChildsByUserId, validateUserToken, addNewLeavesToUsers
+    getChildsByUserId, validateUserToken, addNewLeavesToUsers,getUserLeaveQuota
 } from '../controllers/user.js'
 
 export const userRoute = express.Router();
@@ -26,3 +26,5 @@ userRoute.route('/user/type/organization/:id').get(getEmployeeTypeByOrganization
 userRoute.route('/user/role/type/organization/:id').get(getRoleTypeByOrganizationId)
 userRoute.route('/user/my-chart').get(getChildsByUserId);
 userRoute.route('/user/newLeaves/:id').put(addNewLeavesToUsers);
+userRoute.route('/user/leave-quota/:id').get(getUserLeaveQuota);
+
