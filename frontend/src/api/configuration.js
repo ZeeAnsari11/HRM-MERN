@@ -78,8 +78,12 @@ export const  getLoanTypeBy = {
 
 export const missingPunchesRoute = {
     setUserMissingPunchesRquest: baseUrl+'/missing-punch/new',
+<<<<<<< HEAD
 }
 
 export const desiginationsRoute = {
     createDesigination: baseUrl+'/designation/new',
+=======
+    getMissingPunchesHistoryByUserId : baseUrl+'/missing-punch/user/filter'
+>>>>>>> HRMD-911
 }

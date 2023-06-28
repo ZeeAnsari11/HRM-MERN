@@ -1,4 +1,4 @@
-import { handleCatch, getById, deleteById, updateById } from "../utils/common.js"
+import { handleCatch, getById, deleteById, updateById, getAll } from "../utils/common.js"
 import { MissingPunchesModel } from "../models/missingPunchesSchema.js"
 import { AttendanceModel } from "../models/attendanceSchema.js"
 import { creatingRequest } from "../utils/request.js";
@@ -87,6 +87,17 @@ export const deleteMissingPunchRequest = (req, res, next) => {
         .catch(err => handleCatch(err, res, 423, next))
 }
 
+export const filterMissingPunches = (req, res, next)=>{
+    const { month, year, userId } = req.query;
+    let query = {
+        user: userId,
+        date: {
+          $gte: new Date(year, month - 1, 1), // Start of the month
+          $lt: new Date(year, month, 1) // Start of the next month
+        }
+      }
+    getAll(res, next, MissingPunchesModel, query, "Attendence Request history for this user");
+}
 export const updateMissingPunchRequest = (req, res, next) => {
     MissingPunchesModel.findById(req.params.id)
         .then((punch) => {

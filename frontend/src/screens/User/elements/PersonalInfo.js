@@ -1,7 +1,7 @@
 import React from 'react'
 import Countries from './Countries'
 
-const PersonalInfo = ({changePageNumber, handleInputChange}) => {
+const PersonalInfo = ({changePageNumber, handleInputChange, formData, showButton}) => {
 
     return (
     <form className="lg:col-span-2" onSubmit={(e) => {
@@ -19,6 +19,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange}) => {
                             placeholder="First Name"
                             className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                             onChange={handleInputChange}
+                            value={formData.first_name}
                             required
                         />
                         <input
@@ -28,6 +29,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange}) => {
                             placeholder="Last Name"
                             className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                             onChange={handleInputChange}
+                            value={formData.last_name}
                             required
                         />
                     </div>
@@ -42,6 +44,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange}) => {
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                         onChange={handleInputChange}
                         placeholder="email@domain.com"
+                        value={formData.email}
                         required
                     />
                 </div>
@@ -54,6 +57,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange}) => {
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                         placeholder="Full Address"
                         onChange={handleInputChange}
+                        value={formData.address}
                         required
                     />
                 </div>
@@ -64,6 +68,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange}) => {
                         id="gender"
                         onChange={handleInputChange}
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                        value={formData.gender}
                         required
                     >
                         <option value=''>Select Gender</option>
@@ -78,6 +83,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange}) => {
                         <select
                             name="country"
                             id="country"
+                            value={formData.country}
                             placeholder="Country"
                             onChange={handleInputChange}
                             className="px-4 outline-none text-gray-800 w-full bg-transparent"
@@ -95,6 +101,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange}) => {
                         <input
                             name="state"
                             id="state"
+                            value={formData.state}
                             onChange={handleInputChange}
                             placeholder="State"
                             className="px-4 outline-none text-gray-800 w-full bg-transparent"
@@ -106,6 +113,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange}) => {
                     <label htmlFor="zipcode">Zipcode</label>
                     <input
                         type="text"
+                        value={formData.zipcode}
                         onChange={handleInputChange}
                         name="zipcode"
                         id="zipcode"
@@ -118,6 +126,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange}) => {
                     <input
                         type="date"
                         name="dob"
+                        value={formData.dob}
                         onChange={handleInputChange}
                         id="dob"
                         required
@@ -129,6 +138,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange}) => {
                     <input
                         type="text"
                         name="blood-group"
+                        value={formData["blood-group"]}
                         onChange={handleInputChange}
                         id="blood-group"
                         className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
@@ -141,6 +151,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange}) => {
                     <input
                         type="text"
                         name="religion"
+                        value={formData.religion}
                         onChange={handleInputChange}
                         id="religion"
                         className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
@@ -153,6 +164,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange}) => {
                     <input
                         type="text"
                         name="nationality"
+                        value={formData.nationality}
                         onChange={handleInputChange}
                         id="nationality"
                         required
@@ -166,6 +178,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange}) => {
                     <input
                         type="text"
                         name="contact"
+                        value={formData.contact}
                         onChange={handleInputChange}
                         id="contact"
                         className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
@@ -177,9 +190,9 @@ const PersonalInfo = ({changePageNumber, handleInputChange}) => {
 
                 <div className="md:col-span-5 text-right">
                     <div className="inline-flex items-end">
-                        <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        {showButton ? <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             Next
-                        </button>
+                        </button> : ""}
                     </div>
                 </div>
             </div>

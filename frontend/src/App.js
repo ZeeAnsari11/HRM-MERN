@@ -13,6 +13,7 @@ import Leave from "./screens/Leave";
 import LeavePolicy from "./screens/LeavePolicy";
 import TimeSheet from "./screens/TimeSheet";
 import Attendence from "./screens/Attendence";
+import ViewAttendenceRequests from "./screens/ViewAttendenceRequests";
 import WorkFromHome from "./screens/WorkFromHome";
 import LeaveRequest from "./screens/LeaveRequest";
 import Error from "./screens/Error/404";
@@ -46,7 +47,8 @@ function App() {
         <Route path="/dashboard/leaves" element={<Leave />}/>
         <Route path="/dashboard/policy" element={<LeavePolicy />}/>
         <Route path="/dashboard/timesheet" element={<TimeSheet />}/>
-        <Route path="/dashboard/attendence" element={<Attendence />}/>
+        <Route path="/dashboard/attendence-request" element={<Attendence />}/>
+        {/* <Route path="/dashboard/attendence" element={<ViewAttendenceRequests />}/> */}
         <Route path="/dashboard/wfh" element={<WorkFromHome />}/>
         <Route path="/dashboard/profile" element={<Profile />}/>
         <Route path="/dashboard/settings" element={<Settings />}/>

@@ -6,16 +6,10 @@ import { createUser } from '../../../api/user'
 import { useSelector } from 'react-redux'
 import { selectCurrentUserBranch, selectOrgId } from '../../../states/reducers/slices/backend/UserSlice'
 
-const Forms = ({formNumber, changePageNumber}) => {
-    const [formData, setFormData] = React.useState({});
+const Forms = ({formNumber, changePageNumber, formData, handleInputChange}) => {
     const organization = useSelector(selectOrgId);
     const branch = useSelector(selectCurrentUserBranch);
-
-    const handleInputChange = ({target: {name, value}}) => {
-        setFormData(formData => ({...formData, [name]: value}));
-    };
-    
-      useEffect(() => {
+    useEffect(() => {
         handleInputChange({target: {name:'organization', value:organization}});
         handleInputChange({target: {name:'branch', value:branch}});
     }, [])
@@ -23,13 +17,18 @@ const Forms = ({formNumber, changePageNumber}) => {
         createUser(formData);
     }
     if (formNumber === 1)
-        return <PersonalInfo changePageNumber={changePageNumber} handleInputChange={handleInputChange}/>
+        return <PersonalInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton = {true}/>
     if (formNumber === 2)
-        return <OrganizationInfo changePageNumber={changePageNumber} handleInputChange={handleInputChange}/> 
+        return <OrganizationInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton = {true}/> 
     if (formNumber === 3)
-        return <Configuration changePageNumber={changePageNumber} handleInputChange={handleInputChange}/>
+        return <Configuration formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton = {true}/>
     if (formNumber === 4)
-        return <button onClick={handleSubmit}>Submit</button>
+        return <>
+                <PersonalInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton = {false}/>
+                <OrganizationInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton = {false}/>
+                <Configuration formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton = {false}/>
+                 <button onClick={handleSubmit}>Submit</button>
+         </>
 }
 
 export default Forms

@@ -14,7 +14,7 @@ export const loginAuth = (dispatcher, body, navigation) => {
             localStorage.setItem('organization', auth.data.user.organization);
             localStorage.setItem('authToken', auth.data.token);
             getCurrentUser(auth.data.user._id, dispatcher);
-            navigation('/dashboard');
+            navigation('/dashboard/home');
         })
         .catch((error) => {
             console.log(error.response.data);

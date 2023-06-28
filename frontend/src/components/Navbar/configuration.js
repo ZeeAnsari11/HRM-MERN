@@ -55,7 +55,8 @@ export const Menus = [
         font: faCalendarWeek,
         child: [
             { title: "Time Sheet", font: faCalendarTimes, to:"/dashboard/timesheet" },
-            { title: "Attendence Request ", font: faFileAlt, to:"/dashboard/attendence" },
+            { title: "Attendence Request ", font: faFileAlt, to:"/dashboard/attendence-request" },
+            // { title: "View Attendece", font: faCalendarCheck, to:"/dashboard/attendence"},
         ]
     },
 
