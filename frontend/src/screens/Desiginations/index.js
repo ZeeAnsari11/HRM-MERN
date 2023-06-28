@@ -54,6 +54,7 @@ const Desiginations = () => {
         }
         createDesigination(formData);
         setShowModal(false)
+        LoadData(dispatcher);
     };
     const handleAction = (rowData) => {
 
