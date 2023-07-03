@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import Block from './Block'
+import { useState, useEffect } from 'react';
+import Block from './Block';
 
 const plans = [
   {
@@ -30,33 +30,42 @@ const plans = [
     index: 7,
     name: 'Sunday',
   },
-]
+];
 
-export default function RestDays({handleInputChange}) {
-    const [restDays, setRestDays] = useState([])
+export default function RestDays({ handleInputChange, value }) {
+  const [restDays, setRestDays] = useState([]);
 
-    useEffect(() => {
-      handleInputChange({target: {name:'roaster', value:{restDays}}});
-    }, [restDays])
-
-    const handleRestDays = (index) => {
-        const actual_index = restDays.indexOf(index);
-        if (actual_index !== -1) {
-          let arr = restDays.map(e=>e);
-          arr.splice(actual_index, 1)
-          setRestDays(arr);
-        }
-        else setRestDays([...restDays, index])
+  useEffect(() => {
+    if (value && value) {
+      setRestDays(value);
     }
-    return (
-      <div className='grid grid-cols-5 mobile:grid-cols-2 tablet:grid-cols-3 mx-auto gap-4 py-2'>
-        {
-            plans.map((item) => {
-                return (
-                    <Block handleRestDays={handleRestDays} key={item.index} item={item}/>
-                )
-            })
-        }
-      </div>
-  )
+  }, [value]);
+
+  const handleRestDays = (index) => {
+    if (restDays.includes(index)) {
+      const updatedRestDays = restDays.filter((day) => day !== index);
+      setRestDays(updatedRestDays);
+  
+      handleInputChange({ target: { name: 'roaster', value: { restDays: updatedRestDays } } });
+    } else {
+      const updatedRestDays = [...restDays, index];
+      setRestDays(updatedRestDays);
+  
+      handleInputChange({ target: { name: 'roaster', value: { restDays: updatedRestDays } } });
+    }
+  };
+
+  
+  return (
+    <div className='grid grid-cols-5 mobile:grid-cols-2 tablet:grid-cols-3 mx-auto gap-4 py-2'>
+      {plans.map((item) => (
+        <Block
+          handleRestDays={handleRestDays}
+          key={item.index}
+          item={item}
+          selected={restDays.includes(item.index)}
+        />
+      ))}
+    </div>
+  );
 }

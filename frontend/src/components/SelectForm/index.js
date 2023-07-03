@@ -1,40 +1,40 @@
-import { Fragment, useEffect, useState } from 'react'
-import { Listbox, Transition } from '@headlessui/react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { Fragment, useEffect, useState } from 'react';
+import { Listbox, Transition } from '@headlessui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Avatar from '../../assets/default-avatar.png';
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(' ');
 }
 
 export default function SelectForm({ name, title, people, handleInputChange, value }) {
-
   const initialPerson = {
     _id: null,
-    firstName: "Select",
+    firstName: 'Select',
     lastName: title,
     avatar: Avatar
-  }
-  const [selected, setSelected] = useState(initialPerson)
+  };
+  const [selected, setSelected] = useState(initialPerson);
+
+  useEffect(() => {
+    if (value) {
+      const selectedPerson = people.find(person => person._id === value);
+      if (selectedPerson) {
+        setSelected(selectedPerson);
+      }
+    }
+  }, [people, value]);
 
   const setSetSelected = (event) => {
     const id = event._id;
-    if (value !== undefined) {
-      const item = people.filter((item) => {
-        if ((item._id === value)) return item
-      })
-      setSelected(item[0]);
-    }
-    else {
-      setSelected(event)
-    }
+    setSelected(event);
 
     if (id !== null) {
       handleInputChange({ target: { name, value: id } });
     }
+  };
 
-  }
   return (
     <Listbox value={selected} onChange={setSetSelected} className="w-full">
       {({ open }) => (
@@ -59,7 +59,8 @@ export default function SelectForm({ name, title, people, handleInputChange, val
             >
               <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                 {people.map((person) => (
-                  <Listbox.Option key={person._id}
+                  <Listbox.Option
+                    key={person._id}
                     className={({ active }) =>
                       classNames(
                         active ? 'bg-indigo-600 text-white' : 'text-gray-900',
@@ -73,25 +74,17 @@ export default function SelectForm({ name, title, people, handleInputChange, val
                         <div className="flex items-center">
                           <img src={selected.avatar ? selected.avatar : Avatar} alt="" className="h-6 w-6 flex-shrink-0 rounded-full" />
                           <div>
-                            <span
-                              className={classNames(selected ? 'font-semibold' : 'font-normal', 'ml-3 block truncate')}>
+                            <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'ml-3 block truncate')}>
                               {person.firstName} {person.lastName}
                             </span>
-                            <span
-                              className={classNames(selected ? 'font-semibold' : 'font-normal', 'ml-3 block truncate')}>
+                            <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'ml-3 block truncate')}>
                               {person.email}
                             </span>
                           </div>
                         </div>
 
                         {selected ? (
-                          <span
-                            className={classNames(
-                              active ? 'text-white' : 'text-indigo-600',
-                              'absolute inset-y-0 right-0 flex items-center pr-4'
-                            )}
-                          >
-                          </span>
+                          <span className={classNames(active ? 'text-white' : 'text-indigo-600', 'absolute inset-y-0 right-0 flex items-center pr-4')}></span>
                         ) : null}
                       </>
                     )}
@@ -103,5 +96,5 @@ export default function SelectForm({ name, title, people, handleInputChange, val
         </>
       )}
     </Listbox>
-  )
+  );
 }
