@@ -15,7 +15,8 @@ export const organizationRoutes = {
     getBranchesByOrgId: baseUrl+'/branch/organization/',
     getDepartmentsByOrgId: baseUrl+'/departments/organization/',
     getDesignationsByOrgId: baseUrl+'/designations/organization/',
-    getUsersByFilter: baseUrl+'/user/filterUser/organization/',
+    getUsersByFilter: baseUrl+'/user/filter-user/organization',
+    getEmployementTypesByOrgId: baseUrl+'/employmentType/all/'
 }
 
 export const leaveRequestRoutes = {
@@ -74,4 +75,20 @@ export const  getUserLoan = {
 
 export const  getLoanTypeBy = {
     organization: baseUrl+'/loan-type/organization/'
+}
+
+export const  getOrganization = {
+    grades: baseUrl+'/grade/organization/'
+}
+
+export const  createWfh = {
+    request: baseUrl+'/wfh/new'
+}
+
+export const  getAllWfh = {
+    ofUser: baseUrl+'/wfh/user/'
+}
+
+export const  getTime = {
+    sheet: baseUrl+'/filter-attendence'
 }

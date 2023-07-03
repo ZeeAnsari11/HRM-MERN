@@ -32,11 +32,11 @@ const plans = [
   },
 ]
 
-export default function RestDays({handleInputChange}) {
+export default function RestDays({handleInputChange,}) {
     const [restDays, setRestDays] = useState([])
 
     useEffect(() => {
-      handleInputChange({target: {name:'roaster', value:{restDays}}});
+      handleInputChange({target: {name:'userRoster', value:{restDays:restDays, timeSlots:''}}});
     }, [restDays])
 
     const handleRestDays = (index) => {

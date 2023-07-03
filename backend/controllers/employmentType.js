@@ -1,6 +1,6 @@
 import { EmploymentModel } from '../models/employmentSchema.js'
 import { OrganizationModel } from '../models/organizationSchema.js'
-import { createNew, deleteById, updateById, getById, handleCatch } from '../utils/common.js'
+import { createNew, deleteById, updateById, getById, getAll, handleCatch } from '../utils/common.js'
 
 export const createEmploymentType = (req, res, next) => {
     try {
@@ -19,7 +19,9 @@ export const createEmploymentType = (req, res, next) => {
         handleCatch(`${error}`, res, 401, next)
     }
 }
-
+export const getAllEmploymentTypesFromOrganizationId = (req, res, next) => {
+    getAll(res, next, EmploymentModel, {organization: req.params.id} , 'Employment TYpes')
+}
 export const updateEmploymentTypeById = (req, res, next) => {
     try {
         if (Object.keys(req.body).length == 0) throw "Request Body is empty."

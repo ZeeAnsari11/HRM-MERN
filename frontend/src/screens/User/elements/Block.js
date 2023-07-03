@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Toggler } from '../../../components/FormItems/Toggler';
 
 function Block({item, handleRestDays}) {
 

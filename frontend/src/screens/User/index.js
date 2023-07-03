@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Multistep from "./elements/Multistep";
 import Forms from "./elements/Forms";
 const User = () => {
-    const [pageNumber, setPageNumber] = useState(1);
+    const [pageNumber, setPageNumber] = useState(3);
     const changePageNumber = () => {
         setPageNumber(pageNumber+1);
     }

@@ -9,7 +9,10 @@ export const UserSlice = createSlice({
     teamLeads: [],
     finalAuthority: [],
     timeSlots: [],
-    allUsers: []
+    allUsers: [],
+    grades: [],
+    wfh: [],
+    timeSheet: [],
   },
   reducers: {
     setCurrentUser: (state, action) => {
@@ -38,6 +41,15 @@ export const UserSlice = createSlice({
     },
     setAllUsers: (state, action) => {
       state.allUsers = action.payload;
+    },
+    setUserGrades: (state, action) => {
+      state.grades = action.payload;
+    },
+    setUserWFH: (state, action) => {
+      state.wfh = action.payload;
+    },
+    setTimeSheet: (state, action) => {
+      state.timeSheet = action.payload;
     }
   }
 });
@@ -48,6 +60,9 @@ export const {
   setOrganization, setTeamLeadList, 
   setFinalAuthority, setTimeSLots,
   setAllUsers,
+  setUserGrades,
+  setUserWFH,
+  setTimeSheet,
 } = UserSlice.actions;
 
 // Selector Methods
@@ -62,6 +77,10 @@ export const selectFinalAuthority = (state) => state.user.finalAuthority;
 export const selectOrgId = (state) => state.user.currentUser.organization._id;
 export const selectUserLeaveTypes = (state) => state.user.currentUser.leaveTypeDetails
 export const selectAllUsers = (state) => state.user.allUsers
+
+export const selectUserGrades = (state) => state.user.grades
+export const selectUserWfh = (state) => state.user.wfh
+export const selectTimeSheet = (state) => state.user.timeSheet
 
 // Reducer
 export const UserReducer = UserSlice.reducer;
