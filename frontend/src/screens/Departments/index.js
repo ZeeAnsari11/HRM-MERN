@@ -42,6 +42,7 @@ const Departments = () => {
     const handleCreateDepartment = () => {
         createDepartment(formData, changeToggler);
         setShowModal(false);
+        setFormData({ name: "", organization: orgId, branch: "" });
     };
     const handleAction = (rowData) => {
 

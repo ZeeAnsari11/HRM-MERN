@@ -57,6 +57,11 @@ const Desiginations = () => {
         }
         createDesigination(formData, changeToggler);
         setShowModal(false)
+        setFormData({
+            title: "",
+            organization: orgId,
+            shortForm: ""
+        })
     };
     const handleAction = (rowData) => {
 
