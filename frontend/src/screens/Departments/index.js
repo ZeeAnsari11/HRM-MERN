@@ -1,74 +1,59 @@
 import React, { useEffect, useState } from 'react';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
-import { setOrganizationDesignation } from '../../states/reducers/slices/backend/Designation';
-import { organizationRoutes } from '../../api/configuration';
-import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
+import { useSelector } from 'react-redux';
 import { useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Table from './src/Table'
 import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
-import { createDesigination } from '../../api/designation';
+import { createDepartment, getBranchesByOrgId, getDepartmentsByOrgId } from '../../api/departments';
 
-const Desiginations = () => {
+const Departments = () => {
     let orgId;
-    let dispatcher = useDispatch();
     orgId = useSelector(selectCurrentUserOrg);
     const [showModal, setShowModal] = useState(false);
     const [toggleChange, setToggleChange] = useState(false);
-    const [desiginations, setDesiginations] = useState([]);
+    const [departments, setDepartment] = useState([]);
+    const [branches, setBranches] = useState([]);
+
+
     const [formData, setFormData] = useState({
-        title: "",
+        name: "",
         organization: orgId,
-        shortForm: ""
+        branch: ""
     });
 
     useEffect(() => {
-        LoadData(dispatcher);
+        LoadData()
     }, [toggleChange]);
-
-    let LoadData = (dispatcher) => {
-        axios.get(organizationRoutes.getDesignationsByOrgId + orgId)
-            .then((rsp) => {
-                dispatcher(setOrganizationDesignation(rsp.data.response));
-                setDesiginations(rsp.data.response);
-            })
-            .catch((e) => console.log(e));
-    }
 
     const changeToggler = () => {
         setToggleChange(!toggleChange);
+    }
+
+    let LoadData = () => {
+        getDepartmentsByOrgId(orgId, setDepartment)
+        getBranchesByOrgId(orgId, setBranches)
     }
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleCreateDesigination = () => {
-        if (formData.title.trim() === "" || formData.shortForm.trim() === "") {
-            alert("Please fill in all the required fields.");
-            return;
-        }
-
-        const shortFormRegex = /^[a-zA-Z0-9-]+$/;
-        if (!shortFormRegex.test(formData.shortForm)) {
-            alert("Short Name can only contain alphabets, numbers, and hyphens (-).");
-            return;
-        }
-        createDesigination(formData, changeToggler);
-        setShowModal(false)
+    const handleCreateDepartment = () => {
+        createDepartment(formData, changeToggler);
+        setShowModal(false);
     };
     const handleAction = (rowData) => {
 
     };
     const columns = useMemo(() => [
         {
-            Header: "Title",
-            accessor: 'title',
+            Header: "Name",
+            accessor: 'name',
         },
         {
-            Header: "Short Form",
-            accessor: 'shortForm',
+            Header: "Branch",
+            accessor: 'branch',
         },
         {
             Header: "Action",
@@ -88,9 +73,9 @@ const Desiginations = () => {
         }
     ], [])
 
-    const data = desiginations.map(obj => ({
-        title: obj.title,
-        shortForm: obj.shortForm
+    const data = departments.map(obj => ({
+        name: obj.name,
+        branch: obj.branch.name
     }));
 
     return (
@@ -99,38 +84,42 @@ const Desiginations = () => {
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 onClick={() => setShowModal(!showModal)}
             >
-                Create Desigination
+                Create Department
             </button>
 
             {showModal && (
                 <div className="bg-opacity-50 absolute inset-0">
-                    <div className="bg-opacity-30 absolute inset-0"></div>
                     <div className="bg-white rounded p-8 relative">
-                        <h2 className="text-lg font-bold mb-4">Create Desigination</h2>
+                        <h2 className="text-lg font-bold mb-4">Create Department</h2>
                         <form>
                             <div className="mb-4">
-                                <label className="block text-sm font-bold mb-1">Title</label>
+                                <label className="block text-sm font-bold mb-1">Name</label>
                                 <input
-                                    className="border border-gray-300 rounded-md px-3 py-2 w-full"
+                                    className="border border-gray-300 rounded-md px-3 py-2 w-full bg-gray-50"
                                     type="text"
-                                    name="title"
-                                    value={formData.title}
+                                    name="name"
+                                    value={formData.name}
                                     onChange={handleInputChange}
                                     required
                                 />
                             </div>
                             <div className="mb-4">
-                                <label className="block text-sm font-bold mb-1">Short Name</label>
-                                <input
-                                    className="border border-gray-300 rounded-md px-3 py-2 w-full"
-                                    type="text"
-                                    name="shortForm"
-                                    value={formData.shortForm}
+                                <label className="block text-sm font-bold mb-1">Branch</label>
+                                <select
+                                    name="branch"
+                                    id="branch"
+                                    value={formData.branch}
                                     onChange={handleInputChange}
-                                    pattern="^[a-zA-Z0-9-]+$"
-                                    title="Short Name can only contain alphabets, numbers, and hyphens (-)."
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                     required
-                                />
+                                >
+                                    <option value="" className="border border-gray-300 rounded-md px-3 py-2 w-full"></option>
+                                    {branches.map((branch) => (
+                                        <option key={branch._id} value={branch._id}>
+                                            {branch.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                         </form>
                         <div className="flex justify-end">
@@ -142,12 +131,14 @@ const Desiginations = () => {
                             </button>
                             <button
                                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                onClick={handleCreateDesigination}
+                                onClick={handleCreateDepartment}
                             >
                                 Submit
                             </button>
                         </div>
                     </div>
+
+
                 </div>
             )}
 
@@ -155,7 +146,7 @@ const Desiginations = () => {
                 <div className="min-h-screen bg-gray-100 text-gray-900">
                     <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
                         <div className="mt-6">
-                            <Table columns={columns} data={data} />
+                            {/* <Table columns={columns} data={data} /> */}
                         </div>
                     </main>
                 </div>
@@ -164,4 +155,4 @@ const Desiginations = () => {
     );
 };
 
-export default Desiginations;
+export default Departments;

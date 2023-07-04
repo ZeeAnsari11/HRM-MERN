@@ -13,9 +13,10 @@ export const getDesignationById = (DesignationId, dispatcher) => {
     })
 }
 
-export const createDesigination = (formData) => {
+export const createDesigination = (formData, changeToggler) => {
     axios.post(desiginationsRoute.createDesigination, formData)
     .then((response) => {
+        changeToggler();
        console.log("Desigination created successfully frontend");
     })
     .catch((err) => {

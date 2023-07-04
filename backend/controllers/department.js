@@ -44,7 +44,7 @@ export const getAllDepartmentsByBranchId = (req, res, next) => {
 }
 
 export const getAllDepartmentsByOrganizationId = (req, res, next) => {
-    DepartmentModel.find({ organization: req.params.id })
+    DepartmentModel.find({ organization: req.params.id }).populate('branch')
         .then((departments) => {
             if (departments.length == 0) throw new Error("there is no department within this Organization")
             res.status(200).json({

@@ -24,6 +24,7 @@ import ManageAsset from "./screens/ManageAsset";
 import ViewEmployees from "./screens/ViewEmployees";
 import Roaster from "./screens/Roaster/src";
 import Desiginations from "./screens/Desiginations";
+import Departments from "./screens/Departments";
 
 // import ChartPage from "./screens/Chart/src";
 // import ChartPage from "./screens/Chart";
@@ -53,7 +54,8 @@ function App() {
         <Route path="/dashboard/profile" element={<Profile />}/>
         <Route path="/dashboard/settings" element={<Settings />}/>
         <Route path="/dashboard/add-asset" element={<Asset />}/>
-        <Route path="/dashboard/Desiginations" element={<Desiginations />}/>
+        <Route path="/dashboard/desiginations" element={<Desiginations />}/>
+        <Route path="/dashboard/departments" element={<Departments />}/>
         <Route path="/dashboard/manage-assets" element={<ManageAsset />}/>
       </Route>
       <Route path="/*" element={<Error />}/>

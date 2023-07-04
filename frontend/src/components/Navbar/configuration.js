@@ -21,7 +21,8 @@ export const Menus = [
             { title: "Manage Assets", font: faCalendarCheck, to:"/dashboard/manage-assets"},
         ]
     },
-    { title: "Desiginations", font: faCalendarCheck, child:[], to:"/dashboard/Desiginations"  },
+    { title: "Desiginations", font: faCalendarCheck, child:[], to:"/dashboard/desiginations"  },
+    { title: "Departments", font: faCalendarCheck, child:[], to:"/dashboard/departments"  },
     {
         title: "Employee", 
         access:"admin",
