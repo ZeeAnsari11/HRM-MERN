@@ -85,6 +85,11 @@ export const desiginationsRoute = {
     createDesigination: baseUrl+'/designation/new',
     getMissingPunchesHistoryByUserId : baseUrl+'/missing-punch/user/filter'
 }
+
 export const departmentRoute = {
     createDepartment : baseUrl+'/new/department',
+}
+
+export const branchRoute = {
+    createBranch : baseUrl+'/branch/new',
 }

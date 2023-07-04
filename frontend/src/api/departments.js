@@ -29,7 +29,6 @@ export const getBranchesByOrgId = (orgId, setBranches) => {
         .then((response) => {
             console.log(response);
             setBranches(response.data.branches)
-
         })
         .catch((err) => {
             console.log(err);
