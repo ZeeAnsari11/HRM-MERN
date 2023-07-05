@@ -14,7 +14,7 @@ const Departments = () => {
     const [toggleChange, setToggleChange] = useState(false);
     const [departments, setDepartment] = useState([]);
     const [branches, setBranches] = useState([]);
-
+    const [formError, setFormError] = useState('');
 
     const [formData, setFormData] = useState({
         name: "",
@@ -40,13 +40,20 @@ const Departments = () => {
     };
 
     const handleCreateDepartment = () => {
+        if (!formData.name || !formData.branch) {
+            setFormError('Please fill in all the required fields.');
+            return;
+        }
         createDepartment(formData, changeToggler);
         setShowModal(false);
         setFormData({ name: "", organization: orgId, branch: "" });
+        setFormError('');
     };
-    const handleAction = (rowData) => {
 
+    const handleAction = (rowData) => {
+        // Handle action here
     };
+
     const columns = useMemo(() => [
         {
             Header: "Name",
@@ -72,7 +79,7 @@ const Departments = () => {
                 </div>
             )
         }
-    ], [])
+    ], []);
 
     const data = departments.map(obj => ({
         name: obj.name,
@@ -122,6 +129,7 @@ const Departments = () => {
                                     ))}
                                 </select>
                             </div>
+                            {formError && <p className="text-red-500">{formError}</p>}
                         </form>
                         <div className="flex justify-end">
                             <button
@@ -138,8 +146,6 @@ const Departments = () => {
                             </button>
                         </div>
                     </div>
-
-
                 </div>
             )}
 
