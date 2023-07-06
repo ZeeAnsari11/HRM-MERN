@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Toggler } from '../../../components/FormItems/Toggler';
 
 function Block({ item, handleRestDays, selected }) {
   const [toggle, setToggler] = useState(selected);

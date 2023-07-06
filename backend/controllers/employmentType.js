@@ -19,7 +19,9 @@ export const createEmploymentType = (req, res, next) => {
         handleCatch(`${error}`, res, 401, next)
     }
 }
-
+export const getAllEmploymentTypesFromOrganizationId = (req, res, next) => {
+    getAll(res, next, EmploymentModel, {organization: req.params.id} , 'Employment TYpes')
+}
 export const updateEmploymentTypeById = (req, res, next) => {
     try {
         if (Object.keys(req.body).length == 0) throw "Request Body is empty."
@@ -49,8 +51,4 @@ export const deleteEmploymentTypeById = (req, res, next) => {
 
 export const getEmploymentTypeById = (req, res, next) => {
     getById(req.params.id, res, next, EmploymentModel, 'EmploymentType')
-}
-
-export const getAllEmploymentTypesFromOrganizationId = (req, res, next) => {
-    getAll(res, next, EmploymentModel, {organization: req.params.id} , 'Employment TYpes')
 }

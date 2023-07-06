@@ -46,9 +46,9 @@ export const Menus = [
         title: "Work From Home", 
         font: faCalendarWeek,
         child: [
-            { access:"admin", title: "Requests", font: faCalendarTimes, to:"/dashboard/timesheet" },
+            { access:"admin", title: "Requests", font: faCalendarTimes, to:"/dashboard/wfh" },
             { title: "Request", font: faCalendarTimes, to:"/dashboard/wfh" },
-            { title: "View WFH Requests", font: faFileAlt, to:"/dashboard/*" },
+            { title: "View WFH Requests", font: faFileAlt, to:"/dashboard/view-wfh" },
         ]
     },
     {

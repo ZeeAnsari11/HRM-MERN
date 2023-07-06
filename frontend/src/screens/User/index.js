@@ -4,7 +4,6 @@ import Forms from "./elements/Forms";
 const User = () => {
     const [pageNumber, setPageNumber] = useState(1);
     const [formData, setFormData] = React.useState({});
-
     const changePageNumber = () => {
         setPageNumber(pageNumber+1);
     }

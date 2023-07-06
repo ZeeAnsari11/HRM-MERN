@@ -10,8 +10,6 @@ const UserInfo = ({ changePageNumber, handleInputChange }) => {
     const branchId = useSelector(selectCurrentUserBranch);
     const grades = useSelector(selectUserGrades)
 
-    console.log("grades", grades);
-
     useEffect(() => {
         loadAllOrganizationsInfo(dispatcher, userOrgId, branchId);
     }, []);

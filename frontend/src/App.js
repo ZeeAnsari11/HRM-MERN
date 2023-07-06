@@ -11,10 +11,9 @@ import Probation from "./screens/Probation";
 import Loan from "./screens/Loan";
 import Leave from "./screens/Leave";
 import LeavePolicy from "./screens/LeavePolicy";
-import TimeSheet from "./screens/TimeSheet";
 import Attendence from "./screens/Attendence";
 import ViewAttendenceRequests from "./screens/ViewAttendenceRequests";
-import WorkFromHome from "./screens/WorkFromHome";
+import WorkFromHomeRequest from "./screens/WorkFromHomeRequest";
 import LeaveRequest from "./screens/LeaveRequest";
 import Error from "./screens/Error/404";
 import FirstUser from "./screens/FirstUser";
@@ -25,7 +24,8 @@ import ViewEmployees from "./screens/ViewEmployees";
 import Roaster from "./screens/Roaster/src";
 import Desiginations from "./screens/Desiginations";
 import Departments from "./screens/Departments";
-
+import ViewWorkFromHome from "./screens/WorkFromHome";
+import TimeSheet from "./screens/TimeSheet";
 // import ChartPage from "./screens/Chart/src";
 // import ChartPage from "./screens/Chart";
 
@@ -50,7 +50,8 @@ function App() {
         <Route path="/dashboard/timesheet" element={<TimeSheet />}/>
         <Route path="/dashboard/attendence-request" element={<Attendence />}/>
         <Route path="/dashboard/attendence" element={<ViewAttendenceRequests />}/>
-        <Route path="/dashboard/wfh" element={<WorkFromHome />}/>
+        <Route path="/dashboard/wfh" element={<WorkFromHomeRequest />}/>
+        <Route path="/dashboard/view-wfh" element={< ViewWorkFromHome/>}/>
         <Route path="/dashboard/profile" element={<Profile />}/>
         <Route path="/dashboard/settings" element={<Settings />}/>
         <Route path="/dashboard/add-asset" element={<Asset />}/>

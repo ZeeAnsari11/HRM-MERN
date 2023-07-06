@@ -1,31 +1,38 @@
 import React from 'react'
 import Countries from './Countries'
 
+
 const PersonalInfo = ({changePageNumber, handleInputChange, formData, showButton}) => {
 
     return (
-    <form className="lg:col-span-2" onSubmit={(e) => {
-        e.preventDefault();
-        changePageNumber();
-    }}>
+        <form className="lg:col-span-2" onSubmit={(e) => {
+            e.preventDefault();
+            changePageNumber();
+        }}>
             <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
-                <div className="md:col-span-5">
-                    <label htmlFor="full_name">Full Name</label>
+                <div className="md:col-span-3">
+                    <label htmlFor="firstName">First Name</label>
                     <div className="flex space-x-2">
                         <input
                             type="text"
-                            name="first_name"
-                            id="first_name"
+                            name="firstName"
+                            id="firstName"
                             placeholder="First Name"
                             className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                             onChange={handleInputChange}
                             value={formData.first_name}
                             required
                         />
+                    </div>
+
+                </div>
+                <div className="md:col-span-2">
+                    <label htmlFor="lastName">Last Name</label>
+                    <div className="flex space-x-2">
                         <input
                             type="text"
-                            name="last_name"
-                            id="last_name"
+                            name="lastName"
+                            id="lastName"
                             placeholder="Last Name"
                             className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                             onChange={handleInputChange}
@@ -35,7 +42,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange, formData, showButton
                     </div>
 
                 </div>
-                <div className="md:col-span-5">
+                <div className="md:col-span-3">
                     <label htmlFor="email">Email Address</label>
                     <input
                         type="text"
@@ -48,16 +55,28 @@ const PersonalInfo = ({changePageNumber, handleInputChange, formData, showButton
                         required
                     />
                 </div>
-                <div className="md:col-span-3">
-                    <label htmlFor="address">Full Address</label>
+                <div className="md:col-span-2">
+                    <label htmlFor="password">Password</label>
                     <input
                         type="text"
-                        name="address"
-                        id="address"
+                        name="password"
+                        id="password"
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        placeholder="Full Address"
                         onChange={handleInputChange}
                         value={formData.address}
+                        placeholder="********"
+                        required
+                    />
+                </div>
+                <div className="md:col-span-3">
+                    <label htmlFor="email">Personal Email</label>
+                    <input
+                        type="text"
+                        name="personalEmail"
+                        id="personalEmail"
+                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                        onChange={handleInputChange}
+                        placeholder="email@domain.com"
                         required
                     />
                 </div>
@@ -76,6 +95,19 @@ const PersonalInfo = ({changePageNumber, handleInputChange, formData, showButton
                         <option value='female'>Female</option>
                         <option value='others'>Others</option>
                     </select>
+                </div>
+                
+                <div className="md:col-span-3">
+                    <label htmlFor="address">Full Address</label>
+                    <input
+                        type="text"
+                        name="address"
+                        id="address"
+                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                        placeholder="Full Address"
+                        onChange={handleInputChange}
+                        required
+                    />
                 </div>
                 <div className="md:col-span-2">
                     <label htmlFor="country">Country</label>
@@ -147,6 +179,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange, formData, showButton
                     />
                 </div>
                 <div className="md:col-span-2">
+                <div className="md:col-span-3">
                     <label htmlFor="religion">Religion</label>
                     <input
                         type="text"
@@ -159,6 +192,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange, formData, showButton
                         defaultValue=""
                     />
                 </div>
+                
                 <div className="md:col-span-2">
                     <label htmlFor="nationality">Nationality</label>
                     <input
@@ -187,6 +221,18 @@ const PersonalInfo = ({changePageNumber, handleInputChange, formData, showButton
 
                     />
                 </div>
+                <div className="md:col-span-2">
+                    <label htmlFor="blood-group">Blood Group</label>
+                    <input
+                        type="text"
+                        name="blood-group"
+                        onChange={handleInputChange}
+                        id="blood-group"
+                        className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                        placeholder="Blood G"
+                        defaultValue=""
+                    />
+                </div>
 
                 <div className="md:col-span-5 text-right">
                     <div className="inline-flex items-end">
@@ -196,8 +242,9 @@ const PersonalInfo = ({changePageNumber, handleInputChange, formData, showButton
                     </div>
                 </div>
             </div>
+            </div>
         </form>
-  )
+    )
 }
 
 export default PersonalInfo

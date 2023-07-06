@@ -16,8 +16,7 @@ export const EmploymentSlice = createSlice({
 // Action Methods
 export const { setEmploymentTypes } = EmploymentSlice.actions;
 
-// Selector Methods
-export const selectEmploymentTypes = (state) => state.employmentType.all;
+export const selectEmploymentTypes = (state) => state.employeeType.all;
 
 // Reducer
 export const EmploymentTypeReducer = EmploymentSlice.reducer;

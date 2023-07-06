@@ -6,14 +6,26 @@ import { createUser } from '../../../api/user'
 import { useSelector } from 'react-redux'
 import { selectCurrentUserBranch, selectOrgId } from '../../../states/reducers/slices/backend/UserSlice'
 
-const Forms = ({formNumber, changePageNumber, formData, handleInputChange}) => {
+const Forms = ({ formNumber, changePageNumber }) => {
+    const [formData, setFormData] = React.useState({});
     const organization = useSelector(selectOrgId);
     const branch = useSelector(selectCurrentUserBranch);
+
+    const handleInputChange = ({ target: { name, value } }) => {
+        console.log("formData.userRoster", formData.userRoster);
+        setFormData(formData => ({ ...formData, [name]: value }));
+    };
+
     useEffect(() => {
-        handleInputChange({target: {name:'organization', value:organization}});
-        handleInputChange({target: {name:'branch', value:branch}});
+        handleInputChange({ target: { name: 'organization', value: organization } });
+        handleInputChange({ target: { name: 'branch', value: branch } });
     }, [])
     const handleSubmit = () => {
+        
+        formData.userRoster.timeSlots = formData.timeSlots.timeSlots
+        formData.nic.expiry = formData.expiry
+        formData.nic.attachment.front = "front"
+        formData.nic.attachment.back = "back"
         createUser(formData);
     }
     if (formNumber === 1)
@@ -30,5 +42,6 @@ const Forms = ({formNumber, changePageNumber, formData, handleInputChange}) => {
                  <button onClick={handleSubmit}>Submit</button>
          </>
 }
+
 
 export default Forms

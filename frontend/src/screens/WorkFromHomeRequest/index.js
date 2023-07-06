@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { differenceInBusinessDays } from 'date-fns';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { selectOrgId, selectUID } from "../../states/reducers/slices/backend/UserSlice";
 import { CreateWfhRequest } from "../../api/wfh";
 
@@ -9,13 +9,8 @@ const WorkFromHomeRequest = () => {
   const [endDate, setEndDate] = useState("");
   const [reason, setReason] = useState("");
   const [count, setCount] = useState("");
-
-  const dispatcher = useDispatch();
   const org_id = useSelector(selectOrgId);
   const user = useSelector(selectUID)
-
-  useEffect(() => {
-  }, []);
 
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
@@ -27,7 +22,6 @@ const WorkFromHomeRequest = () => {
 
   const handleEndDateChange = (e) => {
     setEndDate(e.target.value);
-    
       if (startDate) {
         const count = getWfhCount(startDate, e.target.value);
         setCount(count);

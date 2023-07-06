@@ -396,7 +396,7 @@ export const rejectLeaveRequest = (req, res, next, show = true) => {
 }
 
 export const userLeaveRequests = (req, res, next) => {
-    LeaveRequestModel.find({ user: req.params.id })
+    LeaveRequestModel.find({ user: req.params.id }).populate("leaveType")
         .then((leaves) => {
             if (leaves.length == 0) throw new Error('User did not request any leave')
             res.status(200).json({
