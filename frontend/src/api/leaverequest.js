@@ -26,7 +26,7 @@ export const getShortLeaveTypesByOrganizationId = (org_id, dispatcher) => {
 export const saveFormData = (formData) => {
     axios.post(leaveRequestRoutes.setUserLeave, formData)
     .then((response) => {
-       console.log("Form Data Saved Successfully");
+       console.log(response.data.message);
     })
     .catch((err) => {
         console.log(err);

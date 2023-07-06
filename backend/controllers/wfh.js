@@ -1,9 +1,9 @@
 import { WFHModel } from "../models/wfhSchema.js";
 import { UserModel } from '../models/userSchema.js'
 import { creatingRequest } from "../utils/request.js";
-import { handleCatch, updateById, getById, deleteById } from '../utils/common.js'
 import mongoose from "mongoose"
 import { RequestFlowModel } from "../models/requestFlowSchema.js";
+import { handleCatch, updateById, getById, deleteById, getAll } from '../utils/common.js'
 
 export const creatingWFH = (req, res, next) => {
     UserModel.findById(req.body.user)
@@ -116,4 +116,8 @@ export const rejectLeaveRequest = (req, res, next) => {
     } catch (error) {
         handleCatch(error, res, 400, next)
     }
+}
+
+export const getAllWFHByUserId = (req, res, next)=>{
+    getAll(res, next, WFHModel, {user : req.params.id}, "WFH's")
 }

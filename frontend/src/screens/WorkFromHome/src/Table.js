@@ -13,7 +13,6 @@ function GlobalFilter({
 }) {
   const count = preGlobalFilteredRows.length
   const [value, setValue] = React.useState(globalFilter)
-
   const onChange = useAsyncDebounce(value => {
     setGlobalFilter(value || undefined)
   }, 200)
@@ -176,6 +175,15 @@ function Table({ columns, data }) {
                         >
                           <div className="flex items-center justify-center">
                             {column.render('Header')}
+                            <span>
+                              {column.isSorted
+                                ? column.isSortedDesc
+                                  ? <SortDownIcon className="w-4 h-4 text-gray-400" />
+                                  : <SortUpIcon className="w-4 h-4 text-gray-400" />
+                                : (
+                                  <SortIcon className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100" />
+                                )}
+                            </span>
                           </div>
                         </th>
                       ))}

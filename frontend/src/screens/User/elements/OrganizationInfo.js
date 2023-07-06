@@ -2,17 +2,16 @@ import React, { useEffect } from 'react'
 import { loadAllOrganizationsInfo } from '../../../api/user';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentUserBranch, selectCurrentUserOrg, selectFinalAuthority, selectTimeSlots } from '../../../states/reducers/slices/backend/UserSlice';
-import { selectUserBranch } from '../../../states/reducers/slices/backend/Branch';
 import { selectUserDepartment } from '../../../states/reducers/slices/backend/Department';
 import { selectOrganizationDesignation } from '../../../states/reducers/slices/backend/Designation';
 import SelectForm from '../../../components/SelectForm';
 import RestDays from './RestDays';
+import { selectEmploymentTypes } from '../../../states/reducers/slices/backend/EmploymentType';
 
 const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showButton }) => {
     const dispatcher = useDispatch();
     const userOrgId = useSelector(selectCurrentUserOrg);
     const branchId = useSelector(selectCurrentUserBranch);
-    const branches = useSelector(selectUserBranch);
     const departments = useSelector(selectUserDepartment);
     const designations = useSelector(selectOrganizationDesignation);
     const lineManager = useSelector(selectFinalAuthority);
@@ -20,10 +19,23 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
 
     const timeSlotValue = formData.roaster ? formData.roaster.timeSlot : '';
     const restDaysValue = formData.roaster && formData.roaster.restDays ? formData.roaster.restDays : [];
+    const employmentTypes = useSelector(selectEmploymentTypes)
+    console.log("employmentTypes",employmentTypes);
+
+    const employeeTypes = [
+        {
+            name: 'field',
+        },
+        {
+            name: 'non-field'
+        }
+    ];
 
     useEffect(() => {
         loadAllOrganizationsInfo(dispatcher, userOrgId, branchId);
     }, []);
+
+    console.log("Line Manager ", lineManager);
 
     const convertDatetoLocalTime = (date) => {
         const dateTime = new Date(date);
@@ -61,11 +73,37 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                 </div>
             </div>
             <div className="md:col-span-5">
+                <label htmlFor="full_name">Employment Type</label>
+                <div className="flex space-x-2">
+                    <select name='employmentType' onChange={handleInputChange} className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" required>
+                        <option value={''}>Select Employment Type</option>
+                       {
+                            employmentTypes.map((employmentType) => {
+                                return <option key={employmentType._id} value={employmentType._id}>{employmentType.employmentType}</option>
+                            })
+                       }
+                    </select>
+                </div>
+            </div>
+            <div className="md:col-span-5">
+                <label htmlFor="full_name">Employee Type</label>
+                <div className="flex space-x-2">
+                    <select name='employeeType' onChange={handleInputChange} className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" required>
+                        <option value={''}>Select Employee Type</option>
+                       {
+                            employeeTypes.map((employeeType) => {
+                                return <option key={employeeType.name} value={employeeType.name}>{employeeType.name}</option>
+                            })
+                       }
+                    </select>
+                </div>
+            </div>
+            <div className="md:col-span-5">
                 <p>Line Manager</p>
                 {(lineManager.length > 0) && <SelectForm name='lineManager' title={'Line Manager'} people={lineManager} handleInputChange={handleInputChange} value={formData.lineManager} />}
             </div>
             <div className="md:col-span-5">
-                <label htmlFor="full_name">Roaster</label>
+                <label htmlFor="timeSlots">Roster</label>
                 <div className="flex space-x-2">
                     <select
                         name="timeSlot"
@@ -79,7 +117,11 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                         }}
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                         required
-                    >
+                    />
+                    <select name='timeSlots' onChange={(event) => {
+                        let val = event.target.value
+                        handleInputChange({target: {name: 'timeSlots', value: {timeSlots:val}}})
+                    }} className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" required>
                         <option value={''}>Select TimeSlot</option>
                         {timeSlots.map((timeSlot) => (
                             <option key={timeSlot._id} value={timeSlot._id}>
@@ -91,6 +133,7 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
 
                 </div>
             </div>
+            
             <div className="md:col-span-5">
                 <label htmlFor="full_name">Rest Days</label>
                 <div className="flex space-x-2">
