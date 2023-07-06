@@ -24,14 +24,3 @@ export const getDepartmentsByOrgId = (orgId, setDepartment) => {
         })
 }
 
-export const getBranchesByOrgId = (orgId, setBranches) => {
-    axios.get(organizationRoutes.getBranchesByOrgId + orgId)
-        .then((response) => {
-            console.log(response);
-            setBranches(response.data.branches)
-
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-}

@@ -90,6 +90,7 @@ export const desiginationsRoute = {
 export const departmentRoute = {
     createDepartment : baseUrl+'/new/department',
 }
+
 export const  getOrganization = {
     grades: baseUrl+'/grade/organization/'
 }
@@ -104,4 +105,8 @@ export const  getAllWfh = {
 
 export const  getTime = {
     sheet: baseUrl+'/filter-attendence'
+}
+
+export const branchRoute = {
+    createBranch : baseUrl+'/branch/new',
 }

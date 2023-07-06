@@ -5,7 +5,8 @@ import { useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Table from './src/Table'
 import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
-import { createDepartment, getBranchesByOrgId, getDepartmentsByOrgId } from '../../api/departments';
+import { createDepartment, getDepartmentsByOrgId } from '../../api/departments';
+import { getBranchesByOrgId } from '../../api/branches';
 
 const Departments = () => {
     let orgId;

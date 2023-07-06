@@ -23,6 +23,7 @@ export const Menus = [
     },
     { title: "Desiginations", font: faCalendarCheck, child:[], to:"/dashboard/desiginations"  },
     { title: "Departments", font: faCalendarCheck, child:[], to:"/dashboard/departments"  },
+    { title: "Branches", font: faCalendarCheck, child:[], to:"/dashboard/branches"  },
     {
         title: "Employee", 
         access:"admin",
