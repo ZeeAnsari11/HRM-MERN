@@ -148,7 +148,7 @@ function Table({ columns, data }) {
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
             <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
               <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
-                <thead className="items-center  bg-gray-50">
+                <thead className="items-center bg-gray-50">
                   {headerGroups.map(headerGroup => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                       {headerGroup.headers.map(column => (
@@ -190,7 +190,7 @@ function Table({ columns, data }) {
                               role="cell"
                             >
                               {cell.column.Cell.name === "defaultRenderer"
-                                ? <div className="flex items-center  text-sm text-gray-500">{cell.render('Cell')}</div>
+                                ? <div className="flex items-center text-sm text-gray-500">{cell.render('Cell')}</div>
                                 : cell.render('Cell')
                               }
                             </td>

@@ -5,14 +5,14 @@ const timeSlotsSchema = mongoose.Schema({
         type: String,
         required: [true, "Please Enter the Name of TimeSlot"],
         lowercase: true,
-        validate: /^[a-zA-Z0-9][a-zA-Z0-9-]*$/
+        validate: /^[a-zA-Z0-9 ][a-zA-Z0-9- ]*$/
     },
     startTime: {
-        type: Date,
+        type: String,
         required: [true, "Please Enter the Start Time of TimeSlot"]
     },
     endTime: {
-        type: Date,
+        type: String,
         required: [true, "Please Enter the End Time of TimeSlot"]
     },
     isOverNight: {
@@ -46,11 +46,11 @@ const timeSlotsSchema = mongoose.Schema({
             required: [true, "Please Enter the Name of Break"]
         },
         startTime: {
-            type: Date,
+            type: String,
             required: [true, "Please Enter the Start Time of Break"]
         },
         endTime: {
-            type: Date,
+            type: String,
             required: [true, "Please Enter the End Time of Break"]
         },
         inclusive: {

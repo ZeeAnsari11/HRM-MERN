@@ -17,10 +17,12 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
     const lineManager = useSelector(selectFinalAuthority);
     const timeSlots = useSelector(selectTimeSlots);
 
-    const timeSlotValue = formData.roaster ? formData.roaster.timeSlot : '';
-    const restDaysValue = formData.roaster && formData.roaster.restDays ? formData.roaster.restDays : [];
+    const timeSlotValue = formData.timeSlots ? formData.timeSlots.timeSlots : '';
+    const restDaysValue = formData.roaster ? formData.roaster.restDays : [];
+    console.log("=======timeSlotValue==",timeSlotValue);
+    console.log("=======restDaysValue==",restDaysValue);
     const employmentTypes = useSelector(selectEmploymentTypes)
-    console.log("employmentTypes",employmentTypes);
+    console.log("employmentTypes", employmentTypes);
 
     const employeeTypes = [
         {
@@ -37,9 +39,15 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
 
     console.log("Line Manager ", lineManager);
 
-    const convertDatetoLocalTime = (date) => {
-        const dateTime = new Date(date);
-        return dateTime.toLocaleTimeString('en-US', { hour12: true });
+    // const convertDatetoLocalTime = (date) => {
+    //     const dateTime = new Date(date);
+    //     return dateTime.toLocaleTimeString('en-US', { hour12: true });
+    // }
+    const convertToAMPM = (time) => {
+        const [hours, minutes] = time.split(':');
+        const formattedTime = new Date();
+        formattedTime.setHours(hours, minutes);
+        return formattedTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
     }
     return (
         <form className="lg:col-span-2 space-y-4" onSubmit={(e) => {
@@ -75,26 +83,26 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
             <div className="md:col-span-5">
                 <label htmlFor="full_name">Employment Type</label>
                 <div className="flex space-x-2">
-                    <select name='employmentType' onChange={handleInputChange} className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" required>
+                    <select name='employmentType'  id="employmentType" value={formData.employmentType} onChange={handleInputChange} className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" required>
                         <option value={''}>Select Employment Type</option>
-                       {
+                        {
                             employmentTypes.map((employmentType) => {
                                 return <option key={employmentType._id} value={employmentType._id}>{employmentType.employmentType}</option>
                             })
-                       }
+                        }
                     </select>
                 </div>
             </div>
             <div className="md:col-span-5">
                 <label htmlFor="full_name">Employee Type</label>
                 <div className="flex space-x-2">
-                    <select name='employeeType' onChange={handleInputChange} className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" required>
+                    <select name='employeeType'  id="employeeType" value={formData.employeeType}  onChange={handleInputChange} className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" required>
                         <option value={''}>Select Employee Type</option>
-                       {
+                        {
                             employeeTypes.map((employeeType) => {
                                 return <option key={employeeType.name} value={employeeType.name}>{employeeType.name}</option>
                             })
-                       }
+                        }
                     </select>
                 </div>
             </div>
@@ -105,35 +113,22 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
             <div className="md:col-span-5">
                 <label htmlFor="timeSlots">Roster</label>
                 <div className="flex space-x-2">
-                    <select
-                        name="timeSlot"
-                        id="timeSlot"
-                        value={timeSlotValue} // Set value to formData.roaster.timeSlot
-                        onChange={(event) => {
-                            let val = event.target.value;
-                            handleInputChange({
-                                target: { name: 'roaster', value: { timeSlot: val } },
-                            });
-                        }}
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        required
-                    />
-                    <select name='timeSlots' onChange={(event) => {
+                    <select name='timeSlots' value={timeSlotValue} onChange={(event) => {
                         let val = event.target.value
-                        handleInputChange({target: {name: 'timeSlots', value: {timeSlots:val}}})
+                        handleInputChange({ target: { name: 'timeSlots', value: { timeSlots: val } } })
                     }} className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" required>
                         <option value={''}>Select TimeSlot</option>
                         {timeSlots.map((timeSlot) => (
                             <option key={timeSlot._id} value={timeSlot._id}>
-                                {convertDatetoLocalTime(timeSlot.startTime)}-
-                                {convertDatetoLocalTime(timeSlot.endTime)}
+                                {convertToAMPM(timeSlot.startTime)}-
+                                {convertToAMPM(timeSlot.endTime)}
                             </option>
                         ))}
                     </select>
 
                 </div>
             </div>
-            
+
             <div className="md:col-span-5">
                 <label htmlFor="full_name">Rest Days</label>
                 <div className="flex space-x-2">

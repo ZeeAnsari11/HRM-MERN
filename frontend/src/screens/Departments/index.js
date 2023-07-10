@@ -68,7 +68,7 @@ const Departments = () => {
             Header: "Action",
             accessor: 'action',
             Cell: ({ row }) => (
-                <div className='flex items-center justify-center'>
+                <div className='flex items-center'>
                     <div className='pr-2'>
                         <button className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow" onClick={() => handleAction(row.original)}>
                             <FontAwesomeIcon icon={faArrowAltCircleRight} />
@@ -97,8 +97,8 @@ const Departments = () => {
             </button>
 
             {showModal && (
-                <div className="bg-opacity-50 absolute inset-0">
-                    <div className="bg-white rounded p-8 relative">
+                <div className="bg-opacity-50  inset-0">
+                    <div className="bg-white rounded p-8 ">
                         <h2 className="text-lg font-bold mb-4">Create Department</h2>
                         <form>
                             <div className="mb-4">
@@ -150,7 +150,7 @@ const Departments = () => {
                 </div>
             )}
 
-            <div className={showModal ? 'mt-64 bg-opacity-50 ' : ''}>
+            <div className={showModal ? 'bg-opacity-50 ' : ''}>
                 <div className="min-h-screen bg-gray-100 text-gray-900">
                     <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
                         <div className="mt-6">
