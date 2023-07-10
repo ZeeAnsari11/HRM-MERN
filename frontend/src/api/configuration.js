@@ -110,3 +110,8 @@ export const  getTime = {
 export const branchRoute = {
     createBranch : baseUrl+'/branch/new',
 }
+
+export const timeSlotsRoute = {
+    createTimeSlot: baseUrl+'/time-slot/new',
+    getTimeSlotsByOrgId : baseUrl+'/time-slot/organization/'
+}

@@ -2,8 +2,7 @@ import React from 'react'
 import Countries from './Countries'
 
 
-const PersonalInfo = ({changePageNumber, handleInputChange, formData, showButton}) => {
-
+const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButton }) => {
     return (
         <form className="lg:col-span-2" onSubmit={(e) => {
             e.preventDefault();
@@ -20,7 +19,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange, formData, showButton
                             placeholder="First Name"
                             className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                             onChange={handleInputChange}
-                            value={formData.first_name}
+                            value={formData.firstName}
                             required
                         />
                     </div>
@@ -36,7 +35,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange, formData, showButton
                             placeholder="Last Name"
                             className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                             onChange={handleInputChange}
-                            value={formData.last_name}
+                            value={formData.lastName}
                             required
                         />
                     </div>
@@ -58,7 +57,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange, formData, showButton
                 <div className="md:col-span-2">
                     <label htmlFor="password">Password</label>
                     <input
-                        type="text"
+                        type="password"
                         name="password"
                         id="password"
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
@@ -74,6 +73,7 @@ const PersonalInfo = ({changePageNumber, handleInputChange, formData, showButton
                         type="text"
                         name="personalEmail"
                         id="personalEmail"
+                        value={formData.personalEmail}
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                         onChange={handleInputChange}
                         placeholder="email@domain.com"
@@ -96,13 +96,14 @@ const PersonalInfo = ({changePageNumber, handleInputChange, formData, showButton
                         <option value='others'>Others</option>
                     </select>
                 </div>
-                
+
                 <div className="md:col-span-3">
                     <label htmlFor="address">Full Address</label>
                     <input
                         type="text"
                         name="address"
                         id="address"
+                        value={formData.address}
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                         placeholder="Full Address"
                         onChange={handleInputChange}
@@ -165,83 +166,69 @@ const PersonalInfo = ({changePageNumber, handleInputChange, formData, showButton
                         className="transition-all h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                     />
                 </div>
-                <div className="md:col-span-1">
-                    <label htmlFor="blood-group">Blood Group</label>
-                    <input
-                        type="text"
-                        name="blood-group"
-                        value={formData["blood-group"]}
-                        onChange={handleInputChange}
-                        id="blood-group"
-                        className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        placeholder="Blood Group"
-                        defaultValue=""
-                    />
+                <div className="md:col-span-2">
+                    <div className="md:col-span-3">
+                        <label htmlFor="religion">Religion</label>
+                        <input
+                            type="text"
+                            name="religion"
+                            value={formData.religion}
+                            onChange={handleInputChange}
+                            id="religion"
+                            className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                            placeholder="Religion"
+                            defaultValue=""
+                        />
+                    </div>
+                    <div className="md:col-span-2">
+                        <label htmlFor="nationality">Nationality</label>
+                        <input
+                            type="text"
+                            name="nationality"
+                            value={formData.nationality}
+                            onChange={handleInputChange}
+                            id="nationality"
+                            required
+                            className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                            placeholder="Nationality"
+                        />
+                    </div>
                 </div>
                 <div className="md:col-span-2">
-                <div className="md:col-span-3">
-                    <label htmlFor="religion">Religion</label>
-                    <input
-                        type="text"
-                        name="religion"
-                        value={formData.religion}
-                        onChange={handleInputChange}
-                        id="religion"
-                        className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        placeholder="Religion"
-                        defaultValue=""
-                    />
-                </div>
-                
-                <div className="md:col-span-2">
-                    <label htmlFor="nationality">Nationality</label>
-                    <input
-                        type="text"
-                        name="nationality"
-                        value={formData.nationality}
-                        onChange={handleInputChange}
-                        id="nationality"
-                        required
-                        className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        placeholder="Nationality"
-
-                    />
-                </div>
-                <div className="md:col-span-3">
-                    <label htmlFor="contact">Contact Number</label>
-                    <input
-                        type="text"
-                        name="contact"
-                        value={formData.contact}
-                        onChange={handleInputChange}
-                        id="contact"
-                        className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        placeholder="Contact Number"
-                        required
-
-                    />
-                </div>
-                <div className="md:col-span-2">
-                    <label htmlFor="blood-group">Blood Group</label>
-                    <input
-                        type="text"
-                        name="blood-group"
-                        onChange={handleInputChange}
-                        id="blood-group"
-                        className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        placeholder="Blood G"
-                        defaultValue=""
-                    />
-                </div>
-
-                <div className="md:col-span-5 text-right">
-                    <div className="inline-flex items-end">
-                        {showButton ? <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Next
-                        </button> : ""}
+                    <div className="md:col-span-3">
+                        <label htmlFor="contact">Contact Number</label>
+                        <input
+                            type="text"
+                            name="contact"
+                            value={formData.contact}
+                            onChange={handleInputChange}
+                            id="contact"
+                            className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                            placeholder="Contact Number"
+                            required
+                        />
+                    </div>
+                    <div className="md:col-span-2">
+                        <label htmlFor="blood-group">Blood Group</label>
+                        <input
+                            type="text"
+                            name="blood-group"
+                            value={formData["blood-group"]}
+                            onChange={handleInputChange}
+                            id="blood-group"
+                            className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                            placeholder="Blood G"
+                            defaultValue=""
+                        />
                     </div>
                 </div>
             </div>
+            <div className='md:col-span-2'>
+                <div className="md:col-span-5 text-right">
+                    {showButton ? <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Next
+                    </button> : ""}
+                </div>
             </div>
         </form>
     )

@@ -27,6 +27,7 @@ import Departments from "./screens/Departments";
 import ViewWorkFromHome from "./screens/WorkFromHome";
 import TimeSheet from "./screens/TimeSheet";
 import Branches from "./screens/Branches";
+import TimeSlots from "./screens/TimeSlots";
 
 // import ChartPage from "./screens/Chart/src";
 // import ChartPage from "./screens/Chart";
@@ -60,6 +61,7 @@ function App() {
         <Route path="/dashboard/desiginations" element={<Desiginations />}/>
         <Route path="/dashboard/departments" element={<Departments />}/>
         <Route path="/dashboard/branches" element={<Branches />}/>
+        <Route path="/dashboard/timeSlots" element={<TimeSlots />}/>
         <Route path="/dashboard/manage-assets" element={<ManageAsset />}/>
       </Route>
       <Route path="/*" element={<Error />}/>

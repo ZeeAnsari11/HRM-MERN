@@ -32,29 +32,28 @@ const plans = [
   },
 ];
 
-export default function RestDays({handleInputChange,}) {
-    const [restDays, setRestDays] = useState([])
+export default function RestDays({ handleInputChange, value }) {
+  const [restDays, setRestDays] = useState([]);
 
-    useEffect(() => {
-      handleInputChange({target: {name:'userRoster', value:{restDays:restDays, timeSlots:''}}});
-    }, [restDays])
-
+  useEffect(() => {
+    // Set the preselected values when the component mounts or when the prop value changes
+    setRestDays(value || []);
+  }, [value]);
 
   const handleRestDays = (index) => {
     if (restDays.includes(index)) {
       const updatedRestDays = restDays.filter((day) => day !== index);
       setRestDays(updatedRestDays);
-  
+
       handleInputChange({ target: { name: 'roaster', value: { restDays: updatedRestDays } } });
     } else {
       const updatedRestDays = [...restDays, index];
       setRestDays(updatedRestDays);
-  
+
       handleInputChange({ target: { name: 'roaster', value: { restDays: updatedRestDays } } });
     }
   };
 
-  
   return (
     <div className='grid grid-cols-5 mobile:grid-cols-2 tablet:grid-cols-3 mx-auto gap-4 py-2'>
       {plans.map((item) => (
@@ -68,3 +67,4 @@ export default function RestDays({handleInputChange,}) {
     </div>
   );
 }
+
