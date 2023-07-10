@@ -5,6 +5,8 @@ import LoginOthers from './LoginOthers';
 import { useNavigate } from 'react-router-dom';
 import {loginAuth} from '../../../api/user';
 import { useDispatch } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginForm = ({showOtherLoginTypes}) => {
     const dispatcher = useDispatch();
@@ -12,11 +14,13 @@ const LoginForm = ({showOtherLoginTypes}) => {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const navigation = useNavigate();
+    
     const handleLogin = (e) => {
         e.preventDefault();
-        loginAuth(dispatcher, { email:email.toLowerCase(), password }, navigation);
+        loginAuth(dispatcher, { email:email.toLowerCase(), password }, navigation, toast);
     }
     return (
+        <>
         <div className="flex items-center justify-center w-full md:w-auto h-full xl:w-2/5 p-8 md:px-6 lg:p-14 sm:rounded-lg md:rounded-none bg-white">
             <div className="max-w-md w-full space-y-8">
                 <div className="text-center">
@@ -64,7 +68,8 @@ const LoginForm = ({showOtherLoginTypes}) => {
                 </form>
             </div>
         </div>
-
+        <ToastContainer/>
+        </>
     )
 }
 

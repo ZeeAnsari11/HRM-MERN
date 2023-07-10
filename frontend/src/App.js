@@ -28,9 +28,6 @@ import ViewWorkFromHome from "./screens/WorkFromHome";
 import TimeSheet from "./screens/TimeSheet";
 import Branches from "./screens/Branches";
 
-// import ChartPage from "./screens/Chart/src";
-// import ChartPage from "./screens/Chart";
-
 function App() {
   return (
     <Routes>

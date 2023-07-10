@@ -1,15 +1,17 @@
 import axios from "axios";
 import { organizationRoutes } from "./configuration";
 import { branchRoute } from "./configuration";
+import { toastMessage } from "../AlertConfigs";
+import { toast } from "react-toastify";
 
 export const createBranch = (formData, changeToggler) => {
     axios.post(branchRoute.createBranch, formData)
-        .then((response) => {
-            console.log("branch created successfully frontend");
+        .then(() => {
+            toastMessage("success", "Branch created successfully,", toast);
             changeToggler();
         })
         .catch((err) => {
-            console.log(err);
+            toastMessage("error", err.response.data.Message, toast);
         })
 }
 

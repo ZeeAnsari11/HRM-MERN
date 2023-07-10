@@ -7,7 +7,7 @@ import { setOrganizationDesignation } from '../states/reducers/slices/backend/De
 import { getAllUsers } from './configuration';
 import { setEmploymentTypes } from '../states/reducers/slices/backend/EmploymentType';
 
-export const loginAuth = (dispatcher, body, navigation) => {
+export const loginAuth = (dispatcher, body, navigation, toast) => {
     axios.post(authentication.login, body)
         .then((auth) => {
             dispatcher(setAuth(auth.data));
@@ -18,13 +18,22 @@ export const loginAuth = (dispatcher, body, navigation) => {
             navigation('/dashboard/home');
         })
         .catch((error) => {
-            console.log(error.response.data);
+            toast.error(error.response.data.Message, {
+                position: "bottom-right",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
         });
 }
 
 export const logout = (dispatcher, navigation) => {
     axios.get(authentication.logout)
-        .then((auth) => {
+        .then(() => {
             dispatcher(setAuth({ token: null, user: { _id: null } }));
             localStorage.removeItem('authToken');
             localStorage.removeItem('currentUser');

@@ -1,14 +1,16 @@
 import axios from "axios";
 import { setAllAssets, setAllocation, setAsset, setAssetTypes } from "../states/reducers/slices/backend/Assets";
 import { asset, assetManagment, assetType, allAssets, getAsset } from "./configuration";
+import { toastMessage } from "../AlertConfigs";
+import { toast } from "react-toastify";
 
 export const saveAssetFormData = (formData) => {
     axios.post(asset.setAsset, formData)
-    .then((response) => {
-       console.log("Form Data Saved Successfully");
+    .then(() => {
+        toastMessage("success", "Asset created Successfully", toast);
     })
-    .catch((err) => {
-        console.log(err);
+    .catch(() => {
+        toastMessage("error", "Asset creation failed!", toast);
     })
 }
 
@@ -17,8 +19,8 @@ export const getAssetTypesByOrganizationId = (organizationId, dispatcher) => {
     .then((response) => {
        dispatcher(setAssetTypes(response.data.response))
     })
-    .catch((err) => {
-        console.log(err);
+    .catch(() => {
+        toastMessage("error", "Fetching asset types failed!", toast);
     })
 }
 
@@ -27,19 +29,18 @@ export const getAssetByOrganizationId = (organizationId, dispatcher) => {
     .then((response) => {
        dispatcher(setAllAssets(response.data.response))
     })
-    .catch((err) => {
-        console.log(err);
+    .catch(() => {
+        toastMessage("error", "Fetching assets failed!", toast);
     })
 }
 
 export const AllocateDeallocateAsset = (formData, dispatcher) => {
     axios.put(assetManagment.manageAsset, formData)
-    .then((response) => {
+    .then(() => {
        dispatcher(setAllocation(formData))
-       console.log(response)
     })
-    .catch((err) => {
-        console.log(err);
+    .catch(() => {
+        toastMessage("error", "Updating assets failed!", toast);
     })
 }
 
@@ -49,7 +50,7 @@ export const getAssetById = (id , dispatcher) => {
        dispatcher(setAsset(response))
        console.log(response);
     })
-    .catch((err) => {
-        console.log(err);
+    .catch(() => {
+        toastMessage("error", "Fetching asset failed!", toast);
     })
 }

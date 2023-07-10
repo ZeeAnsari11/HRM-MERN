@@ -10,7 +10,7 @@ const Login = () => {
         console.log(authorized)
         if (authorized) navigate('/dashboard');
     })
-    return (<div className="relative min-h-screen flex ">
+    return (<div className="relative min-h-screen flex">
         <div className="w-screen flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0 bg-white">
             <Content />
             <LoginForm/>

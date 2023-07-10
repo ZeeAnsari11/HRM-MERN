@@ -50,6 +50,7 @@ const Branches = () => {
       city: '',
       country: '',
       description: '',
+      organization: orgId
     });
   };
   const handleAction = (rowData) => {
