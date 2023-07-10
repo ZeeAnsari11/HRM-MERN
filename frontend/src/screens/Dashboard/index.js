@@ -6,6 +6,7 @@ import { selectNavState, selectWidth } from '../../states/reducers/slices/fronte
 import { getCurrentUser } from '../../api/user';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import SceneLoader from '../../components/SceneLoader';
 
 const Dashboard = () => {
     const dispatcher = useDispatch();
@@ -23,7 +24,7 @@ const Dashboard = () => {
 
     const bg = 'bg-[url(https://images.unsplash.com/32/Mc8kW4x9Q3aRR3RkP5Im_IMG_4417.jpg?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80)]'
     
-    if (loaded === true) return <h1>Loading</h1>
+    if (loaded === true) return <SceneLoader />
     return (
         <div className={`flex`}>
             <Navbar />
