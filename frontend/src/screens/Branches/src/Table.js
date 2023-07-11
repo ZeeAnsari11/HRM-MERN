@@ -113,10 +113,7 @@ function Table({ columns, data }) {
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    page, // Instead of using 'rows', we'll use page,
-    // which has only the rows for the active page
-
-    // The rest of these things are super handy, too ;)
+    page,
     canPreviousPage,
     canNextPage,
     pageOptions,
@@ -125,27 +122,28 @@ function Table({ columns, data }) {
     nextPage,
     previousPage,
     setPageSize,
-
     state,
     preGlobalFilteredRows,
     setGlobalFilter,
-  } = useTable({
-    columns,
-    data,
-  },
-    useFilters, // useFilters!
+  } = useTable(
+    {
+      columns,
+      data,
+      initialState: { pageSize: 5 }
+    },
+    useFilters,
     useGlobalFilter,
     useSortBy,
-    usePagination,  // new
-  )
+    usePagination
+  );
 
   // Render the UI for your table
   return (
     <>
       {/* table */}
-      <div className="mt-4 flex flex-col">
-        <div className="-my-2 overflow-x-auto -mx-4 sm:-mx-6 lg:-mx-8">
-          <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+      <div className=" flex flex-col">
+        <div className="mt-4 flex flex-col overflow-x-hidden overflow-y-hidden">
+          <div className="py-2 align-middle inline-block min-w-full">
             <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
               <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
                 <thead className="items-center  bg-gray-50">

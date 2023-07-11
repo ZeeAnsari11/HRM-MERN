@@ -29,7 +29,7 @@ const Dashboard = () => {
         <div className={`flex`}>
             <Navbar />
             <Topbar />
-            <div className="h-full text-black bg-gray-100 p-7 px-4 relative top-[5rem] w-[calc(100%-269px)] duration-300" style={{left: width, width:(open)?'':'100vw'}}>
+            <div className="h-full text-black bg-gray-100 p-6 px-4 relative top-[5rem] w-[calc(100%-269px)] duration-300" style={{left: width, width:(open)?'':'100vw'}}>
                 <Outlet />
             </div>
             <ToastContainer />

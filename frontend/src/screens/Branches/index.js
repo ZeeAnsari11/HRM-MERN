@@ -15,9 +15,7 @@ import CBForm from './CBForm';
 const Branches = () => {
   let orgId;
   orgId = useSelector(selectCurrentUserOrg);
-  const [showModal, setShowModal] = useState(false);
   const [toggleChange, setToggleChange] = useState(false);
-  const [departments, setDepartment] = useState([]);
   const [branches, setBranches] = useState([]);
   
 
@@ -48,7 +46,6 @@ const Branches = () => {
 
   const handleCreateBranch = () => {
     createBranch(formData, changeToggler);
-    setShowModal(false);
     setFormData({
       name: '',
       city: '',
@@ -123,7 +120,7 @@ const Branches = () => {
         Element={<CBForm formData={formData} handleInputChange={handleInputChange}/>}
         btnConfig={btnConfig}
       />
-        <div className="min-h-screen bg-gray-100 text-gray-900">
+        <div className="bg-gray-100 text-gray-900">
           <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
               <Table columns={columns} data={data} />
           </main>
