@@ -1,0 +1,15 @@
+//Modal Usage
+
+const btnConfig = [
+    {
+        title: 'Create',
+        handler: handleCreateBranch,
+    }
+]
+
+<Modal
+    action="Modal Title"
+    title="Modal Title"
+    Element={<COMPONENT />}
+    btnConfig={btnConfig}
+/>

@@ -108,7 +108,7 @@ const Branches = () => {
   const btnConfig = [
     {
       title: 'Create',
-      handler: () => handleCreateBranch(),
+      handler: handleCreateBranch,
     }
   ]
 

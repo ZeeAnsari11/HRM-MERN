@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Table from './src/Table'
 import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
 import { createDesigination } from '../../api/designation';
+import Modal from '../../components/Modal';
+import CDForm from './CDForm';
 
 const Desiginations = () => {
     let orgId;
@@ -98,73 +100,29 @@ const Desiginations = () => {
         shortForm: obj.shortForm
     }));
 
+    const btnConfig = [
+        {
+            title: 'Create',
+            handler: handleCreateDesigination,
+        }
+    ]
+
     return (
         <div>
-            <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() => setShowModal(!showModal)}
-            >
-                Create Desigination
-            </button>
-
-            {showModal && (
-                <div className="bg-opacity-50  inset-0">
-                    <div className="bg-opacity-30  inset-0"></div>
-                    <div className="bg-white rounded p-8 ">
-                        <h2 className="text-lg font-bold mb-4">Create Desigination</h2>
-                        <form>
-                            <div className="mb-4">
-                                <label className="block text-sm font-bold mb-1">Title</label>
-                                <input
-                                    className="border border-gray-300 rounded-md px-3 py-2 w-full"
-                                    type="text"
-                                    name="title"
-                                    value={formData.title}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-bold mb-1">Short Name</label>
-                                <input
-                                    className="border border-gray-300 rounded-md px-3 py-2 w-full"
-                                    type="text"
-                                    name="shortForm"
-                                    value={formData.shortForm}
-                                    onChange={handleInputChange}
-                                    pattern="^[a-zA-Z0-9-]+$"
-                                    title="Short Name can only contain alphabets, numbers, and hyphens (-)."
-                                    required
-                                />
-                            </div>
-                        </form>
-                        <div className="flex justify-end">
-                            <button
-                                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2"
-                                onClick={() => setShowModal(false)}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                onClick={handleCreateDesigination}
-                            >
-                                Submit
-                            </button>
-                        </div>
+            <Modal
+                action="Create Designation"
+                title="Create Designation"
+                Element={<CDForm formData={formData} handleInputChange={handleInputChange} />}
+                btnConfig={btnConfig}
+            />
+            <div className="min-h-screen bg-gray-100 text-gray-900">
+                <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+                    <div className="mt-6">
+                        <Table columns={columns} data={data} />
                     </div>
-                </div>
-            )}
-
-            <div className={showModal ? ' bg-opacity-50 ' : ''}>
-                <div className="min-h-screen bg-gray-100 text-gray-900">
-                    <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-                        <div className="mt-6">
-                            <Table columns={columns} data={data} />
-                        </div>
-                    </main>
-                </div>
+                </main>
             </div>
+
         </div>
     );
 };
