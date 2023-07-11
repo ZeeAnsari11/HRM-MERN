@@ -7,15 +7,17 @@ import Table from './src/Table'
 import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
 import { createDepartment, getDepartmentsByOrgId } from '../../api/departments';
 import { getBranchesByOrgId } from '../../api/branches';
+import Modal from '../../components/Modal';
+import CFForm from './component/CFForm';
+import { toastMessage } from '../../AlertConfigs';
+import { toast } from 'react-toastify';
 
 const Departments = () => {
     let orgId;
     orgId = useSelector(selectCurrentUserOrg);
-    const [showModal, setShowModal] = useState(false);
     const [toggleChange, setToggleChange] = useState(false);
     const [departments, setDepartment] = useState([]);
     const [branches, setBranches] = useState([]);
-    const [formError, setFormError] = useState('');
 
     const [formData, setFormData] = useState({
         name: "",
@@ -42,13 +44,11 @@ const Departments = () => {
 
     const handleCreateDepartment = () => {
         if (!formData.name || !formData.branch) {
-            setFormError('Please fill in all the required fields.');
+            toastMessage("error", "Please fill in all the required fields.", toast);
             return;
         }
         createDepartment(formData, changeToggler);
-        setShowModal(false);
         setFormData({ name: "", organization: orgId, branch: "" });
-        setFormError('');
     };
 
     const handleAction = (rowData) => {
@@ -87,78 +87,27 @@ const Departments = () => {
         branch: obj.branch.name
     }));
 
+    const btnConfig = [
+        {
+          title: 'Create',
+          handler: handleCreateDepartment,
+        }
+      ]
+
     return (
         <div>
-            <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() => setShowModal(!showModal)}
-            >
-                Create Department
-            </button>
-
-            {showModal && (
-                <div className="bg-opacity-50  inset-0">
-                    <div className="bg-white rounded p-8 ">
-                        <h2 className="text-lg font-bold mb-4">Create Department</h2>
-                        <form>
-                            <div className="mb-4">
-                                <label className="block text-sm font-bold mb-1">Name</label>
-                                <input
-                                    className="border border-gray-300 rounded-md px-3 py-2 w-full bg-gray-50"
-                                    type="text"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-bold mb-1">Branch</label>
-                                <select
-                                    name="branch"
-                                    id="branch"
-                                    value={formData.branch}
-                                    onChange={handleInputChange}
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                    required
-                                >
-                                    <option value="" className="border border-gray-300 rounded-md px-3 py-2 w-full"></option>
-                                    {branches.map((branch) => (
-                                        <option key={branch._id} value={branch._id}>
-                                            {branch.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            {formError && <p className="text-red-500">{formError}</p>}
-                        </form>
-                        <div className="flex justify-end">
-                            <button
-                                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2"
-                                onClick={() => setShowModal(false)}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                onClick={handleCreateDepartment}
-                            >
-                                Submit
-                            </button>
-                        </div>
-                    </div>
+            <Modal
+                action="Create Department"
+                title="Create Department"
+                Element={<CFForm branches={branches} formData={formData} handleInputChange={handleInputChange} />}
+                btnConfig={btnConfig}
+            />
+            <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+                <div className="mt-6">
+                    <Table columns={columns} data={data} />
                 </div>
-            )}
+            </main>
 
-            <div className={showModal ? 'bg-opacity-50 ' : ''}>
-                <div className="min-h-screen bg-gray-100 text-gray-900">
-                    <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-                        <div className="mt-6">
-                            <Table columns={columns} data={data} />
-                        </div>
-                    </main>
-                </div>
-            </div>
         </div>
     );
 };
