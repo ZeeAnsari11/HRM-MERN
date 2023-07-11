@@ -19,8 +19,6 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
 
     const timeSlotValue = formData.timeSlots ? formData.timeSlots.timeSlots : '';
     const restDaysValue = formData.roaster ? formData.roaster.restDays : [];
-    console.log("=======timeSlotValue==",timeSlotValue);
-    console.log("=======restDaysValue==",restDaysValue);
     const employmentTypes = useSelector(selectEmploymentTypes)
     console.log("employmentTypes", employmentTypes);
 

@@ -5,8 +5,9 @@ import Configuration from './Configuration'
 import { createUser } from '../../../api/user'
 import { useSelector } from 'react-redux'
 import { selectCurrentUserBranch, selectOrgId } from '../../../states/reducers/slices/backend/UserSlice'
+import UserInfo from './UserInfo'
 
-const Forms = ({ formNumber, changePageNumber, formData , handleInputChange}) => {
+const Forms = ({ formNumber, changePageNumber, formData, handleInputChange }) => {
     const organization = useSelector(selectOrgId);
     const branch = useSelector(selectCurrentUserBranch);
 
@@ -18,7 +19,7 @@ const Forms = ({ formNumber, changePageNumber, formData , handleInputChange}) =>
         let element = {
             timeslots: formData.timeSlots ? formData.timeSlots.timeSlots : [],
             restDays: formData.roaster ? formData.roaster.restDays : [],
-          };
+        };
         formData.userRoster = element
         delete formData.roaster
         delete formData.timeSlots
@@ -28,18 +29,21 @@ const Forms = ({ formNumber, changePageNumber, formData , handleInputChange}) =>
         createUser(formData);
     }
     if (formNumber === 1)
-        return <PersonalInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton = {true}/>
+        return <PersonalInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={true} />
     if (formNumber === 2)
-        return <OrganizationInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton = {true}/> 
+        return <UserInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={true}/>
     if (formNumber === 3)
-        return <Configuration formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton = {true}/>
+        return <OrganizationInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={true} />
     if (formNumber === 4)
+        return <Configuration formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={true} />
+    if (formNumber === 5)
         return <>
-                {/* <PersonalInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton = {false}/> */}
-                <OrganizationInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton = {false}/>
-                <Configuration formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton = {false}/>
-                 <button onClick={handleSubmit}>Submit</button>
-         </>
+            <PersonalInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton = {false}/>
+            <UserInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false}/>
+            <OrganizationInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false} />
+            <Configuration formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false} />
+            <button onClick={handleSubmit}>Submit</button>
+        </>
 }
 
 

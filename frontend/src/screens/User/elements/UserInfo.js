@@ -1,18 +1,33 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { loadAllOrganizationsInfo } from '../../../api/user';
 import { selectCurrentUserBranch, selectCurrentUserOrg, selectUserGrades } from '../../../states/reducers/slices/backend/UserSlice';
 
-const UserInfo = ({ changePageNumber, handleInputChange }) => {
-
+const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton }) => {
+    console.log("====frmData====", formData);
     const dispatcher = useDispatch();
     const userOrgId = useSelector(selectCurrentUserOrg);
     const branchId = useSelector(selectCurrentUserBranch);
     const grades = useSelector(selectUserGrades)
+    const [frontFile, setFrontFile] = useState(null);
+    const [backFile, setBackFile] = useState(null);
 
     useEffect(() => {
         loadAllOrganizationsInfo(dispatcher, userOrgId, branchId);
     }, []);
+    console.log(formData)
+
+    const handleFrontFileChange = (event) => {
+        const file = event.target.files[0];
+        setFrontFile(file);
+        handleInputChange({ target: { name: 'frontSide', value: file } });
+    };
+
+    const handleBackFileChange = (event) => {
+        const file = event.target.files[0];
+        setBackFile(file);
+        handleInputChange({ target: { name: 'backSide', value: file } });
+    };
 
     return (
         <form className="lg:col-span-2 space-y-4" onSubmit={(e) => {
@@ -25,6 +40,7 @@ const UserInfo = ({ changePageNumber, handleInputChange }) => {
                     <select
                         name="roleType"
                         id="roleType"
+                        value={formData.roleType}
                         onChange={handleInputChange}
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                         required
@@ -39,7 +55,7 @@ const UserInfo = ({ changePageNumber, handleInputChange }) => {
                 <div className="md:col-span-2">
                     <label htmlFor="full_name">Grades</label>
                     <div className="flex space-x-2">
-                        <select name='grade' onChange={handleInputChange} className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" required>
+                        <select name='grade' value={formData.grade} onChange={handleInputChange} className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" required>
                             <option value={''}>Select Grade</option>
                             {
                                 grades.map((grade) => {
@@ -50,23 +66,23 @@ const UserInfo = ({ changePageNumber, handleInputChange }) => {
                     </div>
                 </div>
                 <div className="md:col-span-3">
-                    <label className='pl-2' htmlFor="cnic">Driving License</label>
+                    <label className='pl-2' htmlFor="drivingLicense">Driving License</label>
                     <div className="flex space-x-2">
                         <input
-                            type="int"
-                            name="drivingLiscence"
-                            id="drivingLiscence"
+                            type='int'
+                            name="drivingLicense" // Corrected the attribute name
+                            id="drivingLicense"
+                            value={formData.drivingLicense?.number}
                             placeholder="3510319187449"
                             className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                            onChange={
-                                (event) => {
-                                    handleInputChange({ target: { name: 'drivingLiscence', value: { number: event.target.value } } })
-                                }
-                            }
+                            onChange={(event) => {
+                                handleInputChange({ target: { name: 'drivingLicense', value: { number: event.target.value } } })
+                            }}
                             required
                         />
                     </div>
                 </div>
+
                 <div className="md:col-span-2">
                     <label htmlFor="gross Salary">Gross Salary</label>
                     <div className="flex space-x-2">
@@ -74,6 +90,7 @@ const UserInfo = ({ changePageNumber, handleInputChange }) => {
                             type="int"
                             name="grossSalary"
                             id="grossSalary"
+                            value={formData.grossSalary}
                             placeholder="100000000000"
                             className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                             onChange={handleInputChange}
@@ -89,6 +106,7 @@ const UserInfo = ({ changePageNumber, handleInputChange }) => {
                             type="int"
                             name="passport"
                             id="passport"
+                            value={formData.passport?.number}
                             placeholder="3510319187449"
                             className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                             onChange={
@@ -107,6 +125,7 @@ const UserInfo = ({ changePageNumber, handleInputChange }) => {
                             type="int"
                             name="number"
                             id="number"
+                            value={formData.nic?.number}
                             placeholder="3510319187449"
                             className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                             onChange={
@@ -127,7 +146,7 @@ const UserInfo = ({ changePageNumber, handleInputChange }) => {
                             className="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] font-normal leading-[2.15] text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
                             id="front"
                             type="file"
-                            onChange={handleInputChange}
+                            onChange={handleFrontFileChange}
                             required
                         />
                     </div>
@@ -141,7 +160,7 @@ const UserInfo = ({ changePageNumber, handleInputChange }) => {
                             className="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] font-normal leading-[2.15] text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
                             id="back"
                             type="file"
-                            onChange={handleInputChange}
+                            onChange={handleBackFileChange}
                             required
                         />
                     </div>
@@ -152,6 +171,7 @@ const UserInfo = ({ changePageNumber, handleInputChange }) => {
                     <input
                         type="date"
                         name="expiry"
+                        value={formData.expiry}
                         onChange={handleInputChange}
                         id="expiry"
                         required
@@ -163,6 +183,7 @@ const UserInfo = ({ changePageNumber, handleInputChange }) => {
                     <input
                         type="date"
                         name="joiningDate"
+                        value={formData.joiningDate}
                         onChange={handleInputChange}
                         id="joiningDate"
                         required
@@ -173,9 +194,9 @@ const UserInfo = ({ changePageNumber, handleInputChange }) => {
 
             <div className="md:col-span-5 text-right">
                 <div className="inline-flex items-end">
-                    <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    {showButton ? <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         Next
-                    </button>
+                    </button> : ""}
                 </div>
             </div>
         </form >

@@ -62,7 +62,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         id="password"
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                         onChange={handleInputChange}
-                        value={formData.address}
+                        value={formData.password}
                         placeholder="********"
                         required
                     />
