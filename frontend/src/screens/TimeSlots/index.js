@@ -104,20 +104,12 @@ const TimeSlots = () => {
       accessor: 'endTime',
     },
     {
-      Header: 'Buffer Start',
-      accessor: 'punchBufferStart',
+      Header: 'Buffer Time(min)',
+      accessor: 'bufferTime',
     },
     {
-      Header: 'Buffer End',
-      accessor: 'punchBufferEnd',
-    },
-    {
-      Header: 'Break StartTime',
-      accessor: 'break.startTime',
-    },
-    {
-      Header: 'Break EndTime',
-      accessor: 'break.endTime',
+      Header: 'Break Time',
+      accessor: 'breakTime',
     },
     {
       Header: 'Action',
@@ -154,35 +146,31 @@ const TimeSlots = () => {
     name: obj.name,
     startTime: convertToAMPM(obj.startTime),
     endTime: convertToAMPM(obj.endTime),
-    punchBufferStart: obj.punchBufferStart,
-    punchBufferEnd: obj.punchBufferEnd,
-    break: {
-      startTime: convertToAMPM(obj.break.startTime),
-      endTime: convertToAMPM(obj.break.endTime)
-    }
+    bufferTime: `${obj.punchBufferStart} - ${obj.punchBufferEnd}`,
+    breakTime: `${convertToAMPM(obj.break.startTime)} - ${convertToAMPM(obj.break.endTime)}`
   }
   ))
-  
+
   const btnConfig = [
     {
-        title: 'Create',
-        handler: handleCreateBranch,
+      title: 'Create',
+      handler: handleCreateBranch,
     }
   ]
 
   return (
     <div>
       <Modal
-          action="Create Timeslot"
-          title="Create Timeslot"
-          Element={<CTForm formData={formData} handleInputChange={handleInputChange} />}
-          btnConfig={btnConfig}
+        action="Create Timeslot"
+        title="Create Timeslot"
+        Element={<CTForm formData={formData} handleInputChange={handleInputChange} />}
+        btnConfig={btnConfig}
       />
-          <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-            <div className="mt-6">
-              <Table columns={columns} data={data} />
-            </div>
-          </main>
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <div className="mt-6">
+          <Table columns={columns} data={data} />
+        </div>
+      </main>
     </div>
   );
 };
