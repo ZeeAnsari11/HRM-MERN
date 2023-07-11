@@ -1,5 +1,5 @@
 import React from 'react'  // new
-import Table, { StatusPill } from './src/Table'
+import Table, { StatusPill } from '../../components/Table';
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectUID } from '../../states/reducers/slices/backend/UserSlice'

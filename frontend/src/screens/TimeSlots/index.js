@@ -1,21 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
-import { useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Table from './src/Table'
+import Table from '../../components/Table';
 import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
 import { createTimeSlot, getTimeSlotsByOrgId } from '../../api/timeSlots';
 import CTForm from './CTForm';
 import Modal from '../../components/Modal';
 
 const TimeSlots = () => {
-  let orgId;
-  orgId = useSelector(selectCurrentUserOrg);
+  let orgId = useSelector(selectCurrentUserOrg);
   const [toggleChange, setToggleChange] = useState(false);
   const [timeSlots, setTimeSlots] = useState([]);
-
-
   const [formData, setFormData] = useState({
     name: '',
     startTime: '',

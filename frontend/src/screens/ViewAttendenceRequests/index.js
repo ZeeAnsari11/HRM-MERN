@@ -1,13 +1,10 @@
-import React from 'react'
-import Table, { StatusPill } from './src/Table'
+import React, { useState, useEffect } from 'react'
+import Table, { StatusPill } from '../../components/Table';
 import { useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
-import { useDispatch, useSelector } from 'react-redux'
-import { selectUID, selectUserWfh } from '../../states/reducers/slices/backend/UserSlice'
-import { useEffect } from 'react'
-import View from './src/modal';
-import { useState } from 'react';
+import { useSelector } from 'react-redux'
+import { selectUID } from '../../states/reducers/slices/backend/UserSlice'
 import { getMissingPunchesRquestsOfUser } from '../../api/missingPunchesRequests';
 
 
@@ -101,7 +98,7 @@ function ViewAttendenceRequests() {
         <div className="min-h-screen bg-gray-100 text-gray-900">
             <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
                 <div className="mt-6">
-                    {showView && <View />}
+                    {/* {showView && <View />} */}
                     <Table columns={columns} data={data} />
                 </div>
             </main>

@@ -3,14 +3,14 @@ import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserS
 import { useSelector } from 'react-redux';
 import { useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Table from './src/Table'
+import { toastMessage } from '../../AlertConfigs';
+import { toast } from 'react-toastify';
 import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
 import { createDepartment, getDepartmentsByOrgId } from '../../api/departments';
 import { getBranchesByOrgId } from '../../api/branches';
 import Modal from '../../components/Modal';
 import CFForm from './component/CFForm';
-import { toastMessage } from '../../AlertConfigs';
-import { toast } from 'react-toastify';
+import Table from '../../components/Table';
 
 const Departments = () => {
     let orgId;

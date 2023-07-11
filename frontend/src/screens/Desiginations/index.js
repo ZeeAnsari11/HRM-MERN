@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Table from './src/Table'
+import Table from '../../components/Table';
 import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
 import { createDesigination } from '../../api/designation';
 import Modal from '../../components/Modal';
@@ -16,7 +16,6 @@ const Desiginations = () => {
     let orgId;
     let dispatcher = useDispatch();
     orgId = useSelector(selectCurrentUserOrg);
-    const [showModal, setShowModal] = useState(false);
     const [toggleChange, setToggleChange] = useState(false);
     const [desiginations, setDesiginations] = useState([]);
     const [formData, setFormData] = useState({
@@ -58,7 +57,6 @@ const Desiginations = () => {
             return;
         }
         createDesigination(formData, changeToggler);
-        setShowModal(false)
         setFormData({
             title: "",
             organization: orgId,

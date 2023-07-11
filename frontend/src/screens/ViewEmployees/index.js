@@ -1,5 +1,5 @@
 import React from 'react'  // new
-import Table, { AvatarCell, SelectColumnFilter, StatusPill } from './src/Table'
+import Table, { AvatarCell, SelectColumnFilter, StatusPill } from '../../components/Table';
 import { useMemo } from 'react'
 import { getAllUsersByOrganization } from '../../api/user'
 import { useDispatch, useSelector } from 'react-redux'

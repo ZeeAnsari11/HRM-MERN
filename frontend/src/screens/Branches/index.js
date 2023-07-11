@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
-import { useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Table from './src/Table'
+import Table from '../../components/Table';
 import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
 
 import { createBranch } from '../../api/branches';
@@ -11,15 +10,11 @@ import { getBranchesByOrgId } from '../../api/branches';
 import Modal from '../../components/Modal';
 import CBForm from './CBForm';
 
-
 const Branches = () => {
   let orgId;
   orgId = useSelector(selectCurrentUserOrg);
   const [toggleChange, setToggleChange] = useState(false);
   const [branches, setBranches] = useState([]);
-  
-
-
   const [formData, setFormData] = useState({
     name: '',
     city: '',
