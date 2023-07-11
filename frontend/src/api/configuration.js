@@ -101,3 +101,7 @@ export const  getAllWfh = {
 export const  getTime = {
     sheet: baseUrl+'/filter-attendence'
 }
+
+export const  paySlips = {
+    ofUser: baseUrl+'/paySlip/user/'
+}

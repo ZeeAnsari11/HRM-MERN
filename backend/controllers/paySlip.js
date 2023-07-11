@@ -1,7 +1,7 @@
 import { PaySlipModel } from "../models/payslipSchema.js";
 import { UserModel } from "../models/userSchema.js"
 import { AllowanceModel } from "../models/allowanceSchema.js";
-import { createNew, updateById, handleCatch } from "../utils/common.js"
+import { createNew, updateById, handleCatch, getAll } from "../utils/common.js"
 import { SalaryModel } from "../models/salarySchema.js";
 import { OrganizationModel } from "../models/organizationSchema.js";
 import { TaxRuleModel } from "../models/taxRuleSchema.js";
@@ -562,4 +562,10 @@ export const updatePaySlipsById = (req, res, next) => {
     catch (error) {
         handleCatch(error, res, 400, next)
     }
+}
+
+
+export const getPaySlipsByUserId = (req, res, next) => {
+    let query = {user:req.params.id, status:'close'}
+   getAll(res, next, PaySlipModel,{user:req.params.id, status:'close'}, "PaySlips")
 }

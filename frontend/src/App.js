@@ -25,6 +25,7 @@ import Roaster from "./screens/Roaster/src";
 import Desiginations from "./screens/Desiginations";
 import ViewWorkFromHome from "./screens/WorkFromHome";
 import TimeSheet from "./screens/TimeSheet";
+import Payslips from "./screens/Payslips";
 // import ChartPage from "./screens/Chart/src";
 // import ChartPage from "./screens/Chart";
 
@@ -54,6 +55,7 @@ function App() {
         <Route path="/dashboard/profile" element={<Profile />}/>
         <Route path="/dashboard/settings" element={<Settings />}/>
         <Route path="/dashboard/add-asset" element={<Asset />}/>
+        <Route path="/dashboard/payslips" element={<Payslips />}/>
         <Route path="/dashboard/Desiginations" element={<Desiginations />}/>
         <Route path="/dashboard/manage-assets" element={<ManageAsset />}/>
       </Route>
