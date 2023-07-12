@@ -1,9 +1,9 @@
 import React from 'react'
 import Logo from '../../../assets/default-avatar.png';
-import NotificationsRoundedIcon from '@material-ui/icons/NotificationsRounded';
-import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectMenuOpen, setTogglers } from '../../../states/reducers/slices/frontend/Navbar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBell, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 const Notification = ({ styled }) => {
     const key = 'notification';
@@ -11,9 +11,9 @@ const Notification = ({ styled }) => {
     let isMenuOpen = useSelector(selectMenuOpen);
     return (
         <div className={styled.iconsContainer} onClick={() => dispatcher(setTogglers(key))}>
-            <NotificationsRoundedIcon className={styled.textColor} />
+            <FontAwesomeIcon className={styled.textColor} icon={faBell}/>
             <div style={{ maxWidth: (isMenuOpen[key]) ? '400px' : '0' }} className="overflow-hidden cursor-default duration-300 fixed z-50 right-0 top-0 h-screen bg-lightBgColor divide-y divide-gray-100 rounded-lg shadow-lg">
-                <div className='p-4 w-full'><CloseRoundedIcon className='cursor-pointer' onClick={() => dispatcher(setTogglers(key))}/></div>
+                <div className='p-4 w-full'><FontAwesomeIcon className='cursor-pointer' onClick={() => dispatcher(setTogglers(key))} icon={faXmark}/></div>
                 <div className="divide-y divide-gray-100">
                     <div className="flex px-4 py-3 hover:bg-gray-100 cursor-pointer">
                         <div className="flex-shrink-0">

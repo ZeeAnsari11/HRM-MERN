@@ -2,8 +2,6 @@
 import React from 'react';
 import 'tailwindcss/tailwind.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import Alert from '@mui/material/Alert';
-// import Stack from '@mui/material';
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import { useDropzone } from "react-dropzone";
 import { useEffect, useState } from 'react';

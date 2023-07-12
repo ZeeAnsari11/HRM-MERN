@@ -1,13 +1,11 @@
 import React from 'react';
-import Brightness2OutlinedIcon from '@material-ui/icons/Brightness2Outlined';
-import FullscreenRoundedIcon from '@material-ui/icons/FullscreenRounded';
-import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
-import MailOutlineRoundedIcon from '@material-ui/icons/MailOutlineRounded';
-import SearchRoundedIcon from '@material-ui/icons/SearchRounded';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { selectNavState, setNavbarState } from '../../states/reducers/slices/frontend/Navbar';
 import User from './elements/User';
 import Notification from './elements/Notification';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faEnvelope, faExpand, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 const Topbar = () => {
     const dispatcher = useDispatch();
@@ -34,24 +32,21 @@ const Topbar = () => {
             <div className={tailwindStyle.toglerContainer}>
                 <div className={tailwindStyle.iconsContainer}
                     onClick={() => dispatcher(setNavbarState(!open))}>
-                    <MenuRoundedIcon />
+                    <FontAwesomeIcon icon={faBars} />
                 </div>
                 <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <SearchRoundedIcon className={tailwindStyle.textColor} />
+                        <FontAwesomeIcon icon={faSearch}/>
                     </div>
                     <input type="text" className="bg-[#f1f4fb] text-gray-900 text-sm rounded-lg focus:ring-primaryColorLight block w-full pl-10 p-3.5" placeholder="Search Mockups, Logos, Design Templates..." required />
                 </div>
             </div>
             <div className={tailwindStyle.toglerContainer}>
-                <div className={tailwindStyle.iconsContainer}>
-                    <Brightness2OutlinedIcon className={tailwindStyle.textColor} />
-                </div>
                 <div className={tailwindStyle.iconsContainer} onClick={() => toggleFullScreen()}>
-                    <FullscreenRoundedIcon className={tailwindStyle.textColor} />
+                <FontAwesomeIcon icon={faExpand}/>
                 </div>
                 <div className={tailwindStyle.iconsContainer}>
-                    <MailOutlineRoundedIcon className={tailwindStyle.textColor} />
+                    <FontAwesomeIcon icon={faEnvelope} />
                 </div>
                 <Notification styled={tailwindStyle}/>
                 <User />
