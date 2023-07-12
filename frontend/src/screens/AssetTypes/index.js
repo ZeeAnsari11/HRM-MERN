@@ -45,6 +45,34 @@ const AssetTypes = () => {
 console.log();
   };
 
+  const columns = [
+    {
+      Header: "Type",
+      accessor: "type",
+    },
+    {
+      Header: "Action",
+      accessor: "action",
+      Cell: ({ row }) => (
+        <div className="flex items-center">
+          <div className="pr-2">
+            <button
+              className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
+              onClick={() => handleAction(row.original)}
+            >
+              <FontAwesomeIcon icon={faArrowAltCircleRight} />
+            </button>
+          </div>
+          <button
+            className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
+            onClick={() => handleAction(row.original)}
+          >
+            <FontAwesomeIcon icon={faEye} />
+          </button>
+        </div>
+      ),
+    },
+  ];
 
   const data = assetTypes.map(obj => ({
     type: obj.type,
@@ -65,7 +93,11 @@ console.log();
         Element={<ATForm formData={formData} handleInputChange={handleInputChange}/>}
         btnConfig={btnConfig}
       />
-       
+       <div className="bg-gray-100 text-gray-900">
+          <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+              <Table columns={columns} data={data} />
+          </main>
+        </div>
     </div>
   );
 };
