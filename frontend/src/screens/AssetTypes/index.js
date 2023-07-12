@@ -34,8 +34,8 @@ const AssetTypes = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleCreateAssetType = () => {
-    createAssetType(formData, changeToggler);
+  const handleCreateAssetType = (trigger) => {
+    createAssetType(formData, changeToggler, trigger);
     setFormData({
       type: '',
       organization: orgId,
