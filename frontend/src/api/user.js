@@ -7,7 +7,7 @@ import { setOrganizationDesignation } from '../states/reducers/slices/backend/De
 import { getAllUsers } from './configuration';
 import { setEmploymentTypes } from '../states/reducers/slices/backend/EmploymentType';
 
-export const loginAuth = (dispatcher, body, navigation, toast) => {
+export const loginAuth = (dispatcher, body, navigation, toast, setLoading) => {
     axios.post(authentication.login, body)
         .then((auth) => {
             dispatcher(setAuth(auth.data));
@@ -28,6 +28,8 @@ export const loginAuth = (dispatcher, body, navigation, toast) => {
                 progress: undefined,
                 theme: "light",
             });
+        }).finally(() => {
+            setLoading(false)
         });
 }
 

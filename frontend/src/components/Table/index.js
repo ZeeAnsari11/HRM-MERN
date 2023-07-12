@@ -157,10 +157,10 @@ function Table({ columns, data }) {
           )}
         </div>
       {/* table */}
-      <div className=" flex flex-col">
-        <div className="mt-4 flex flex-col overflow-x-hidden overflow-y-hidden">
+      <div className="flex flex-col">
+        <div className="mt-4 flex flex-col overflow-x-auto overflow-y-hidden">
           <div className="py-2 align-middle inline-block min-w-full">
-            <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <div className="shadow overflow-auto border-b border-gray-200 sm:rounded-lg">
               <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
                 <thead className="items-center  bg-gray-50">
                   {headerGroups.map(headerGroup => (

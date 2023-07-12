@@ -39,8 +39,8 @@ const Branches = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleCreateBranch = () => {
-    createBranch(formData, changeToggler);
+  const handleCreateBranch = (trigger) => {
+    createBranch(formData, changeToggler, trigger);
     setFormData({
       name: '',
       city: '',
@@ -50,7 +50,7 @@ const Branches = () => {
     });
   };
   const handleAction = (rowData) => {
-
+    console.log("====rowData===", rowData);
   };
   const columns = [
     {
@@ -94,6 +94,7 @@ const Branches = () => {
   ];
 
   const data = branches.map(obj => ({
+    id: obj._id,
     name: obj.name,
     city: obj.city,
     description: obj.description,
@@ -109,17 +110,17 @@ const Branches = () => {
 
   return (
     <div className='my-4'>
-      <Modal 
-        action="Create Branch" 
-        title="Create Branch" 
-        Element={<CBForm formData={formData} handleInputChange={handleInputChange}/>}
+      <Modal
+        action="Create Branch"
+        title="Create Branch"
+        Element={<CBForm formData={formData} handleInputChange={handleInputChange} />}
         btnConfig={btnConfig}
       />
-        <div className="bg-gray-100 text-gray-900">
-          <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-              <Table columns={columns} data={data} />
-          </main>
-        </div>
+      <div className="bg-gray-100 text-gray-900">
+        <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+          <Table columns={columns} data={data} />
+        </main>
+      </div>
     </div>
   );
 };

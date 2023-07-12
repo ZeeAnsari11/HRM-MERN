@@ -1,13 +1,15 @@
 import axios from 'axios';
 import { missingPunchesRoute } from './configuration';
+import { toastMessage } from '../AlertConfigs';
+import { toast } from 'react-toastify';
 
 export const saveFormDataForMissingPunches = (formData) => {
     axios.post(missingPunchesRoute.setUserMissingPunchesRquest, formData)
-        .then((response) => {
-            console.log("Form Data Saved Successfully for MissingPunches");
+        .then(() => {
+            toastMessage("success", "Data Saved Successfully for MissingPunches", toast)
         })
         .catch((err) => {
-            console.log(err);
+            toastMessage("error", err.response.data.Message , toast);
         })
 }
 

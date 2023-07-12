@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CDForm = (formData, handleInputChange) => {
+const CDForm = ({formData, handleInputChange}) => {
     return (
         <form>
             <div className="mb-4">
@@ -22,8 +22,6 @@ const CDForm = (formData, handleInputChange) => {
                     name="shortForm"
                     value={formData.shortForm}
                     onChange={handleInputChange}
-                    pattern="^[a-zA-Z0-9-]+$"
-                    title="Short Name can only contain alphabets, numbers, and hyphens (-)."
                     required
                 />
             </div>

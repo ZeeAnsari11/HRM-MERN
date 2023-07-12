@@ -1,8 +1,10 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
+import Loader from '../Loader'
 
 export default function Modal({ action, title, Element, btnConfig }) {
-  let [isOpen, setIsOpen] = useState(false)
+  let [isOpen, setIsOpen] = useState(false);
+  let [isLoader, setIsLoader] = useState(false);
 
   function closeModal() {
     setIsOpen(false)
@@ -10,6 +12,11 @@ export default function Modal({ action, title, Element, btnConfig }) {
 
   function openModal() {
     setIsOpen(true)
+  }
+
+  function closeLoader() {
+    setIsLoader(false);
+    closeModal();
   }
 
   return (
@@ -74,11 +81,11 @@ export default function Modal({ action, title, Element, btnConfig }) {
                           type="button"
                           className="inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
                           onClick={() => {
-                            item.handler();
-                            closeModal();
+                            setIsLoader(true);
+                            item.handler(closeLoader);
                           }}
                         >
-                          {item.title}
+                          {item.title} {isLoader ? <Loader/> : ""}
                         </button>
                       })
                     }

@@ -42,12 +42,13 @@ const Departments = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleCreateDepartment = () => {
+    const handleCreateDepartment = (toggler) => {
         if (!formData.name || !formData.branch) {
             toastMessage("error", "Please fill in all the required fields.", toast);
+            toggler();
             return;
         }
-        createDepartment(formData, changeToggler);
+        createDepartment(formData, changeToggler, toggler);
         setFormData({ name: "", organization: orgId, branch: "" });
     };
 

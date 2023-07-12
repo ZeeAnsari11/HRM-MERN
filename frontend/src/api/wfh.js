@@ -1,15 +1,20 @@
 import axios from 'axios';
 import { setTimeSheet, setUserWFH } from '../states/reducers/slices/backend/UserSlice';
 import { createWfh, getAllWfh, getTime } from './configuration';
+import { toastMessage } from '../AlertConfigs';
+import { toast } from 'react-toastify';
 
-export const CreateWfhRequest = (formData) => {
+export const CreateWfhRequest = (formData, toggler) => {
     axios.post(createWfh.request , formData)
     .then((wfh) => {
-        console.log("Message", wfh.data);
+        toastMessage("success", "Work From Home request generated successfully", toast);
     })
     .catch((error) => {
-        console.log(error.response.data);
-    });
+        toastMessage("error", error.response.data?.Message, toast);
+    })
+    .finally(()=>{
+        toggler()
+    })
    
 }
 

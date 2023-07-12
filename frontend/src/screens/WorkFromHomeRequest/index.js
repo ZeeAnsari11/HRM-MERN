@@ -3,6 +3,7 @@ import { differenceInBusinessDays } from 'date-fns';
 import { useSelector } from "react-redux";
 import { selectOrgId, selectUID } from "../../states/reducers/slices/backend/UserSlice";
 import { CreateWfhRequest } from "../../api/wfh";
+import Loader from "../../components/Loader";
 
 const WorkFromHomeRequest = () => {
   const [startDate, setStartDate] = useState("");
@@ -11,6 +12,7 @@ const WorkFromHomeRequest = () => {
   const [count, setCount] = useState("");
   const org_id = useSelector(selectOrgId);
   const user = useSelector(selectUID)
+  const [isLoader,setIsLoader] = useState(false);
 
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
@@ -29,6 +31,10 @@ const WorkFromHomeRequest = () => {
 
   };
 
+  const closeLoader = () => {
+    setIsLoader(false);
+  }
+
   const getWfhCount = (start, end) => {
     const businessDays = differenceInBusinessDays(new Date(end), new Date(start));
     const leaveCount = businessDays + 1;
@@ -37,6 +43,7 @@ const WorkFromHomeRequest = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsLoader(true);
     const organization = org_id
     const newFormData = {
       user,
@@ -45,8 +52,7 @@ const WorkFromHomeRequest = () => {
       organization,
       reason
     };
-    console.log(newFormData);
-    CreateWfhRequest(newFormData)
+    CreateWfhRequest(newFormData, closeLoader)
   };
 
   return (
@@ -103,14 +109,12 @@ const WorkFromHomeRequest = () => {
           required
         ></textarea>
       </div>
-      <div className="flex items-center justify-between">
         <button
-          className="bg-backgroundDark hover:bg-white hover:text-backgroundDark border border-backgroundDark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-backgroundDark flex items-center justify-between hover:bg-white hover:text-backgroundDark border border-backgroundDark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           type="submit"
         >
-          Submit
+          Submit {isLoader? <Loader color={'white'}/> : ""}
         </button>
-      </div>
     </form>
   );
 };

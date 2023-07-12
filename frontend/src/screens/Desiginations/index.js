@@ -11,6 +11,8 @@ import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons'
 import { createDesigination } from '../../api/designation';
 import Modal from '../../components/Modal';
 import CDForm from './CDForm';
+import { toastMessage } from '../../AlertConfigs';
+import { toast } from 'react-toastify';
 
 const Desiginations = () => {
     let orgId;
@@ -45,18 +47,20 @@ const Desiginations = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleCreateDesigination = () => {
+    const handleCreateDesigination = (trigger) => {
         if (formData.title.trim() === "" || formData.shortForm.trim() === "") {
-            alert("Please fill in all the required fields.");
+            toastMessage("error", "Please fill in all the required fields.", toast);
+            trigger()
             return;
         }
 
         const shortFormRegex = /^[a-zA-Z0-9-]+$/;
         if (!shortFormRegex.test(formData.shortForm)) {
-            alert("Short Name can only contain alphabets, numbers, and hyphens (-).");
+            toastMessage("error", "Short Name can only contain alphabets, numbers, and hyphens (-).", toast);
+            trigger()
             return;
         }
-        createDesigination(formData, changeToggler);
+        createDesigination(formData, changeToggler, trigger);
         setFormData({
             title: "",
             organization: orgId,

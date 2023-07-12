@@ -1,6 +1,8 @@
 import axios from "axios"
 import { setDesignationName } from "../states/reducers/slices/backend/Designation";
 import { getDesignation ,desiginationsRoute} from "./configuration";
+import { toastMessage } from "../AlertConfigs";
+import { toast } from "react-toastify";
 
 export const getDesignationById = (DesignationId, dispatcher) => {
     axios.get(getDesignation.byId+DesignationId)
@@ -9,17 +11,20 @@ export const getDesignationById = (DesignationId, dispatcher) => {
        dispatcher(setDesignationName(response.data.response))
     })
     .catch((err) => {
-        console.log(err);
+        toastMessage("error", err.response.data.Message, toast);
     })
 }
 
-export const createDesigination = (formData, changeToggler) => {
+export const createDesigination = (formData, changeToggler, trigger) => {
     axios.post(desiginationsRoute.createDesigination, formData)
     .then((response) => {
         changeToggler();
-       console.log("Desigination created successfully frontend");
+        toastMessage("success", "Designation created successfully", toast);
     })
     .catch((err) => {
-        console.log(err);
+        toastMessage("error", err.response.data.Message, toast);
+    })
+    .finally(() => {
+        trigger();
     })
 }
