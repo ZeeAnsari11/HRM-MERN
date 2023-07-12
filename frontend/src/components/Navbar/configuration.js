@@ -67,6 +67,7 @@ export const Menus = [
     },
 
     { title: "Payslips", font: faCircleDollarToSlot, child:[], to:"/dashboard/payslips"  },
+    { title: "Allowances", font: faCalendarCheck, child:[], to:"/dashboard/allowances"  },
     { title: "Profile ", font: faUserCircle, gap: true, child:[], to:"/dashboard/profile"},
     { title: "Settings", font: faGear, child:[], to:"/dashboard/settings" },
 ];

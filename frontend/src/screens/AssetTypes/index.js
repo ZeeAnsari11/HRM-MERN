@@ -42,7 +42,7 @@ const AssetTypes = () => {
     });
   };
   const handleAction = (rowData) => {
-console.log();
+    console.log();
   };
 
   const columns = [
@@ -87,17 +87,14 @@ console.log();
 
   return (
     <div className='my-4'>
-      <Modal 
-        action="Create Asset Type" 
-        title="Create Asset Type" 
-        Element={<ATForm formData={formData} handleInputChange={handleInputChange}/>}
+      <Modal
+        action="Create Asset Type"
+        title="Create Asset Type"
+        Element={<ATForm formData={formData} handleInputChange={handleInputChange} />}
         btnConfig={btnConfig}
       />
-       <div className="bg-gray-100 text-gray-900">
-          <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-              <Table columns={columns} data={data} />
-          </main>
-        </div>
+      <div className="bg-gray-100 text-gray-900">
+      </div>
     </div>
   );
 };

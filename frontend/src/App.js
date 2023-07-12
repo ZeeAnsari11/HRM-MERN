@@ -29,7 +29,7 @@ import TimeSheet from "./screens/TimeSheet";
 import Branches from "./screens/Branches";
 import TimeSlots from "./screens/TimeSlots";
 import AssetTypes from "./screens/AssetTypes";
-
+import Allowances from "./screens/Allowances";
 
 function App() {
   return (
@@ -62,6 +62,7 @@ function App() {
         <Route path="/dashboard/departments" element={<Departments />}/>
         <Route path="/dashboard/branches" element={<Branches />}/>
         <Route path="/dashboard/timeSlots" element={<TimeSlots />}/>
+        <Route path="/dashboard/allowances" element={<Allowances />}/>
         <Route path="/dashboard/manage-assets" element={<ManageAsset />}/>
       </Route>
       <Route path="/*" element={<Error />}/>
