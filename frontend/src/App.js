@@ -28,6 +28,8 @@ import ViewWorkFromHome from "./screens/WorkFromHome";
 import TimeSheet from "./screens/TimeSheet";
 import Branches from "./screens/Branches";
 import TimeSlots from "./screens/TimeSlots";
+import AssetTypes from "./screens/AssetTypes";
+
 
 function App() {
   return (
@@ -55,6 +57,7 @@ function App() {
         <Route path="/dashboard/profile" element={<Profile />}/>
         <Route path="/dashboard/settings" element={<Settings />}/>
         <Route path="/dashboard/add-asset" element={<Asset />}/>
+        <Route path="/dashboard/asset-type" element={<AssetTypes />}/>
         <Route path="/dashboard/desiginations" element={<Desiginations />}/>
         <Route path="/dashboard/departments" element={<Departments />}/>
         <Route path="/dashboard/branches" element={<Branches />}/>

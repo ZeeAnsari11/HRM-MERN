@@ -19,6 +19,8 @@ export const Menus = [
         child: [
             { title: "Add Asset", font: faCodePullRequest, to:"/dashboard/add-asset" },
             { title: "Manage Assets", font: faCalendarCheck, to:"/dashboard/manage-assets"},
+            { title: "Asset Type", font: faCodePullRequest, to:"/dashboard/asset-type" },
+
         ]
     },
     { title: "Desiginations", font: faCalendarCheck, child:[], to:"/dashboard/desiginations"  },
