@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Table from '../../components/Table';
 import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
-
 import { createBranch } from '../../api/branches';
 import { getBranchesByOrgId } from '../../api/branches';
 import Modal from '../../components/Modal';
@@ -50,7 +49,6 @@ const Branches = () => {
     });
   };
   const handleAction = (rowData) => {
-    console.log("====rowData===", rowData);
   };
   const columns = [
     {

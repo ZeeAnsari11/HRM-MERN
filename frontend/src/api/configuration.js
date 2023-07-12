@@ -46,6 +46,7 @@ export const asset = {
 }
 
 export const assetType = {
+    createAssetType : baseUrl+'/asset-type/new',
     getAssetType: baseUrl+'/asset-type/organization/'
 }
 
