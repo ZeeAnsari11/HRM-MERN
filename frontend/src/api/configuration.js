@@ -50,6 +50,11 @@ export const assetType = {
     getAssetType: baseUrl+'/asset-type/organization/'
 }
 
+export const allowances = {
+    createAllowance : baseUrl+'/allowance/new',
+    getAllowancesByOrgId: baseUrl+'/allowance/all/'
+}
+
 export const assetManagment = {
     manageAsset: baseUrl+'/asset/management'
 }
