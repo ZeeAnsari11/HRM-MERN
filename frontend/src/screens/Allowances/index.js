@@ -35,8 +35,8 @@ const Allowances = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleCreateAssetType = () => {
-    createAllowance(formData, changeToggler);
+  const handleCreateAssetType = (trigger) => {
+    createAllowance(formData, changeToggler, trigger);
     setFormData({
       allowanceName: '',
       percrentageOfBaseSalary: '',

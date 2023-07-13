@@ -4,7 +4,7 @@ import { getDesignation ,desiginationsRoute} from "./configuration";
 import { toastMessage } from "../AlertConfigs";
 import { toast } from "react-toastify";
 
-export const getDesignationById = (DesignationId, dispatcher) => {
+export const getDesignationById = (DesignationId, dispatcher, trigger) => {
     axios.get(getDesignation.byId+DesignationId)
     .then((response) => {
         console.log(response.data.response);
@@ -12,6 +12,9 @@ export const getDesignationById = (DesignationId, dispatcher) => {
     })
     .catch((err) => {
         toastMessage("error", err.response.data.Message, toast);
+    })
+    .finally(() => {
+        trigger();
     })
 }
 

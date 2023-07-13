@@ -62,8 +62,8 @@ const TimeSlots = () => {
     getTimeSlotsByOrgId(orgId, setTimeSlots)
   }
 
-  const handleCreateBranch = () => {
-    createTimeSlot(formData, changeToggler);
+  const handleCreateBranch = (trigger) => {
+    createTimeSlot(formData, changeToggler, trigger);
     setFormData({
       name: '',
       startTime: '',

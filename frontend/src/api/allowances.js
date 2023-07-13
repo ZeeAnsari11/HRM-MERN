@@ -3,7 +3,7 @@ import { allowances } from "./configuration";
 import { toastMessage } from "../AlertConfigs";
 import { toast } from "react-toastify";
 
-export const createAllowance = (formData, changeToggler) => {
+export const createAllowance = (formData, changeToggler, trigger) => {
     axios.post(allowances.createAllowance, formData)
         .then(() => {
             toastMessage("success", "Asset Type created successfully,", toast);
@@ -11,6 +11,9 @@ export const createAllowance = (formData, changeToggler) => {
         })
         .catch((err) => {
             toastMessage("error", err.response.data.Message, toast);
+        })
+        .finally(() => {
+            trigger();
         })
 }
 
