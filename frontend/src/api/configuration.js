@@ -77,7 +77,7 @@ export const  getDesignation = {
 }
 
 export const  getAsset = {
-    byId: baseUrl+'/asset/'
+    byId: baseUrl+'/previous-holders/asset/'
 }
 
 export const  getUserLoan = {
@@ -117,7 +117,6 @@ export const  getAllWfh = {
 export const  getTime = {
     sheet: baseUrl+'/filter-attendence'
 }
-
 export const branchRoute = {
     createBranch : baseUrl+'/branch/new',
 }
@@ -125,4 +124,8 @@ export const branchRoute = {
 export const timeSlotsRoute = {
     createTimeSlot: baseUrl+'/time-slot/new',
     getTimeSlotsByOrgId : baseUrl+'/time-slot/organization/'
+}    
+export const  paySlips = {
+    ofUser: baseUrl+'/paySlip/user/'
+
 }

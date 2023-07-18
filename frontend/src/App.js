@@ -31,6 +31,9 @@ import TimeSlots from "./screens/TimeSlots";
 import AssetTypes from "./screens/AssetTypes";
 import Allowances from "./screens/Allowances";
 import LoanType from "./screens/LoanType";
+import Payslips from "./screens/Payslips";
+// import ChartPage from "./screens/Chart/src";
+// import ChartPage from "./screens/Chart";
 
 function App() {
   return (
@@ -65,6 +68,8 @@ function App() {
         <Route path="/dashboard/timeSlots" element={<TimeSlots />}/>
         <Route path="/dashboard/allowances" element={<Allowances />}/>
         <Route path="/dashboard/loan-type" element={<LoanType />}/>
+        <Route path="/dashboard/payslips" element={<Payslips />}/>
+        <Route path="/dashboard/Desiginations" element={<Desiginations />}/>
         <Route path="/dashboard/manage-assets" element={<ManageAsset />}/>
       </Route>
       <Route path="/*" element={<Error />}/>

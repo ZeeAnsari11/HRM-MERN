@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setAllAssets, setAllocation, setAsset, setAssetTypes } from "../states/reducers/slices/backend/Assets";
+import { setAllAssets, setAllocation, setAssetHistory, setAssetTypes } from "../states/reducers/slices/backend/Assets";
 import { asset, assetManagment, assetType, allAssets, getAsset } from "./configuration";
 import { toastMessage } from "../AlertConfigs";
 import { toast } from "react-toastify";
@@ -44,11 +44,11 @@ export const AllocateDeallocateAsset = (formData, dispatcher) => {
     })
 }
 
-export const getAssetById = (id , dispatcher) => {
-    axios.get(getAsset.byId+id)
+export const getAssetHistoryById = (id , setHistory) => {
+    axios.get(getAsset.byId + id)
     .then((response) => {
-       dispatcher(setAsset(response))
-       console.log(response);
+        console.log("Response", response);
+        setHistory(response?.data?.data);
     })
     .catch(() => {
         toastMessage("error", "Fetching asset failed!", toast);
