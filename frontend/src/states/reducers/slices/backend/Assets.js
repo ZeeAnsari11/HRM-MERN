@@ -10,7 +10,7 @@ export const AssetsSlice = createSlice({
         allocation: [],
         id: {},
         action: {},
-        asset: {}
+        assetHistory: []
     },
     reducers: {
         setUserAssets: (state, action) => {
@@ -31,15 +31,15 @@ export const AssetsSlice = createSlice({
         setAllocationAction: (state, action) => {
             state.action = action.payload;
         },
-        setAsset: (state, action) => {
-            state.action = action.payload;
+        setAssetHistory: (state, action) => {
+            state.assetHistory = action.payload;
         }
         
     }
 });
 
 // Action Methods
-export const { setUserAssets, setAssetTypes, setAllAssets, setAllocation, setAllocationId, setAllocationAction, setAsset } = AssetsSlice.actions;
+export const { setUserAssets, setAssetTypes, setAllAssets, setAllocation, setAllocationId, setAllocationAction, setAssetHistory } = AssetsSlice.actions;
 
 // Selector Methods
 export const selectUserAssets = (state) => state.assets.assets;
@@ -54,7 +54,7 @@ export const selectAllocationId = (state) => state.assets.id;
 
 export const selectAllocationAction = (state) => state.assets.action;
 
-export const selectAsset = (state) => state.assets.asset;
+export const selectAssetHistory = (state) => state.assets.assetHistory;
 
 // Reducer
 export const AssetsReducer = AssetsSlice.reducer;

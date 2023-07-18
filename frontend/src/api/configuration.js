@@ -66,7 +66,7 @@ export const  getDesignation = {
 }
 
 export const  getAsset = {
-    byId: baseUrl+'/asset/'
+    byId: baseUrl+'/previous-holders/asset/'
 }
 
 export const  getUserLoan = {

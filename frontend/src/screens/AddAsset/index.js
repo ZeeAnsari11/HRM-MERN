@@ -1,6 +1,5 @@
 // Import React and Tailwind CSS
 import React from 'react';
-import 'tailwindcss/tailwind.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import { useDropzone } from "react-dropzone";
@@ -49,7 +48,7 @@ const Asset = () => {
       description,
       type,
     };
-    console.log(newAsset);
+    saveAssetFormData(newAsset)
   };
 
   const organization = useSelector(selectOrgId)
@@ -61,7 +60,7 @@ const Asset = () => {
   // Return the JSX for the add asset form
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl block text-gray-700 font-bold mb-2 pl-1 pr-4 py-2" >Add Asset</h1>
+      <h1 className="text-2xl block text-gray-700 font-bold mb-2 pl-1 pr-4 py-2">Add Asset</h1>
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         {/* Name field */}
         <div className="mb-4">
@@ -129,17 +128,17 @@ const Asset = () => {
           />
         </div>
         <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2 pl-1 pr-4 py-2" htmlFor="isTaxable">
-          <input
-            className="mr-2 border border-backgroundDark leading-tight"
-            type="checkbox"
-            id="short"
-            checked={isTaxable}
-            onChange={(e) => setIsTaxable(e.target.checked)}
-          />
-          <span className="text-sm font-bold">Is Taxable</span>
-        </label>
-      </div>
+          <label className="block text-gray-700 font-bold mb-2 pl-1 pr-4 py-2" htmlFor="isTaxable">
+            <input
+              className="mr-2 border border-backgroundDark leading-tight"
+              type="checkbox"
+              id="short"
+              checked={isTaxable}
+              onChange={(e) => setIsTaxable(e.target.checked)}
+            />
+            <span className="text-sm font-bold">Is Taxable</span>
+          </label>
+        </div>
         <div className="mb-4">
           <label htmlFor="price" className="block text-gray-700 text-sm font-bold mb-2 pl-1 pr-4 py-2">
             Price
@@ -163,28 +162,25 @@ const Asset = () => {
             type="text"
             id="type"
             name="type"
-              
-            // value={assetType}
             onChange={(e) => setType(e.target.value)}
             className="shadow appearance-none border border-backgroundDark rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             placeholder="Enter type ID"
-            required>
+            required
+          >
             <option value="">Select Asset Type</option>
-            {
-              assetType.map((type) => {
-                return <option value={type._id}>{type.type}</option>
-              })
-            }
-            </select>
+            {assetType.map((type) => {
+              return <option value={type._id}>{type.type}</option>
+            })}
+          </select>
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 font-bold mb-2 pl-1 pr-4 py-2 " htmlFor="attachment">
             Asset Image
           </label>
-          <div {...getRootProps()} className="border border-dashed p-4 border-backgroundDark ">
+          <div {...getRootProps()} className="border border-dashed p-4 border-backgroundDark">
             <input {...getInputProps()} accept=".pdf,.doc,.docx,image/*" />
             {assetPreview ? (
-              <img src={assetPreview} alt="Attachment Preview" />
+              <img src={assetPreview} alt="Attachment Preview" className="mx-auto mb-4" />
             ) : (
               <>
                 <FontAwesomeIcon icon={faCloudUploadAlt} className="text-4xl mb-4 mx-auto flex justify-center items-center" />

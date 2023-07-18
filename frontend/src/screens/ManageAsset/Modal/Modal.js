@@ -1,15 +1,12 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
-import { useDispatch } from 'react-redux';
-import { setAllocationAction, setAllocationId } from '../../../states/reducers/slices/backend/Assets';
 
-export default function MyModal({ title, Form, id}) {
+export default function MyModal({name, title, Form, id}) {
 
   let [isOpen, setIsOpen] = useState(false)
-  const dispatcher = useDispatch();
-  dispatcher(setAllocationId(id))
-  dispatcher(setAllocationAction(title))
-
+  
+  
+  console.log(id, "isisisisisis")
   function closeModal() {
     setIsOpen(false)
   }
@@ -45,7 +42,7 @@ export default function MyModal({ title, Form, id}) {
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <div className="flex min-h-screen items-center justify-center p-4 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -55,15 +52,19 @@ export default function MyModal({ title, Form, id}) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
                   >
                     {title}
                   </Dialog.Title>
-                  <div className="mt-2">
-                    <Form/>
+                  <div className='mb-2'>
+                    {name}
+                  </div>
+
+                  <div className="w-full max-w-4xl mt-2">
+                    {Form}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
