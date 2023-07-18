@@ -55,6 +55,11 @@ export const allowances = {
     getAllowancesByOrgId: baseUrl+'/allowance/all/'
 }
 
+export const loanType = {
+    createLoanType : baseUrl+'/loan-type/new',
+    getAllowancesByOrgId: baseUrl+'/loan-type/organization/'
+}
+
 export const assetManagment = {
     manageAsset: baseUrl+'/asset/management'
 }

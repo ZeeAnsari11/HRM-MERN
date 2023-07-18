@@ -24,6 +24,7 @@ export const Menus = [
         ]
     },
     { title: "Desiginations", font: faCalendarCheck, child:[], to:"/dashboard/desiginations"  },
+    { title: "Loan Type", font: faCalendarCheck, child:[], to:"/dashboard/loan-type"  },
     { title: "Departments", font: faCalendarCheck, child:[], to:"/dashboard/departments"  },
     { title: "Branches", font: faCalendarCheck, child:[], to:"/dashboard/branches"  },
     { title: "TimeSlots", font: faCalendarCheck, child:[], to:"/dashboard/timeSlots"  },

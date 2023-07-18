@@ -108,3 +108,6 @@ code {
   background: #6f48eb;
   color: white;
  }
+ .no-scrollbar::-webkit-scrollbar{
+  display: none;
+ }
