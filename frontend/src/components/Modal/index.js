@@ -24,7 +24,7 @@ export default function Modal({ action, title, Element, btnConfig }) {
       <button
         type="button"
         onClick={openModal}
-        className="rounded-md bg-primaryColorLight md:mx-8 px-4 py-2 text-sm font-medium text-white hover:bg-lightText hover:text-primaryColorLight"
+        className="rounded-md bg-lightText md:mx-8 px-4 py-2 text-sm font-medium text-white hover:bg-gray-500 hover:text-primaryColorLight"
       >
         {action}
       </button>
@@ -39,8 +39,9 @@ export default function Modal({ action, title, Element, btnConfig }) {
             leave="ease-in duration-200"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
+            
           >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
+            <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-[5px]" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
@@ -54,10 +55,10 @@ export default function Modal({ action, title, Element, btnConfig }) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-h-[600px] max-w-lg transform overflow-auto rounded-lg bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-h-[600px] max-w-3xl transform overflow-auto rounded-lg bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
                     as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
+                    className="text-2xl font-bold pb-6 leading-6 text-gray-900"
                   >
                     {title}
                   </Dialog.Title>

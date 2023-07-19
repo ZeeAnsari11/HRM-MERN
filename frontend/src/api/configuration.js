@@ -116,3 +116,27 @@ export const timeSlotsRoute = {
     createTimeSlot: baseUrl+'/time-slot/new',
     getTimeSlotsByOrgId : baseUrl+'/time-slot/organization/'
 }
+
+export const relatives = {
+    createRelative: baseUrl+'/relative/new',
+    getRealtives: baseUrl+'/relatives/user/',
+    updateRelative: baseUrl+'/relative/',
+}
+
+export const experiences = {
+    createExperience: baseUrl+'/experience/new',
+    getExperience: baseUrl+'/experience/user/',
+    updateExperience: baseUrl+'/experience/',
+}
+
+export const certification = {
+    createCertification: baseUrl+'/certificate/new',
+    getCertifications: baseUrl+'/certificate/user/',
+    updateCertification: baseUrl+'/certificate/',
+}
+
+export const qualification = {
+    createQualification: baseUrl+'/qualification/new',
+    getQualifications: baseUrl+'/qualification/user/',
+    updateQualification: baseUrl+'/qualification/',
+}

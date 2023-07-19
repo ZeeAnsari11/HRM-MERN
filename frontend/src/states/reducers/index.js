@@ -3,7 +3,7 @@ import { AddressReducer } from "./slices/backend/Address";
 import { AssetsReducer } from "./slices/backend/Assets";
 import { BankReducer } from "./slices/backend/Bank";
 import { BranchReducer } from "./slices/backend/Branch";
-import { CertificatesReducer } from "./slices/backend/Certificates";
+import { CertificationReducer } from "./slices/backend/Certificates";
 import { DepartmentReducer } from "./slices/backend/Department";
 import { DesignationReducer } from "./slices/backend/Designation";
 import { ExperiencesReducer } from "./slices/backend/Experiences";
@@ -20,13 +20,13 @@ import { EmploymentTypeReducer } from "./slices/backend/EmploymentType";
 export const rootReducer = combineReducers({
     user: UserReducer,
     relatives: RelativeReducer,
-    qualifications: QualificationReducer,
+    qualification: QualificationReducer,
     salary: SalaryReducer,
     address: AddressReducer,
     assets: AssetsReducer,
     bank: BankReducer,
     branch: BranchReducer,
-    certificates: CertificatesReducer,
+    certification: CertificationReducer,
     department: DepartmentReducer,
     designation: DesignationReducer,
     experiences: ExperiencesReducer,

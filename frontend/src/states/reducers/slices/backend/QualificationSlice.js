@@ -1,23 +1,43 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// Slice for Storing User Relatives
 export const QualificationSlice = createSlice({
   name: 'qualifications',
   initialState: {
-    qualifications: []
+    qualifications: [],
+    clickState: '',
+    selectedQualification: {
+        id: '',
+        instituteName: '',
+        degreeTitle:'',
+        isDegreeCompleted: false,
+        starting: '',
+        ending: ''
+    }
   },
   reducers: {
-    setUserQualification: (state, action) => {
-        state = action.payload;
-    }
-  }
+    setUserQualifications: (state, action) => {
+        state.qualifications = action.payload;
+    },
+    setClickState: (state, action) => {
+        state.clickState = action.payload._id;
+        state.selectedQualification = {
+            id: action.payload._id,
+            instituteName: action.payload.instituteName,
+            degreeTitle: action.payload.degreeTitle,
+            isDegreeCompleted: action.payload.isDegreeCompleted,
+            starting: action.payload.starting,
+            ending: action.payload.ending
+      }
+    }}
 });
 
 // Action Methods
-export const { setUserQualification } = QualificationSlice.actions;
+export const { setUserQualifications, setClickState } = QualificationSlice.actions;
 
 // Selector Methods
-export const selectUserQualification = (state) => state.qualifications;
+export const selectUserQualifications = (state) => state.qualification.qualifications;
+export const selectQualificationsClickState = (state) => state.qualification.clickState;
+export const selectSelectedQualification = (state) => state.qualification.selectedQualification;
 
 // Reducer
 export const QualificationReducer = QualificationSlice.reducer;
