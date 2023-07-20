@@ -11,6 +11,9 @@ import { organizationRoutes } from '../../api/configuration';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setOrganizationDesignation } from '../../states/reducers/slices/backend/Designation';
+import LoanTypeView from './LoanTypeView';
+// import { UpdateLoanTypeById } from '../../../../backend/controllers/loanType';
+
 
 const LoanType = () => {
   let dispatcher = useDispatch();
@@ -43,13 +46,26 @@ const LoanType = () => {
   };
 
   const handleInputChange = (e) => {
+    console.log("=====e1=====",e.target.name)
+    console.log("=====e2=====",e.target.value)
+
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleCreateAssetType = (trigger) => {
+  const handleCreateLoanType = (trigger) => {
     createLoanType(formData, changeToggler, trigger);
     setFormData({
       type: '',
+      designations :[],
+      organization: orgId,
+    });
+  };
+
+  const handleUpdateLoanType = (trigger) => {
+    // UpdateLoanTypeById(formData, changeToggler, trigger);
+    setFormData({
+      type: '',
+      designations :[],
       organization: orgId,
     });
   };
@@ -84,12 +100,13 @@ const LoanType = () => {
       Cell: ({ row }) => (
         <div className="flex items-center">
           <div className="pr-2">
-            <button
-              className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
-              onClick={() => handleAction(row.original)}
-            >
-              <FontAwesomeIcon icon={faArrowAltCircleRight} />
-            </button>
+           <Modal 
+              action={ <FontAwesomeIcon icon={faArrowAltCircleRight} />}
+              title={''}
+              Element={<LoanTypeView orgId={orgId} data={row.original} desiginationsList={desiginations} />}
+              btnConfig={ViewBtnConfig}
+              row = {row.original}
+            />
           </div>
           <button
             className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
@@ -109,18 +126,25 @@ const LoanType = () => {
     });
 
     return {
+       id: obj._id,
       type: obj.type,
       designations: designationTitles,
     };
   });
 
-  const btnConfig = [
+  const ViewBtnConfig = [
     {
-      title: 'Create',
-      handler: handleCreateAssetType,
+      title: 'Update',
+      handler: handleUpdateLoanType,
     },
   ];
 
+  const btnConfig = [
+    {
+      title: 'Create',
+      handler: handleCreateLoanType,
+    },
+  ];
   return (
     <div className="my-4">
       <Modal

@@ -2,7 +2,8 @@ import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
 import Loader from '../Loader'
 
-export default function Modal({ action, title, Element, btnConfig }) {
+export default function Modal({ action, title, Element, btnConfig , row}) {
+  // console.log("=======row=====",row);
   let [isOpen, setIsOpen] = useState(false);
   let [isLoader, setIsLoader] = useState(false);
 

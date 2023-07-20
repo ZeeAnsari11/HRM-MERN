@@ -26,3 +26,14 @@ export const getLoanTypesByOrgId = (orgId, setAssetTypes) => {
             console.log(err);
         })
 }
+
+export const updateLoanTypeById = (id, setAssetTypes) => {
+    console.log("==========caskjdhsakjdhjkashd================");
+    // axios.get(loanType.updateLoanTypeById + id)
+    //     .then((response) => {
+    //         setAssetTypes(response.data.response)
+    //     })
+    //     .catch((err) => {
+    //         console.log(err);
+    //     })
+}
