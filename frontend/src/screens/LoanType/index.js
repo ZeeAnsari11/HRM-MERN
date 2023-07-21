@@ -12,8 +12,6 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setOrganizationDesignation } from '../../states/reducers/slices/backend/Designation';
 import LoanTypeView from './LoanTypeView';
-// import { UpdateLoanTypeById } from '../../../../backend/controllers/loanType';
-
 
 const LoanType = () => {
   let dispatcher = useDispatch();
@@ -46,32 +44,18 @@ const LoanType = () => {
   };
 
   const handleInputChange = (e) => {
-    console.log("=====e1=====",e.target.name)
-    console.log("=====e2=====",e.target.value)
-
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleCreateLoanType = (trigger) => {
+  
+
+  const handleUpdateLoanType = (trigger) => {
     createLoanType(formData, changeToggler, trigger);
     setFormData({
       type: '',
       designations :[],
       organization: orgId,
     });
-  };
-
-  const handleUpdateLoanType = (trigger) => {
-    // UpdateLoanTypeById(formData, changeToggler, trigger);
-    setFormData({
-      type: '',
-      designations :[],
-      organization: orgId,
-    });
-  };
-
-  const handleAction = (rowData) => {
-    console.log("======rowData======",rowData);
   };
 
   const columns = [
@@ -98,23 +82,7 @@ const LoanType = () => {
       Header: 'Action',
       accessor: 'action',
       Cell: ({ row }) => (
-        <div className="flex items-center">
-          <div className="pr-2">
-           <Modal 
-              action={ <FontAwesomeIcon icon={faArrowAltCircleRight} />}
-              title={''}
-              Element={<LoanTypeView orgId={orgId} data={row.original} desiginationsList={desiginations} />}
-              btnConfig={ViewBtnConfig}
-              row = {row.original}
-            />
-          </div>
-          <button
-            className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
-            onClick={() => handleAction(row.original)}
-          >
-            <FontAwesomeIcon icon={faEye} />
-          </button>
-        </div>
+        <LoanTypeView orgId={orgId} data={row.original} desiginationsList={desiginations}/>
       ),
     },
   ];
@@ -126,23 +94,16 @@ const LoanType = () => {
     });
 
     return {
-       id: obj._id,
+      id : obj._id,
       type: obj.type,
       designations: designationTitles,
     };
   });
 
-  const ViewBtnConfig = [
-    {
-      title: 'Update',
-      handler: handleUpdateLoanType,
-    },
-  ];
-
   const btnConfig = [
     {
       title: 'Create',
-      handler: handleCreateLoanType,
+      handler: handleUpdateLoanType,
     },
   ];
   return (

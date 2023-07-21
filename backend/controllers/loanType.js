@@ -62,28 +62,26 @@ export const getAllLoanTypesByUserDesignation = (req, res, next) => {
 }
 
 export const UpdateLoanTypeById = (req, res, next) => {
+    console.log("================1================");
     try {
         if (req.body.organization) {
             throw new Error('Cannot Update the Organization')
         }
-        if (!req.body.designations) {
-            updateById(req, res, next, DepartmentModel);
+        if (req.body.designations.length === 0) {
+            throw new Error("Please select at least 1 designation.");
         }
-    }
-    catch (error) {
-        handleCatch(error, res, 400, next)
-    }
-    if (req.body.designations) {
         LoanTypeModel.findById(req.params.id)
             .then((loanType) => {
                 if (!loanType) throw new Error("LoanType not found")
-                let DbDesignations = loanType.designations || [];
+                let DbDesignations = req.body.designations || [];
                 let notExistDesignations = []
                 let count = 0
                 req.body.designations.forEach((designationId) => {
                     DesignationModel.find({ _id: designationId, organization: loanType.organization })
                         .then((designation) => {
                             count++;
+                            console.log("================4================", count);
+
                             if (designation.length == 0) notExistDesignations.push(designationId);
                             else {
                                 if (!DbDesignations.includes(designationId)) {
@@ -92,6 +90,8 @@ export const UpdateLoanTypeById = (req, res, next) => {
                             }
                             if (req.body.designations.length == count) {
                                 loanType.designations = DbDesignations;
+                                loanType.type = req.body.type
+                                console.log("=======loanType=====", loanType);
                                 loanType.save()
                                     .then((response) => {
                                         if (!response) {
@@ -117,6 +117,11 @@ export const UpdateLoanTypeById = (req, res, next) => {
                 handleCatch(err, res, 500, next)
             })
     }
+
+    catch (error) {
+        handleCatch(error, res, 400, next)
+    }
+
 }
 
 export const getAllLoanTypeByOrgId = (req, res, next) => {

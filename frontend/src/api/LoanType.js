@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 export const createLoanType = (formData, changeToggler, trigger) => {
     axios.post(loanType.createLoanType, formData)
         .then(() => {
-            toastMessage("success", "Asset Type created successfully,", toast);
+            toastMessage("success", "Loan Type created successfully,", toast);
             changeToggler();
         })
         .catch((err) => {
@@ -20,20 +20,39 @@ export const createLoanType = (formData, changeToggler, trigger) => {
 export const getLoanTypesByOrgId = (orgId, setAssetTypes) => {
     axios.get(loanType.getAllowancesByOrgId + orgId)
         .then((response) => {
-            setAssetTypes(response.data.response)
+            setAssetTypes(response.data.response);
         })
         .catch((err) => {
             console.log(err);
         })
 }
 
-export const updateLoanTypeById = (id, setAssetTypes) => {
-    console.log("==========caskjdhsakjdhjkashd================");
-    // axios.get(loanType.updateLoanTypeById + id)
-    //     .then((response) => {
-    //         setAssetTypes(response.data.response)
-    //     })
-    //     .catch((err) => {
-    //         console.log(err);
-    //     })
+export const deleteLoanType = (id) => {
+    axios.delete(loanType.deleteLoanTypeById + id)
+        .then((response) => {
+            toastMessage("success", response.data.Message, toast);
+            setTimeout(() => {
+                window.location.href = "/dashboard/loan-type"
+            }, 2000)
+        })
+        .catch((err) => {
+            toastMessage("error", err.response.data.Message, toast);
+        })
+}
+
+export const updateLoanTypeById = (id, formData, trigger) => {
+    axios.put(loanType.updateLoanTypeById + id, formData)
+        .then((response) => {
+            toastMessage("success", response.data.Message, toast)
+        })
+        .catch((error) => {
+            toastMessage("error", error.response.data.Message, toast)
+        })
+        .finally(()=>{
+            //TODO: Update required
+            setTimeout(() => {
+                window.location.href = "/dashboard/loan-type"
+            }, 2000)
+            trigger();
+        })
 }
