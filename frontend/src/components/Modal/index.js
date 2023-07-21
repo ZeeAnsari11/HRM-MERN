@@ -2,12 +2,13 @@ import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
 import Loader from '../Loader'
 
-export default function Modal({ action, title, Element, btnConfig}) {
+export default function Modal({ action, title, Element, btnConfig, onClose=null }) {
 
   let [isOpen, setIsOpen] = useState(false);
   let [isLoader, setIsLoader] = useState(false);
 
   function closeModal() {
+    if (onClose !== null) onClose();
     setIsOpen(false)
   }
 
@@ -25,7 +26,7 @@ export default function Modal({ action, title, Element, btnConfig}) {
       <button
         type="button"
         onClick={openModal}
-        className="rounded-md bg-primaryColorLight md:mx-8 px-4 py-2 text-sm font-medium text-white hover:bg-lightText hover:text-primaryColorLight"
+        className="rounded-md bg-gray-300 md:mx-8 px-4 py-2 text-sm font-medium text-white hover:bg-lightText hover:text-primaryColorLight"
       >
         {action}
       </button>

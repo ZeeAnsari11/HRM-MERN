@@ -11,31 +11,6 @@ const experienceSchema = new mongoose.Schema({
         required: [true, 'Please enter organization name'],
         maxlength: [65, 'Organization name is too long']
     },
-    city: {
-        type: String,
-        required: [true, "Please enter companies' city name"],
-        maxlength: [65, 'City name is too long']
-    },
-    country: {
-        type: String,
-        required: [true, "Please enter comapanies' Country"],
-        maxlength: [65, 'Country name is too long']
-    },
-    employerName: {
-        type: String,
-        required: [true, 'Please enter the employer name currently working in the organization'],
-        trim : true
-    },
-    employerDesignation: {
-        type: String,
-        required: [true, 'Please enter the employer designation in the organization'],
-        trim : true
-    },
-    employerContactNumber: {
-        type: String,
-        required: [true, 'Please enter the employer contact number in the organization'],
-        trim : true
-    },
     stack: {
         type: String,
         required: [true, 'Please enter the stack you have experience in'],

@@ -3,6 +3,7 @@ import { certification } from "./configuration";
 import { toastMessage } from "../AlertConfigs";
 import { toast } from "react-toastify";
 import { setUserCertifications, setClickState } from "../states/reducers/slices/backend/Certificates";
+import { setProfileCompletion } from "../states/reducers/slices/backend/UserSlice";
 
 export const createCertification = (data, trigger) => {
     axios.post(certification.createCertification, data)
@@ -24,9 +25,22 @@ export const getCertifications = (userId, dispatcher) => {
     axios.get(certification.getCertifications+userId)
     .then((response) => {
         dispatcher(setUserCertifications(response.data.response))
+        if (response.data.response.length > 0) dispatcher(setProfileCompletion(10))
     })
     .catch((err) => {
-        toastMessage('error', err.response.data.Message, toast);
+        if (err.response.status !== 404) toastMessage('error', err.response.data.Message, toast);
+    })
+}
+
+export const deleteCertifications = (id, dispatcher) => {
+    axios.delete(certification.deleteCertification+id)
+    .then((response) => { toastMessage('success', response.data.Message, toast) })
+    .catch((err) => { toastMessage('error', err.response.data.Message, toast) })
+    .finally(() => { 
+        resetStates(dispatcher);
+        setTimeout(() => {
+            window.location.href = "/dashboard/profile"
+        }, 2000)
     })
 }
 
@@ -44,7 +58,7 @@ export const updateCertification = (certificate_id, certificate, dispatcher, tri
     })
 }
 
-const resetStates = (dispatcher) => {
+export const resetStates = (dispatcher) => {
     dispatcher(setClickState({
         id: '',
         instituteName: '',

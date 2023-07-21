@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { authentication, getOrganization, organizationRoutes, timeSlots, userRoutes } from './configuration';
-import { setAuth, setCurrentUser, setFinalAuthority, setTimeSLots, setAllUsers, setUserGrades } from '../states/reducers/slices/backend/UserSlice';
+import { setAuth, setCurrentUser, setFinalAuthority, setTimeSLots, setAllUsers, setUserGrades, setProfileCompletion } from '../states/reducers/slices/backend/UserSlice';
 import { setUserBranch } from '../states/reducers/slices/backend/Branch';
 import { setUserDepartment } from '../states/reducers/slices/backend/Department';
 import { setOrganizationDesignation } from '../states/reducers/slices/backend/Designation';
 import { getAllUsers } from './configuration';
 import { setEmploymentTypes } from '../states/reducers/slices/backend/EmploymentType';
+import { toastMessage } from "../AlertConfigs";
+import { toast } from 'react-toastify';
 
 export const loginAuth = (dispatcher, body, navigation, toast, setLoading) => {
     axios.post(authentication.login, body)
@@ -48,10 +50,15 @@ export const logout = (dispatcher, navigation) => {
 
 export const getCurrentUser = (dispatcher, setLoaded=null) => {
     const userId = localStorage.getItem("currentUser")
-    console.log(localStorage.getItem('currentUser'));
     axios.get(userRoutes.getUserById + userId)
         .then((user) => {
             dispatcher(setCurrentUser(user.data.user));
+            if (user.data.user.skills.length > 0)  dispatcher(setProfileCompletion(10))
+            if (user.data.user.phoneNumber)  dispatcher(setProfileCompletion(5))
+            if (user.data.user.personalEmail)  dispatcher(setProfileCompletion(5))
+            if (user.data.user.profile)  dispatcher(setProfileCompletion(10))
+            if (user.data.user.nic?.number)  dispatcher(setProfileCompletion(5))
+            if (user.data.user.drivingLinsence?.number)  dispatcher(setProfileCompletion(5))
             if (setLoaded !== null) setLoaded(false);
         }).catch((error) => {
             console.log(error)
@@ -92,4 +99,21 @@ export const getAllUsersByOrganization = (organizationId, dispatcher) => {
         }).catch((error) => {
             console.log(error)
         })
+}
+
+export const updateUserById = (userId, data, trigger) => {
+    console.log(data)
+    axios.put(userRoutes.updateById+userId, data)
+    .then((response) => {
+        toastMessage('success', response.data.Message, toast);
+        setTimeout(() => {
+            window.location.href = "/dashboard/profile"
+        }, 2000)
+    })
+    .catch((error) => {
+        console.log(error)
+    })
+    .finally(() => {
+        trigger();
+    })
 }

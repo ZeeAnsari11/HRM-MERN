@@ -2,15 +2,48 @@ import { faEnvelope, faMailBulk, faPhoneSquare, faPencil } from '@fortawesome/fr
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import Modal from '../../../components/Modal'
+import CUForm from './common/CUForm'
+import { updateUserById } from '../../../api/user'
+import { selectUID } from '../../../states/reducers/slices/backend/UserSlice'
+import { useSelector } from 'react-redux'
 
 const ContactInfo = ({ data }) => {
     const title = "Contact Info"
-    const handleSubmit = (triiger) => {
-        console.log("Clicked Address")
-        triiger();
+    const userId = useSelector(selectUID);
+    
+    const [formData, setFormData] = React.useState({
+        personalEmail: data.personalEmail,
+        phoneNumber: data.phoneNumber,
+    });
+
+    const handleInputChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = (trigger) => {
+        updateUserById(userId, formData, trigger);
     }
+
+    const config = [
+        {
+            label: 'Personal Email',
+            type: 'text',
+            name: 'personalEmail',
+            value: formData.personalEmail,
+            onChange: handleInputChange,
+            isRequired: true
+        },
+        {
+            label: 'Phone Number',
+            type: 'Integer',
+            name: 'phoneNumber',
+            value: formData.phoneNumber,
+            onChange: handleInputChange,
+            isRequired: true
+        },
+    ]
     const btnConfig = [{
-        title: 'Create',
+        title: 'Update',
         handler: handleSubmit,
     }]
     return (
@@ -20,7 +53,7 @@ const ContactInfo = ({ data }) => {
                 <Modal
                     action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
                     title={title}
-                    Element={<h1>Hello</h1>}
+                    Element={<CUForm config={config} handleInputChange={handleInputChange} isFull={false}/>}
                     btnConfig={btnConfig}
                 />
             </div>

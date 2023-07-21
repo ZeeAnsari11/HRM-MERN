@@ -34,6 +34,13 @@ const userSchema = mongoose.Schema({
         ref: 'Grade',
         required: true,
     },
+    phoneNumber: {
+        type: String,
+        required: [true, 'Please enter phone number'],
+        trim: true,
+        maxLength: [20, 'Phone number cannot exceeds from 100 characters'],
+        unique: [true, 'Phone number already in use'],
+    },
     firstName: {
         type: String,
         required: [true, 'Please enter first name'],
@@ -352,6 +359,12 @@ const userSchema = mongoose.Schema({
     grossSalary: {
         type: Number,
         required: true
+    },
+    temporaryAddress: {
+        type: String,
+    },
+    permanentAddress: {
+        type: String,
     },
     createdAt: {
         type: Date,

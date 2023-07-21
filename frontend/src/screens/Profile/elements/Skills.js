@@ -2,15 +2,37 @@ import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react'
 import Modal from '../../../components/Modal'
+import CUForm from './common/CUForm';
+import { updateUserById } from '../../../api/user'
+import { selectUID } from '../../../states/reducers/slices/backend/UserSlice'
+import { useSelector } from 'react-redux'
 
 const Skills = ({ data }) => {
     const title = "Skills"
-    const handleSubmit = (triiger) => {
-        console.log("Clicked")
-        triiger();
+    const userId = useSelector(selectUID);
+    const [formData, setFormData] = React.useState(data?.skills?.join(','));
+
+    const handleInputChange = (e) => {
+        setFormData(e.target.value.replace(/\s/g, ''));
+    };
+
+    const handleSubmit = (trigger) => {
+        const skillData = { skills : formData.split(',') };
+        updateUserById(userId, skillData, trigger);
     }
+    
+    const config = [
+        {
+            type: 'text',
+            name: 'skills',
+            value: formData,
+            onChange: handleInputChange,
+            isRequired: true
+        }
+    ]
+
     const btnConfig = [{
-        title: 'Create',
+        title: 'Update',
         handler: handleSubmit,
     }]
     return (
@@ -20,7 +42,12 @@ const Skills = ({ data }) => {
                 <Modal
                     action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
                     title={title}
-                    Element={<h1>Hello</h1>}
+                    Element={
+                        <>
+                            <CUForm config={config} handleInputChange={handleInputChange} isFull={false} />
+                            <p className='text-xs text-gray-600 font-semibold'><span className='text-red-700'>Important Note :</span> Input should be comma-spererated. (e.g. Marketing,Accounting,Developer, etc)</p>
+                        </>
+                    }
                     btnConfig={btnConfig}
                 />
             </div>

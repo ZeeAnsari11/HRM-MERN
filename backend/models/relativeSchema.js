@@ -10,13 +10,13 @@ const relativeSchema = mongoose.Schema({
     relationship: {
         type: String,
         required: [true, "Please enter Relationship"],
-        maxlength: [100, "Organization Address Can't Exceed 100 Characters"],
-        trim: true,
-        unique: true
+        maxlength: [100, "Relationship can't Exceed 100 Characters"],
+        trim: true
     },
     cellNumber: {
         type: String,
-        required: [true, "Please enter relatives' cell number."]
+        required: [true, "Please enter relatives' cell number."],
+        unique: true
     },
     landLineNumber: {
         type: String,

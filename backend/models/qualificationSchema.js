@@ -15,16 +15,6 @@ const qualificationSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    city: {
-        type: String,
-        required: [true, "Please enter the city name"],
-        maxlength: [65, 'City name is too long']
-    },
-    country: {
-        type: String,
-        required: [true, "Please enter the country name"],
-        maxlength: [65, 'Country name is too long']
-    },
     starting: {
         type: Date,
         required: [true, "Please enter starting date."]
@@ -33,13 +23,6 @@ const qualificationSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please enter ending date."],
         default: "processing"
-    },
-    lastTranscriptAttachment: {
-        type: String,
-    },
-    description: {
-        type: String,
-        trim: true
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,

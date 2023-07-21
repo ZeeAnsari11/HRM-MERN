@@ -11,14 +11,6 @@ const certificateSchema = new mongoose.Schema({
         required: [true, 'Please enter your certificate title'],
         trim: true
     },
-    city: {
-        type: String,
-        required: [true, "Please enter the city name"],
-    },
-    country: {
-        type: String,
-        required: [true, "Please enter the country name"],
-    },
     certificationYear: {
         type: String,
         required: [true, "Please enter certification year."]
