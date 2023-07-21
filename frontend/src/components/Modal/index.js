@@ -2,11 +2,12 @@ import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
 import Loader from '../Loader'
 
-export default function Modal({ action, title, Element, btnConfig }) {
+export default function Modal({ action, title, Element, btnConfig, onClose=null }) {
   let [isOpen, setIsOpen] = useState(false);
   let [isLoader, setIsLoader] = useState(false);
 
   function closeModal() {
+    if (onClose !== null) onClose();
     setIsOpen(false)
   }
 

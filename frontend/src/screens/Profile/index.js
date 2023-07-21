@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../states/reducers/slices/backend/UserSlice";
+import { selectCurrentUser, selectProfileCompletion } from "../../states/reducers/slices/backend/UserSlice";
 import PersonalInfo from "./elements/PersonalInfo";
 import ContactInfo from "./elements/ContactInfo";
 import OrganizationInfo from "./elements/OrganizationInfo";
@@ -13,7 +13,7 @@ import Experiences from "./elements/Experiences";
 
 const UserProfile = () => {
   const currentUser = useSelector(selectCurrentUser);
-
+  const profileCompletion = useSelector(selectProfileCompletion);
   const config = [
     { title: 'Personal Information', Component: <PersonalInfo data={currentUser}/> },
     { title: 'Contact Information', Component: <ContactInfo data={currentUser}/> },
@@ -40,10 +40,10 @@ const UserProfile = () => {
         <div className="flex flex-col flex-[0.6] justify-center">
           <div className="flex justify-between mb-1">
             <span className="text-base font-medium">Profile Complete</span>
-            <span className="text-sm font-medium">45%</span>
+            <span className="text-sm font-medium">{profileCompletion}%</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2.5">
-            <div className="bg-green-500 h-2.5 rounded-full" style={{ width: "45%" }}></div>
+            <div className="bg-green-500 h-2.5 rounded-full delay-200 transition-all" style={{ width: `${profileCompletion}%` }}></div>
           </div>
         </div>
       </div>

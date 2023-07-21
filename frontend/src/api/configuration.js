@@ -8,6 +8,7 @@ export const authentication = {
 export const userRoutes = {
     createUser: baseUrl+'/user/new',
     getUserById: baseUrl+'/user/',
+    updateById: baseUrl+'/user/update/'
 }
 
 export const organizationRoutes = {
@@ -135,22 +136,26 @@ export const relatives = {
     createRelative: baseUrl+'/relative/new',
     getRealtives: baseUrl+'/relatives/user/',
     updateRelative: baseUrl+'/relative/',
+    deleteRelative: baseUrl+'/relative/'
 }
 
 export const experiences = {
     createExperience: baseUrl+'/experience/new',
     getExperience: baseUrl+'/experience/user/',
     updateExperience: baseUrl+'/experience/',
+    deleteExperience: baseUrl+'/experience/'
 }
 
 export const certification = {
     createCertification: baseUrl+'/certificate/new',
     getCertifications: baseUrl+'/certificate/user/',
     updateCertification: baseUrl+'/certificate/',
+    deleteCertification: baseUrl+'/certificate/'
 }
 
 export const qualification = {
     createQualification: baseUrl+'/qualification/new',
     getQualifications: baseUrl+'/qualification/user/',
     updateQualification: baseUrl+'/qualification/',
+    deleteQualification: baseUrl+'/qualification/'
 }

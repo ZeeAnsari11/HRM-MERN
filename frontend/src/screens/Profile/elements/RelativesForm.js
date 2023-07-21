@@ -1,16 +1,17 @@
-import { faMailBulk, faPencil } from '@fortawesome/free-solid-svg-icons'
+import { faMailBulk, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import Modal from '../../../components/Modal'
-import { createRelative, getRelatives, updateRelative } from '../../../api/relatives'
+import { createRelative, deleteRelative, getRelatives, resetStates, updateRelative } from '../../../api/relatives'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectRelativeClickState, selectSelectedRelative, selectUserRelative, setClickState } from '../../../states/reducers/slices/backend/RelativesSlice'
 import CUForm from './common/CUForm'
 
 const RelativeBlock = ({ item }) => {
   const dispatcher = useDispatch();
+  const [hoverState, setHoverState] = useState(false);
   const selectState = useSelector(selectRelativeClickState);
-  return <div className="flex flex-col space-y-4" onClick={() => dispatcher(setClickState(item))}>
+  return <div className="flex flex-col space-y-4 relative" onMouseLeave={() => setHoverState(false)} onMouseEnter={() => setHoverState(true)}>
     <span className={`${(selectState === item._id) ? 'bg-primaryColorLight text-white' : 'bg-gray-300'} text-gray-600 cursor-pointer hover:bg-gray-400 hover:shadow-sm rounded-md p-4`}>
       <div className="text-lg font-semibold"><FontAwesomeIcon icon={faMailBulk} className="w-8 mr-2" />{item?.name}</div>
       <div className='flex justify-between items-center'>
@@ -18,6 +19,11 @@ const RelativeBlock = ({ item }) => {
         <p>{item?.relationship}</p>
       </div>
     </span>
+    <div className={`absolute flex cursor-pointer justify-evenly items-center transition-opacity top-0 !mt-0 rounded-md bg-lightText w-full h-full ${hoverState ? 'opacity-100' : 'opacity-0'}`}>
+      <FontAwesomeIcon className='hover:text-gray-600' onClick={() => deleteRelative(item._id,dispatcher)} icon={faTrash}/>
+      <div className='w-[2px] h-1/2 bg-gray-500'></div>
+      <FontAwesomeIcon className='hover:text-gray-600' onClick={() => dispatcher(setClickState(item))} icon={faPencil}/>
+    </div>
   </div>
 }
 
@@ -122,6 +128,7 @@ const RelativesForm = ({ userID }) => {
         <Modal
           action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
           title={title}
+          onClose={() => resetStates(dispatcher)}
           Element={
             <>
             <div className='flex justify-between'>
