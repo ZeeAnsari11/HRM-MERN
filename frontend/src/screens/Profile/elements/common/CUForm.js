@@ -1,7 +1,7 @@
 import React from 'react'
 
 const CUForm = ({ config, handleInputChange, isFull=true }) => {
-    return <div className={isFull ? 'w-1/2' : 'w-full'}>
+    return <div className={isFull ? 'w-1/2 mobile:w-full' : 'w-full'}>
             {
                 config.map((item, index) => {
                     if (item.type === 'checkbox') {

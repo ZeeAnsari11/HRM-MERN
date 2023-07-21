@@ -37,8 +37,8 @@ const Skills = ({ data }) => {
     }]
     return (
         <>
-            <div className="flex justify-between items-center border-l-8 border-backgroundDark font-bold text-lg">
-                <h1 className="px-4 text-2xl">{title}</h1>
+            <div className="flex justify-between items-center border-l-8 border-backgroundDark font-bold text-lg tablet:pr-6">
+                <h1 className="px-4 text-2xl mobile:text-xl">{title}</h1>
                 <Modal
                     action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
                     title={title}

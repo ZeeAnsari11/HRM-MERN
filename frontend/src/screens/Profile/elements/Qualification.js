@@ -1,11 +1,12 @@
-import { faMailBulk, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
-import Modal from '../../../components/Modal'
 import { createQualification, deleteQualification, getQualifications, resetStates, updateQualification } from '../../../api/qualifications'
+import { faMailBulk, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { selectQualificationsClickState, selectSelectedQualification, selectUserQualifications, setClickState } from '../../../states/reducers/slices/backend/QualificationSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectSelectedQualification, selectUserQualifications, setClickState, selectQualificationsClickState } from '../../../states/reducers/slices/backend/QualificationSlice'
+
 import CUForm from './common/CUForm'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Modal from '../../../components/Modal'
 
 const getYear = (date) => {
   const dt = new Date(date);
@@ -21,7 +22,7 @@ const QualificationBlock = ({ item }) => {
       <div className="text-lg font-semibold"><FontAwesomeIcon icon={faMailBulk} className="w-8 mr-2" />{item?.instituteName}</div>
       <div className='flex justify-between items-center'>
         <p>{item?.degreeTitle}</p>
-        <p className='text-sm px-10'>{getYear(item?.starting)} - {getYear(item?.ending)}</p>
+        <p className='text-sm px-10 mobile:px-0'>{getYear(item?.starting)} - {getYear(item?.ending)}</p>
       </div>
     </span>
     <div className={`absolute flex justify-evenly items-center transition-opacity delay-75 top-0 !mt-0 rounded-md bg-lightText w-full h-full ${hoverState ? 'opacity-100' : 'opacity-0'}`}>
@@ -127,16 +128,16 @@ const Qualification = ({ userID }) => {
 
   return (
     <>
-      <div className="flex justify-between items-center border-l-8 border-backgroundDark font-bold text-lg">
-        <h1 className="px-4 text-2xl">{title}</h1>
+      <div className="flex justify-between items-center border-l-8 border-backgroundDark font-bold text-lg tablet:pr-6">
+        <h1 className="px-4 text-2xl mobile:text-xl">{title}</h1>
         <Modal
           action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
           title={title}
           onClose={() => resetStates(dispatcher)}
           Element={
             <>
-            <div className='flex justify-between'>
-              <div className='space-y-4 max-h-[400px] overflow-auto w-[300px]'>
+            <div className='flex justify-between mobile:flex-col mobile:space-y-4'>
+              <div className='space-y-4 max-h-[400px] mobile:w-full overflow-auto w-[300px]'>
                   {
                       allUserExperiences?.map((item, index) => {
                           return <QualificationBlock item={item} key={index} />

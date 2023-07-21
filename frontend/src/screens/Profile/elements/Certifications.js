@@ -1,11 +1,12 @@
-import { faMailBulk, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
-import Modal from '../../../components/Modal'
 import { createCertification, deleteCertifications, getCertifications, resetStates, updateCertification } from '../../../api/certifications'
+import { faMailBulk, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { selectCertificationClickState, selectSelectedCertification, selectUserCertifications, setClickState } from '../../../states/reducers/slices/backend/Certificates'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectSelectedCertification, selectUserCertifications, setClickState, selectCertificationClickState } from '../../../states/reducers/slices/backend/Certificates'
+
 import CUForm from './common/CUForm'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Modal from '../../../components/Modal'
 
 const CertificationBlock = ({ item }) => {
   const dispatcher = useDispatch();
@@ -104,16 +105,16 @@ const Certifications = ({ userID }) => {
 
   return (
     <>
-      <div className="flex justify-between items-center border-l-8 border-backgroundDark font-bold text-lg">
-        <h1 className="px-4 text-2xl">{title}</h1>
+      <div className="flex justify-between items-center border-l-8 border-backgroundDark font-bold text-lg tablet:pr-6">
+        <h1 className="px-4 text-2xl mobile:text-xl">{title}</h1>
         <Modal
           action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
           title={title}
           onClose={() => resetStates(dispatcher)}
           Element={
             <>
-            <div className='flex justify-between'>
-              <div className='space-y-4 max-h-[400px] overflow-auto w-[300px]'>
+            <div className='flex justify-between mobile:flex-col mobile:space-y-4'>
+              <div className='space-y-4 max-h-[400px] mobile:w-full overflow-auto w-[300px]'>
                   {
                       allUserCertifications?.map((item, index) => {
                           return <CertificationBlock item={item} key={index} />

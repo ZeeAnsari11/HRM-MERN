@@ -48,8 +48,8 @@ const Addresses = ({ data }) => {
 
     return (
         <>
-            <div className="flex justify-between items-center border-l-8 border-backgroundDark font-bold text-lg">
-                <h1 className="px-4 text-2xl">{title}</h1>
+            <div className="flex justify-between items-center border-l-8 border-backgroundDark font-bold text-lg tablet:pr-6">
+                <h1 className="px-4 text-2xl mobile:text-xl">{title}</h1>
                 <Modal
                     action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
                     title={title}
@@ -60,7 +60,7 @@ const Addresses = ({ data }) => {
 
             <div className="flex flex-col p-4 space-y-4">
                 <span className="text-gray-600">
-                    <div className="text-lg font-semibold"><FontAwesomeIcon icon={faBuilding} className="w-8 mr-2" />Permanant</div>
+                    <div className="text-lg font-semibold mobile:text-md"><FontAwesomeIcon icon={faBuilding} className="w-8 mr-2" />Permanant</div>
                     <p className="px-10">{formData.permanentAddress}</p>
                 </span>
                 <span className="text-gray-600">
