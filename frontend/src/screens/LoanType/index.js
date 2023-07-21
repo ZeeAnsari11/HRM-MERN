@@ -11,6 +11,7 @@ import { organizationRoutes } from '../../api/configuration';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setOrganizationDesignation } from '../../states/reducers/slices/backend/Designation';
+import LoanTypeView from './LoanTypeView';
 
 const LoanType = () => {
   let dispatcher = useDispatch();
@@ -46,16 +47,15 @@ const LoanType = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleCreateAssetType = (trigger) => {
+  
+
+  const handleUpdateLoanType = (trigger) => {
     createLoanType(formData, changeToggler, trigger);
     setFormData({
       type: '',
+      designations :[],
       organization: orgId,
     });
-  };
-
-  const handleAction = (rowData) => {
-    console.log("======rowData======",rowData);
   };
 
   const columns = [
@@ -82,22 +82,7 @@ const LoanType = () => {
       Header: 'Action',
       accessor: 'action',
       Cell: ({ row }) => (
-        <div className="flex items-center">
-          <div className="pr-2">
-            <button
-              className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
-              onClick={() => handleAction(row.original)}
-            >
-              <FontAwesomeIcon icon={faArrowAltCircleRight} />
-            </button>
-          </div>
-          <button
-            className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
-            onClick={() => handleAction(row.original)}
-          >
-            <FontAwesomeIcon icon={faEye} />
-          </button>
-        </div>
+        <LoanTypeView orgId={orgId} data={row.original} desiginationsList={desiginations}/>
       ),
     },
   ];
@@ -109,6 +94,7 @@ const LoanType = () => {
     });
 
     return {
+      id : obj._id,
       type: obj.type,
       designations: designationTitles,
     };
@@ -117,10 +103,9 @@ const LoanType = () => {
   const btnConfig = [
     {
       title: 'Create',
-      handler: handleCreateAssetType,
+      handler: handleUpdateLoanType,
     },
   ];
-
   return (
     <div className="my-4">
       <Modal

@@ -73,12 +73,13 @@ const Branches = () => {
       Cell: ({ row }) => (
         <div className="flex items-center">
           <div className="pr-2">
-            <button
-              className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
-              onClick={() => handleAction(row.original)}
-            >
-              <FontAwesomeIcon icon={faArrowAltCircleRight} />
-            </button>
+            <Modal 
+              action={ <FontAwesomeIcon icon={faArrowAltCircleRight} />}
+              title={''}
+              Element={<CBForm formData={formData} handleInputChange={handleInputChange} />}
+              btnConfig={btnConfig}
+              row={row.original}
+            />
           </div>
           <button
             className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"

@@ -2,7 +2,6 @@ import React from 'react';
 import MultiSelect from '../../components/SelectForm/MultiSelect';
 
 export default function LoanTypeForm({formData, handleInputChange, desiginations}) {
-  console.log("=====desiginations====1===",desiginations);
     return <form>
           <div className="mb-4">
             <label className="block text-sm font-bold mb-1">Create Loan Type Name</label>
@@ -17,7 +16,7 @@ export default function LoanTypeForm({formData, handleInputChange, desiginations
           </div>
           <div className="mb-4">
             <label className="block text-sm font-bold mb-1">Select Designation(s) </label>
-            <MultiSelect handleInputChange= {handleInputChange} desiginations = {desiginations}/>
+            <MultiSelect handleInputChange= {handleInputChange} desiginations = {desiginations} formData={formData}/>
           </div>
         </form>
 }
