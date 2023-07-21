@@ -366,16 +366,7 @@ export const updateUserById = (req, res, next) => {
                     userSave(res, next, user)
                 }
                 else if (req.body.skills?.length > 0) {
-                    if (req.body.reason !== undefined > 0) throw new Error('Cannot update Skills')
-                    let dbSkills = user.skills || []
-                    let skills = req.body.skills
-                    skills.forEach((skill) => {
-                        let skl = skill.toLowerCase();
-                        if (!dbSkills.includes(skl)) {
-                            dbSkills.push(skl);
-                        }
-                    });
-                    req.body.skills = dbSkills;
+                    req.body.skills = req.body.skills;
                     updateById(req, res, next, UserModel);
                 }
                 else {
