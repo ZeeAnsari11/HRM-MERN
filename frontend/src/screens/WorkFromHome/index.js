@@ -6,6 +6,7 @@ import { selectUID, selectUserWfh } from '../../states/reducers/slices/backend/U
 import { useEffect } from 'react'
 import { getAllWfhOfUser } from '../../api/wfh'
 import { useState } from 'react';
+import View from './src/modal';
 
 function ViewWorkFromHome() {
 
@@ -13,6 +14,21 @@ function ViewWorkFromHome() {
   const handleAction = (rowData) => {
     setShowView(!showView);
   };
+
+  const user_id = useSelector(selectUID)
+  const apiData = useSelector(selectUserWfh)
+  const dispatcher = useDispatch()
+  useEffect(() => {
+    getAllWfhOfUser(user_id, dispatcher)
+  }, [])
+
+  const data = apiData.map(obj => ({
+    startDate: obj.startDate.substring(0, 10), endDate: obj.endDate.substring(0, 10),
+    createdAt: obj.createdAt.substring(0, 10), reason: obj.reason,
+    status: obj.status, id: obj._id,
+  }));
+
+
   const columns = useMemo(() => [
     {
       Header: "Start Date",
@@ -37,26 +53,14 @@ function ViewWorkFromHome() {
       accessor: 'action',
       Cell: ({ row }) => (
         <div className='flex items-center justify-center'>
-          {/* <View></View> */}
-          {/* <button className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow" onClick={() => handleAction(row.original)}>
-            <FontAwesomeIcon icon={faEye} />
-          </button> */}
+          <View
+            selectedId={row.original.id}
+            user_id = {user_id}
+          />
         </div>
       )
     }
   ], [])
-  const user_id = useSelector(selectUID)
-  const apiData = useSelector(selectUserWfh)
-  const dispatcher = useDispatch()
-  useEffect(() => {
-    getAllWfhOfUser(user_id, dispatcher)
-  }, [])
-
-  const data = apiData.map(obj => ({
-    startDate: obj.startDate.substring(0, 10), endDate: obj.endDate.substring(0, 10),
-    createdAt: obj.createdAt.substring(0, 10), reason: obj.reason,
-    status: obj.status
-  }));
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900">

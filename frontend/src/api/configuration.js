@@ -120,6 +120,14 @@ export const  getAllWfh = {
 export const  getTime = {
     sheet: baseUrl+'/filter-attendence'
 }
+export const  deleteRequest = {
+    wfh: baseUrl+'/wfh/delete/'
+}
+
+export const  updateWfh = {
+    request: baseUrl+'/wfh/update/'
+}
+
 export const branchRoute = {
     createBranch : baseUrl+'/branch/new',
 }

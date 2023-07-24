@@ -9,6 +9,7 @@ import { useEffect } from 'react'
 import { useState } from 'react';
 import { getUserLeaves } from '../../api/leaverequest';
 import { selectUserLeaves } from '../../states/reducers/slices/backend/LeaveRequest';
+import View from './src/modal';
 
 function Leave() {
 
@@ -50,17 +51,12 @@ function Leave() {
       accessor: 'action',
       Cell: ({ row }) => (
         <div className='flex items-center justify-center'>
-          <div className='pr-2'>
-            <button className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow" onClick={() => handleAction(row.original)}>
-              <FontAwesomeIcon icon={faArrowAltCircleRight} />
-            </button>
-          </div>
-          <button className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow" onClick={() => handleAction(row.original)}>
-            <FontAwesomeIcon icon={faEye} />
-          </button>
+          <View
+            selectedId={row.original.id}
+          />
         </div>
       )
-    }
+    },
   ], [])
   const user_id = useSelector(selectUID)
   const apiData = useSelector(selectUserLeaves)
