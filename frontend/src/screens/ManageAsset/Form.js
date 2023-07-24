@@ -1,8 +1,10 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { AllocateDeallocateAsset } from "../../api/asset";
 import { selectAllocationAction, selectAllocationId } from "../../states/reducers/slices/backend/Assets";
+
+import { AllocateDeallocateAsset } from "../../api/asset";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+
 const FormGG = () => {
     const [user, setUser] = useState('');
     const [reason, setReason] = useState('');
@@ -28,7 +30,7 @@ const FormGG = () => {
     }
   
     return (
-      <form onSubmit={handleFormSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <form onSubmit={handleFormSubmit} className="rounded pt-6 mb-4">
         <div className="mb-4">
           <label htmlFor="user" className="block text-gray-700 text-sm font-bold mb-2">
             User

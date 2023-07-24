@@ -1,7 +1,8 @@
+import { asset, assetType } from "./configuration";
+
 import axios from "axios";
-import { assetType } from "./configuration";
-import { toastMessage } from "../AlertConfigs";
 import { toast } from "react-toastify";
+import { toastMessage } from "../AlertConfigs";
 
 export const createAssetType = (formData, changeToggler, trigger) => {
     axios.post(assetType.createAssetType, formData)
@@ -26,4 +27,27 @@ export const getAssetTypesByOrgId = (orgId, setAssetTypes) => {
         .catch((err) => {
             console.log(err);
         })
+}
+
+export const deleteAssetType = (id) => {
+    axios.delete(assetType.deleteAssetType+id)
+    .then((response) => {
+        toastMessage("success", response.data.Message, toast) 
+    })
+    .catch((err) => { 
+        toastMessage("error", err.response.data.Message, toast) 
+    })
+}
+
+export const updateAssetType = (id, data, trigger) => {
+    axios.put(assetType.deleteAssetType+id, data)
+    .then((response) => {
+        toastMessage("success", response.data.Message, toast)
+    })
+    .catch((err) => { 
+        toastMessage("error", err.response.data.Message, toast) 
+    })
+    .finally(() => {
+        trigger();
+    })
 }

@@ -48,7 +48,8 @@ export const asset = {
 
 export const assetType = {
     createAssetType : baseUrl+'/asset-type/new',
-    getAssetType: baseUrl+'/asset-type/organization/'
+    getAssetType: baseUrl+'/asset-type/organization/',
+    deleteAssetType: baseUrl+'/asset-type/'
 }
 
 export const allowances = {
