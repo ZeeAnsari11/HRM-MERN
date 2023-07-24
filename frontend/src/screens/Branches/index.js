@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
-import { useSelector } from 'react-redux';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import BranchesView from './BranchesView';
+import CBForm from './CBForm';
+import Modal from '../../components/Modal';
 import Table from '../../components/Table';
-import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
 import { createBranch } from '../../api/branches';
 import { getBranchesByOrgId } from '../../api/branches';
-import Modal from '../../components/Modal';
-import CBForm from './CBForm';
+import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
+import { useSelector } from 'react-redux';
 
 const Branches = () => {
   let orgId;
@@ -48,8 +48,7 @@ const Branches = () => {
       organization: orgId,
     });
   };
-  const handleAction = (rowData) => {
-  };
+
   const columns = [
     {
       Header: 'Name',
@@ -71,23 +70,7 @@ const Branches = () => {
       Header: 'Action',
       accessor: 'action',
       Cell: ({ row }) => (
-        <div className="flex items-center">
-          <div className="pr-2">
-            <Modal 
-              action={ <FontAwesomeIcon icon={faArrowAltCircleRight} />}
-              title={''}
-              Element={<CBForm formData={formData} handleInputChange={handleInputChange} />}
-              btnConfig={btnConfig}
-              row={row.original}
-            />
-          </div>
-          <button
-            className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
-            onClick={() => handleAction(row.original)}
-          >
-            <FontAwesomeIcon icon={faEye} />
-          </button>
-        </div>
+        <BranchesView data={row.original}/>
       ),
     },
   ];

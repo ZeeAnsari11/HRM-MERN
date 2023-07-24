@@ -102,6 +102,8 @@ export const desiginationsRoute = {
 
 export const departmentRoute = {
     createDepartment : baseUrl+'/new/department',
+    updateDepartmentById : baseUrl+'/department/',
+    deleteDepartmentById : baseUrl+'/department/'
 }
 
 export const  getOrganization = {
@@ -121,6 +123,8 @@ export const  getTime = {
 }
 export const branchRoute = {
     createBranch : baseUrl+'/branch/new',
+    updateBranchById :baseUrl + '/branch/',
+    deleteBranchById : baseUrl +'/branch/'
 }
 
 export const timeSlotsRoute = {

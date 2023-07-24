@@ -1,9 +1,10 @@
-import React from 'react'
-import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy, usePagination } from 'react-table'
-import { ChevronDoubleLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronDoubleRightIcon } from '@heroicons/react/solid'
 import { Button, PageButton } from './shared/Button'
+import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
+import { SortDownIcon, SortIcon, SortUpIcon } from './shared/Icons'
+import { useAsyncDebounce, useFilters, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table'
+
+import React from 'react'
 import { classNames } from './shared/Utils'
-import { SortIcon, SortUpIcon, SortDownIcon } from './shared/Icons'
 
 // Define a default UI for filtering
 function GlobalFilter({

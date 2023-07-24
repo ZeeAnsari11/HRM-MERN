@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
-import { useSelector } from 'react-redux';
-import Table from '../../components/Table';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
-import Modal from '../../components/Modal';
-import LoanTypeForm from './LoanTypeForm';
 import { createLoanType, getLoanTypesByOrgId } from '../../api/LoanType';
-import { organizationRoutes } from '../../api/configuration';
-import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { setOrganizationDesignation } from '../../states/reducers/slices/backend/Designation';
+
+import LoanTypeForm from './LoanTypeForm';
 import LoanTypeView from './LoanTypeView';
+import Modal from '../../components/Modal';
+import Table from '../../components/Table';
+import axios from 'axios';
+import { organizationRoutes } from '../../api/configuration';
+import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
+import { setOrganizationDesignation } from '../../states/reducers/slices/backend/Designation';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const LoanType = () => {
   let dispatcher = useDispatch();
@@ -47,13 +46,13 @@ const LoanType = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  
+
 
   const handleUpdateLoanType = (trigger) => {
     createLoanType(formData, changeToggler, trigger);
     setFormData({
       type: '',
-      designations :[],
+      designations: [],
       organization: orgId,
     });
   };
@@ -68,13 +67,13 @@ const LoanType = () => {
       accessor: 'designations',
       Cell: ({ value }) => {
         return (
-         <div className='overflow-x-auto max-w-sm no-scrollbar cursor-all-scroll'>
-          {
+          <div className='overflow-x-auto max-w-sm no-scrollbar cursor-all-scroll'>
+            {
               value.map((val, index) => {
                 return <div key={index} className="inline-flex items-center bg-gray-200 text-gray-700 rounded-full text-sm font-medium px-2 py-1 mr-1 mb-1">{val}</div>
               })
-          }
-         </div> 
+            }
+          </div>
         )
       },
     },
@@ -82,7 +81,7 @@ const LoanType = () => {
       Header: 'Action',
       accessor: 'action',
       Cell: ({ row }) => (
-        <LoanTypeView orgId={orgId} data={row.original} desiginationsList={desiginations}/>
+        <LoanTypeView orgId={orgId} data={row.original} desiginationsList={desiginations} />
       ),
     },
   ];
@@ -94,7 +93,7 @@ const LoanType = () => {
     });
 
     return {
-      id : obj._id,
+      id: obj._id,
       type: obj.type,
       designations: designationTitles,
     };
@@ -111,7 +110,7 @@ const LoanType = () => {
       <Modal
         action="Create Loan Type"
         title="Create Loan Type"
-        Element={<LoanTypeForm formData={formData} handleInputChange={handleInputChange} desiginations={desiginations} />}
+        Element={<LoanTypeForm formData={formData} handleInputChange={handleInputChange} desiginationsList={desiginations} />}
         btnConfig={btnConfig}
       />
       <div className="bg-gray-100 text-gray-900">

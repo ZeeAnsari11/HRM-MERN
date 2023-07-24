@@ -31,6 +31,7 @@ export const deleteLoanType = (id) => {
     axios.delete(loanType.deleteLoanTypeById + id)
         .then((response) => {
             toastMessage("success", response.data.Message, toast);
+             //TODO: Update required
             setTimeout(() => {
                 window.location.href = "/dashboard/loan-type"
             }, 2000)
@@ -44,15 +45,15 @@ export const updateLoanTypeById = (id, formData, trigger) => {
     axios.put(loanType.updateLoanTypeById + id, formData)
         .then((response) => {
             toastMessage("success", response.data.Message, toast)
+             //TODO: Update required
+             setTimeout(() => {
+                window.location.href = "/dashboard/loan-type"
+            }, 2000)
         })
         .catch((error) => {
             toastMessage("error", error.response.data.Message, toast)
         })
         .finally(()=>{
-            //TODO: Update required
-            setTimeout(() => {
-                window.location.href = "/dashboard/loan-type"
-            }, 2000)
             trigger();
         })
 }
