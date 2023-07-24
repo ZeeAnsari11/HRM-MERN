@@ -138,7 +138,9 @@ export const branchRoute = {
 
 export const timeSlotsRoute = {
     createTimeSlot: baseUrl+'/time-slot/new',
-    getTimeSlotsByOrgId : baseUrl+'/time-slot/organization/'
+    getTimeSlotsByOrgId : baseUrl+'/time-slot/organization/',
+    updateTimeSlotById : baseUrl+'/time-slot/',
+    deleteTimeSlotById : baseUrl+'/time-slot/',
 }
 
 export const  paySlips = {
