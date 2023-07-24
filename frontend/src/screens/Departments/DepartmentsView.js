@@ -54,7 +54,7 @@ export default function DepartmentsView({ data }) {
         <Modal
             action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
             title={title}
-            Element={<CUForm config={formDataConfig} handleInputChange={handleInputChange} isFull={true} />}
+            Element={<CUForm config={formDataConfig} handleInputChange={handleInputChange} isFull={false} />}
             btnConfig={btnConfig}
 
         />
