@@ -6,18 +6,16 @@ import { selectPayslips, selectUID } from '../../states/reducers/slices/backend/
 import { useEffect } from 'react';
 import View from './src/modal';
 import { getPayslips } from '../../api/payslips';
-import FormFields from './Formfields';
 
 function Payslips() {
   const apiData = useSelector(selectPayslips);
   const user_id = useSelector(selectUID);
-  console.log("Payslips", apiData);
   const dispatcher = useDispatch();
   useEffect(() => {
     getPayslips(user_id, dispatcher);
   }, []);
 
-  const [selectedId, setSelectedId] = useState(null);
+  const [setSelectedId] = useState(null);
 
   const data = apiData.map(obj => ({
     month: obj.month,
