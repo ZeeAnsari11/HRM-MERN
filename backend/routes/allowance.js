@@ -1,13 +1,16 @@
-import express from "express";
 import {
-    createAllowance, updateAllowanceById, deleteAllowanceById,
-    getAllowanceById, getAllAllowanceByOrganization
+    createAllowance,
+    deleteAllowanceById,
+    getAllAllowanceByOrganization,
+    getAllowanceById,
+    updateAllowanceById
 } from '../controllers/allowance.js'
+
+import express from "express";
 
 export const allowanceRoute = express.Router();
 
 allowanceRoute.route('/allowance/new').post(createAllowance)
-allowanceRoute.route('/allowance/update/:id').put(updateAllowanceById)
-allowanceRoute.route('/allowance/delete/:id').delete(deleteAllowanceById)
+allowanceRoute.route('/allowance/:id').put(updateAllowanceById).delete(deleteAllowanceById)
 allowanceRoute.route('/allowance/:id').get(getAllowanceById)
 allowanceRoute.route('/allowance/all/:id').get(getAllAllowanceByOrganization)
