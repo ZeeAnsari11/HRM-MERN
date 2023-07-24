@@ -1,7 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
 
-export default function MyModal({name, title, Form, id}) {
+export default function MyModal({action,name, title, Form, id}) {
 
   let [isOpen, setIsOpen] = useState(false)
   
@@ -21,9 +21,9 @@ export default function MyModal({name, title, Form, id}) {
         <button
           type="button"
           onClick={openModal}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="rounded-md bg-gray-300 px-4 py-2 text-sm font-medium text-white hover:bg-lightText hover:text-primaryColorLight"
         >
-          {title}
+          {action}
         </button>
       </div>
 

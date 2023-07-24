@@ -1,12 +1,56 @@
 import React, { useEffect, useState } from 'react';
+import { createAssetType, deleteAssetType, getAssetTypesByOrgId, updateAssetType } from '../../api/assetTypes';
+import { faArrowAltCircleRight, faTrash } from '@fortawesome/free-solid-svg-icons';
+
+import ATForm from './ATForm';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Modal from '../../components/Modal';
+import Table from '../../components/Table';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Table from '../../components/Table';
-import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
-import Modal from '../../components/Modal';
-import ATForm from './ATForm';
-import { createAssetType, getAssetTypesByOrgId } from '../../api/assetTypes';
+
+const AssetTypeForm = ({data}) => {
+  const [value, setValue] = useState(data.type);
+
+  const handleAssetTypeUpdate = (trigger) => {
+    updateAssetType(data.id,{type: value},trigger)
+  }
+
+  const btnConfig = [
+    {
+      title: 'Update',
+      handler: handleAssetTypeUpdate,
+    }
+  ]
+  
+  return (
+    <div className="flex items-center justify-center space-x-2">
+          <Modal 
+              action={ <FontAwesomeIcon icon={faArrowAltCircleRight} />}
+              title={'Update Asset Type'}
+              Element={<div className="mb-4">
+                   <label htmlFor='type' className="block text-sm font-bold mb-1">Title</label>
+                   <input
+                      className="border border-gray-300 rounded-md px-3 py-2 w-full"
+                      type="text"
+                      name="type"
+                      id="type"
+                      value={value}
+                      onChange={(e) => setValue(e.target.value)}
+                      required
+                  />
+              </div>}
+              btnConfig={btnConfig}
+            />
+          <button title='Delete'
+            className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
+            onClick={() => deleteAssetType(data.id)}
+          >
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+        </div> 
+  )
+}
 
 const AssetTypes = () => {
   let orgId;
@@ -17,17 +61,13 @@ const AssetTypes = () => {
     type: '',
     organization: orgId,
   });
-
+  
   useEffect(() => {
-    LoadData()
+    getAssetTypesByOrgId(orgId, setAssetTypes)
   }, [toggleChange]);
 
   const changeToggler = () => {
     setToggleChange(!toggleChange);
-  }
-
-  let LoadData = () => {
-    getAssetTypesByOrgId(orgId, setAssetTypes)
   }
 
   const handleInputChange = (e) => {
@@ -41,9 +81,6 @@ const AssetTypes = () => {
       organization: orgId,
     });
   };
-  const handleAction = (rowData) => {
-    console.log();
-  };
 
   const columns = [
     {
@@ -54,27 +91,13 @@ const AssetTypes = () => {
       Header: "Action",
       accessor: "action",
       Cell: ({ row }) => (
-        <div className="flex items-center">
-          <div className="pr-2">
-            <button
-              className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
-              onClick={() => handleAction(row.original)}
-            >
-              <FontAwesomeIcon icon={faArrowAltCircleRight} />
-            </button>
-          </div>
-          <button
-            className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
-            onClick={() => handleAction(row.original)}
-          >
-            <FontAwesomeIcon icon={faEye} />
-          </button>
-        </div>
+        <AssetTypeForm data={row.original} />
       ),
     },
   ];
 
-  const data = assetTypes.map(obj => ({
+  const data = assetTypes?.map(obj => ({
+    id: obj._id,
     type: obj.type,
   }));
 
@@ -84,7 +107,7 @@ const AssetTypes = () => {
       handler: handleCreateAssetType,
     }
   ]
-
+  
   return (
     <div className='my-4'>
       <Modal
@@ -93,7 +116,8 @@ const AssetTypes = () => {
         Element={<ATForm formData={formData} handleInputChange={handleInputChange} />}
         btnConfig={btnConfig}
       />
-      <div className="bg-gray-100 text-gray-900">
+      <div className="bg-gray-100 text-gray-900 py-4 px-8">
+       <Table data={data} columns={columns}/> 
       </div>
     </div>
   );
