@@ -1,7 +1,8 @@
-import { LoanTypeModel } from "../models/loanTypeSchema.js";
+import { createNew, deleteById, deleteInBulk, getAll, getById, handleCatch, updateById } from "../utils/common.js";
+
 import { DesignationModel } from '../models/designationSchema.js'
+import { LoanTypeModel } from "../models/loanTypeSchema.js";
 import { UserModel } from '../models/userSchema.js'
-import { deleteInBulk, getAll, deleteById, updateById, createNew, getById, handleCatch } from "../utils/common.js";
 
 export const createLoanType = (req, res, next) => {
     try {
@@ -62,7 +63,6 @@ export const getAllLoanTypesByUserDesignation = (req, res, next) => {
 }
 
 export const UpdateLoanTypeById = (req, res, next) => {
-    console.log("================1================");
     try {
         if (req.body.organization) {
             throw new Error('Cannot Update the Organization')
@@ -80,8 +80,6 @@ export const UpdateLoanTypeById = (req, res, next) => {
                     DesignationModel.find({ _id: designationId, organization: loanType.organization })
                         .then((designation) => {
                             count++;
-                            console.log("================4================", count);
-
                             if (designation.length == 0) notExistDesignations.push(designationId);
                             else {
                                 if (!DbDesignations.includes(designationId)) {
@@ -91,7 +89,6 @@ export const UpdateLoanTypeById = (req, res, next) => {
                             if (req.body.designations.length == count) {
                                 loanType.designations = DbDesignations;
                                 loanType.type = req.body.type
-                                console.log("=======loanType=====", loanType);
                                 loanType.save()
                                     .then((response) => {
                                         if (!response) {

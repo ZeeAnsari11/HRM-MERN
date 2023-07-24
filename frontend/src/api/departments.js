@@ -1,7 +1,8 @@
+import { departmentRoute, organizationRoutes } from "./configuration";
+
+import axios from "axios";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
-import { departmentRoute, organizationRoutes } from "./configuration";
-import axios from "axios";
 
 export const createDepartment = (formData, changeToggler, toggler) => {
     axios.post(departmentRoute.createDepartment, formData)
@@ -24,5 +25,35 @@ export const getDepartmentsByOrgId = (orgId, setDepartment) => {
         })
         .catch((err) => {
             console.log(err);
+        })
+}
+
+export const deleteDepartmentById = (id) => {
+    axios.delete(departmentRoute.deleteDepartmentById + id)
+        .then((response) => {
+            toastMessage("success", response.data.Message, toast);
+            setTimeout(() => {
+                window.location.href = "/dashboard/departments"
+            }, 2000)
+        })
+        .catch((err) => {
+            toastMessage("error", err.response.data.Message, toast);
+        })
+}
+
+export const updateDepartmentById = (id, formData, trigger) => {
+    axios.put(departmentRoute.updateDepartmentById + id, formData)
+        .then((response) => {
+            toastMessage("success", response.data.Message, toast)
+            //TODO: Update required
+            setTimeout(() => {
+                window.location.href = "/dashboard/departments"
+            }, 2000)
+        })
+        .catch((error) => {
+            toastMessage("error", error.response.data.Message, toast)
+        })
+        .finally(()=>{
+            trigger();
         })
 }

@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
-import { useSelector } from 'react-redux';
-import { useMemo } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { toastMessage } from '../../AlertConfigs';
-import { toast } from 'react-toastify';
-import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
 import { createDepartment, getDepartmentsByOrgId } from '../../api/departments';
-import { getBranchesByOrgId } from '../../api/branches';
+
+import CDForm from './CDForm';
+import DepartmentsView from './DepartmentsView';
 import Modal from '../../components/Modal';
-import CFForm from './component/CFForm';
 import Table from '../../components/Table';
+import { getBranchesByOrgId } from '../../api/branches';
+import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
+import { toast } from 'react-toastify';
+import { toastMessage } from '../../AlertConfigs';
+import { useMemo } from 'react'
+import { useSelector } from 'react-redux';
 
 const Departments = () => {
     let orgId;
@@ -26,6 +26,7 @@ const Departments = () => {
     });
 
     useEffect(() => {
+        console.log("i get called")
         LoadData()
     }, [toggleChange]);
 
@@ -51,11 +52,7 @@ const Departments = () => {
         createDepartment(formData, changeToggler, toggler);
         setFormData({ name: "", organization: orgId, branch: "" });
     };
-
-    const handleAction = (rowData) => {
-        // Handle action here
-    };
-
+    
     const columns = useMemo(() => [
         {
             Header: "Name",
@@ -69,38 +66,30 @@ const Departments = () => {
             Header: "Action",
             accessor: 'action',
             Cell: ({ row }) => (
-                <div className='flex items-center'>
-                    <div className='pr-2'>
-                        <button className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow" onClick={() => handleAction(row.original)}>
-                            <FontAwesomeIcon icon={faArrowAltCircleRight} />
-                        </button>
-                    </div>
-                    <button className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow" onClick={() => handleAction(row.original)}>
-                        <FontAwesomeIcon icon={faEye} />
-                    </button>
-                </div>
-            )
+                <DepartmentsView data={row.original} />
+            ),
         }
     ], []);
 
     const data = departments.map(obj => ({
+        id: obj._id,
         name: obj.name,
-        branch: obj.branch.name
+        branch: obj.branch?.name,
     }));
 
     const btnConfig = [
         {
-          title: 'Create',
-          handler: handleCreateDepartment,
+            title: 'Create',
+            handler: handleCreateDepartment,
         }
-      ]
+    ]
 
     return (
         <div>
             <Modal
                 action="Create Department"
                 title="Create Department"
-                Element={<CFForm branches={branches} formData={formData} handleInputChange={handleInputChange} />}
+                Element={<CDForm branches={branches} formData={formData} handleInputChange={handleInputChange} />}
                 btnConfig={btnConfig}
             />
             <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">

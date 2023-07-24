@@ -1,28 +1,28 @@
-import React from 'react';
-import MultiSelect from '../../components/SelectForm/MultiSelect';
-import { useState } from 'react';
-import { faArrowAltCircleRight, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
-import Modal from '../../components/Modal';
-import { deleteLoanType, updateLoanTypeById } from '../../api/LoanType';
+import { deleteBranch, updateBranchById } from '../../api/branches';
+import { faArrowAltCircleRight, faTrash } from '@fortawesome/free-solid-svg-icons';
+
+import CBForm from './CBForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import LoanTypeForm from './LoanTypeForm';
+import Modal from '../../components/Modal';
+import React from 'react';
+import { useState } from 'react';
 
-
-export default function LoanTypeView({ data, desiginationsList }) {
+export default function BranchesView({ data }) {
     const [formData, setFormData] = useState({
-        id: data.id,
-        type: data.type,
-        designations: data.designations,
+        city: data.city,
+        country: data.country,
+        description: data.description,
+        name: data.name,
     });
 
-    const handleUpdateLoanType = (trigger) => {
-        updateLoanTypeById(formData.id ,formData, trigger);
+    const handleUpdateBranches = (trigger) => {
+        updateBranchById(data.id ,formData, trigger);
     };
 
     const ViewBtnConfig = [
         {
           title: 'Update',
-          handler: handleUpdateLoanType,
+          handler: handleUpdateBranches,
         },
     ];
 
@@ -31,14 +31,14 @@ export default function LoanTypeView({ data, desiginationsList }) {
     };
 
     const handleAction = (id) => {
-        deleteLoanType(id);
+        deleteBranch(id);
     }
 
     return <div className="flex items-center space-x-2">
             <Modal
                 action={<FontAwesomeIcon icon={faArrowAltCircleRight} />}
                 title={''}
-                Element={<LoanTypeForm handleInputChange={handleInputChange} desiginationsList={desiginationsList} formData={formData}/>}
+                Element={<CBForm handleInputChange={handleInputChange} formData={formData}/>}
                 btnConfig={ViewBtnConfig}
             />
         <button
