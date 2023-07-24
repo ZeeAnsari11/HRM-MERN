@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
+import { useDispatch, useSelector } from 'react-redux';
+
+import CDForm from './CDForm';
+import DesiginationsView from './DesiginationsView';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Modal from '../../components/Modal';
+import Table from '../../components/Table';
+import axios from 'axios';
+import { createDesigination } from '../../api/designation';
+import { organizationRoutes } from '../../api/configuration';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { setOrganizationDesignation } from '../../states/reducers/slices/backend/Designation';
-import { organizationRoutes } from '../../api/configuration';
-import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
-import { useMemo } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Table from '../../components/Table';
-import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
-import { createDesigination } from '../../api/designation';
-import Modal from '../../components/Modal';
-import CDForm from './CDForm';
-import { toastMessage } from '../../AlertConfigs';
 import { toast } from 'react-toastify';
+import { toastMessage } from '../../AlertConfigs';
+import { useMemo } from 'react'
 
 const Desiginations = () => {
     let orgId;
@@ -83,21 +85,13 @@ const Desiginations = () => {
             Header: "Action",
             accessor: 'action',
             Cell: ({ row }) => (
-                <div className='flex items-center'>
-                    <div className='pr-2'>
-                        <button className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow" onClick={() => handleAction(row.original)}>
-                            <FontAwesomeIcon icon={faArrowAltCircleRight} />
-                        </button>
-                    </div>
-                    <button className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow" onClick={() => handleAction(row.original)}>
-                        <FontAwesomeIcon icon={faEye} />
-                    </button>
-                </div>
-            )
+                <DesiginationsView data={row.original} />
+            ),
         }
     ], [])
 
     const data = desiginations.map(obj => ({
+        id : obj._id,
         title: obj.title,
         shortForm: obj.shortForm
     }));
