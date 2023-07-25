@@ -1,13 +1,14 @@
-import axios from 'axios';
 import { authentication, getOrganization, organizationRoutes, timeSlots, userRoutes } from './configuration';
-import { setAuth, setCurrentUser, setFinalAuthority, setTimeSLots, setAllUsers, setUserGrades, setProfileCompletion } from '../states/reducers/slices/backend/UserSlice';
-import { setUserBranch } from '../states/reducers/slices/backend/Branch';
-import { setUserDepartment } from '../states/reducers/slices/backend/Department';
-import { setOrganizationDesignation } from '../states/reducers/slices/backend/Designation';
+import { setAllUsers, setAuth, setCurrentUser, setFinalAuthority, setProfileCompletion, setTimeSLots, setUserGrades } from '../states/reducers/slices/backend/UserSlice';
+
+import axios from 'axios';
 import { getAllUsers } from './configuration';
 import { setEmploymentTypes } from '../states/reducers/slices/backend/EmploymentType';
-import { toastMessage } from "../AlertConfigs";
+import { setOrganizationDesignation } from '../states/reducers/slices/backend/Designation';
+import { setUserBranch } from '../states/reducers/slices/backend/Branch';
+import { setUserDepartment } from '../states/reducers/slices/backend/Department';
 import { toast } from 'react-toastify';
+import { toastMessage } from "../AlertConfigs";
 
 export const loginAuth = (dispatcher, body, navigation, toast, setLoading) => {
     axios.post(authentication.login, body)
@@ -90,7 +91,7 @@ export const createUser = (data) => {
         }, 2000)
     })
     .catch((error) => {
-        console.log(error)
+        toastMessage("error", error.response.data.Message, toast);
     })
 }
 

@@ -1,13 +1,15 @@
-import { BranchModel } from '../models/branchSchema.js'
-import { OrganizationModel } from '../models/organizationSchema.js'
-import { UserModel } from '../models/userSchema.js'
-import { DepartmentModel } from '../models/departmentSchema.js'
-import { EmploymentModel } from '../models/employmentSchema.js'
-import { TimeSlotsModel } from "../models/timeSlotsSchema.js";
 import { handleCatch, updateById } from '../utils/common.js'
-import { LeaveTypeModel } from '../models/leaveTypeSchema.js'
-import { EOETypeModel } from '../models/eoeTypeSchema.js'
 
+import { BranchModel } from '../models/branchSchema.js'
+import { DepartmentModel } from '../models/departmentSchema.js'
+import { EOETypeModel } from '../models/eoeTypeSchema.js'
+import { EmploymentModel } from '../models/employmentSchema.js'
+import { LeaveTypeModel } from '../models/leaveTypeSchema.js'
+import { OrganizationModel } from '../models/organizationSchema.js'
+import { TimeSlotsModel } from "../models/timeSlotsSchema.js";
+import { UserModel } from '../models/userSchema.js'
+
+const placeHolder = '0001-01-01T';
 //// Create User ////
 export const addingUser = (req, res, next) => {
     try {
@@ -135,7 +137,7 @@ const creatingRoster = (req, res, next, user = null, timeSlot = null) => {
                 day: i.getUTCDay(),
                 date: i.toISOString(),
                 workingHours: slotTimeStart + " - " + slotTimeEnd,
-                plannedHours: Math.abs(new Date(timeSlot.endTime) - new Date(timeSlot.startTime)) / (60 * 60 * 1000),
+                plannedHours: Math.abs(new Date(placeHolder+timeSlot.endTime) - new Date(placeHolder+timeSlot.startTime)) / (60 * 60 * 1000),
             };
             user ? user.roster.employeeRosterDetails.push(x) : req.body.roster.employeeRosterDetails.push(x);
         }
