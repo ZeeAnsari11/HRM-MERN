@@ -35,12 +35,7 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
         loadAllOrganizationsInfo(dispatcher, userOrgId, branchId);
     }, []);
 
-    console.log("Line Manager ", lineManager);
 
-    // const convertDatetoLocalTime = (date) => {
-    //     const dateTime = new Date(date);
-    //     return dateTime.toLocaleTimeString('en-US', { hour12: true });
-    // }
     const convertToAMPM = (time) => {
         const [hours, minutes] = time.split(':');
         const formattedTime = new Date();

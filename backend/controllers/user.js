@@ -102,6 +102,7 @@ const checkingProbation = (req, res, next, organization) => {
 
 const userRoster = (req, res, next) => {
     try {
+        console.log("userRoster", req.body.userRoster.timeSlots);
         if (!req.body.userRoster || !req.body.userRoster?.timeSlots || !req.body.userRoster?.restDays) throw new Error('Kindly Provide Data for Roster')
         req.body.userRoster.restDays.forEach(restDay => {
             if (restDay < 0 || restDay > 6) throw new Error('Invalid Rest Days.')
@@ -124,8 +125,8 @@ const creatingRoster = (req, res, next, user = null, timeSlot = null) => {
     startDate.setUTCHours(0, 0, 0, 0); // Set time to midnight in UTC
     startDate.setDate(startDate.getDate() + 1);
     let endDate = new Date(startDate.getFullYear(), 11, 32);
-    let slotTimeStart = timeSlot.startTime.getHours() + ":" + timeSlot.startTime.getMinutes();
-    let slotTimeEnd = timeSlot.endTime.getHours() + ":" + timeSlot.endTime.getMinutes();
+    let slotTimeStart = timeSlot.startTime;
+    let slotTimeEnd = timeSlot.endTime;
     user ? (user.roster.employeeRosterDetails = []) : (req.body.roster = { employeeRosterDetails: [] });
 
     for (let i = startDate; i <= endDate; i.setDate(i.getDate() + 1)) {
