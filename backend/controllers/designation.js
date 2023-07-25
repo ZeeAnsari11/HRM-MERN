@@ -1,6 +1,7 @@
+import { createNew, deleteById, deleteInBulk, getAll, getById, handleCatch, updateById } from "../utils/common.js"
+
 import { DesignationModel } from "../models/designationSchema.js";
 import { OrganizationModel } from "../models/organizationSchema.js";
-import { createNew, updateById, getAll, getById, deleteInBulk, handleCatch } from "../utils/common.js"
 
 export const createDesignation = (req, res, next) => {
     try{
@@ -45,6 +46,9 @@ export const getDesignationById = (req, res, next) => {
 // export const getDesignationsBycreatorId = (req, res, next)=>{
 //     getAll(res, next, DesignationModel, {createdBy : req.params.id}, "Designation");
 // }
+export const deleteDesiginationById= (req, res, next) => {
+    deleteById(req.params.id, res, next, DesignationModel, "Desigination")
+}
 
 export const getAllDesignationsByOrgId = (req, res, next)=>{
     getAll(res, next, DesignationModel, {organization : req.params.id}, "Designation");

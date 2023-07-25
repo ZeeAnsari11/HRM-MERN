@@ -99,7 +99,9 @@ export const missingPunchesRoute = {
 
 export const desiginationsRoute = {
     createDesigination: baseUrl+'/designation/new',
-    getMissingPunchesHistoryByUserId : baseUrl+'/missing-punch/user/filter'
+    getMissingPunchesHistoryByUserId : baseUrl+'/missing-punch/user/filter',
+    deleteDesiginationById : baseUrl +'/designation/',
+    updateDesiginationById : baseUrl +'/designation/',
 }
 
 export const departmentRoute = {
