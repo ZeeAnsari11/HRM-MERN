@@ -1,5 +1,4 @@
-import { asset, assetType } from "./configuration";
-
+import { assetType } from "./configuration";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";

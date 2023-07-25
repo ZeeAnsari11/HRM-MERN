@@ -1,15 +1,16 @@
-import React from "react";
-import { useSelector } from "react-redux";
 import { selectCurrentUser, selectProfileCompletion } from "../../states/reducers/slices/backend/UserSlice";
-import PersonalInfo from "./elements/PersonalInfo";
-import ContactInfo from "./elements/ContactInfo";
-import OrganizationInfo from "./elements/OrganizationInfo";
+
 import Addresses from "./elements/Addresses";
-import Skills from "./elements/Skills";
-import RelativesForm from "./elements/RelativesForm";
-import Qualification from "./elements/Qualification";
 import Certifications from "./elements/Certifications";
+import ContactInfo from "./elements/ContactInfo";
 import Experiences from "./elements/Experiences";
+import OrganizationInfo from "./elements/OrganizationInfo";
+import PersonalInfo from "./elements/PersonalInfo";
+import Qualification from "./elements/Qualification";
+import React from "react";
+import RelativesForm from "./elements/RelativesForm";
+import Skills from "./elements/Skills";
+import { useSelector } from "react-redux";
 
 const UserProfile = () => {
   const currentUser = useSelector(selectCurrentUser);
@@ -33,7 +34,7 @@ const UserProfile = () => {
           <div className="flex flex-col mobile:!ml-0">
             <span className="text-3xl text-gray-600 font-bold">{currentUser.firstName} {currentUser.lastName}</span>
             <span className="text-gray-600">
-              {currentUser.designation.title} @{currentUser.organization.name}
+              {currentUser.designation?.title} @{currentUser.organization?.name}
             </span>
           </div>
         </div>
