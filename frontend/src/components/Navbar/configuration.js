@@ -1,4 +1,4 @@
-import { faHome, faUser, faGear, faTimeline, faChartArea, faCircleDollarToSlot, faCalendarDays, faCalendarDay, faCodePullRequest, faCalendarPlus, faCalendarWeek, faCalendarTimes, faFileAlt, faCalendarCheck, faUserClock, faNetworkWired, faUserCircle, faUsers , faCoffee, faCediSign} from '@fortawesome/free-solid-svg-icons'
+import { faCalendarCheck, faCalendarDay, faCalendarDays, faCalendarPlus, faCalendarTimes, faCalendarWeek, faCediSign, faChartArea, faCircleDollarToSlot, faCodePullRequest, faCoffee, faFileAlt, faGear, faHome, faNetworkWired, faTimeline, faUser, faUserCircle, faUserClock, faUsers } from '@fortawesome/free-solid-svg-icons'
 
 export const Menus = [
     { title: "Dashboard", font:faHome, gap: true, child:[], to: "/dashboard/home"},
@@ -46,6 +46,7 @@ export const Menus = [
             { title: "Request Leave", font: faCodePullRequest, to:"/dashboard/leaverequest" },
             { title: "View Leaves", font: faCalendarCheck, to:"/dashboard/leaves"},
             { title: "Policy", font: faTimeline, to:"/dashboard/policy" },
+            { title: "Leave Types", font: faTimeline, to:"/dashboard/leave-type" },
         ]
     },
     {

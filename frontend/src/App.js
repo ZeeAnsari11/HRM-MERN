@@ -1,37 +1,40 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Dashboard from "./screens/Dashboard";
-import ForgotPassword from "./screens/ForgotPassword";
-import Login from "./screens/Login"
-import ResetPassword from "./screens/ResetPassword";
-import Skeleton from "./screens/Skeleton";
-import Profile from "./screens/Profile";
-import Settings from "./screens/Settings";
-import Probation from "./screens/Probation";
-import Loan from "./screens/Loan";
-import Leave from "./screens/Leave";
-import LeavePolicy from "./screens/LeavePolicy";
+import { Route, Routes } from "react-router-dom";
+
+import Allowances from "./screens/Allowances";
+import Asset from "./screens/AddAsset";
+import AssetTypes from "./screens/AssetTypes";
 import Attendence from "./screens/Attendence";
-import ViewAttendenceRequests from "./screens/ViewAttendenceRequests";
-import WorkFromHomeRequest from "./screens/WorkFromHomeRequest";
-import LeaveRequest from "./screens/LeaveRequest";
+import Branches from "./screens/Branches";
+import Dashboard from "./screens/Dashboard";
+import Departments from "./screens/Departments";
+import Desiginations from "./screens/Desiginations";
 import Error from "./screens/Error/404";
 import FirstUser from "./screens/FirstUser";
-import User from "./screens/User";
-import Asset from "./screens/AddAsset";
-import ManageAsset from "./screens/ManageAsset";
-import ViewEmployees from "./screens/ViewEmployees";
-import Roaster from "./screens/Roaster/src";
-import Desiginations from "./screens/Desiginations";
-import Departments from "./screens/Departments";
-import ViewWorkFromHome from "./screens/WorkFromHome";
-import TimeSheet from "./screens/TimeSheet";
-import Branches from "./screens/Branches";
-import TimeSlots from "./screens/TimeSlots";
-import AssetTypes from "./screens/AssetTypes";
-import Allowances from "./screens/Allowances";
+import ForgotPassword from "./screens/ForgotPassword";
+import Leave from "./screens/Leave";
+import LeavePolicy from "./screens/LeavePolicy";
+import LeaveRequest from "./screens/LeaveRequest";
+import LeaveType from "./screens/LeaveType";
+import Loan from "./screens/Loan";
 import LoanType from "./screens/LoanType";
+import Login from "./screens/Login"
+import ManageAsset from "./screens/ManageAsset";
 import Payslips from "./screens/Payslips";
+import Probation from "./screens/Probation";
+import Profile from "./screens/Profile";
+import React from "react";
+import ResetPassword from "./screens/ResetPassword";
+import Roaster from "./screens/Roaster/src";
+import Settings from "./screens/Settings";
+import Skeleton from "./screens/Skeleton";
+import TimeSheet from "./screens/TimeSheet";
+import TimeSlots from "./screens/TimeSlots";
+import User from "./screens/User";
+import ViewAttendenceRequests from "./screens/ViewAttendenceRequests";
+import ViewEmployees from "./screens/ViewEmployees";
+import ViewWorkFromHome from "./screens/WorkFromHome";
+import WorkFromHomeRequest from "./screens/WorkFromHomeRequest";
+
 // import ChartPage from "./screens/Chart/src";
 // import ChartPage from "./screens/Chart";
 
@@ -71,10 +74,11 @@ function App() {
         <Route path="/dashboard/payslips" element={<Payslips />}/>
         <Route path="/dashboard/Desiginations" element={<Desiginations />}/>
         <Route path="/dashboard/manage-assets" element={<ManageAsset />}/>
+        <Route path="/dashboard/leave-type" element={<LeaveType />}/>
+
       </Route>
       <Route path="/*" element={<Error />}/>
     </Routes>
   );
 }
-
 export default App;

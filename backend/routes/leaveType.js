@@ -1,14 +1,19 @@
-import express from 'express'
 import {
-    createNewLeaveType, changeLeaveStatusById, getLeaveTypeById, updateLeaveTypeById,
-    filterLeaveTypes
+    changeLeaveStatusById,
+    createNewLeaveType,
+    filterLeaveTypes,
+    getLeaveTypeById,
+    getLeaveTypeByOrgId,
+    updateLeaveTypeById
 } from '../controllers/leaveType.js';
 
+import express from 'express'
 
 export const leaveTypeRoute = express.Router();
 
 leaveTypeRoute.route('/leaveType/new').post(createNewLeaveType)
 leaveTypeRoute.route('/leaveType/updateStatus/:id').put(changeLeaveStatusById)
-leaveTypeRoute.route('/leaveType/update/:id').put(updateLeaveTypeById)
-leaveTypeRoute.route('/leaveType/:id').get(getLeaveTypeById)
+leaveTypeRoute.route('/leaveType/:id').put(updateLeaveTypeById).get(getLeaveTypeById)
 leaveTypeRoute.route('/leaveTypes/filter').get(filterLeaveTypes)
+leaveTypeRoute.route('/leave-types/organization/:id').get(getLeaveTypeByOrgId)
+

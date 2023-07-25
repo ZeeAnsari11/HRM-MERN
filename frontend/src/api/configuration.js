@@ -16,6 +16,7 @@ export const organizationRoutes = {
     getBranchesByOrgId: baseUrl+'/branch/organization/',
     getDepartmentsByOrgId: baseUrl+'/departments/organization/',
     getDesignationsByOrgId: baseUrl+'/designations/organization/',
+    getLeaveTypeByOrgId: baseUrl+'/leave-types/organization/',
     getUsersByFilter: baseUrl+'/user/filter-user/organization',
     getEmployementTypesByOrgId: baseUrl+'/employmentType/all/'
 }
@@ -135,6 +136,11 @@ export const branchRoute = {
     createBranch : baseUrl+'/branch/new',
     updateBranchById :baseUrl + '/branch/',
     deleteBranchById : baseUrl +'/branch/'
+}
+
+export const leaveTypeRoute = {
+    updateLeaveTypeById :baseUrl + '/leaveType/',
+    createLeaveType : baseUrl +'/leaveType/new'
 }
 
 export const timeSlotsRoute = {
