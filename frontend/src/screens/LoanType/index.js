@@ -114,7 +114,7 @@ const LoanType = () => {
         btnConfig={btnConfig}
       />
       <div className="bg-gray-100 text-gray-900">
-        <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
           <Table columns={columns} data={data} />
         </main>
       </div>

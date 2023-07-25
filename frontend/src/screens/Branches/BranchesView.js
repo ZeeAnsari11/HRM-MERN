@@ -34,7 +34,7 @@ export default function BranchesView({ data }) {
         deleteBranch(id);
     }
 
-    return <div className="flex items-center space-x-2">
+    return <div className="flex items-center space-x-2 justify-center">
             <Modal
                 action={<FontAwesomeIcon icon={faArrowAltCircleRight} />}
                 title={''}

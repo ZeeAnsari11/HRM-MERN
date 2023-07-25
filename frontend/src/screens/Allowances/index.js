@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { createAllowance, getAllowancesByOrgId } from '../../api/allowances';
+import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
+
+import AllowanceForm from './AllowanceForm';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Modal from '../../components/Modal';
+import Table from '../../components/Table';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
-import Table from '../../components/Table';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
-import Modal from '../../components/Modal';
-import AllowanceForm from './AllowanceForm';
-import { createAllowance, getAllowancesByOrgId } from '../../api/allowances';
 
 const Allowances = () => {
   let orgId;
@@ -59,7 +60,7 @@ const Allowances = () => {
       Header: "Action",
       accessor: "action",
       Cell: ({ row }) => (
-        <div className="flex items-center">
+        <div className="flex items-center justify-center">
           <div className="pr-2">
             <button
               className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
@@ -99,7 +100,7 @@ const Allowances = () => {
         btnConfig={btnConfig}
       />
       <div className="bg-gray-100 text-gray-900">
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
           <Table columns={columns} data={data} />
         </main>
       </div>

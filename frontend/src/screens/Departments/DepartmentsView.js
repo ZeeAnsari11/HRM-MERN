@@ -50,7 +50,7 @@ export default function DepartmentsView({ data }) {
         deleteDepartmentById(id);
     }
 
-    return <div className="flex items-center space-x-2">
+    return <div className="flex items-center justify-center space-x-2">
         <Modal
             action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
             title={title}

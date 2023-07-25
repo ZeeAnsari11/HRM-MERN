@@ -1,12 +1,13 @@
-import React from 'react'
 import Table, { StatusPill } from '../../components/Table';
-import { useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { selectUID, selectUserWfh } from '../../states/reducers/slices/backend/UserSlice'
-import { useEffect } from 'react'
-import { getAllWfhOfUser } from '../../api/wfh'
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+
+import React from 'react'
 import View from './src/modal';
+import { getAllWfhOfUser } from '../../api/wfh'
+import { useEffect } from 'react'
+import { useMemo } from 'react'
+import { useState } from 'react';
 
 function ViewWorkFromHome() {
 
@@ -64,7 +65,7 @@ function ViewWorkFromHome() {
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900">
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <div className="mt-6">
         {/* {showView && <View />} */}
           <Table columns={columns} data={data} />

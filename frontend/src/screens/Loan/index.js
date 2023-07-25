@@ -1,13 +1,16 @@
-import React from 'react'  // new
 import Table, { StatusPill } from '../../components/Table';
-import { useMemo } from 'react'
+import { selectCreatingLoan, selectUserLoan } from '../../states/reducers/slices/backend/Loan'
 import { useDispatch, useSelector } from 'react-redux'
+
+import CreateLoanRequest from './CreateLoan'
+import React from 'react'
+import { getUserLoanById } from '../../api/loan'
 import { selectUID } from '../../states/reducers/slices/backend/UserSlice'
 import { useEffect } from 'react'
-import { getUserLoanById } from '../../api/loan'
-import { selectCreatingLoan, selectUserLoan } from '../../states/reducers/slices/backend/Loan'
+import { useMemo } from 'react'
 import { useState } from 'react'
-import CreateLoanRequest from './CreateLoan'
+
+// new
 
 function Loan() {
 
@@ -86,7 +89,7 @@ function Loan() {
   }
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900">
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
     
       {!isCreatingLoanRequest && (
           <div className="flex justify-between items-center mb-6">

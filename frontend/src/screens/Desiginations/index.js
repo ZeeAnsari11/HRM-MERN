@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
+import { useDispatch, useSelector } from 'react-redux';
+
+import CDForm from './CDForm';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Modal from '../../components/Modal';
+import Table from '../../components/Table';
+import axios from 'axios';
+import { createDesigination } from '../../api/designation';
+import { organizationRoutes } from '../../api/configuration';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { setOrganizationDesignation } from '../../states/reducers/slices/backend/Designation';
-import { organizationRoutes } from '../../api/configuration';
-import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
-import { useMemo } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Table from '../../components/Table';
-import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
-import { createDesigination } from '../../api/designation';
-import Modal from '../../components/Modal';
-import CDForm from './CDForm';
-import { toastMessage } from '../../AlertConfigs';
 import { toast } from 'react-toastify';
+import { toastMessage } from '../../AlertConfigs';
+import { useMemo } from 'react'
 
 const Desiginations = () => {
     let orgId;
@@ -118,7 +119,7 @@ const Desiginations = () => {
                 btnConfig={btnConfig}
             />
             <div className="min-h-screen bg-gray-100 text-gray-900">
-                <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+                <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
                     <div className="mt-6">
                         <Table columns={columns} data={data} />
                     </div>

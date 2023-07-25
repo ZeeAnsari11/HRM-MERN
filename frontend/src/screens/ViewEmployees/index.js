@@ -1,10 +1,13 @@
-import React from 'react'  // new
 import Table, { AvatarCell, SelectColumnFilter, StatusPill } from '../../components/Table';
-import { useMemo } from 'react'
-import { getAllUsersByOrganization } from '../../api/user'
-import { useDispatch, useSelector } from 'react-redux'
 import { selectAllUsers, selectOrgId } from '../../states/reducers/slices/backend/UserSlice'
+import { useDispatch, useSelector } from 'react-redux'
+
+import React from 'react'
+import { getAllUsersByOrganization } from '../../api/user'
 import { useEffect } from 'react'
+import { useMemo } from 'react'
+
+// new
 
 
 function ViewEmployees() {
@@ -62,7 +65,7 @@ function ViewEmployees() {
   }
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900">
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <div className="mt-6">
           <Table columns={columns} data={data} />
         </div>

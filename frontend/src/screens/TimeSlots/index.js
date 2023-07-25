@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { createTimeSlot, getTimeSlotsByOrgId } from '../../api/timeSlots';
+import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
+
+import CTForm from './CTForm';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Modal from '../../components/Modal';
+import Table from '../../components/Table';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Table from '../../components/Table';
-import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
-import { createTimeSlot, getTimeSlotsByOrgId } from '../../api/timeSlots';
-import CTForm from './CTForm';
-import Modal from '../../components/Modal';
 
 const TimeSlots = () => {
   let orgId = useSelector(selectCurrentUserOrg);
@@ -111,7 +112,7 @@ const TimeSlots = () => {
       Header: 'Action',
       accessor: 'action',
       Cell: ({ row }) => (
-        <div className="flex items-center ">
+        <div className="flex items-center justify-center">
           <div className="pr-2">
             <button
               className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
@@ -162,7 +163,7 @@ const TimeSlots = () => {
         Element={<CTForm formData={formData} handleInputChange={handleInputChange} />}
         btnConfig={btnConfig}
       />
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <div className="mt-6">
           <Table columns={columns} data={data} />
         </div>

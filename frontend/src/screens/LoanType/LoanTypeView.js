@@ -1,12 +1,12 @@
-import React from 'react';
-import MultiSelect from '../../components/SelectForm/MultiSelect';
-import { useState } from 'react';
-import { faArrowAltCircleRight, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
-import Modal from '../../components/Modal';
 import { deleteLoanType, updateLoanTypeById } from '../../api/LoanType';
+import { faArrowAltCircleRight, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LoanTypeForm from './LoanTypeForm';
-
+import Modal from '../../components/Modal';
+import MultiSelect from '../../components/SelectForm/MultiSelect';
+import React from 'react';
+import { useState } from 'react';
 
 export default function LoanTypeView({ data, desiginationsList }) {
     const [formData, setFormData] = useState({
@@ -34,7 +34,7 @@ export default function LoanTypeView({ data, desiginationsList }) {
         deleteLoanType(id);
     }
 
-    return <div className="flex items-center space-x-2">
+    return <div className="flex items-center space-x-2 justify-center">
             <Modal
                 action={<FontAwesomeIcon icon={faArrowAltCircleRight} />}
                 title={''}
