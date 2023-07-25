@@ -67,7 +67,7 @@ export const getCurrentUser = (dispatcher, setLoaded=null) => {
 
 export const loadAllOrganizationsInfo = (dispatcher, orgId, branchId) => {
     axios.get(getOrganization.grades + orgId).then((rsp) => { dispatcher(setUserGrades(rsp.data.grades))}).catch((e) => console.log(e))
-    axios.get(organizationRoutes.getEmployementTypesByOrgId + orgId).then((rsp) => {console.log("sungiiiii",rsp); dispatcher(setEmploymentTypes(rsp.data.response))}).catch((e) => console.log(e))
+    axios.get(organizationRoutes.getEmployementTypesByOrgId + orgId).then((rsp) => {dispatcher(setEmploymentTypes(rsp.data.response))}).catch((e) => console.log(e))
     axios.get(organizationRoutes.getBranchesByOrgId + orgId).then((rsp) => { dispatcher(setUserBranch(rsp.data.branches))}).catch((e) => console.log(e))
     axios.get(organizationRoutes.getDepartmentsByOrgId + orgId).then((rsp) => { dispatcher(setUserDepartment(rsp.data.departments)) }).catch((e) => console.log(e))
     axios.get(organizationRoutes.getDesignationsByOrgId + orgId).then((rsp) => { 
@@ -84,7 +84,10 @@ export const loadAllOrganizationsInfo = (dispatcher, orgId, branchId) => {
 export const createUser = (data) => {
     axios.post(userRoutes.createUser, data)
     .then((response) => {
-        console.log(response.data)
+        toastMessage("success", "User Created Succefully", toast)
+        setTimeout(() => {
+            window.location.href = "/dashboard/view-employees"
+        }, 2000)
     })
     .catch((error) => {
         console.log(error)

@@ -17,15 +17,16 @@ const Forms = ({ formNumber, changePageNumber, formData, handleInputChange }) =>
     }, [])
     const handleSubmit = () => {
         let element = {
-            timeslots: formData.timeSlots ? formData.timeSlots.timeSlots : [],
+            timeSlots: formData.timeSlots ? formData.timeSlots.timeSlots : [],
             restDays: formData.roaster ? formData.roaster.restDays : [],
         };
         formData.userRoster = element
-        delete formData.roaster
-        delete formData.timeSlots
+        // delete formData.roaster
+        // delete formData.timeSlots
         formData.nic.expiry = formData.expiry
-        formData.nic.attachment.front = "front"
-        formData.nic.attachment.back = "back"
+        formData.nic.attachment.front = "front.png"
+        formData.nic.attachment.back = "back.png"
+        console.log("FormData: ", formData);
         createUser(formData);
     }
     if (formNumber === 1)

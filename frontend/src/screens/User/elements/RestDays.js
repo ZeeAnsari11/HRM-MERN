@@ -27,7 +27,7 @@ const plans = [
     name: 'Saturday',
   },
   {
-    index: 7,
+    index: 0,
     name: 'Sunday',
   },
 ];

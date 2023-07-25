@@ -196,13 +196,13 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                 </div>
                 <div className="md:col-span-2">
                     <div className="md:col-span-3">
-                        <label htmlFor="contact">Contact Number</label>
+                        <label htmlFor="phoneNumber">Contact Number</label>
                         <input
                             type="text"
-                            name="contact"
-                            value={formData.contact}
+                            name="phoneNumber"
+                            value={formData.phoneNumber}
                             onChange={handleInputChange}
-                            id="contact"
+                            id="phoneNumber"
                             className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                             placeholder="Contact Number"
                             required

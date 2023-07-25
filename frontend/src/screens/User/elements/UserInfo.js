@@ -4,7 +4,6 @@ import { loadAllOrganizationsInfo } from '../../../api/user';
 import { selectCurrentUserBranch, selectCurrentUserOrg, selectUserGrades } from '../../../states/reducers/slices/backend/UserSlice';
 
 const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton }) => {
-    console.log("====frmData====", formData);
     const dispatcher = useDispatch();
     const userOrgId = useSelector(selectCurrentUserOrg);
     const branchId = useSelector(selectCurrentUserBranch);
@@ -66,17 +65,17 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
                     </div>
                 </div>
                 <div className="md:col-span-3">
-                    <label className='pl-2' htmlFor="drivingLicense">Driving License</label>
+                    <label className='pl-2' htmlFor="drivingLiscence">Driving License</label>
                     <div className="flex space-x-2">
                         <input
                             type='int'
-                            name="drivingLicense" // Corrected the attribute name
-                            id="drivingLicense"
-                            value={formData.drivingLicense?.number}
+                            name="drivingLiscence" // Corrected the attribute name
+                            id="drivingLiscence"
+                            value={formData.drivingLiscence?.number}
                             placeholder="3510319187449"
                             className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                             onChange={(event) => {
-                                handleInputChange({ target: { name: 'drivingLicense', value: { number: event.target.value } } })
+                                handleInputChange({ target: { name: 'drivingLiscence', value: { number: event.target.value } } })
                             }}
                             required
                         />
