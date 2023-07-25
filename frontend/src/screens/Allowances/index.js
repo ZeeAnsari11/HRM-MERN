@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { createAllowance, getAllowancesByOrgId } from '../../api/allowances';
-import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
 
 import AllowanceForm from './AllowanceForm';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import AllowanceView from './AllowanceView';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
@@ -44,9 +43,7 @@ const Allowances = () => {
       organization: orgId,
     });
   };
-  const handleAction = (rowData) => {
-    console.log();
-  };
+
   const columns = [
     {
       Header: "Name",
@@ -60,26 +57,12 @@ const Allowances = () => {
       Header: "Action",
       accessor: "action",
       Cell: ({ row }) => (
-        <div className="flex items-center justify-center">
-          <div className="pr-2">
-            <button
-              className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
-              onClick={() => handleAction(row.original)}
-            >
-              <FontAwesomeIcon icon={faArrowAltCircleRight} />
-            </button>
-          </div>
-          <button
-            className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
-            onClick={() => handleAction(row.original)}
-          >
-            <FontAwesomeIcon icon={faEye} />
-          </button>
-        </div>
-      ),
+        <AllowanceView data={row.original} />
+    ),
     },
   ];
   const data = allowances.map(obj => ({
+    id: obj._id,
     allowanceName : obj.allowanceName,
     percrentageOfBaseSalary : obj.percrentageOfBaseSalary
   }));

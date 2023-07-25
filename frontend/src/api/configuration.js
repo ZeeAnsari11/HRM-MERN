@@ -54,7 +54,9 @@ export const assetType = {
 
 export const allowances = {
     createAllowance : baseUrl+'/allowance/new',
-    getAllowancesByOrgId: baseUrl+'/allowance/all/'
+    getAllowancesByOrgId: baseUrl+'/allowance/all/',
+    updateAllowancesById : baseUrl + '/allowance/',
+    deletAllowancesById : baseUrl + '/allowance/'
 }
 
 export const loanType = {
