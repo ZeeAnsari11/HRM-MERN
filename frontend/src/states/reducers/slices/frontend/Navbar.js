@@ -7,8 +7,9 @@ export const NavbarSlice = createSlice({
     actionBarWidth: '269px',
     topbarMenu: {
       user: false,
-      notification: false
-    }
+      notification: false,
+    },
+    selectedItem: ""
   },
   reducers: {
     setNavbarState: (state, action) => {
@@ -25,17 +26,18 @@ export const NavbarSlice = createSlice({
           })
         }
     },
-    closeAll: (state, action) => {
-       console.log("close all")
+    setChangeMenuState: (state, action) => {
+        state.selectedItem = action.payload
     },
   }
 });
 
 // Action Methods
-export const { setTogglers, setNavbarState, closeAll } = NavbarSlice.actions;
+export const { setTogglers, setNavbarState, setChangeMenuState, closeAll } = NavbarSlice.actions;
 
 // Selector Methods
 export const selectNavState = (state) => state.navbar.isNavSm;
+export const selectNavItem = (state) => state.navbar.selectedItem;
 export const selectWidth = (state) => state.navbar.actionBarWidth;
 export const selectMenuOpen = (state) => state.navbar.topbarMenu;
 

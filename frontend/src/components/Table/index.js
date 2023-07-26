@@ -3,8 +3,10 @@ import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon, ChevronLeftIcon, Chevron
 import { SortDownIcon, SortIcon, SortUpIcon } from './shared/Icons'
 import { useAsyncDebounce, useFilters, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { classNames } from './shared/Utils'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -19,19 +21,23 @@ function GlobalFilter({
   }, 200)
 
   return (
-    <label className="flex gap-x-2 items-baseline">
-      <span className="text-gray-700">Search: </span>
-      <input
-        type="text"
-        className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-        value={value || ""}
-        onChange={e => {
-          setValue(e.target.value);
-          onChange(e.target.value);
-        }}
-        placeholder={`${count} records...`}
-      />
-    </label>
+    <div className="flex gap-x-2 items-baseline bg-primaryColorLight rounded-lg">
+      <div class="relative">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+              </svg>
+          </div>
+          <input type="search"
+              value={value || ""}
+              onChange={e => {
+                setValue(e.target.value);
+                onChange(e.target.value);
+              }}
+              placeholder={`${count} records...`} class="block w-full px-4 py-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-black-500 focus:outline "
+            />
+      </div>
+    </div>
   )
 }
 
@@ -163,16 +169,16 @@ function Table({ columns, data }) {
           <div className="py-2 align-middle inline-block min-w-full">
             <div className="shadow overflow-auto border-b border-gray-200 sm:rounded-lg">
               <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
-                <thead className="items-center bg-gray-50">
+                <thead className="bg-gray-50">
                   {headerGroups.map(headerGroup => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                       {headerGroup.headers.map(column => (
                         <th
                           scope="col"
-                          className="group px-6 py-3 text-center text-xs font-lg text-gray-500 uppercase tracking-wider"
+                          className="group px-6 py-3 text-xs font-lg text-gray-500 uppercase tracking-wider"
                           {...column.getHeaderProps(column.getSortByToggleProps())}
                         >
-                          <div className="flex items-center justify-center">
+                          <div className="flex items-center justify-start">
                             {column.render('Header')}
                             <span>
                               {column.isSorted
@@ -205,7 +211,7 @@ function Table({ columns, data }) {
                               role="cell"
                             >
                               {cell.column.Cell.name === "defaultRenderer"
-                                ? <div className="flex items-center justify-center text-sm text-gray-500">{cell.render('Cell')}</div>
+                                ? <div className="text-sm text-gray-500">{cell.render('Cell')}</div>
                                 : cell.render('Cell')
                               }
                             </td>
@@ -234,7 +240,7 @@ function Table({ columns, data }) {
             <label>
               <span className="sr-only">Items Per Page</span>
               <select
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="mt-1 px-4 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 value={state.pageSize}
                 onChange={e => {
                   setPageSize(Number(e.target.value))

@@ -1,11 +1,11 @@
-import React from 'react';
-
-import { useDispatch, useSelector } from 'react-redux';
+import { faBars, faExpand, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { selectNavState, setNavbarState } from '../../states/reducers/slices/frontend/Navbar';
-import User from './elements/User';
-import Notification from './elements/Notification';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faEnvelope, faExpand, faSearch } from '@fortawesome/free-solid-svg-icons';
+import Notification from './elements/Notification';
+import React from 'react';
+import User from './elements/User';
 
 const Topbar = () => {
     const dispatcher = useDispatch();
@@ -45,11 +45,9 @@ const Topbar = () => {
                 <div className={tailwindStyle.iconsContainer} onClick={() => toggleFullScreen()}>
                 <FontAwesomeIcon icon={faExpand}/>
                 </div>
-                <div className={tailwindStyle.iconsContainer}>
-                    <FontAwesomeIcon icon={faEnvelope} />
-                </div>
                 <Notification styled={tailwindStyle}/>
                 <User />
+                <span title='This build does not represent the final version' className="bg-orange-100 animate-pulse text-orange-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-orange-200 dark:text-orange-900">beta</span>
             </div>
         </div>
     )
