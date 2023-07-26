@@ -9,7 +9,8 @@ export const NavbarSlice = createSlice({
       user: false,
       notification: false,
     },
-    selectedItem: ""
+    selectedItem: "",
+    selectedChildItem: ""
   },
   reducers: {
     setNavbarState: (state, action) => {
@@ -29,15 +30,19 @@ export const NavbarSlice = createSlice({
     setChangeMenuState: (state, action) => {
         state.selectedItem = action.payload
     },
+    setChangeMenuChildState: (state, action) => {
+      state.selectedChildItem = action.payload
+  },
   }
 });
 
 // Action Methods
-export const { setTogglers, setNavbarState, setChangeMenuState, closeAll } = NavbarSlice.actions;
+export const { setTogglers, setNavbarState, setChangeMenuState, setChangeMenuChildState, closeAll } = NavbarSlice.actions;
 
 // Selector Methods
 export const selectNavState = (state) => state.navbar.isNavSm;
 export const selectNavItem = (state) => state.navbar.selectedItem;
+export const selectNavChildItem = (state) => state.navbar.selectedChildItem;
 export const selectWidth = (state) => state.navbar.actionBarWidth;
 export const selectMenuOpen = (state) => state.navbar.topbarMenu;
 
