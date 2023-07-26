@@ -12,30 +12,27 @@ const Menu = ({ menu }) => {
     const [hoverEffect, setHoverEffect] = React.useState('text-lightText');
     return (
         <>
-            <div onMouseOver={() => setHoverEffect('text-white')} onMouseOut={() => { setHoverEffect('text-lightText') }}
+            <Link to={menu.to} onMouseOver={() => setHoverEffect('text-white')} onMouseOut={() => { setHoverEffect('text-lightText') }}
                 className={`flex px-4 cursor-pointer items-center justify-between ${menu.gap ? "mt-9" : "mt-2"} rounded text-center px-2 py-1 hover:bg-gray-600 hover:shadow-md hover:text-lightText ${selectedMenuItem === menu.title ? 'bg-gray-600 text-lightText': ''}`}
                 onClick={() => {
-                    // if (menu.child.length !== 0) {
-                    //     (menu.title !== selectedMenuItem) ? diapatcher(setChangeMenuState(menu.title)) : diapatcher(setChangeMenuState(""));
-                    // };
                     (menu.title !== selectedMenuItem) ? diapatcher(setChangeMenuState(menu.title)) : diapatcher(setChangeMenuState(""));
                 }}>
                 <div className={`flex py-1 text-gray-300 text-sm items-center gap-x-4`}>
                     <FontAwesomeIcon icon={menu.font} className={`${hoverEffect}`} width={'20'} />
-                    <Link to={menu.to} className={`origin-left duration-300 font-semibold ${hoverEffect}`}>
+                    <div className={`origin-left duration-300 font-semibold ${hoverEffect}`}>
                         {menu.title}
-                    </Link>
+                    </div>
                 </div>
                 {(menu.child.length !== 0) ? <FontAwesomeIcon icon={faChevronDown} className={`duration-300 ${hoverEffect} ${(menu.title === selectedMenuItem) && 'rotate-180'}`} /> : null}
-            </div>
+            </Link>
             <ul className={`px-6 space-y-2 relative !mt-0 left-0 w-full ${(menu.title === selectedMenuItem && menu.child.length !== 0) ? "max-h-[500px] opacity-100 py-4 bg-black" : "max-h-0 opacity-0 py-0"} overflow-hidden transition-max-height duration-300 ease-in-out`}>
                 {menu.child.map((menuItem, index) => {
-                        return <li key={index} className={`flex p-1 text-gray-300 text-sm items-center gap-x-4`}>
+                        return <Link to={menuItem.to}  key={index} className={`flex p-1 text-gray-300 text-sm items-center gap-x-4`}>
                             <FontAwesomeIcon icon={menuItem.font} color={'white'} width={'20'} />
-                            <Link to={menuItem.to} className={`origin-left duration-200 ${hoverEffect}`}>
+                            <div className={`origin-left duration-200 ${hoverEffect}`}>
                                 {menuItem.title}
-                            </Link>
-                        </li>
+                            </div>
+                        </Link>
                 })}
             </ul>
         </>
