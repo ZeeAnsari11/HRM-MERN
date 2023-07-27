@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { createTimeSlot, getTimeSlotsByOrgId } from '../../api/timeSlots';
+import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
+
+import CTForm from './CTForm';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Modal from '../../components/Modal';
+import Table from '../../components/Table';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Table from '../../components/Table';
-import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
-import { createTimeSlot, getTimeSlotsByOrgId } from '../../api/timeSlots';
-import CTForm from './CTForm';
-import Modal from '../../components/Modal';
 
 const TimeSlots = () => {
   let orgId = useSelector(selectCurrentUserOrg);
