@@ -1,6 +1,8 @@
-import { response } from "express";
+import { createNew, deleteById, getAll, getById, handleCatch } from "../utils/common.js";
+
 import { TimeSlotsModel } from "../models/timeSlotsSchema.js"
-import { createNew, getAll, getById, handleCatch } from "../utils/common.js";
+import { response } from "express";
+
 // Create controller function
 export const createTimeSlot = (req, res, next) => {
     try {
@@ -50,9 +52,9 @@ export const updateTimeSlotById = (req, res, next) => {
                             message: "Updated Successfully",
                         })
                     })
-                    .catch((err) => { handleCatch(err, res, 500, "TimeSlot") })
+                    .catch((err) => {  handleCatch(err, res, 500, next) })
             })
-            .catch((err) => { handleCatch(err, res, 400, "TimeSlot") })
+            .catch((err) => {  handleCatch(err, res, 400, next)})
 };
 
 export const getTimeSlotsByOrganizationId = (req, res, next) => {
@@ -62,3 +64,7 @@ export const getTimeSlotsByOrganizationId = (req, res, next) => {
 export const getTimeSlotById = (req, res, next) => {
     getById(req.params.id, res, next, TimeSlotsModel, "TimeSlots")
 };
+
+export const deleteTimeSlotById = (req, res, next) => {
+    deleteById(req.params.id, res, next, TimeSlotsModel, "TimeSlots")
+}

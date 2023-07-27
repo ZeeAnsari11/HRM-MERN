@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { createTimeSlot, getTimeSlotsByOrgId } from '../../api/timeSlots';
-import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
 
 import CTForm from './CTForm';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
+import TimeSlotsView from './TimeSlotsView';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
 
@@ -50,7 +49,6 @@ const TimeSlots = () => {
   };
 
 
-
   useEffect(() => {
     LoadData()
   }, [toggleChange]);
@@ -84,21 +82,14 @@ const TimeSlots = () => {
     });
   };
 
-  const handleAction = (rowData) => {
-
-  };
   const columns = [
     {
       Header: 'Name',
       accessor: 'name',
     },
     {
-      Header: 'Start Time',
-      accessor: 'startTime',
-    },
-    {
-      Header: 'End Time',
-      accessor: 'endTime',
+      Header: 'Slot Time',
+      accessor: 'slotTime',
     },
     {
       Header: 'Buffer Time(min)',
@@ -112,22 +103,7 @@ const TimeSlots = () => {
       Header: 'Action',
       accessor: 'action',
       Cell: ({ row }) => (
-        <div className="flex items-center justify-center">
-          <div className="pr-2">
-            <button
-              className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
-              onClick={() => handleAction(row.original)}
-            >
-              <FontAwesomeIcon icon={faArrowAltCircleRight} />
-            </button>
-          </div>
-          <button
-            className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
-            onClick={() => handleAction(row.original)}
-          >
-            <FontAwesomeIcon icon={faEye} />
-          </button>
-        </div>
+        <TimeSlotsView data={row.original} />
       ),
     },
   ];
@@ -140,11 +116,25 @@ const TimeSlots = () => {
   }
 
   const data = timeSlots.map((obj) => ({
+    id: obj._id,
     name: obj.name,
-    startTime: convertToAMPM(obj.startTime),
-    endTime: convertToAMPM(obj.endTime),
+    startTime: obj.startTime,
+    endTime: obj.endTime,
+    slotTime : `${convertToAMPM(obj.startTime)} - ${convertToAMPM(obj.endTime)}`,
     bufferTime: `${obj.punchBufferStart} - ${obj.punchBufferEnd}`,
-    breakTime: `${convertToAMPM(obj.break.startTime)} - ${convertToAMPM(obj.break.endTime)}`
+    breakTime: `${convertToAMPM(obj.break.startTime)} - ${convertToAMPM(obj.break.endTime)}`,
+    lateBuffer: obj.lateBuffer,
+    earlyBuffer: obj.earlyBuffer,
+    punchBufferStart: obj.punchBufferStart,
+    punchBufferEnd: obj.punchBufferEnd,
+    isOverNight: obj.isOverNight,
+    inclusive: obj.break.inclusive,
+    break: {
+      name: obj.break.name,
+      startTime: obj.break.startTime,
+      endTime: obj.break.endTime,
+      inclusive: obj.break
+    },
   }
   ))
 
