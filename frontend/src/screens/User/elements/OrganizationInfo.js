@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react'
-import { loadAllOrganizationsInfo } from '../../../api/user';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentUserBranch, selectCurrentUserOrg, selectFinalAuthority, selectTimeSlots } from '../../../states/reducers/slices/backend/UserSlice';
-import { selectUserDepartment } from '../../../states/reducers/slices/backend/Department';
-import { selectOrganizationDesignation } from '../../../states/reducers/slices/backend/Designation';
-import SelectForm from '../../../components/SelectForm';
+import { useDispatch, useSelector } from 'react-redux';
+
 import RestDays from './RestDays';
+import SelectForm from '../../../components/SelectForm';
+import { loadAllOrganizationsInfo } from '../../../api/user';
 import { selectEmploymentTypes } from '../../../states/reducers/slices/backend/EmploymentType';
+import { selectOrganizationDesignation } from '../../../states/reducers/slices/backend/Designation';
+import { selectUserDepartment } from '../../../states/reducers/slices/backend/Department';
 
 const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showButton }) => {
     const dispatcher = useDispatch();

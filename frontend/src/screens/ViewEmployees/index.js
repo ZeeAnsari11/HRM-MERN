@@ -112,51 +112,118 @@ function ViewEmployees() {
 
   const apiData = useSelector(selectAllUsers)
   console.log("====apiData====", apiData);
+  // const data = apiData.map(obj => ({
+  //   name: obj.firstName + " " + obj.lastName,
+  //   email: obj.email,
+  //   designation: obj.designation?.title,
+  //   salary: obj.grossSalary,
+  //   active: obj.status,
+  //   role: obj.roleType, status: "",
+  //   firstName: obj.firstName,
+  //   lastName: obj.lastName,
+  //   grossSalary: obj.grossSalary,
+  //   isActive: obj.isActive,
+  //   roleType: obj.roleType,
+  //   status: "", // You can add more fields here
+  //   // Add more fields as needed
+  //   nicNumber: obj.nic?.number,
+  //   nicFrontAttachment: obj.nic?.attachment?.front,
+  //   nicBackAttachment: obj.nic?.attachment?.back,
+  //   nicExpiry: obj.nic?.expiry,
+  //   id: obj._id,
+  //   skills: obj.skills,
+  //   isLineManager: obj.isLineManager,
+  //   isTeamLead: obj.isTeamLead,
+  //   isFinalAuthority: obj.isFinalAuthority,
+  //   attendanceExempt: obj.attendanceExempt,
+  //   lineManager: obj.lineManager,
+  //   firstUser: obj.firstUser,
+  //   grade: obj.grade,
+  //   branch: obj.branch,
+  //   organization: obj.organization,
+  //   personalEmail: obj.personalEmail,
+  //   bloodGroup: obj.bloodGroup,
+  //   nationality: obj.nationality,
+  //   joiningDate: obj.joiningDate,
+  //   employmentType: obj.employmentType,
+  //   employeeType: obj.employeeType,
+  //   userDefinedCode: obj.userDefinedCode,
+  //   leaveTypeDetails: obj.leaveTypeDetails,
+  //   timeZone: obj.timeZone,
+  //   rehire: obj.rehire,
+  //   createdAt: obj.createdAt,
+  //   __v: obj.__v,
+  //   phoneNumber: obj.phoneNumber,
+  //   permanentAddress: obj.permanentAddress,
+  //   temporaryAddress: obj.temporaryAddress,
+  // }));
+  let pass = apiData.map(obj => obj.password)
+  console.log("====pass=======", pass);
+  
   const data = apiData.map(obj => ({
-    name: obj.firstName + " " + obj.lastName,
-    email: obj.email,
-    designation: obj.designation?.title,
-    salary: obj.grossSalary,
-    active: obj.status,
-    role: obj.roleType, status: "",
-    firstName: obj.firstName,
-    lastName: obj.lastName,
-    grossSalary: obj.grossSalary,
-    isActive: obj.isActive,
-    roleType: obj.roleType,
-    status: "", // You can add more fields here
-    // Add more fields as needed
-    nicNumber: obj.nic?.number,
-    nicFrontAttachment: obj.nic?.attachment?.front,
-    nicBackAttachment: obj.nic?.attachment?.back,
-    nicExpiry: obj.nic?.expiry,
-    id: obj._id,
-    skills: obj.skills,
-    isLineManager: obj.isLineManager,
-    isTeamLead: obj.isTeamLead,
-    isFinalAuthority: obj.isFinalAuthority,
+    fullName: obj.firstName + " " + obj.lastName,
+    designationTitle: obj.designation?.title,
+    HOD: {
+      department: obj.HOD?.department,
+      isHOD: obj.HOD?.isHOD
+    },
+    areaBounded: {
+      isBounded: obj.areaBounded?.isBounded
+    },
     attendanceExempt: obj.attendanceExempt,
-    lineManager: obj.lineManager,
+    "blood-group": obj.bloodGroup,
+    branch: obj.branch,
+    createdAt: obj.createdAt,
+    designation: obj.designation,
+    password: obj.password,
+    drivingLiscence: {
+      number: obj.drivingLiscence?.number
+    },
+    email: obj.email,
+    employeeType: obj.employeeType,
+    employmentType: obj.employmentType,
+    firstName: obj.firstName,
     firstUser: obj.firstUser,
     grade: obj.grade,
-    branch: obj.branch,
-    organization: obj.organization,
-    personalEmail: obj.personalEmail,
-    bloodGroup: obj.bloodGroup,
-    nationality: obj.nationality,
+    grossSalary: obj.grossSalary,
+    isActive: obj.isActive,
+    isFinalAuthority: obj.isFinalAuthority,
+    isLineManager: obj.isLineManager,
+    isTeamLead: obj.isTeamLead,
     joiningDate: obj.joiningDate,
-    employmentType: obj.employmentType,
-    employeeType: obj.employeeType,
-    userDefinedCode: obj.userDefinedCode,
-    leaveTypeDetails: obj.leaveTypeDetails,
-    timeZone: obj.timeZone,
-    rehire: obj.rehire,
-    createdAt: obj.createdAt,
-    __v: obj.__v,
-    phoneNumber: obj.phoneNumber,
+    lastName: obj.lastName,
+    lineManager: obj.lineManager,
+    nationality: obj.nationality,
+    nic: {
+      attachment: {
+        back: obj.nic?.attachment?.back,
+        front: obj.nic?.attachment?.front
+      },
+      expiry: obj.nic?.expiry,
+      number: obj.nic?.number,
+    },
+    organization: obj.organization,
+    passport: {
+      number: obj.passport?.number,
+    },
     permanentAddress: obj.permanentAddress,
+    personalEmail: obj.personalEmail,
+    phoneNumber: obj.phoneNumber,
+    probation: {
+      isOnProbation: obj.probation?.isOnProbation,
+      status: obj.probation?.status
+    },
+    roleType: obj.roleType,
     temporaryAddress: obj.temporaryAddress,
+    timeZone: obj.timeZone,
+    userDefinedCode: obj.userDefinedCode,
+    userRoster: {
+      restDays: obj.userRoster?.restDays,
+      timeSlots: obj.userRoster?.timeSlots
+    },
+    id: obj._id
   }));
+
 
   for (let index = 0; index < data.length; index++) {
     if (data[index].active === false) {
@@ -175,8 +242,8 @@ function ViewEmployees() {
   const handleCreateBranch = (trigger) => {
     createBranch(formData, changeToggler, trigger);
     setFormData({
-      name: '',
-      city: '',
+      fullName: '',
+      designationTitle: '',
       country: '',
       description: '',
       organization: orgId,
@@ -186,14 +253,14 @@ function ViewEmployees() {
   const columns = useMemo(() => [
     {
       Header: "Name",
-      accessor: 'name',
+      accessor: 'fullName',
       Cell: AvatarCell,
       imgAccessor: "imgUrl",
       emailAccessor: "email",
     },
     {
       Header: "Designation",
-      accessor: 'designation',
+      accessor: 'designationTitle',
     },
     {
       Header: "Status",

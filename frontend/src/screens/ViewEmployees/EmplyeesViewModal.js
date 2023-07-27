@@ -10,45 +10,66 @@ import { useState } from 'react';
 export default function EmployeesVieModal({ data }) {
     console.log("======data========", data);
     const [formData, setFormData] = useState({
-        name: data.name,
-        email: data.email,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        designation: data.designation,
-        salary: data.salary,
-        active: data.active,
-        role: data.role,
-        status: data.status,
-        nicNumber: data.nicNumber,
-        nicFrontAttachment: data.nicFrontAttachment,
-        nicBackAttachment: data.nicBackAttachment,
-        nicExpiry: data.nicExpiry,
-        id: data.id,
-        skills: data.skills,
-        isLineManager: data.isLineManager,
-        isTeamLead: data.isTeamLead,
-        isFinalAuthority: data.isFinalAuthority,
-        attendanceExempt: data.attendanceExempt,
-        lineManager: data.lineManager,
-        firstUser: data.firstUser,
-        grade: data.grade,
-        branch: data.branch,
-        organization: data.organization,
-        personalEmail: data.personalEmail,
-        bloodGroup: data.bloodGroup,
-        nationality: data.nationality,
-        joiningDate: data.joiningDate,
-        employmentType: data.employmentType,
-        employeeType: data.employeeType,
-        userDefinedCode: data.userDefinedCode,
-        leaveTypeDetails: data.leaveTypeDetails,
-        timeZone: data.timeZone,
-        rehire: data.rehire,
-        createdAt: data.createdAt,
-        __v: data.__v,
-        phoneNumber: data.phoneNumber,
-        permanentAddress: data.permanentAddress,
-        temporaryAddress: data.temporaryAddress,
+    fullName: data.firstName + " " + data.lastName,
+    designationTitle: data.designation?.title,
+      HOD : {
+        department : data.HOD?.department,
+        isHOD : data.HOD?.isHOD
+      },
+      areaBounded : {
+        isBounded : data.areaBounded?.isBounded
+      },
+      attendanceExempt : data.attendanceExempt,
+      "blood-group" : data.bloodGroup,
+      branch : data.branch,
+      createdAt : data.createdAt,
+      designation : data.designation,
+      drivingLiscence :{
+        number : data.drivingLiscence?.number
+      },
+      email : data.email,
+      employeeType : data.employeeType,
+      employmentType : data.employmentType,
+      firstName : data.firstName,
+      firstUser : data.firstUser,
+      grade : data.grade,
+      grossSalary : data.grossSalary,
+      isActive : data.isActive,
+      isFinalAuthority : data.isFinalAuthority,
+      isLineManager : data.isLineManager,
+      isTeamLead : data.isTeamLead,
+      joiningDate : data.joiningDate,
+      lastName : data.lastName,
+      lineManager : data.lineManager,
+      nationality : data.nationality,
+      nic : {
+        attachment : {
+          back : data.nic?.attachment?.back,
+          front: data.nic?.attachment?.front
+        },
+        expiry : data.nic?.expiry,
+        number : data.nic?.number,
+      },
+      organization : data.organization,
+      passport : {
+        number : data.passport?.number,
+      },
+      permanentAddress : data.permanentAddress,
+      personalEmail : data.personalEmail,
+      phoneNumber : data.phoneNumber,
+      probation :{
+        isOnProbation : data.probation?.isOnProbation,
+        status : data.probation?.status
+      },
+      roleType : data.roleType,
+      temporaryAddress : data.temporaryAddress,
+      timeZone : data.timeZone,
+      userDefinedCode: data.userDefinedCode,
+      userRoster:{
+        restDays : data.userRoster?.restDays,
+        timeSlots : data.userRoster?.timeSlots
+      },
+      id : data._id
     });
 
     const handleUpdateBranches = (trigger) => {
