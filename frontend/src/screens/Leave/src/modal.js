@@ -3,22 +3,24 @@ import { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit, faEye } from '@fortawesome/free-solid-svg-icons';
 import FormFields from "./Formfields";
-import { deleteWfhRequest, updateWfhRequest } from "../../../api/wfh";
-import EditWfh from "./EditLeaves";
 import { useSelector } from "react-redux";
-import { selecteUpdatedWfh } from "../../../states/reducers/slices/backend/UserSlice";
+import { selecteUpdatedLeave } from "../../../states/reducers/slices/backend/UserSlice";
+import { deleteLeaveRequest, updateLeaveRequest } from "../../../api/leaverequest";
+import EditLeaves from "./EditLeaves";
 
-export default function View({ selectedId, user_id }) {
+export default function View({ selectedId }) {
   const [showModal, setShowModal] = useState(false);
   const [edit, setEdit] = useState(false);
-  const wfh = useSelector(selecteUpdatedWfh)
+  const leave = useSelector(selecteUpdatedLeave)
 
+  console.log("helllo", leave);
+  
   const handleDelete = () => {
-    deleteWfhRequest(selectedId)
+    deleteLeaveRequest(selectedId)
   }
 
   const handleSubmit = () => {
-    updateWfhRequest(wfh, selectedId);
+    updateLeaveRequest(leave, selectedId);
       setShowModal(false);
       setEdit(false);
   }
@@ -49,15 +51,15 @@ export default function View({ selectedId, user_id }) {
       {showModal ? (
         <>
           <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+            className="mt-20 justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
           >
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+            <div className="mt-20 relative w-auto my-6 mx-auto max-w-3xl">
               {/*content*/}
-              <div className="mt-6 border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+              <div className="mt-10 border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
-                <div className=" flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
                   <h3 className="text-3xl font-semibold">
-                    WFH Request View
+                    Leave Request View
                   </h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
@@ -71,7 +73,7 @@ export default function View({ selectedId, user_id }) {
                 {/*body*/}
                 <div className="relative p-4 flex-auto">
                   {edit ? (
-                    <EditWfh id={selectedId} />
+                    <EditLeaves id={selectedId} />
                   ) : <FormFields id={selectedId} />}
                   <div className="pr-4 flex items-center justify-end">
                     {edit ? (

@@ -1,9 +1,13 @@
 import React from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { FaLeaf } from 'react-icons/fa';
 import { MdLocalFlorist } from 'react-icons/md';
 import { FaFlask } from 'react-icons/fa';
 import { RiPlantFill } from 'react-icons/ri';
+import { getUserLeaveDetails } from '../../api/user';
+import { selectUID, selectUserLeaveDetails } from '../../states/reducers/slices/backend/UserSlice';
 
 const leaveData = [
   { leaveType: 'Annual Leaves', balance: 20, availed: 10, available: 10 },
@@ -24,6 +28,17 @@ const COLORS = ['#364f6b', '#3fc1c9', '#fc5185'];
 const icons = [FaLeaf, MdLocalFlorist, FaFlask];
 
 const LeavePolicy = () => {
+
+  const dispatch = useDispatch()
+  const user_id =  useSelector(selectUID)
+  console.log("userId",user_id);
+  useEffect(() => {
+    getUserLeaveDetails(user_id, dispatch)
+  }, [])
+  const leaveDetails = useSelector(selectUserLeaveDetails)
+  console.log("Leave Details", leaveDetails);
+
+  
   const totalLeaves = leaveData.reduce((sum, item) => sum + item.balance, 0);
   const leavesBullet = leaveData.map((leave) => {
     const Icon = icons[leaveData.indexOf(leave)];

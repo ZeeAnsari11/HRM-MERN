@@ -194,31 +194,43 @@ const creatingLeaveRequest = (req, res, next, user, session) => {
 
 export const updateLeaveRequest = (req, res, next) => {
     try {
+        console.log("=====req body=======", req.body);
         if (req.body.organization || !req.body.leaveType || !req.body.user || req.body.availableLeaves || req.body.count || req.body.createdAt || !req.body.startDate) throw new Error('Invalid Body.')
         LeaveTypeModel.findById(req.body.leaveType)
             .then((leaveType) => {
+                console.log("Leave",leaveType);
                 if (!leaveType) throw new Error(`No such leave type ${req.body.leaveType}`)
-                LeaveRequestModel.find({ user: req.body.user, leaveType: leaveType._id })
+                LeaveRequestModel.find({ user: req.body.user, leave: leaveType._id })
                     .then((userLeaveRequests) => {
+                        console.log("----------3");
                         if (!userLeaveRequests) throw new Error(`No such Leave Request`)
                         UserModel.findById(req.body.user)
                             .then((user) => {
                                 if (!user) throw new Error(`No such user ${req.body.user}`)
+                                console.log("----------4",userLeaveRequests);
                                 userLeaveRequests.forEach(userLeaveRequest => {
+                                    console.log("----------5");
                                     if (userLeaveRequest._id.toString() == req.params.id.toString()) {
                                         if (req.body.short == undefined) {
+                                            console.log("----------6");
                                             req.body.short = userLeaveRequest.short
                                         }
+                                        
                                         if (userLeaveRequest.short !== req.body.short) {
+                                            
                                             req.body.organization = userLeaveRequest.organization
                                             if (userLeaveRequest.short == true && req.body.short == false) {
+                                            console.log("====2====");
+
                                                 updateLeaveRequestFromShortToFull(req, res, next, user, userLeaveRequest)
                                             }
                                             else if (userLeaveRequest.short == false && req.body.short == true) {
+                                                
                                                 updateLeaveRequestFromFullToShort(req, res, next, user, userLeaveRequest)
                                             }
                                         }
                                         else if (userLeaveRequest.short == true && req.body.short == true) {
+                                            
                                             if (userLeaveRequest.leaveType !== req.body.leaveType || new Date(userLeaveRequest.startDate) !== new Date(req.body.startDate) || userLeaveRequest.shortleaveDetails.shortLeaveType.toString() !== req.body.userLeaveRequest.shortleaveDetails.shortLeaveType || userLeaveRequest.shortleaveDetails.startTime !== req.body.shortleaveDetails.startTime) {
                                                 req.body.organization = userLeaveRequest.organization
                                                 updateLeaveRequestFromShortToShort(req, res, next, user, userLeaveRequest)
@@ -227,7 +239,10 @@ export const updateLeaveRequest = (req, res, next) => {
                                             }
                                         }
                                         else if (userLeaveRequest.short == false && req.body.short == false) {
-                                            if (userLeaveRequest.leaveType !== req.body.leaveType || new Date(userLeaveRequest.startDate) !== new Date(req.body.startDate) || new Date(userLeaveRequest.endDate) !== new Date(req.body.endDate)) {
+                                           
+                                            if (userLeaveRequest.leaveType.toString() !== req.body.leaveType.toString() || 
+                                            new Date(userLeaveRequest.startDate).toString() !== new Date(req.body.startDate).toString() ||
+                                             new Date(userLeaveRequest.endDate).toString() !== new Date(req.body.endDate).toString()) {
                                                 req.body.organization = userLeaveRequest.organization
                                                 updateLeaveRequestFromFullToFull(req, res, next, user, userLeaveRequest)
                                             } else {
@@ -235,6 +250,7 @@ export const updateLeaveRequest = (req, res, next) => {
                                             }
                                         }
                                         else {
+                        
                                             updateById(req, res, next, LeaveRequestModel, 'LeaveRequest')
                                         }
                                     }

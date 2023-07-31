@@ -16,6 +16,8 @@ export const UserSlice = createSlice({
     payslips: [],
     profileCompletion: 0,
     updatedWfh: {},
+    updatedLeave: {},
+    userLeaveDetails: [],
   },
   reducers: {
     setCurrentUser: (state, action) => {
@@ -62,6 +64,12 @@ export const UserSlice = createSlice({
     },
     setUpdatedWfh: (state, action) => {
       state.updatedWfh = action.payload;
+    },
+    setUpdatedLeave: (state, action) => {
+      state.updatedLeave = action.payload;
+    },
+    setUserLeaveDetails: (state, action) => {
+      state.userLeaveDetails = action.payload;
     }
   }
 });
@@ -77,7 +85,9 @@ export const {
   setTimeSheet,
   setPayslips,
   setProfileCompletion,
-  setUpdatedWfh
+  setUpdatedWfh,
+  setUpdatedLeave,
+  setUserLeaveDetails,
 } = UserSlice.actions;
 
 // Selector Methods
@@ -99,6 +109,8 @@ export const selectUserWfh = (state) => state.user.wfh
 export const selectTimeSheet = (state) => state.user.timeSheet
 export const selectProfileCompletion = (state) => state.user.profileCompletion
 export const selecteUpdatedWfh = (state) => state.user.updatedWfh
+export const selecteUpdatedLeave = (state) => state.user.updatedLeave
+export const selectUserLeaveDetails = (state) => state.user.userLeaveDetails
 
 // Reducer
 export const UserReducer = UserSlice.reducer;

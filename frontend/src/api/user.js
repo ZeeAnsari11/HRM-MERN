@@ -1,12 +1,12 @@
-import { authentication, getOrganization, organizationRoutes, timeSlots, userRoutes } from './configuration';
-import { setAllUsers, setAuth, setCurrentUser, setFinalAuthority, setProfileCompletion, setTimeSLots, setUserGrades } from '../states/reducers/slices/backend/UserSlice';
 
 import axios from 'axios';
-import { getAllUsers } from './configuration';
-import { setEmploymentTypes } from '../states/reducers/slices/backend/EmploymentType';
-import { setOrganizationDesignation } from '../states/reducers/slices/backend/Designation';
+import { authentication, getOrganization, organizationRoutes, timeSlots, userLeave, userRoutes } from './configuration';
+import { setAuth, setCurrentUser, setFinalAuthority, setTimeSLots, setAllUsers, setUserGrades, setProfileCompletion, setUserLeaveDetails } from '../states/reducers/slices/backend/UserSlice';
 import { setUserBranch } from '../states/reducers/slices/backend/Branch';
 import { setUserDepartment } from '../states/reducers/slices/backend/Department';
+import { setOrganizationDesignation } from '../states/reducers/slices/backend/Designation';
+import { getAllUsers } from './configuration';
+import { setEmploymentTypes } from '../states/reducers/slices/backend/EmploymentType';
 import { toast } from 'react-toastify';
 import { toastMessage } from "../AlertConfigs";
 
@@ -119,5 +119,15 @@ export const updateUserById = (userId, data, trigger) => {
     })
     .finally(() => {
         trigger();
+    })
+}
+
+export const getUserLeaveDetails = (userId, dispatch) => {
+    axios.get(userLeave.details+userId)
+    .then((response) => {
+        dispatch(setUserLeaveDetails(response.data.result))
+    })
+    .catch((error) => {
+        console.log(error)
     })
 }

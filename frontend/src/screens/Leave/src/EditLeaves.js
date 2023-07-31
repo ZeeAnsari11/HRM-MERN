@@ -1,43 +1,75 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserWfh, setUpdatedWfh } from "../../../states/reducers/slices/backend/UserSlice";
+import { getLeaveRequestByOrganizationId, getShortLeaveTypesByOrganizationId } from "../../../api/leaverequest";
+import { selectLeaveTypes, selectShortLeaveTypes, selectUserLeaves } from "../../../states/reducers/slices/backend/LeaveRequest";
+import { selectOrgId, selectUID, setUpdatedLeave } from "../../../states/reducers/slices/backend/UserSlice";
 
-const EditWfh = ({ id }) => {
-    const data = useSelector(selectUserWfh);
-    const [wfh, setwfh] = useState({
-        startDate: '',
-        endDate: '',
-        reason: '',
-    })
 
-    console.log("helllo", wfh);
+const EditLeaves = ({ id }) => {
+    const org_id = useSelector(selectOrgId);
+    const user = useSelector(selectUID)
+    const data = useSelector(selectUserLeaves);
+    const leaveTypes = useSelector(selectLeaveTypes);
+    const shortLeaveTypes = useSelector(selectShortLeaveTypes);
+    const [short, setShort] = useState(false);
+    const [leave, setLeave] = useState(null)
+
+    useEffect(() => {
+        getLeaveRequestByOrganizationId(org_id, dispatch);
+        getShortLeaveTypesByOrganizationId(org_id, dispatch)
+    }, []);
+
     const dispatch = useDispatch();
-
     useEffect(() => {
         for (let i = 0; i < data.length; i++) {
             if (data[i]._id === id) {
-                const { startDate, endDate, reason } = data[i];
-                setwfh({ startDate, endDate, reason });
+                const { startDate, endDate, reason, leaveType } = data[i];
+                if (data[i].short) {
+                    const { startTime, endTime , shortLeaveType, short} = data[i];
+                    setLeave({ startDate, endDate, reason, user, leaveType: leaveType._id, short, startTime, shortLeaveType, endTime });
+                    setShort(short)
+                }
+                else {
+                    setLeave({ startDate, endDate, reason, user, leaveType: leaveType._id });
+                }
                 break;
             }
         }
-    }, [data, id]);
+    }, []);
 
     useEffect(() => {
-        dispatch(setUpdatedWfh(wfh))
-    }, [dispatch, wfh]);
+        dispatch(setUpdatedLeave(leave))
+    }, [dispatch, leave]);
 
     const handleChangeStartDate = (e) => {
-        setwfh({ ...wfh, startDate: e.target.value });
+        setLeave({ ...leave, startDate: e.target.value });
     };
+    
 
     const handleChangeEndDate = (e) => {
-        setwfh({ ...wfh, endDate: e.target.value });
+        setLeave({ ...leave, endDate: e.target.value });
     };
 
     const handleChangeReason = (e) => {
-        setwfh({ ...wfh, reason: e.target.value });
+        setLeave({ ...leave, reason: e.target.value });
 
+    };
+
+    const handleChangeLeaveType = (e) => {
+        setLeave({ ...leave, leaveType: e.target.value });
+
+    };
+
+    const handleChangeStartTime = (e) => {
+        setLeave({ ...leave, startTime: e.target.value });
+    };
+
+    const handleChangeEndTime = (e) => {
+        setLeave({ ...leave, endTime: e.target.value });
+    };
+
+    const setShortLeaveType = (e) => {
+        setLeave({ ...leave, shortLeaveType: e.target.value });
     };
 
     return (
@@ -45,9 +77,43 @@ const EditWfh = ({ id }) => {
             <form className="w-full max-w-md bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label htmlFor="startDate" className="block text-sm font-bold text-gray-700 mb-2">
+                        <label htmlFor="leaveType" className="block text-sm font-bold text-gray-700 mb-2">
                             Name
                         </label>
+                        <div>
+                            <input
+                                type="text"
+                                id="leaveType"
+                                value="Leave Type"
+                                readOnly
+                                className="w-full border border-gray-300 rounded py-2 px-3 text-gray-700 leading-tight bg-gray-100 focus:outline-none"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label htmlFor="leaveType" className="block text-sm font-bold text-gray-700 mb-2">
+                            Value
+                        </label>
+                        <select
+                            className="shadow appearance-none border border-backgroundDark rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                            id="leave-type"
+                            value={leave ? leave?.leaveType : ''}
+                            onChange={handleChangeLeaveType}
+                            required
+                        >
+                            <option value="">Select leave type</option>
+                            {
+                                leaveTypes.map((type) => {
+                                    return <option value={type._id}>{type.name}</option>
+                                })
+                            }
+
+                        </select>
+                    </div>
+                </div>
+
+                <div className="mt-3 grid grid-cols-2 gap-4">
+                    <div>
                         <div>
                             <input
                                 type="text"
@@ -59,13 +125,10 @@ const EditWfh = ({ id }) => {
                         </div>
                     </div>
                     <div>
-                        <label htmlFor="startDateInput" className="block text-sm font-bold text-gray-700 mb-2">
-                            Value
-                        </label>
                         <input
                             type="date"
                             id="startDateInput"
-                            value={wfh ? wfh.startDate.substring(0, 10) : ''}
+                            value={leave ? leave.startDate.substring(0, 10) : ''}
                             className="w-full border border-gray-300 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             placeholder="Enter field name"
                             required
@@ -73,23 +136,22 @@ const EditWfh = ({ id }) => {
                         />
                     </div>
                 </div>
+
                 <div className="mt-3 grid grid-cols-2 gap-4">
                     <div>
-                        <div>
-                            <input
-                                type="text"
-                                id="endDate"
-                                value="End Date"
-                                readOnly
-                                className="w-full border border-gray-300 rounded py-2 px-3 text-gray-700 leading-tight bg-gray-100 focus:outline-none"
-                            />
-                        </div>
+                        <input
+                            type="text"
+                            id="endDate"
+                            value="End Date"
+                            readOnly
+                            className="w-full border border-gray-300 rounded py-2 px-3 text-gray-700 leading-tight bg-gray-100 focus:outline-none"
+                        />
                     </div>
                     <div>
                         <input
                             type="date"
                             id="endDateInput"
-                            value={wfh ? wfh.endDate.substring(0, 10) : ''}
+                            value={leave ? leave.endDate.substring(0, 10) : ''}
                             className="w-full border border-gray-300 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             placeholder="Enter field name"
                             required
@@ -97,6 +159,86 @@ const EditWfh = ({ id }) => {
                         />
                     </div>
                 </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 font-bold mb-2 pl-1 pr-4 py-2" htmlFor="short">
+                        <input
+                            className="mr-2 border border-backgroundDark leading-tight"
+                            type="checkbox"
+                            id="short"
+                            checked={short}
+                            onChange={(e) => {setShort(e.target.checked);  setLeave({ ...leave, short: e.target.checked })}}
+                        />
+                        <span className="text-sm font-medium">Short</span>
+                    </label>
+                </div>
+
+                {short && (
+                    <>
+                        <div className="mt-3 grid grid-cols-2 gap-4">
+                            <div>
+                                <input
+                                    type="text"
+                                    id="shortLeaveType"
+                                    value="Short Leave Type"
+                                    readOnly
+                                    className="w-full border border-gray-300 rounded py-2 px-3 text-gray-700 leading-tight bg-gray-100 focus:outline-none"
+                                />
+                            </div>
+                            <select
+                                className="shadow appearance-none border-backgroundDark border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                                id="short-leave-type"
+                                value={leave ? leave.shortLeaveType : ''}
+                                onChange={setShortLeaveType}
+                                required
+                            >
+                                <option value="">Short Leave Type</option>
+                                {shortLeaveTypes.map((type) => (
+                                    <option value={type._id} key={type._id}>{type.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="mt-3 grid grid-cols-2 gap-4">
+                            <div>
+                                <input
+                                    type="text"
+                                    id="startTime"
+                                    value="Start Time"
+                                    readOnly
+                                    className="w-full border border-gray-300 rounded py-2 px-3 text-gray-700 leading-tight bg-gray-100 focus:outline-none"
+                                />
+                            </div>
+                            <input
+                                className="shadow appearance-none border border-backgroundDark rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                                id="start-time"
+                                type="time"
+                                value={leave ? leave.startTime : ''}
+                                onChange={handleChangeStartTime}
+                                required
+                            />
+                        </div>
+
+                        <div className="mt-3 grid grid-cols-2 gap-4">
+                            <div>
+                                <input
+                                    type="text"
+                                    id="endTime"
+                                    value="End Time"
+                                    readOnly
+                                    className="w-full border border-gray-300 rounded py-2 px-3 text-gray-700 leading-tight bg-gray-100 focus:outline-none"
+                                />
+                            </div>
+                            <input
+                                className="shadow appearance-none border border-backgroundDark rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                                id="end-time"
+                                type="time"
+                                value={leave ? leave.endTime : ''}
+                                onChange={handleChangeEndTime}
+                                required
+                            />
+                        </div>
+                    </>
+                )}
 
                 <div className="mt-3 grid grid-cols-2 gap-4">
                     <div>
@@ -114,7 +256,7 @@ const EditWfh = ({ id }) => {
                         <input
                             type="text"
                             id="reasonInput"
-                            value={wfh ? wfh.reason : ''}
+                            value={leave ? leave.reason : ''}
                             className="w-full border border-gray-300 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             placeholder="Enter field name"
                             required
@@ -127,4 +269,4 @@ const EditWfh = ({ id }) => {
     );
 };
 
-export default EditWfh;
+export default EditLeaves;

@@ -799,7 +799,7 @@ export const getUserLeaveQuota = (req, res, next) => {
                 select: 'name accumulativeCount'
             })
             .then((result) => {
-                if(!user) throw new Error("user not found")
+                if(!result) throw new Error("No Leave Quota not found")
                 res.status(200).json({
                     success: true,
                     result

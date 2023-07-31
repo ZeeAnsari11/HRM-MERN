@@ -33,6 +33,10 @@ export const userLeaveRoute = {
     getUserLeaves: baseUrl+'/leave-request/user-leaves/'
 }
 
+export const userLeave = {
+    details: baseUrl+'/user/leave-quota/'
+}
+
 export const leaveType = {
     getLeaveType: baseUrl+'/leaveType/'
 }
@@ -131,8 +135,16 @@ export const  deleteRequest = {
     wfh: baseUrl+'/wfh/delete/'
 }
 
+export const  deleteLeave = {
+    request: baseUrl+'/leave-request/delete/'
+}
+
 export const  updateWfh = {
     request: baseUrl+'/wfh/update/'
+}
+
+export const  updateLeave = {
+    request: baseUrl+'/leave-request/update/'
 }
 
 export const branchRoute = {
