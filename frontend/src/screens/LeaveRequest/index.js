@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { differenceInBusinessDays, addHours } from 'date-fns';
-import { useDropzone } from "react-dropzone";
-import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { addHours, differenceInBusinessDays } from 'date-fns';
 import { getLeaveRequestByOrganizationId, getShortLeaveTypesByOrganizationId, saveFormData } from "../../api/leaverequest";
-import { useDispatch, useSelector } from "react-redux";
-import { selectOrgId, selectUID, selectUserLeaveTypes } from "../../states/reducers/slices/backend/UserSlice";
 import { selectLeaveTypes, selectShortLeaveTypes } from "../../states/reducers/slices/backend/LeaveRequest";
+import { selectOrgId, selectUID, selectUserLeaveTypes } from "../../states/reducers/slices/backend/UserSlice";
+import { useDispatch, useSelector } from "react-redux";
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
+import { useDropzone } from "react-dropzone";
 
 const LeaveRequest = () => {
   const [startDate, setStartDate] = useState("");
@@ -72,7 +73,6 @@ const LeaveRequest = () => {
     setStartTime(time);
     // const startDateObj = parseISO(time);
     const endDateObj = addHours(new Date('2020-10-10T' + time), 4);
-    console.log((endDateObj.getHours() + ':' + endDateObj.getMinutes()).toString());
     let concater = '';
     if (endDateObj.getHours() < 10) concater = '0';
     setEndTime((concater + endDateObj.getHours() + ':' + endDateObj.getMinutes()).toString());
@@ -101,7 +101,6 @@ const LeaveRequest = () => {
       reason
     };
     // // setFormData(newFormData);
-    console.log(newFormData);
     saveFormData(newFormData)
   };
 

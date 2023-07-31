@@ -20,7 +20,6 @@ const ManageAssets = () => {
   }, []);
 
   const assets = useSelector(selectAllAsset)
-  console.log(assets);
   const [searchTerm, setSearchTerm] = useState("");
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);

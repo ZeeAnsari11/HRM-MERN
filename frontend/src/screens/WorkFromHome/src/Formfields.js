@@ -1,10 +1,8 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { selectUserWfh } from "../../../states/reducers/slices/backend/UserSlice";
+import { useSelector } from "react-redux";
 const FormFields = ({ id }) => {
     const data = useSelector(selectUserWfh)
-
-    console.log("selectedId", id)
 
     let wfh = null;
 
@@ -14,7 +12,6 @@ const FormFields = ({ id }) => {
             break;
         }
     }
-    console.log("wfh", wfh);
 
     return (
         <div className="flex flex-col items-center justify-center">

@@ -1,11 +1,10 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { selectUserLeaves } from "../../../states/reducers/slices/backend/LeaveRequest";
+import { useSelector } from "react-redux";
 
 const FormFields = ({ id }) => {
   const data = useSelector(selectUserLeaves);
-
-
+  let wfh = null;
 
   let leave = null;
   for (let i = 0; i < data.length; i++) {

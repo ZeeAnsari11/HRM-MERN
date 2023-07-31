@@ -1,12 +1,12 @@
 import { faBuilding, faIdBadge, faPencil } from '@fortawesome/free-solid-svg-icons'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
 import Modal from '../../../components/Modal'
+import React from 'react'
 
 const OrganizationInfo = ({data}) => {
     const title = "Organization Info"
     const handleSubmit = (triiger) => {
-        console.log("Clicked")
         triiger();
     }
     const btnConfig = [{

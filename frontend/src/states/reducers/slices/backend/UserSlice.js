@@ -18,6 +18,7 @@ export const UserSlice = createSlice({
     updatedWfh: {},
     updatedLeave: {},
     userLeaveDetails: [],
+    isAdmin: false,
   },
   reducers: {
     setCurrentUser: (state, action) => {
@@ -65,11 +66,15 @@ export const UserSlice = createSlice({
     setUpdatedWfh: (state, action) => {
       state.updatedWfh = action.payload;
     },
+
     setUpdatedLeave: (state, action) => {
       state.updatedLeave = action.payload;
     },
     setUserLeaveDetails: (state, action) => {
       state.userLeaveDetails = action.payload;
+    },
+    setIsAdmin: (state, action) => {
+      state.isAdmin = action.payload;
     }
   }
 });
@@ -80,6 +85,7 @@ export const {
   setOrganization, setTeamLeadList, 
   setFinalAuthority, setTimeSLots,
   setAllUsers,
+  setIsAdmin,
   setUserGrades,
   setUserWFH,
   setTimeSheet,
@@ -92,6 +98,7 @@ export const {
 
 // Selector Methods
 export const selectCurrentUser = (state) => state.user.currentUser;
+export const selectIsAdmin = (state) => state.user.isAdmin;
 export const selectCurrentUserOrg = (state) => state.user.currentUser.organization._id;
 export const selectCurrentUserBranch = (state) => state.user.currentUser.branch._id;
 export const selectAuth = (state) => state.user.userAuthToken;

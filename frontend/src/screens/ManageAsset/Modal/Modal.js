@@ -5,8 +5,6 @@ export default function MyModal({action,name, title, Form, id}) {
 
   let [isOpen, setIsOpen] = useState(false)
   
-  
-  console.log(id, "isisisisisis")
   function closeModal() {
     setIsOpen(false)
   }
@@ -42,7 +40,7 @@ export default function MyModal({action,name, title, Form, id}) {
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-screen items-center justify-center p-4 text-center">
+            <div className="flex items-center justify-center p-4 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"

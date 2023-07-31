@@ -1,12 +1,12 @@
+import { authentication, getOrganization, organizationRoutes, timeSlots, userLeave, userRoutes } from './configuration';
+import { setAllUsers, setAuth, setCurrentUser, setFinalAuthority, setIsAdmin, setProfileCompletion, setTimeSLots, setUserGrades, setUserLeaveDetails } from '../states/reducers/slices/backend/UserSlice';
 
 import axios from 'axios';
-import { authentication, getOrganization, organizationRoutes, timeSlots, userLeave, userRoutes } from './configuration';
-import { setAuth, setCurrentUser, setFinalAuthority, setTimeSLots, setAllUsers, setUserGrades, setProfileCompletion, setUserLeaveDetails } from '../states/reducers/slices/backend/UserSlice';
-import { setUserBranch } from '../states/reducers/slices/backend/Branch';
-import { setUserDepartment } from '../states/reducers/slices/backend/Department';
-import { setOrganizationDesignation } from '../states/reducers/slices/backend/Designation';
 import { getAllUsers } from './configuration';
 import { setEmploymentTypes } from '../states/reducers/slices/backend/EmploymentType';
+import { setOrganizationDesignation } from '../states/reducers/slices/backend/Designation';
+import { setUserBranch } from '../states/reducers/slices/backend/Branch';
+import { setUserDepartment } from '../states/reducers/slices/backend/Department';
 import { toast } from 'react-toastify';
 import { toastMessage } from "../AlertConfigs";
 
@@ -61,8 +61,12 @@ export const getCurrentUser = (dispatcher, setLoaded=null) => {
             if (user.data.user.nic?.number)  dispatcher(setProfileCompletion(5))
             if (user.data.user.drivingLinsence?.number)  dispatcher(setProfileCompletion(5))
             if (setLoaded !== null) setLoaded(false);
-        }).catch((error) => {
-            console.log(error)
+            if (user.data.user.roleType === "admin") {
+                dispatcher(setIsAdmin(true));
+            }
+        })
+        .catch((error) => {
+            console.log(error);
         })
 }
 

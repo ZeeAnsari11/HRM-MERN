@@ -1,10 +1,8 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { selectPayslips } from "../../states/reducers/slices/backend/UserSlice";
+import { useSelector } from "react-redux";
 const FormFields = ({ id }) => {
     const data = useSelector(selectPayslips)
-    console.log("data", data);
-    console.log("selectedId", id)
 
     let payslip = null;
 
@@ -15,9 +13,6 @@ const FormFields = ({ id }) => {
             break;
         }
     }
-
-
-    console.log(payslip);
 
     return (
         <div className="flex flex-col items-center justify-center">

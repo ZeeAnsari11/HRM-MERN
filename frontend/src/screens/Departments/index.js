@@ -26,7 +26,6 @@ const Departments = () => {
     });
 
     useEffect(() => {
-        console.log("i get called")
         LoadData()
     }, [toggleChange]);
 

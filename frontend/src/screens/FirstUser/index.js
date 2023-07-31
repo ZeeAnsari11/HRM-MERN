@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import Image from '../../assets/placer.svg'
+
 import Forms from "./elements/Forms";
+import Image from '../../assets/placer.svg'
 
 const FirstUser = () => {
     const [page, setPage] = useState(1);
