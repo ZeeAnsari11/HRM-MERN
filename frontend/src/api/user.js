@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { authentication, getOrganization, organizationRoutes, timeSlots, userRoutes } from './configuration';
-import { setAuth, setCurrentUser, setFinalAuthority, setTimeSLots, setAllUsers, setUserGrades, setProfileCompletion } from '../states/reducers/slices/backend/UserSlice';
+import { authentication, getOrganization, organizationRoutes, timeSlots, userLeave, userRoutes } from './configuration';
+import { setAuth, setCurrentUser, setFinalAuthority, setTimeSLots, setAllUsers, setUserGrades, setProfileCompletion, setUserLeaveDetails } from '../states/reducers/slices/backend/UserSlice';
 import { setUserBranch } from '../states/reducers/slices/backend/Branch';
 import { setUserDepartment } from '../states/reducers/slices/backend/Department';
 import { setOrganizationDesignation } from '../states/reducers/slices/backend/Designation';
@@ -118,5 +118,15 @@ export const updateUserById = (userId, data, trigger) => {
     })
     .finally(() => {
         trigger();
+    })
+}
+
+export const getUserLeaveDetails = (userId, dispatch) => {
+    axios.get(userLeave.details+userId)
+    .then((response) => {
+        dispatch(setUserLeaveDetails(response.data.result))
+    })
+    .catch((error) => {
+        console.log(error)
     })
 }

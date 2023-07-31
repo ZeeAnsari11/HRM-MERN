@@ -7,14 +7,9 @@ import View from './src/modal';
 import { getAllWfhOfUser } from '../../api/wfh'
 import { useEffect } from 'react'
 import { useMemo } from 'react'
-import { useState } from 'react';
 
 function ViewWorkFromHome() {
 
-  const [showView, setShowView] = useState(false);
-  const handleAction = (rowData) => {
-    setShowView(!showView);
-  };
 
   const user_id = useSelector(selectUID)
   const apiData = useSelector(selectUserWfh)
