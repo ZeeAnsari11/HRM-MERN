@@ -1,6 +1,6 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import React, { useEffect } from 'react';
-import { selectNavState, selectWidth, setNavbarState } from '../../states/reducers/slices/frontend/Navbar';
+import { selectNavState, selectWidth } from '../../states/reducers/slices/frontend/Navbar';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Navbar from '../../components/Navbar';
@@ -26,10 +26,10 @@ const Dashboard = () => {
     
     if (loaded === true) return <SceneLoader />
     return (
-        <div className={`flex`}>
+        <div className={`flex bg-gray-100 w-full h-full`}>
             <Navbar />
             <Topbar />
-            <div className="h-full text-black bg-gray-100 p-6 px-4 relative top-[5rem] w-[calc(100%-269px)] mobile:w-full z-40 duration-300" style={{left: (window.screen.width > 430) ? width : 0, width:(open)?'':'100vw'}}>
+            <div className="max-h-[calc(100%-6rem)] py-4 text-black px-4 relative top-[5rem] w-[calc(100%-269px)] mobile:w-full z-40 duration-300" style={{left: (window.screen.width > 430) ? width : 0, width:(open)?'':'100vw'}}>
                 <Outlet />
             </div>
             <ToastContainer />

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { loadAllOrganizationsInfo } from '../../../api/user';
 import { selectCurrentUserBranch, selectCurrentUserOrg, selectUserGrades } from '../../../states/reducers/slices/backend/UserSlice';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { loadAllOrganizationsInfo } from '../../../api/user';
 
 const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton }) => {
     const dispatcher = useDispatch();
@@ -14,7 +15,6 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
     useEffect(() => {
         loadAllOrganizationsInfo(dispatcher, userOrgId, branchId);
     }, []);
-    console.log(formData)
 
     const handleFrontFileChange = (event) => {
         const file = event.target.files[0];

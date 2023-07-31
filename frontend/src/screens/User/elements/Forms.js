@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
-import PersonalInfo from './PersonalInfo'
-import OrganizationInfo from './OrganizationInfo'
+import { selectCurrentUserBranch, selectOrgId } from '../../../states/reducers/slices/backend/UserSlice'
+
 import Configuration from './Configuration'
+import OrganizationInfo from './OrganizationInfo'
+import PersonalInfo from './PersonalInfo'
+import UserInfo from './UserInfo'
 import { createUser } from '../../../api/user'
 import { useSelector } from 'react-redux'
-import { selectCurrentUserBranch, selectOrgId } from '../../../states/reducers/slices/backend/UserSlice'
-import UserInfo from './UserInfo'
 
 const Forms = ({ formNumber, changePageNumber, formData, handleInputChange }) => {
     const organization = useSelector(selectOrgId);
@@ -21,12 +22,9 @@ const Forms = ({ formNumber, changePageNumber, formData, handleInputChange }) =>
             restDays: formData.roaster ? formData.roaster.restDays : [],
         };
         formData.userRoster = element
-        // delete formData.roaster
-        // delete formData.timeSlots
         formData.nic.expiry = formData.expiry
         formData.nic.attachment.front = "front.png"
         formData.nic.attachment.back = "back.png"
-        console.log("FormData: ", formData);
         createUser(formData);
     }
     if (formNumber === 1)

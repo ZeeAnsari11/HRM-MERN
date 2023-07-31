@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import { selectUserWfh, setUpdatedWfh } from "../../../states/reducers/slices/backend/UserSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const EditWfh = ({ id }) => {
     const data = useSelector(selectUserWfh);
@@ -10,7 +10,6 @@ const EditWfh = ({ id }) => {
         reason: '',
     })
 
-    console.log("helllo", wfh);
     const dispatch = useDispatch();
 
     useEffect(() => {

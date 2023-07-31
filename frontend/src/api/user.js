@@ -1,5 +1,5 @@
 import { authentication, getOrganization, organizationRoutes, timeSlots, userRoutes } from './configuration';
-import { setAllUsers, setAuth, setCurrentUser, setFinalAuthority, setProfileCompletion, setTimeSLots, setUserGrades } from '../states/reducers/slices/backend/UserSlice';
+import { setAllUsers, setAuth, setCurrentUser, setFinalAuthority, setIsAdmin, setProfileCompletion, setTimeSLots, setUserGrades } from '../states/reducers/slices/backend/UserSlice';
 
 import axios from 'axios';
 import { getAllUsers } from './configuration';
@@ -61,8 +61,12 @@ export const getCurrentUser = (dispatcher, setLoaded=null) => {
             if (user.data.user.nic?.number)  dispatcher(setProfileCompletion(5))
             if (user.data.user.drivingLinsence?.number)  dispatcher(setProfileCompletion(5))
             if (setLoaded !== null) setLoaded(false);
-        }).catch((error) => {
-            console.log(error)
+            if (user.data.user.roleType === "admin") {
+                dispatcher(setIsAdmin(true));
+            }
+        })
+        .catch((error) => {
+            console.log(error);
         })
 }
 

@@ -1,11 +1,11 @@
+import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import FormFields from "../Formfields";
 import React from "react";
 import { useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
-import FormFields from "../Formfields";
 export default function View({ selectedId }) {
   const [showModal, setShowModal] = useState(false);
-  console.log("Modal Id", selectedId);
   return (
     <>
       <div className='pr-2'>

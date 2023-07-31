@@ -61,7 +61,6 @@ function Leave() {
   ], [])
   const user_id = useSelector(selectUID)
   const apiData = useSelector(selectUserLeaves)
-  console.log(apiData,"apiData");
   const dispatcher = useDispatch()
   useEffect(() => {
     getUserLeaves(user_id, dispatcher)
@@ -75,7 +74,7 @@ function Leave() {
   }));
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900">
+    <div className="bg-gray-100 text-gray-900">
       <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <div className="mt-6">
         {/* {showView && <View />} */}

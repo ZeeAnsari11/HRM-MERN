@@ -90,12 +90,9 @@ function TimeSheet() {
     filter: "my-sheet"
   }
 
-  console.log("body", body);
   useEffect(() => {
     getTimeSheet(body, dispatcher)
   }, [])
-
-  console.log("Time Sheet",apiData);
 
   const data = apiData.map(obj => ({
     date: obj.date.substring(0, 10), checkIn: obj.checkIn,
@@ -109,7 +106,7 @@ function TimeSheet() {
   }));
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900">
+    <div className="bg-gray-100 text-gray-900">
       <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <div className="mt-6">
           <div className="overflow-x-hidden">

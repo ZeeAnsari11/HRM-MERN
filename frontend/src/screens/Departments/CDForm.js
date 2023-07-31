@@ -1,9 +1,6 @@
 import React from 'react'
 
 const CDForm = ({ branches, formData, handleInputChange }) => {
-    console.log("========branchesList======deep in========", branches);
-    console.log("========branchesList======deep in========", branches);
-
 
     return (
         <form>

@@ -48,7 +48,6 @@ export default function DesiginationsView({ data }) {
 
 
     const handleAction = (id) => {
-        console.log("=====1=======",id);
         deleteDesiginationById(id);
     }
 

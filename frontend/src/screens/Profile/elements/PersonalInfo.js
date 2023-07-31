@@ -1,24 +1,25 @@
-import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDriversLicense, faIdCard, faPassport, faPencil } from '@fortawesome/free-solid-svg-icons'
-import Modal from '../../../components/Modal'
+
 import CUForm from './common/CUForm'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Modal from '../../../components/Modal'
+import React from 'react'
 import { selectUID } from '../../../states/reducers/slices/backend/UserSlice'
-import { useSelector } from 'react-redux'
 import { updateUserById } from '../../../api/user'
+import { useSelector } from 'react-redux'
 
 const PersonalInfo = ({ data }) => {
     const userId = useSelector(selectUID);
     const [formData, setFormData] = React.useState({
-        nic: {number: data.nic.number,
+        nic: {number: data?.nic?.number,
             attachment : {
                 back: 'x',
                 front : 'x'
             },
             expiry:'2025-11-12T00:00:00.000Z'
         },
-        passport: {number: data.passport.number},
-        drivingLiscence: {number: data.drivingLiscence.number}
+        passport: {number: data?.passport?.number},
+        drivingLiscence: {number: data?.drivingLiscence?.number}
     });
 
     const handleInputChange = (e) => {

@@ -31,7 +31,6 @@ const TimeSlots = () => {
     organization: orgId,
   });
 
-  console.log("FORM DATA", formData)
   const handleInputChange = (e) => {
     if (e.target.name.startsWith('break.')) {
       setFormData({

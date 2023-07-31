@@ -1,37 +1,37 @@
-import { faHome, faUser, faGear, faTimeline, faChartArea, faCircleDollarToSlot, faCalendarDays, faCalendarDay, faCodePullRequest, faCalendarPlus, faCalendarWeek, faCalendarTimes, faFileAlt, faCalendarCheck, faUserClock, faNetworkWired, faUserCircle, faUsers , faCoffee, faCediSign} from '@fortawesome/free-solid-svg-icons'
+import { faCalendarCheck, faCalendarDay, faCalendarDays, faCalendarPlus, faCalendarTimes, faCalendarWeek, faCediSign, faChartArea, faCircleDollarToSlot, faCodePullRequest, faCoffee, faFileAlt, faGear, faHome, faNetworkWired, faTimeline, faUser, faUserCircle, faUserClock, faUsers } from '@fortawesome/free-solid-svg-icons'
 
 export const Menus = [
-    { title: "Dashboard", font:faHome, gap: true, child:[], to: "/dashboard/home"},
+    { title: "Dashboard", access: "Admin", font:faHome, gap: true, child:[], to: "/dashboard/home"},
     {
         title: "Self Services",
         font: faUser,
+        access: "Non-Admin",
         child: [
-            { title: "Probation", font:faUserClock, to:"/dashboard/probation" },
-            { title: "Roaster", font:faCalendarPlus, to:"/dashboard/roaster"},
-            { title: "Chart", font:faChartArea, to:"/dashboard/chart" },
-            { title: "Loan & Advance", font:faCircleDollarToSlot, to:"/dashboard/loan" },
+            { title: "Probation",    font:faUserClock, to:"/dashboard/probation" },
+            { title: "Roaster",    font:faCalendarPlus, to:"/dashboard/roaster"},
+            { title: "Chart",    font:faChartArea, to:"/dashboard/chart" },
+            { title: "Loan & Advance",    font:faCircleDollarToSlot, to:"/dashboard/loan" },
         ] 
     },
     {
         title: "Assets",
-        access:"admin",
+        access:"Admin",
         font: faCalendarDay,
         child: [
             { title: "Add Asset", font: faCodePullRequest, to:"/dashboard/add-asset" },
             { title: "Manage Assets", font: faCalendarCheck, to:"/dashboard/manage-assets"},
             { title: "Asset Type", font: faCodePullRequest, to:"/dashboard/asset-type" },
-
         ]
     },
-    { title: "Desiginations", font: faCalendarCheck, child:[], to:"/dashboard/desiginations"  },
-    { title: "Loan Type", font: faCalendarCheck, child:[], to:"/dashboard/loan-type"  },
-    { title: "Departments", font: faCalendarCheck, child:[], to:"/dashboard/departments"  },
-    { title: "Branches", font: faCalendarCheck, child:[], to:"/dashboard/branches"  },
-    { title: "TimeSlots", font: faCalendarCheck, child:[], to:"/dashboard/timeSlots"  },
+    { title: "Desiginations",access:"Admin", font: faCalendarCheck, child:[], to:"/dashboard/desiginations"  },
+    { title: "Loan Type", access:"Admin",font: faCalendarCheck, child:[], to:"/dashboard/loan-type"  },
+    { title: "Departments", access:"Admin",font: faCalendarCheck, child:[], to:"/dashboard/departments"  },
+    { title: "Branches", access:"Admin",font: faCalendarCheck, child:[], to:"/dashboard/branches"  },
+    { title: "TimeSlots", access:"Admin",font: faCalendarCheck, child:[], to:"/dashboard/timeSlots"  },
 
     {
         title: "Employee", 
-        access:"admin",
+        access:"Admin",
         font: faUsers,
         child: [
             { title: "Create Employee", font: faCalendarTimes, to:"/dashboard/employee" },
@@ -42,7 +42,7 @@ export const Menus = [
         title: "Leave", 
         font: faCalendarWeek,
         child: [
-            { access:"admin", title: "Requests", font: faCalendarTimes, to:"/dashboard/timesheet" },
+            { access:"Admin", title: "Requests", font: faCalendarTimes, to:"/dashboard/timesheet" },
             { title: "Request Leave", font: faCodePullRequest, to:"/dashboard/leaverequest" },
             { title: "View Leaves", font: faCalendarCheck, to:"/dashboard/leaves"},
             { title: "Policy", font: faTimeline, to:"/dashboard/policy" },
@@ -51,8 +51,9 @@ export const Menus = [
     {
         title: "Work From Home", 
         font: faCalendarWeek,
+           
         child: [
-            { access:"admin", title: "Requests", font: faCalendarTimes, to:"/dashboard/wfh" },
+            // { access:"Admin", title: "Requests", font: faCalendarTimes, to:"/dashboard/wfh" },
             { title: "Request", font: faCalendarTimes, to:"/dashboard/wfh" },
             { title: "View WFH Requests", font: faFileAlt, to:"/dashboard/view-wfh" },
         ]
@@ -67,8 +68,8 @@ export const Menus = [
         ]
     },
 
-    { title: "Payslips", font: faCircleDollarToSlot, child:[], to:"/dashboard/payslips"  },
-    { title: "Allowances", font: faCalendarCheck, child:[], to:"/dashboard/allowances"  },
+    { title: "Payslips", access:"Admin", font: faCircleDollarToSlot, child:[], to:"/dashboard/payslips"  },
+    { title: "Allowances",access:"Admin", font: faCalendarCheck, child:[], to:"/dashboard/allowances"  },
     { title: "Profile ", font: faUserCircle, gap: true, child:[], to:"/dashboard/profile"},
     { title: "Settings", font: faGear, child:[], to:"/dashboard/settings" },
 ];

@@ -45,10 +45,7 @@ export default function AllowanceView({ data }) {
         handler: handleUpdateDepartmennt,
     }]
 
-
-
     const handleAction = (id) => {
-        console.log("=====1=======",id);
         deletAllowanceById(id);
     }
 
@@ -58,7 +55,6 @@ export default function AllowanceView({ data }) {
             title={title}
             Element={<CUForm config={formDataConfig} handleInputChange={handleInputChange} isFull={false} />}
             btnConfig={btnConfig}
-
         />
         <button
             className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"

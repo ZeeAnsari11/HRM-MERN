@@ -1,15 +1,16 @@
+import 'tailwindcss/tailwind.css';
+
+import { getLoanType, setCancel } from '../../api/loan';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // Import React and Tailwind CSS
 import React from 'react';
-import 'tailwindcss/tailwind.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
-import { useDropzone } from "react-dropzone";
-import { useEffect, useState } from 'react';
-import { selectOrgId } from '../../states/reducers/slices/backend/UserSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { getLoanType, setCancel } from '../../api/loan';
 import { selectLoanTypes } from '../../states/reducers/slices/backend/Loan';
-
+import { selectOrgId } from '../../states/reducers/slices/backend/UserSlice';
+import { useDropzone } from "react-dropzone";
 
 // Define a component for the add asset form
 const CreateLoanRequest = () => {
@@ -54,7 +55,6 @@ const CreateLoanRequest = () => {
 
   const submit = e => {
     e.preventDefault();
-    console.log(formFields);
   };
 
   const addFields = () => {
@@ -101,7 +101,6 @@ const CreateLoanRequest = () => {
     //   description,
     //   type,
     // };
-    console.log();
   };
   const handleCancel = () => {
     const flag = false
@@ -114,21 +113,10 @@ const CreateLoanRequest = () => {
   }, []);
 
   const loanTypes = useSelector(selectLoanTypes)
-  console.log('loanTypes', loanTypes);
+ 
   // Return the JSX for the add asset form
   return (
     <div className="container mx-auto p-4">
-      {/* {isRequestCreated && (
-        <h1>
-          <Stack spacing={2} sx={{ width: '100%' }}>
-            <Alert variant="filled" severity="success">
-              Request Created Successfully !
-            </Alert>
-          </Stack>
-        </h1>
-
-      )}
-      ) */}
       <h1 className="text-2xl block text-gray-700 font-bold mb-2 pl-1 pr-4 py-2" >Loan & Advances Request Create</h1>
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         {/* Name field */}

@@ -52,12 +52,8 @@ function Loan() {
     setCreatingLoanRequest(req)
   }, [])
 
-  
-
-  console.log('userId', userId);
   const apiData = useSelector(selectUserLoan)
 
-  console.log('apiData', apiData);
   let data = [];
   if(apiData) {
       data = apiData.map(obj => ({
@@ -88,7 +84,7 @@ function Loan() {
 
   }
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900">
+    <div className="bg-gray-100 text-gray-900">
       <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
     
       {!isCreatingLoanRequest && (

@@ -69,7 +69,7 @@ function Payslips() {
   ], []);
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900">
+    <div className="bg-gray-100 text-gray-900">
       <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <div className="mt-6">
           <Table columns={columns} data={data} />

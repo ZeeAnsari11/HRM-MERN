@@ -1,8 +1,9 @@
-import dayjs from "dayjs";
+import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import React, { useState } from "react";
 import { generateDate, months } from "./util/calendar";
+
 import cn from "./util/cn";
-import { GrFormNext, GrFormPrevious } from "react-icons/gr";
+import dayjs from "dayjs";
 
 export default function Calendar() {
 	const days = ["S", "M", "T", "W", "T", "F", "S"];
@@ -10,7 +11,7 @@ export default function Calendar() {
 	const [today, setToday] = useState(currentDate);
 	const [selectDate, setSelectDate] = useState(currentDate);
 	return (
-		<div className="flex gap-10 sm:divide-x justify-center sm:w-3/4 mx-auto h-screen items-center sm:flex-row flex-col">
+		<div className="flex gap-10 sm:divide-x justify-center sm:w-3/4 mx-auto items-center sm:flex-row flex-col">
 			<div className="w-full h-30 p-4 rounded-lg shadow-2xl drop-shadow">
 				<div className="flex justify-between items-center">
 					<h1 className="select-none font-semibold">
