@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { createTimeSlot, getTimeSlotsByOrgId } from '../../api/timeSlots';
+import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
 
 import CTForm from './CTForm';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import TimeSlotsView from './TimeSlotsView';
