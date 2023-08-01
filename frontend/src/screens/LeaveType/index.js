@@ -64,7 +64,7 @@ const handleCreateLeaveType = (trigger) => {
       accessor: 'action',
       Cell: ({ row }) => (
         <LeaveTypeView data={row.original}/>
-      ),
+      )
     },
   ];
 
