@@ -811,3 +811,61 @@ export const getUserLeaveQuota = (req, res, next) => {
         handleCatch(err, res, 400, next)
     }
 }
+
+
+
+const multer = require('multer');
+const User = require('../models/user'); // Import your user model here
+
+// Set up the storage configuration for multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads'); // Save the uploaded files to the "uploads" folder
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const fileExtension = file.originalname.split('.').pop();
+    cb(null, file.fieldname + '-' + uniqueSuffix + '.' + fileExtension);
+  },
+});
+
+const upload = multer({ storage });
+
+// Controller function for handling image upload
+export const updateProfilePicture = (req, res, next) => {
+  try {
+    // Use the upload middleware to handle the file upload
+    upload.single('image')(req, res, (err) => {
+      if (err instanceof multer.MulterError) {
+        // Handle multer specific errors
+        return res.status(400).json({ error: 'Error uploading image.' });
+      } else if (err) {
+        // Handle other errors
+        return res.status(400).json({ error: err.message });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({ error: 'No image file received.' });
+      }
+
+      // Assuming you have a user object representing the current user
+      // Update the user model with the file path
+      const imagePath = req.file.path;
+      // For example, you can update the user's profilePicture property with the file path
+      // Replace "user" with your actual user object, and "profilePicture" with the appropriate property name
+      user.profile = imagePath;
+
+      // Save the updated user object to the database (Assuming you are using Mongoose)
+      user.save((err, updatedUser) => {
+        if (err) {
+          return res.status(500).json({ error: 'Error updating user profile.' });
+        }
+
+        res.json(updatedUser); // Respond with the updated user object
+      });
+    });
+  } catch (err) {
+    // Handle any other unexpected errors
+    handleCatch(err, res, 400, next);
+  }
+};

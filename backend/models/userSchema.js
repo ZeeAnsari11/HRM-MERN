@@ -244,6 +244,9 @@ const userSchema = mongoose.Schema({
 
         }]
     },
+    profile: {
+        type: String
+    },
     rehire: {
         type: [{
             date: {
