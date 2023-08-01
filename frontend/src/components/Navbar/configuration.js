@@ -46,7 +46,7 @@ export const Menus = [
             { title: "Request Leave", font: faCodePullRequest, to:"/dashboard/leaverequest" },
             { title: "View Leaves", font: faCalendarCheck, to:"/dashboard/leaves"},
             { title: "Policy", font: faTimeline, to:"/dashboard/policy" },
-            { title: "Leave Types", font: faTimeline, to:"/dashboard/leave-type" },
+            { title: "Leave Types", access:"Admin", font: faTimeline, to:"/dashboard/leave-type" },
         ]
     },
     {

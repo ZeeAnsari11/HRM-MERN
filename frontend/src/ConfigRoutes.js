@@ -8,6 +8,7 @@ import Desiginations from "./screens/Desiginations";
 import Leave from "./screens/Leave";
 import LeavePolicy from "./screens/LeavePolicy";
 import LeaveRequest from "./screens/LeaveRequest";
+import LeaveType from "./screens/LeaveType";
 import Loan from "./screens/Loan";
 import LoanType from "./screens/LoanType";
 import ManageAssets from "./screens/ManageAsset";
@@ -40,6 +41,8 @@ export const privateRoutes = () => {
       <Route path="/dashboard/loan-type" element={<LoanType />} />
       <Route path="/dashboard/payslips" element={<Payslips />} />
       <Route path="/dashboard/manage-assets" element={<ManageAssets />} />
+      <Route path="/dashboard/leave-type" element={<LeaveType />} />
+
     </>
   }
   

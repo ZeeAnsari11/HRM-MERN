@@ -31,8 +31,8 @@ const Navbar = () => {
             <div className={tailwindStyleSheet.subMenuContainer}>
                 {Menus.map((Menu, index) => {
                     if (Menu.access !== "Admin")
-                        return <MenuRenderer key={index} menu={Menu} />
-                    else if (user == "admin") return <MenuRenderer key={index} menu={Menu} />
+                        return <MenuRenderer key={index} menu={Menu} user={user}/>
+                    else if (user == "admin") return <MenuRenderer key={index} user={user} menu={Menu} />
                 })}
             </div>
         </div>

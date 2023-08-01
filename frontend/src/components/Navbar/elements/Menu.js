@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
-const Menu = ({ menu }) => {
+const Menu = ({ menu, user }) => {
     const diapatcher = useDispatch();
     const selectedMenuItem = useSelector(selectNavItem)
     const selectedMenuChildItem = useSelector(selectNavChildItem)
@@ -31,6 +31,7 @@ const Menu = ({ menu }) => {
                 <div className='w-[1.5px] bg-gray-600'></div>
                 <div className='w-full space-y-[5px]'>
                 {menu.child.map((menuItem, index) => {
+                    if (menuItem.access !== "Admin")
                         return <Link
                             className={`flex p-2 text-gray-300 text-sm items-center gap-x-4 hover:bg-gray-700 hover:shadow-md hover:text-lightText rounded-lg ${(menuItem.title === selectedMenuChildItem) ? 'bg-gray-700 text-lightText' : ''}`}
                             to={menuItem.to}  
@@ -43,6 +44,19 @@ const Menu = ({ menu }) => {
                                 {menuItem.title}
                             </div>
                         </Link>
+                    else if (user == "admin")
+                        return <Link
+                                className={`flex p-2 text-gray-300 text-sm items-center gap-x-4 hover:bg-gray-700 hover:shadow-md hover:text-lightText rounded-lg ${(menuItem.title === selectedMenuChildItem) ? 'bg-gray-700 text-lightText' : ''}`}
+                                to={menuItem.to}  
+                                key={index} 
+                                onClick={() => {
+                                    if (menuItem.title !== selectedMenuChildItem) diapatcher(setChangeMenuChildState(menuItem.title))
+                                }}>
+                                <FontAwesomeIcon icon={menuItem.font} className='text-white p-2 bg-gray-600 rounded-md' width={'20'} />
+                                <div className={`origin-left duration-200 text-white`}>
+                                    {menuItem.title}
+                                </div>
+                            </Link>
                 })}
                 </div>
             </ul>
