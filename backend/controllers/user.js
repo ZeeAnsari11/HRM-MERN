@@ -8,6 +8,7 @@ import { LeaveTypeModel } from '../models/leaveTypeSchema.js'
 import { OrganizationModel } from '../models/organizationSchema.js'
 import { TimeSlotsModel } from "../models/timeSlotsSchema.js";
 import { UserModel } from '../models/userSchema.js'
+import multer from 'multer';
 
 const placeHolder = '0001-01-01T';
 //// Create User ////
@@ -814,33 +815,24 @@ export const getUserLeaveQuota = (req, res, next) => {
 
 
 
-const multer = require('multer');
-const User = require('../models/user'); // Import your user model here
-
-// Set up the storage configuration for multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads'); // Save the uploaded files to the "uploads" folder
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const fileExtension = file.originalname.split('.').pop();
-    cb(null, file.fieldname + '-' + uniqueSuffix + '.' + fileExtension);
-  },
-});
-
-const upload = multer({ storage });
-
 // Controller function for handling image upload
 export const updateProfilePicture = (req, res, next) => {
   try {
-    // Use the upload middleware to handle the file upload
+    const storage = multer.diskStorage({
+        destination: (req, file, cb) => {
+          cb(null, 'uploads'); // Save the uploaded files to the "uploads" folder
+        },
+        filename: (req, file, cb) => {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const fileExtension = file.originalname.split('.').pop();
+          cb(null, file.fieldname + '-' + uniqueSuffix + '.' + fileExtension);
+        },
+      });
+      const upload = multer({ storage });
     upload.single('image')(req, res, (err) => {
       if (err instanceof multer.MulterError) {
-        // Handle multer specific errors
         return res.status(400).json({ error: 'Error uploading image.' });
       } else if (err) {
-        // Handle other errors
         return res.status(400).json({ error: err.message });
       }
 
@@ -848,20 +840,28 @@ export const updateProfilePicture = (req, res, next) => {
         return res.status(400).json({ error: 'No image file received.' });
       }
 
-      // Assuming you have a user object representing the current user
-      // Update the user model with the file path
+      const userId = req.params.id;
       const imagePath = req.file.path;
-      // For example, you can update the user's profilePicture property with the file path
-      // Replace "user" with your actual user object, and "profilePicture" with the appropriate property name
       user.profile = imagePath;
-
-      // Save the updated user object to the database (Assuming you are using Mongoose)
-      user.save((err, updatedUser) => {
+      User.findById(userId, (err, user) => {
         if (err) {
-          return res.status(500).json({ error: 'Error updating user profile.' });
+          return res.status(500).json({ error: 'Error finding the user.' });
         }
-
-        res.json(updatedUser); // Respond with the updated user object
+    
+        if (!user) {
+          return res.status(404).json({ error: 'User not found.' });
+        }
+    
+        // Update the user profile field with the imagePath
+        user.profile = imagePath;
+        // Save the updated user
+        user.save((err, updatedUser) => {
+          if (err) {
+            return res.status(500).json({ error: 'Error updating user profile.' });
+          }
+    
+          res.json(updatedUser); // Respond with the updated user object
+        });
       });
     });
   } catch (err) {
