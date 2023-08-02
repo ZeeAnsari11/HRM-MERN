@@ -853,8 +853,7 @@ export const updateProfilePicture = (req, res, next) => {
         }
     
         // Update the user profile field with the imagePath
-        user.profile = imagePath;
-        // Save the updated user
+        user.profile = imagePath
         user.save((err, updatedUser) => {
           if (err) {
             return res.status(500).json({ error: 'Error updating user profile.' });
