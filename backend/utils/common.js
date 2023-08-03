@@ -1,12 +1,14 @@
-export const createNew = (req, res, next, model) => {
+export const createNew = (req, res, next, model, show=true) => {
     try {
         if (Object.keys(req.body).length > 0) {
             model.create(req.body)
                 .then((response) => {
-                    res.status(200).json({
-                        success: true,
-                        response
-                    })
+                    if(show){
+                        res.status(200).json({
+                            success: true,
+                            response
+                        })
+                    }
                 })
                 .catch((err) => { handleCatch(err, res, 500, next) })
         }

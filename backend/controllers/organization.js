@@ -1,8 +1,10 @@
+import { deleteById, getAll, getById, handleCatch, updateById } from '../utils/common.js';
+
 import { OrganizationModel } from '../models/organizationSchema.js';
-import { getAll, getById, deleteById, updateById, handleCatch } from '../utils/common.js';
+import { PermissionsModel } from '../models/permissions.js';
+import { addingUser } from './user.js';
 import app from '../app.js';
 import expressListEndpoints from "express-list-endpoints";
-import { PermissionsModel } from '../models/permissions.js';
 import mongoose from "mongoose";
 
 export const createOrganization = (req, res, next) => {
@@ -18,6 +20,10 @@ export const createOrganization = (req, res, next) => {
             OrganizationModel.create([req.body], { session: session })
                 .then((org) => {
                     createPermissionsObjects(org[0]._id, res, next, session)
+                    req.body.organization = org[0]._id
+                    req.body.roleType = 'admin'
+                    delete req.body.timeZone
+                    addingUser(req, res, next) 
                 })
                 .catch((err) => {
                     session.endSession();
@@ -64,14 +70,8 @@ export const updateOrganizationById = (req, res, next) => {
 
 const createPermissionsObjects = (organizationId, res, next, session) => {
     const routes = expressListEndpoints(app);
+
     let permissionsPromises = [];
-    // let totalCount = 0;
-    // routes.forEach((route) => {
-    //   const methodCount = route.methods.length;
-    //   totalCount += methodCount;
-    // });
-    // console.log("============toatl========",totalCount);
-    // console.log('Total sum of method counts:', totalCount);
     routes.forEach((route) => {
         const { methods, middlewares } = route;
         methods.forEach((method, index) => {

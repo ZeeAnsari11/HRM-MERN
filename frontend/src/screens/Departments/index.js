@@ -65,7 +65,7 @@ const Departments = () => {
             Header: "Action",
             accessor: 'action',
             Cell: ({ row }) => (
-                <DepartmentsView data={row.original} />
+                <DepartmentsView  data={row.original} />
             ),
         }
     ], []);
@@ -74,6 +74,7 @@ const Departments = () => {
         id: obj._id,
         name: obj.name,
         branch: obj.branch?.name,
+        branches
     }));
 
     const btnConfig = [

@@ -1,10 +1,9 @@
-import mongoose from "mongoose";
-import timeZone from "mongoose-timezone";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { handleCatch } from "../utils/common.js";
-
+import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
+import timeZone from "mongoose-timezone";
 
 //  Schema to Create User 
 
@@ -18,7 +17,9 @@ const userSchema = mongoose.Schema({
         trim: true,
         maxLength: [100, 'Email cannot exceeds from 100 characters'],
         // validate: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
-        unique: [true, 'Email already in use'],
+        unique: function () {
+            return !this.firstUser; // Set unique to false when firstUser is true
+        },
         lowercase: true,
     },
     password: {
@@ -32,14 +33,20 @@ const userSchema = mongoose.Schema({
     grade: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Grade',
-        required: true,
+        required: function () {
+            return !this.firstUser; // Set unique to false when firstUser is true
+        },
     },
     phoneNumber: {
         type: String,
-        required: [true, 'Please enter phone number'],
+        required: function () {
+            return !this.firstUser; // Set unique to false when firstUser is true
+        },
         trim: true,
         maxLength: [20, 'Phone number cannot exceeds from 100 characters'],
-        unique: [true, 'Phone number already in use'],
+        unique: function () {
+            return !this.firstUser; // Set unique to false when firstUser is true
+        },
     },
     firstName: {
         type: String,
@@ -64,12 +71,16 @@ const userSchema = mongoose.Schema({
     branch: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Branch',
-        required: true,
+        required: function () {
+            return !this.firstUser; // Set unique to false when firstUser is true
+        },
     },
     designation: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Designation',
-        required: true,
+        required: function () {
+            return !this.firstUser; // Set unique to false when firstUser is true
+        },
     },
     skills: [
         {
@@ -99,14 +110,18 @@ const userSchema = mongoose.Schema({
         timeSlots: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'TimeSlots',
-            required: true
+            required: function () {
+                return !this.firstUser; // Set unique to false when firstUser is true
+            },
         },
         restDays: [Number],
     },
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
-        required: true,
+        required: function () {
+            return !this.firstUser; // Set unique to false when firstUser is true
+        },
     },
     isLineManager: {
         type: Boolean,
@@ -184,16 +199,22 @@ const userSchema = mongoose.Schema({
             ],
             messsage: 'Enter a valid Employee Type',
         },
-        required: [true, "Select Employee Type"],
+        required: function () {
+            return !this.firstUser; // Set unique to false when firstUser is true
+        },
     },
     employmentType: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Employment',
-        required: true,
+        required: function () {
+            return !this.firstUser; // Set unique to false when firstUser is true
+        },
     },
     roleType: {
         type: String,
-        required: [true, 'please Enter the User Role'],
+        required: function () {
+            return !this.firstUser; // Set unique to false when firstUser is true
+        },
         lowercase: true,
         enum: {
             values: [
@@ -208,9 +229,11 @@ const userSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    joiningDate: {
+    joiningDate: { 
         type: Date,
-        required: true
+        required: function () {
+            return !this.firstUser; // Set unique to false when firstUser is true
+        },
     },
     EOE: {
         details: [{
@@ -268,7 +291,9 @@ const userSchema = mongoose.Schema({
     },
     nationality: {
         type: String,
-        required: [true, 'Please enter your nationality'],
+        required: function () {
+            return !this.firstUser; // Set unique to false when firstUser is true
+        },
         trim: true,
         maxLength: [100, 'Cannot exceeds from 100 characters'],
         //validate: /^[a-zA-Z]+$/
@@ -289,34 +314,48 @@ const userSchema = mongoose.Schema({
     },
     personalEmail: {
         type: String,
-        required: [true, 'Please enter your personal email'],
+        required: function () {
+            return !this.firstUser; // Set unique to false when firstUser is true
+        },
         trim: true,
         maxLength: [100, 'Cannot exceeds from 100 characters'],
         //validate: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
-        unique: [true, 'Email already in use'],
+        unique: function () {
+            return !this.firstUser; // Set unique to false when firstUser is true
+        },
         lowercase: true,
     },
     nic: {
         number: {
             type: String,
-            required: [true, 'Please enter your CNIC without dashes'],
+            required: function () {
+                return !this.firstUser; // Set unique to false when firstUser is true
+            },
             trim: true,
             //validate: /^[0-9]+$/
-            unique: [true, 'CNIC already in use']
+            unique: function () {
+                return !this.firstUser; // Set unique to false when firstUser is true
+            },
         },
         attachment: {
             front: {
                 type: String,
-                required: [true, 'Please enter your cnic front attachment']
+                function() {
+                    return !this.firstUser; // Set unique to false when firstUser is true
+                },
             },
             back: {
                 type: String,
-                required: [true, 'Please enter your cnic back attachment']
+                function() {
+                    return !this.firstUser; // Set unique to false when firstUser is true
+                },
             }
         },
         expiry: {
             type: Date,
-            required: [true, 'Please enter your cnic expiry date']
+            function() {
+                return !this.firstUser; // Set unique to false when firstUser is true
+            },
         }
     },
     passport: {
@@ -324,7 +363,9 @@ const userSchema = mongoose.Schema({
             type: String,
             trim: true,
             //validate: /^[0-9]+$/
-            unique: [true, 'Passport already in use']
+            unique: function () {
+                return !this.firstUser; // Set unique to false when firstUser is true
+            },
         },
         attachment: {
             type: String,
@@ -338,8 +379,9 @@ const userSchema = mongoose.Schema({
             type: String,
             trim: true,
             validate: /^[0-9]+$/,
-            unique: [true, 'Driving Lisence already in use'],
-
+            unique: function () {
+                return !this.firstUser; // Set unique to false when firstUser is true
+            }
         },
         attachment: {
             type: String,
@@ -361,7 +403,9 @@ const userSchema = mongoose.Schema({
     }],
     grossSalary: {
         type: Number,
-        required: true
+        function() {
+            return !this.firstUser; // Set unique to false when firstUser is true
+        },
     },
     temporaryAddress: {
         type: String,
@@ -377,21 +421,56 @@ const userSchema = mongoose.Schema({
 
 userSchema.plugin(timeZone, { paths: ['timeZone'] });
 
+// userSchema.pre('save', async function (next) {
+//     try {
+//         var user = this;
+//         if (user.firstUser) {
+//             userSchema.eachPath((path, schemaType) => {
+//                 schemaType.validators = [];
+//             });
+//         }
+//         if (!user.isModified('password')) return next();
+
+//         bcrypt.genSalt(10, function (err, salt) {
+//             if (err) {
+//                 throw err = new Error(err);
+//                 err.statusCode = 400;
+//                 throw err;
+//             }
+//             bcrypt.hash(user.password, salt, function (err, hash) {
+//                 if (err) {
+//                     throw err = new Error(err);
+//                     err.statusCode = 400;
+//                     throw err;
+//                 }
+//                 user.password = hash;
+//                 next();
+//             });
+//         });
+//     } catch (err) {
+//         handleCatch(err, res, err.statusCode || 400, next)
+//     }
+// });
+
 userSchema.pre('save', function (next) {
     try {
         var user = this;
-
+        if (user.firstUser) {
+            userSchema.eachPath((path, schemaType) => {
+                schemaType.validators = [];
+            });
+        }
         if (!user.isModified('password')) return next();
 
         bcrypt.genSalt(10, function (err, salt) {
             if (err) {
-                throw err = new Error(err);
+                let err = new Error(err);
                 err.statusCode = 400;
                 throw err;
             }
             bcrypt.hash(user.password, salt, function (err, hash) {
                 if (err) {
-                    throw err = new Error(err);
+                    let err = new Error(err);
                     err.statusCode = 400;
                     throw err;
                 }
@@ -404,7 +483,6 @@ userSchema.pre('save', function (next) {
         handleCatch(err, res, err.statusCode || 400, next)
     }
 })
-
 
 userSchema.methods.getJwtToken = function () {
     return jwt.sign({ id: this.id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_TIME })

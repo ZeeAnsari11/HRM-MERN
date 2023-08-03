@@ -16,6 +16,7 @@ const CDForm = ({ branches, formData, handleInputChange }) => {
                 />
             </div>
             <div>
+            <label className="block text-sm font-bold mb-1">Branch</label>
             <select
                 name="branch"
                 id="branch"

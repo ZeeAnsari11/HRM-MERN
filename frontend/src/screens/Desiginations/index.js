@@ -93,7 +93,7 @@ const Desiginations = () => {
     const data = desiginations.map(obj => ({
         id : obj._id,
         title: obj.title,
-        shortForm: obj.shortForm
+        shortForm: obj.shortForm.toUpperCase()
     }));
 
     const btnConfig = [

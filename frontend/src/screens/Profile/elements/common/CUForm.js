@@ -4,8 +4,9 @@ const CUForm = ({ config, handleInputChange, isFull=true }) => {
     return <div className={isFull ? 'w-1/2 mobile:w-full' : 'w-full'}>
             {
                 config.map((item, index) => {
-                    if (item.type === 'checkbox') {
-                        return <div className="mb-4 flex items-center">
+                    if (item?.customElements) return <div key={index}>{item.customElements}</div>
+                    else if (item.type === 'checkbox') {
+                        return <div key={index} className="mb-4 flex items-center">
                             <input
                                 className="border border-gray-300 rounded-md px-3 mr-2 py-2"
                                 type="checkbox"
