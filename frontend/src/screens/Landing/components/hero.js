@@ -1,4 +1,5 @@
 import Container from "./container";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -15,13 +16,13 @@ If you are here to automate your HR operations, Get a free trial & consultation 
             </p>
 
             <div className="flex flex-col items-start tablet:items-center space-y-3 sm:space-x-4 sm:space-y-0 sm:items-center sm:flex-row">
-              <a
-                href="https://web3templates.com/templates/nextly-landing-page-template-for-startups"
+              <Link
+                to='/'
                 target="_blank"
                 rel="noopener"
                 className={`px-8 py-4 text-lg font-medium text-center text-white bg-[#1567B1] rounded-md`}>
                 Start a free trial
-              </a>
+              </Link>
             </div>
           </div>
         </div>

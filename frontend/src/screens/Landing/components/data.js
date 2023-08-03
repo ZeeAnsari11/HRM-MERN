@@ -26,21 +26,21 @@ const benefitOne = {
 
 const benefitTwo = {
   title: "Offer more benefits here",
-  desc: "You can use this same layout with a flip image to highlight your rest of the benefits of your product. It can also contain an image or Illustration as above section along with some bullet points.",
+  desc: "A good HRMS ensures that your company is in legal compliance with corporate, international, or local laws. You can automatically update policies to support legality and ensure all information is stored securely. ",
   bullets: [
     {
       title: "Mobile Responsive Template",
-      desc: "Nextly is designed as a mobile first responsive template.",
+      desc: "NexHR is designed as a mobile first responsive template.",
       icon: <FontAwesomeIcon icon={faMobile}/>,
     },
     {
-      title: "Powered by Next.js & TailwindCSS",
+      title: "Powered by MERN",
       desc: "This template is powered by latest technologies and tools.",
       icon: <FontAwesomeIcon icon={faGlobeAsia}/>,
     },
     {
       title: "Dark & Light Mode",
-      desc: "Nextly comes with a zero-config light & dark mode. ",
+      desc: "NexHR comes with a zero-config light & dark mode. ",
       icon: <FontAwesomeIcon icon={faSun}/>,
     },
   ],

@@ -1,17 +1,18 @@
+import React, { useRef } from "react";
 import { selectCurrentUser, selectProfileCompletion } from "../../states/reducers/slices/backend/UserSlice";
-import { faPencil } from '@fortawesome/free-solid-svg-icons';
+
 import Addresses from "./elements/Addresses";
 import Certifications from "./elements/Certifications";
 import ContactInfo from "./elements/ContactInfo";
 import Experiences from "./elements/Experiences";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import OrganizationInfo from "./elements/OrganizationInfo";
 import PersonalInfo from "./elements/PersonalInfo";
 import Qualification from "./elements/Qualification";
-import React, { useRef } from "react";
 import RelativesForm from "./elements/RelativesForm";
 import Skills from "./elements/Skills";
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { useSelector } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const UserProfile = () => {
   const currentUser = useSelector(selectCurrentUser);
@@ -64,17 +65,8 @@ const UserProfile = () => {
   return (
     <>
       <div className="flex justify-between flex-wrap p-4 h-26 border rounded-xl mobile:space-y-4">
-        {/* <div className="flex items-center space-x-6 mobile:flex-col mobile:text-center mobile:space-y-4">
-          <img className="w-24 h-24 rounded-xl" src="https://randomuser.me/api/portraits/men/2.jpg" alt="Avatar" />
-          <div className="flex flex-col mobile:!ml-0">
-            <span className="text-3xl text-gray-600 font-bold">{currentUser.firstName} {currentUser.lastName}</span>
-            <span className="text-gray-600">
-              {currentUser.designation?.title} @{currentUser.organization?.name}
-            </span>
-          </div>
-        </div> */}
         <div className="flex items-center space-x-6 mobile:flex-col mobile:text-center mobile:space-y-4">
-          <div className="flex flex-col mobile:!ml-0">
+          <div className="flex flex-row space-x-2 mobile:!ml-0">
             <div
               className="relative cursor-pointer"
               onMouseEnter={handleMouseEnter}
@@ -98,12 +90,14 @@ const UserProfile = () => {
                 </button>
               )}
             </div>
-            <span className="text-3xl text-gray-600 font-bold">
-              {currentUser.firstName} {currentUser.lastName}
-            </span>
-            <span className="text-gray-600">
-              {currentUser.designation?.title} @{currentUser.organization?.name}
-            </span>
+            <div className="flex flex-col justify-center">
+              <span className="text-3xl text-gray-600 font-bold">
+                {currentUser.firstName} {currentUser.lastName}
+              </span>
+              <span className="text-gray-600">
+                {currentUser.designation?.title} @{currentUser.organization?.name}
+              </span>
+            </div>
           </div>
         </div>
 

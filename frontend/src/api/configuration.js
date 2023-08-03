@@ -204,3 +204,7 @@ export const qualification = {
     updateQualification: baseUrl+'/qualification/',
     deleteQualification: baseUrl+'/qualification/'
 }
+
+export const organization = {
+    createOrganization: baseUrl+'/organization/new'
+}

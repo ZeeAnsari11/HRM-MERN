@@ -49,93 +49,6 @@ export default function TimeSlotsView({ data }) {
       };
 
     let title = "Update Department"
-    // const formDataConfig = [
-    //     {
-    //         label: 'Name',
-    //         type: 'text',
-    //         name: 'name',
-    //         value: formData.name,
-    //         onChange: handleInputChange,
-    //     },
-    //     {
-    //         label: 'Start Time',
-    //         type: 'text',
-    //         name: 'startTime',
-    //         value: formData.startTime,
-    //         onChange: handleInputChange,
-    //     },
-    //     {
-    //         label: 'End Time',
-    //         type: 'text',
-    //         name: 'endTime',
-    //         value: formData.endTime,
-    //         onChange: handleInputChange,
-    //     }, 
-    //     {
-    //         label: 'isOverNight',
-    //         type: 'boolean',
-    //         name: 'isOverNight',
-    //         value: formData.isOverNight,
-    //         onChange: handleInputChange,
-    //     }, 
-    //     {
-    //         label: 'Late Buffer',
-    //         type: 'text',
-    //         name: 'lateBuffer',
-    //         value: formData.lateBuffer,
-    //         onChange: handleInputChange,
-    //     }, 
-    //     {
-    //         label: 'Early Buffer',
-    //         type: 'text',
-    //         name: 'earlyBuffer',
-    //         value: formData.earlyBuffer,
-    //         onChange: handleInputChange,
-    //     }, 
-    //     {
-    //         label: 'Punch Buffer Start',
-    //         type: 'text',
-    //         name: 'punchBufferStart',
-    //         value: formData.punchBufferStart,
-    //         onChange: handleInputChange,
-    //     }, 
-    //     {
-    //         label: 'Punch Buffer End',
-    //         type: 'text',
-    //         name: 'punchBufferEnd',
-    //         value: formData.punchBufferEnd,
-    //         onChange: handleInputChange,
-    //     }, 
-    //     {
-    //         label: 'Break Name',
-    //         type: 'text',
-    //         name: 'break["name"]',
-    //         value: formData.break.name,
-    //         onChange: handleInputChange,
-    //     },
-    //     {
-    //         label: 'Break Start Time',
-    //         type: 'text',
-    //         name: 'break["startTime"]',
-    //         value: formData.break.startTime,
-    //         onChange: handleInputChange,
-    //     },
-    //     {
-    //         label: 'Break End Time',
-    //         type: 'text',
-    //         name: 'break["endTime"]',
-    //         value: formData.break.endTime,
-    //         onChange: handleInputChange,
-    //     },
-    //     {
-    //         label: 'Break Inclusive',
-    //         type: 'text',
-    //         name: 'break["inclusive"]',
-    //         value: formData.break.inclusive,
-    //         onChange: handleInputChange,
-    //     }
-    // ]
-
     const btnConfig = [{
         title: 'Update',
         handler: handleUpdateDepartmennt,
@@ -144,7 +57,6 @@ export default function TimeSlotsView({ data }) {
 
 
     const handleAction = (id) => {
-        console.log("=====1=======",id);
         deleteTimeSlotById(id);
     }
 

@@ -51,7 +51,7 @@ export const logout = (dispatcher, navigation) => {
 
 export const getCurrentUser = (dispatcher, setLoaded=null) => {
     const userId = localStorage.getItem("currentUser")
-    axios.get(userRoutes.getUserById + userId)
+    if (userId) axios.get(userRoutes.getUserById + userId)
         .then((user) => {
             dispatcher(setCurrentUser(user.data.user));
             if (user.data.user.skills.length > 0)  dispatcher(setProfileCompletion(10))

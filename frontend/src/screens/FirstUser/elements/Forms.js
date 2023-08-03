@@ -1,9 +1,16 @@
 import React, { useState } from 'react'
 
 import CBForm from '../../Branches/CBForm';
+import Loader from '../../../components/Loader';
 import RestDays from '../../User/elements/RestDays';
+import { createOrganizationFirstUser } from '../../../api/organization';
+import { useNavigate } from 'react-router-dom';
 
 const Forms = ({ page, handlePrevPage, handleNextPage }) => {
+  const navigation = useNavigate()
+  const [file, setFile] = useState(null);
+  const [loader, setLoader] = useState(false)
+  const [previewUrl, setPreviewUrl] = useState('');
   const [formData, setFormData] = React.useState({
     location: {
       type: "Point 2",
@@ -19,6 +26,11 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
     start: Date.now(),
   })
   const [branch, setBranch] = useState({})
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+    setPreviewUrl(URL.createObjectURL(selectedFile));
+  };
   const handleInputChange = ({target: {name, value}}) => {
     setFormData(formData => ({...formData, [name]: value}));
   };
@@ -172,9 +184,9 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
                     stroke="currentColor"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M10 19l-7-7m0 0l7-7m-7 7h18"
                     />
                   </svg>
@@ -222,6 +234,28 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
                         "
             />
             </div>
+
+            <div className="flex flex-col mb-4">
+            <label
+              htmlFor="logo"
+              className="inline-flex mb-2 text-sm text-gray-800"
+            >
+              Please enter your organization's logo
+            </label>
+            <input
+              name="logo"
+              type="file"
+              onChange={handleFileChange}
+              accept=".png, .jpg, .jpeg"
+              required
+              className="w-full px-3 py-2 text-gray-800 border rounded outline-none
+                          bg-gray-50
+                          focus:ring
+                          
+                        "
+            />
+            </div>
+
             <div className="flex flex-col mb-4">
             <label
               htmlFor="address"
@@ -289,7 +323,7 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
             <div className="flex items-center h-5">
               <input onChange={handleInputChange} required id="terms" type="checkbox" value="" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"/>
             </div>
-            <label htmlhtmlFor="terms" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I agree with the <a href="#" className="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a></label>
+            <label htmlFor="terms" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I agree with the <a href="#" className="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a></label>
           </div>
 
           <div className="flex items-center mb-4">
@@ -357,7 +391,9 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
       }
       {
         (page === 4) && (
-          <><CBForm formData={branch} handleInputChange={handleInputChangeBranch}/>
+          <>
+          <CBForm disableFields={loader} formData={branch} handleInputChange={handleInputChangeBranch}/>
+          <div className='w-full'>
           <button
               className="px-6
                           py-2
@@ -366,22 +402,25 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
                           rounded-lg
                           outline-none
                           hover:bg-[#1567D7]
-                          
+                          flex float-right
                         "
               onClick={() => {
+                setLoader(true)
                 let restDays = formData.roaster.restDays;
                 let obj = {...formData}
                 obj['restDays'] = restDays
                 delete obj['roaster']
+                delete obj['c_password']
                 obj.branch = branch
-                console.log(branch)
-                console.log(obj)
-                
+                obj.logo = previewUrl
+                createOrganizationFirstUser(obj, navigation)
               }}
+              
             >
               Create Account
-            
+              {(loader) && <span className='px-3'><Loader color={'white'}/></span>}
             </button>
+            </div>
             </>
         )
       }

@@ -17,13 +17,11 @@ export default function Footer() {
         <div className="flex flex-wrap tablet:space-y-4 max-w-screen-xl justify-between pt-10 mt-5 border-t border-gray-100 px-8 tablet:px-2">
           <div>
             <a href="/">
-              <img src="https://nexius.ai/wp-content/uploads/2023/05/nexius-hghres.webp" alt="N" width="32" height="32" class="w-1/3"/>
+              <img src="https://nexius.ai/wp-content/uploads/2023/05/nexius-hghres.webp" alt="N" width="32" height="32" className="w-1/3"/>
             </a>
           
             <div className="max-w-md mt-4 text-gray-500 dark:text-gray-400">
-              Nextly is a free landing page & marketing website
-              template for startups and indie projects. Its built with
-              Next.js & TailwindCSS. And its completely open-source.
+            NexHR has been thoughtfully designed to cater to all your HR needs, offering a comprehensive solution to streamline your HR processes and boost overall productivity. With its user-friendly interface and powerful features, you can look forward to a hassle-free HR management experience.
             </div>
           </div>
           <div>
@@ -61,7 +59,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="my-10 text-sm text-center text-gray-600 dark:text-gray-400">
+        <div className="mt-10 text-sm text-center text-gray-600 dark:text-gray-400">
           Copyright © {new Date().getFullYear()}
         </div>
       </Container>

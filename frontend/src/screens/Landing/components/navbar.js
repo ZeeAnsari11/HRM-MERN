@@ -78,9 +78,9 @@ const Navbar = () => {
         </div>
 
         <div className="hidden mr-3 space-x-4 lg:flex nav__item">
-          <a href="/" className={`px-6 py-2 text-white bg-[#1567B1] rounded-md md:ml-5`}>
+          <Link to="/welcome" className={`px-6 py-2 text-white bg-[#1567B1] rounded-md md:ml-5`}>
               Get Started
-          </a>
+          </Link>
         </div>
       </nav>
     </div>

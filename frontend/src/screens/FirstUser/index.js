@@ -19,7 +19,7 @@ const FirstUser = () => {
         <div className="flex justify-center items-center tablet:hidden">
             <img src={Image} loading="lazy" alt="banner" className="w-1/2"/>
         </div>
-        <div className="md:w-1/2 flex flex-col items-center justify-center h-96">
+        <div className="md:w-1/2 w-full flex flex-col items-center justify-center h-96">
           <div className="mt-8">
             <h2 className="mb-4 text-2xl font-bold text-center text-gray-800 lg:text-3xl md:mb-6">
               Lets Create Your Account
@@ -29,8 +29,8 @@ const FirstUser = () => {
               Please fill in the details to start your organization
             </p>
           </div>
-          <div className="w-full text-gray-600">
-            <div className="container flex flex-col px-5 tablet: py-4">
+          <div className="text-gray-600 w-full">
+            <div className="container flex flex-col px-5 tablet:py-4 tablet:w-full">
               <div className="flex flex-wrap tablet:mx-0 mx-auto">
                 <div className={`flex items-center justify-center w-1/3 py-3 font-medium leading-none tracking-wider ${page === 1 ? 'text-blue-400 bg-gray-100 border-[#1567B1]' : ''} ${page > 1 ? 'text-green-500 border-green-500' : ''} rounded-t border-b-2 sm:px-6 sm:w-auto sm:justify-start title-font`}>
                   STEP 1
