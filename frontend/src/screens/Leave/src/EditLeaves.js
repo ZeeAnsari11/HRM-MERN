@@ -20,16 +20,17 @@ const EditLeaves = ({ id }) => {
 
     const dispatch = useDispatch();
     useEffect(() => {
+        console.log(data);
         for (let i = 0; i < data.length; i++) {
             if (data[i]._id === id) {
                 const { startDate, endDate, reason, leaveType } = data[i];
                 if (data[i].short) {
                     const { startTime, endTime , shortLeaveType, short} = data[i];
-                    setLeave({ startDate, endDate, reason, user, leaveType: leaveType._id, short, startTime, shortLeaveType, endTime });
+                    setLeave({ startDate, endDate, reason, leaveType: leaveType._id, short, startTime, shortLeaveType, endTime });
                     setShort(short)
                 }
                 else {
-                    setLeave({ startDate, endDate, reason, user, leaveType: leaveType._id });
+                    setLeave({ startDate, endDate, reason , leaveType: leaveType?._id });
                 }
                 break;
             }

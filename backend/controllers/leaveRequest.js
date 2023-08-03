@@ -1,11 +1,12 @@
+import { deleteById, getById, handleCatch, updateById } from '../utils/common.js'
+
 import { LeaveRequestModel } from "../models/leaveRequestSchema.js";
 import { LeaveTypeModel } from "../models/leaveTypeSchema.js";
-import { UserModel } from "../models/userSchema.js"
-import { ShortLeaveTypeModel } from "../models/shortLeaveTypeSchema.js";
-import { creatingRequest } from "../utils/request.js";
-import { handleCatch, updateById, deleteById, getById } from '../utils/common.js'
-import mongoose from "mongoose";
 import { RequestFlowModel } from "../models/requestFlowSchema.js";
+import { ShortLeaveTypeModel } from "../models/shortLeaveTypeSchema.js";
+import { UserModel } from "../models/userSchema.js"
+import { creatingRequest } from "../utils/request.js";
+import mongoose from "mongoose";
 
 const placeHolder = '0001-01-01T';
 
@@ -101,13 +102,13 @@ const userShortLeaveHours = (req, shrtLeaveType, user, update = null) => {
 
 const userLeaveCountReduction = (req, user, count, session) => {
     // console.log("==============L2===count====", count);
-// console.log("=============x==========",session);
+    // console.log("=============x==========",session);
     user.leaveTypeDetails.forEach(leaveType => {
         if (leaveType.leaveType.toString() == req.body.leaveType) {
             leaveType.count = leaveType.count - count
         }
     })
-    user.save({session : session});
+    user.save({ session: session });
 }
 
 const formatTime = (time) => {
@@ -131,8 +132,10 @@ const fullLeaveRequest = (req, res, next, user, availableLeaves) => {
                 userLeaveCountReduction(req, user, req.body.count, session);
                 creatingLeaveRequest(req, res, next, user, session);
             })
-            .catch(err=>{session.endSession()
-            handleCatch(err, res, 400, next)})
+                .catch(err => {
+                    session.endSession()
+                    handleCatch(err, res, 400, next)
+                })
         }
         else throw new Error('Invalid Leave Number of Days.')
     } catch (error) {
@@ -192,83 +195,139 @@ const creatingLeaveRequest = (req, res, next, user, session) => {
         .catch((err) => handleCatch(err, res, 400, next));
 }
 
+// export const updateLeaveRequestee = (req, res, next) => {
+//     try {
+//         console.log("=====req body=======", req.body);
+//         if (req.body.organization || !req.body.leaveType || !req.body.user || req.body.availableLeaves || req.body.count || req.body.createdAt || !req.body.startDate) throw new Error('Invalid Body.')
+//         LeaveTypeModel.findById(req.body.leaveType)
+//             .then((leaveType) => {
+//                 console.log("Leave", leaveType);
+//                 if (!leaveType) throw new Error(`No such leave type ${req.body.leaveType}`)
+//                 LeaveRequestModel.find({ user: req.body.user, leave: leaveType._id })
+//                     .then((userLeaveRequests) => {
+//                         console.log("----------3");
+//                         if (!userLeaveRequests) throw new Error(`No such Leave Request`)
+//                         UserModel.findById(req.body.user)
+//                             .then((user) => {
+//                                 if (!user) throw new Error(`No such user ${req.body.user}`)
+//                                 console.log("----------4", userLeaveRequests);
+//                                 userLeaveRequests.forEach(userLeaveRequest => {
+//                                     console.log("----------5");
+//                                     if (userLeaveRequest._id.toString() == req.params.id.toString()) {
+//                                         if (req.body.short == undefined) {
+//                                             console.log("----------6");
+//                                             req.body.short = userLeaveRequest.short
+//                                         }
+
+//                                         if (userLeaveRequest.short !== req.body.short) {
+
+//                                             req.body.organization = userLeaveRequest.organization
+//                                             if (userLeaveRequest.short == true && req.body.short == false) {
+//                                                 console.log("====2====");
+
+//                                                 updateLeaveRequestFromShortToFull(req, res, next, user, userLeaveRequest)
+//                                             }
+//                                             else if (userLeaveRequest.short == false && req.body.short == true) {
+
+//                                                 updateLeaveRequestFromFullToShort(req, res, next, user, userLeaveRequest)
+//                                             }
+//                                         }
+//                                         else if (userLeaveRequest.short == true && req.body.short == true) {
+
+//                                             if (userLeaveRequest.leaveType !== req.body.leaveType || new Date(userLeaveRequest.startDate) !== new Date(req.body.startDate) || userLeaveRequest.shortleaveDetails.shortLeaveType.toString() !== req.body.userLeaveRequest.shortleaveDetails.shortLeaveType || userLeaveRequest.shortleaveDetails.startTime !== req.body.shortleaveDetails.startTime) {
+//                                                 req.body.organization = userLeaveRequest.organization
+//                                                 updateLeaveRequestFromShortToShort(req, res, next, user, userLeaveRequest)
+//                                             } else {
+//                                                 updateById(req, res, next, LeaveRequestModel, 'LeaveRequest')
+//                                             }
+//                                         }
+//                                         else if (userLeaveRequest.short == false && req.body.short == false) {
+
+//                                             if (userLeaveRequest.leaveType.toString() !== req.body.leaveType.toString() ||
+//                                                 new Date(userLeaveRequest.startDate).toString() !== new Date(req.body.startDate).toString() ||
+//                                                 new Date(userLeaveRequest.endDate).toString() !== new Date(req.body.endDate).toString()) {
+//                                                 req.body.organization = userLeaveRequest.organization
+//                                                 updateLeaveRequestFromFullToFull(req, res, next, user, userLeaveRequest)
+//                                             } else {
+//                                                 updateById(req, res, next, LeaveRequestModel, 'LeaveRequest')
+//                                             }
+//                                         }
+//                                         else {
+
+//                                             updateById(req, res, next, LeaveRequestModel, 'LeaveRequest')
+//                                         }
+//                                     }
+//                                 })
+//                             })
+//                             .catch((error) => {
+//                                 handleCatch(error, res, 401, next)
+//                             })
+//                     })
+//                     .catch((error) => {
+//                         handleCatch(error, res, 400, next)
+//                     })
+//             })
+//             .catch((error) => {
+//                 handleCatch(error, res, 404, next);
+//             });
+//     } catch (error) {
+//         handleCatch(error, res, 400, next)
+//     }
+// }
+
 export const updateLeaveRequest = (req, res, next) => {
     try {
-        console.log("=====req body=======", req.body);
-        if (req.body.organization || !req.body.leaveType || !req.body.user || req.body.availableLeaves || req.body.count || req.body.createdAt || !req.body.startDate) throw new Error('Invalid Body.')
-        LeaveTypeModel.findById(req.body.leaveType)
-            .then((leaveType) => {
-                console.log("Leave",leaveType);
-                if (!leaveType) throw new Error(`No such leave type ${req.body.leaveType}`)
-                LeaveRequestModel.find({ user: req.body.user, leave: leaveType._id })
-                    .then((userLeaveRequests) => {
-                        console.log("----------3");
-                        if (!userLeaveRequests) throw new Error(`No such Leave Request`)
-                        UserModel.findById(req.body.user)
-                            .then((user) => {
-                                if (!user) throw new Error(`No such user ${req.body.user}`)
-                                console.log("----------4",userLeaveRequests);
-                                userLeaveRequests.forEach(userLeaveRequest => {
-                                    console.log("----------5");
-                                    if (userLeaveRequest._id.toString() == req.params.id.toString()) {
-                                        if (req.body.short == undefined) {
-                                            console.log("----------6");
-                                            req.body.short = userLeaveRequest.short
-                                        }
-                                        
-                                        if (userLeaveRequest.short !== req.body.short) {
-                                            
-                                            req.body.organization = userLeaveRequest.organization
-                                            if (userLeaveRequest.short == true && req.body.short == false) {
-                                            console.log("====2====");
-
-                                                updateLeaveRequestFromShortToFull(req, res, next, user, userLeaveRequest)
-                                            }
-                                            else if (userLeaveRequest.short == false && req.body.short == true) {
-                                                
-                                                updateLeaveRequestFromFullToShort(req, res, next, user, userLeaveRequest)
-                                            }
-                                        }
-                                        else if (userLeaveRequest.short == true && req.body.short == true) {
-                                            
-                                            if (userLeaveRequest.leaveType !== req.body.leaveType || new Date(userLeaveRequest.startDate) !== new Date(req.body.startDate) || userLeaveRequest.shortleaveDetails.shortLeaveType.toString() !== req.body.userLeaveRequest.shortleaveDetails.shortLeaveType || userLeaveRequest.shortleaveDetails.startTime !== req.body.shortleaveDetails.startTime) {
-                                                req.body.organization = userLeaveRequest.organization
-                                                updateLeaveRequestFromShortToShort(req, res, next, user, userLeaveRequest)
-                                            } else {
-                                                updateById(req, res, next, LeaveRequestModel, 'LeaveRequest')
-                                            }
-                                        }
-                                        else if (userLeaveRequest.short == false && req.body.short == false) {
-                                           
-                                            if (userLeaveRequest.leaveType.toString() !== req.body.leaveType.toString() || 
-                                            new Date(userLeaveRequest.startDate).toString() !== new Date(req.body.startDate).toString() ||
-                                             new Date(userLeaveRequest.endDate).toString() !== new Date(req.body.endDate).toString()) {
-                                                req.body.organization = userLeaveRequest.organization
-                                                updateLeaveRequestFromFullToFull(req, res, next, user, userLeaveRequest)
-                                            } else {
-                                                updateById(req, res, next, LeaveRequestModel, 'LeaveRequest')
-                                            }
-                                        }
-                                        else {
-                        
-                                            updateById(req, res, next, LeaveRequestModel, 'LeaveRequest')
-                                        }
-                                    }
-                                })
-                            })
-                            .catch((error) => {
-                                handleCatch(error, res, 401, next)
-                            })
+        if (req.body.organization || req.body.availableLeaves || req.body.count || req.body.createdAt) throw new Error('Invalid Body.')
+        LeaveRequestModel.findById(req.params.id)
+            .then((userLeaveRequest) => {
+                if (!userLeaveRequest) throw new Error('User Leave Request not found')
+                if (userLeaveRequest.status !== "pending") throw new Error("The request is approved or in pending state")
+                UserModel.findById(userLeaveRequest.user)
+                    .then((user) => {
+                        if (!user) throw new Error(`No such user ${req.body.user}`)
+                        if (req.body.short) {
+                            if (userLeaveRequest.short !== req.body.short) {
+                                if (userLeaveRequest.short == true && req.body.short == false) {
+                                    updateLeaveRequestFromShortToFull(req, res, next, user, userLeaveRequest)
+                                }
+                                else if (userLeaveRequest.short == false && req.body.short == true) {
+                                    updateLeaveRequestFromFullToShort(req, res, next, user, userLeaveRequest)
+                                }
+                            }
+                        }
+                        else if (userLeaveRequest.short == true && req.body.short == true) {
+                            if (userLeaveRequest.leaveType !== userLeaveRequest.leaveType || new Date(userLeaveRequest.startDate) !== new Date(req.body.startDate) || userLeaveRequest.shortleaveDetails.shortLeaveType.toString() !== req.body.userLeaveRequest.shortleaveDetails.shortLeaveType || userLeaveRequest.shortleaveDetails.startTime !== req.body.shortleaveDetails.startTime) {
+                                req.body.organization = userLeaveRequest.organization
+                                updateLeaveRequestFromShortToShort(req, res, next, user, userLeaveRequest)
+                            } else {
+                                updateById(req, res, next, LeaveRequestModel, 'LeaveRequest')
+                            }
+                        }
+                        else if (userLeaveRequest.short == false && req.body.short == false) {
+                            
+                            if (userLeaveRequest.leaveType.toString() !== req.body.leaveType.toString() ||
+                                new Date(userLeaveRequest.startDate).toString() !== new Date(req.body.startDate).toString() ||
+                                new Date(userLeaveRequest.endDate).toString() !== new Date(req.body.endDate).toString()) {
+                                req.body.organization = userLeaveRequest.organization
+                                updateLeaveRequestFromFullToFull(req, res, next, user, userLeaveRequest)
+                            } else {
+                                updateById(req, res, next, LeaveRequestModel, 'LeaveRequest')
+                            }
+                        }
+                        else {
+                            updateById(req, res, next, LeaveRequestModel, 'LeaveRequest')
+                        }
                     })
                     .catch((error) => {
                         handleCatch(error, res, 400, next)
                     })
             })
             .catch((error) => {
-                handleCatch(error, res, 404, next);
-            });
-    } catch (error) {
-        handleCatch(error, res, 400, next)
+                handleCatch(error, res, 400, next)
+            })
+    }
+    catch (err) {
+        handleCatch(err, res, 400, next)
     }
 }
 

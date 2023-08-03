@@ -16,7 +16,8 @@ const permissions = mongoose.Schema({
       },
     key: {
         type: String,
-        required: [true, "Enter the key of the route"]
+        required: [true, "Enter the key of the route"],
+        default : "admin"
     },
     createdAt: {
         type: Date,

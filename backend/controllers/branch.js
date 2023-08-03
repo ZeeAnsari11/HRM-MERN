@@ -1,7 +1,7 @@
+import { deleteById as DeleteByID, createNew, getAll, getById, handleCatch, updateById } from "../utils/common.js"
+
 import { BranchModel } from "../models/branchSchema.js"
 import { OrganizationModel } from "../models/organizationSchema.js"
-import { createNew, getById, deleteById as DeleteByID, getAll, updateById, handleCatch } from "../utils/common.js"
-
 
 export const createBranch = (req, res, next) => {
     try {

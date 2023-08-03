@@ -17,7 +17,7 @@ export const loginAuth = (dispatcher, body, navigation, toast, setLoading) => {
             localStorage.setItem('currentUser', auth.data.user._id);
             localStorage.setItem('organization', auth.data.user.organization);
             localStorage.setItem('authToken', auth.data.token);
-            getCurrentUser(auth.data.user._id, dispatcher);
+            getCurrentUser(dispatcher, null);
             navigation('/dashboard/home');
         })
         .catch((error) => {
@@ -65,8 +65,10 @@ export const getCurrentUser = (dispatcher, setLoaded=null) => {
                 dispatcher(setIsAdmin(true));
             }
         })
-        .catch((error) => {
-            console.log(error);
+        .catch(() => {
+            dispatcher(setCurrentUser({}))
+            localStorage.removeItem('currentUser')
+            localStorage.removeItem('authToken')
         })
 }
 
@@ -102,8 +104,7 @@ export const createUser = (data) => {
 export const getAllUsersByOrganization = (organizationId, dispatcher) => {
     axios.get(getAllUsers.byOrganization + organizationId)
         .then((response) => {
-            console.log(response.data.users);
-            dispatcher(setAllUsers(response.data.users));
+            dispatcher(setAllUsers(response.data.users.filter((user) => { if (user.firstUser === false) return user })));
         }).catch((error) => {
             console.log(error)
         })

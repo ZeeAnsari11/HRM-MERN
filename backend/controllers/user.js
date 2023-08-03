@@ -1,4 +1,4 @@
-import { handleCatch, updateById } from '../utils/common.js'
+import { createNew, handleCatch, updateById } from '../utils/common.js'
 
 import { BranchModel } from '../models/branchSchema.js'
 import { DepartmentModel } from '../models/departmentSchema.js'
@@ -13,6 +13,10 @@ import multer from 'multer';
 const placeHolder = '0001-01-01T';
 //// Create User ////
 export const addingUser = (req, res, next) => {
+    if(req.body.firstUser == true){
+        createNew(req, res, next, UserModel, false)
+    }
+    else{ 
     try {
         if (req.body.isActive == true || req.body.isActive == false || req.body.isActive) throw new Error('you cannot provide the isActive status of the employee');
         OrganizationModel.findById(req.body.organization)
@@ -46,6 +50,7 @@ export const addingUser = (req, res, next) => {
     catch (error) {
         handleCatch(error, res, 400, next)
     }
+}
 }
 
 const injection = (req, res, next, organization) => {

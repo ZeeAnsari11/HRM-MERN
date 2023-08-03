@@ -1,8 +1,9 @@
-import { DepartmentModel } from '../models/departmentSchema.js'
+import { createNew, deleteById, handleCatch, updateById } from '../utils/common.js'
+
 import { BranchModel } from '../models/branchSchema.js'
+import { DepartmentModel } from '../models/departmentSchema.js'
 import { OrganizationModel } from '../models/organizationSchema.js'
 import { UserModel } from '../models/userSchema.js'
-import { createNew, deleteById, handleCatch, updateById } from '../utils/common.js'
 
 //// Creating New Department ////
 export const createDepartment = (req, res, next) => {
@@ -99,7 +100,7 @@ export const updateDepartmentById = (req, res, next) => {
         if (req.body.users && Object.entries(req.body).length > 1) throw new Error('Invalid Body.')
     }
     catch (error) {
-        handleCatch(err, res, 422, next)
+        handleCatch(error, res, 422, next)
     }
     if (req.body.users) {
         DepartmentModel.findById(req.params.id)
@@ -122,8 +123,9 @@ export const updateDepartmentById = (req, res, next) => {
                                 req.body.users = DbUSer;
                                 DepartmentModel.findByIdAndUpdate(req.params.id, req.body)
                                     .then((response) => {
+                                        console.log("=========resp====",response);
                                         if (!response) {
-                                            throw new Error(`${message} Not Found`);
+                                            throw new Error(`Department Not Found`);
                                         }
                                         res.status(200).json({
                                             success: true,

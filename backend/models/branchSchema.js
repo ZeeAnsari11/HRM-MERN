@@ -33,7 +33,6 @@ const branchSchema = new mongoose.Schema({
         },
         coordinates: {
             type: Array,
-            required: [true, 'Please Enter the Longititude and latitude of the Organization']
         }
     },
     organization: {

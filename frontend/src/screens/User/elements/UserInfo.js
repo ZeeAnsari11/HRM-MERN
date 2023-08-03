@@ -54,7 +54,7 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
                 <div className="md:col-span-2">
                     <label htmlFor="full_name">Grades</label>
                     <div className="flex space-x-2">
-                        <select name='grade' value={formData.grade} onChange={handleInputChange} className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" required>
+                        <select name='grade' value={formData.grade} onChange={handleInputChange} className="h-10 border mt-1 rounded px-4 w-full bg-gray-50">
                             <option value={''}>Select Grade</option>
                             {
                                 grades.map((grade) => {

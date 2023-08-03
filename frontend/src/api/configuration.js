@@ -154,6 +154,12 @@ export const branchRoute = {
     deleteBranchById : baseUrl +'/branch/'
 }
 
+export const employeementTypeRoute = {
+    createEmployeementType : baseUrl+'/employmentType/new',
+    updateEmployeementType :baseUrl + '/employmentType/',
+    deleteEmployeementType : baseUrl +'/employmentType/'
+}
+
 export const leaveTypeRoute = {
     updateLeaveTypeById :baseUrl + '/leaveType/',
     createLeaveType : baseUrl +'/leaveType/new'

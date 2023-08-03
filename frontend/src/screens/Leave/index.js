@@ -59,7 +59,8 @@ function Leave() {
   }, [])
 
   const data = apiData.map(obj => ({
-    leaveType: obj.leaveType.shortName,
+    _id : obj._id,
+    leaveType: obj.leaveType?.shortName,
     startDate: obj.startDate.substring(0, 10), endDate: obj.endDate.substring(0, 10),
     createdAt: obj.createdAt.substring(0, 10), count: obj.count,
     status: obj.status, id: obj._id,

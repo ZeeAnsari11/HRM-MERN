@@ -32,7 +32,7 @@ export default function DepartmentsView({ data }) {
             onChange: handleInputChange,
         },
         {
-            label: 'Branch Name',
+            label: <>Branch Name <span className='text-red-600 text-xs font-bold'>(Branch is not editable)</span></>,
             type: 'text',
             name: 'branch',
             value: data.branch

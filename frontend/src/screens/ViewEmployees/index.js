@@ -7,9 +7,6 @@ import { getAllUsersByOrganization } from '../../api/user'
 import { useEffect } from 'react'
 import { useMemo } from 'react'
 
-// new
-
-
 function ViewEmployees() {
 
   const columns = useMemo(() => [
@@ -36,7 +33,7 @@ function ViewEmployees() {
     {
       Header: "Role",
       accessor: 'role',
-      Filter: SelectColumnFilter,  // new
+      Filter: SelectColumnFilter,
       filter: 'includes',
     },
   ], [])
@@ -51,7 +48,7 @@ function ViewEmployees() {
 
   const data = apiData.map(obj => ({
     name: obj.firstName + " " + obj.lastName, email: obj.email,
-    designation: obj.designation.title, salary: obj.grossSalary, 
+    designation: obj.designation?.title, salary: obj.grossSalary, 
     active: obj.status, role: obj.roleType, status: ""
   }));
 

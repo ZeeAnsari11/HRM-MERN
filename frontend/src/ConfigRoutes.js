@@ -5,6 +5,7 @@ import Attendence from "./screens/Attendence";
 import Branches from "./screens/Branches";
 import Departments from "./screens/Departments";
 import Desiginations from "./screens/Desiginations";
+import EmployeementType from "./screens/EmployeementType";
 import Leave from "./screens/Leave";
 import LeavePolicy from "./screens/LeavePolicy";
 import LeaveRequest from "./screens/LeaveRequest";
@@ -29,39 +30,41 @@ import WorkFromHomeRequest from "./screens/WorkFromHomeRequest";
 
 export const privateRoutes = () => {
     return <>
-      <Route path="/dashboard/employee" element={<User />} />
-      <Route path="/dashboard/view-employees" element={<ViewEmployees />} />
-      <Route path="/dashboard/add-asset" element={<Asset />} />
-      <Route path="/dashboard/asset-type" element={<AssetTypes />} />
-      <Route path="/dashboard/desiginations" element={<Desiginations />} />
-      <Route path="/dashboard/departments" element={<Departments />} />
-      <Route path="/dashboard/branches" element={<Branches />} />
-      <Route path="/dashboard/timeSlots" element={<TimeSlots />} />
-      <Route path="/dashboard/allowances" element={<Allowances />} />
-      <Route path="/dashboard/loan-type" element={<LoanType />} />
-      <Route path="/dashboard/payslips" element={<Payslips />} />
-      <Route path="/dashboard/manage-assets" element={<ManageAssets />} />
-      <Route path="/dashboard/leave-type" element={<LeaveType />} />
+      <Route path="employee" element={<User />} />
+      <Route path="view-employees" element={<ViewEmployees />} />
+      <Route path="add-asset" element={<Asset />} />
+      <Route path="asset-type" element={<AssetTypes />} />
+      <Route path="desiginations" element={<Desiginations />} />
+      <Route path="departments" element={<Departments />} />
+      <Route path="branches" element={<Branches />} />
+      <Route path="timeSlots" element={<TimeSlots />} />
+      <Route path="allowances" element={<Allowances />} />
+      <Route path="loan-type" element={<LoanType />} />
+      <Route path="payslips" element={<Payslips />} />
+      <Route path="manage-assets" element={<ManageAssets />} />
+      <Route path="leave-type" element={<LeaveType />} />
+      <Route path="employeement-type" element={<EmployeementType/>} />
+
 
     </>
   }
   
 export const publicRoutes = () => {
     return <>
-        <Route path="/dashboard/home" element={<Skeleton />} />
-        <Route path="/dashboard/probation" element={<Probation />} />
-        <Route path="/dashboard/roaster" element={<Roaster />} />
-        {/* <Route path="/dashboard/chart" element={<ChartPage />}/> */}
-        <Route path="/dashboard/loan" element={<Loan />} />
-        <Route path="/dashboard/leaverequest" element={<LeaveRequest />} />
-        <Route path="/dashboard/leaves" element={<Leave />} />
-        <Route path="/dashboard/policy" element={<LeavePolicy />} />
-        <Route path="/dashboard/timesheet" element={<TimeSheet />} />
-        <Route path="/dashboard/attendence-request" element={<Attendence />} />
-        <Route path="/dashboard/attendence" element={<ViewAttendenceRequests />} />
-        <Route path="/dashboard/wfh" element={<WorkFromHomeRequest />} />
-        <Route path="/dashboard/view-wfh" element={< ViewWorkFromHome />} />
-        <Route path="/dashboard/profile" element={<UserProfile />} />
-        <Route path="/dashboard/settings" element={<Settings />} />
+        <Route path="home" element={<Skeleton />} />
+        <Route path="probation" element={<Probation />} />
+        <Route path="roaster" element={<Roaster />} />
+        {/* <Route path="chart" element={<ChartPage />}/> */}
+        <Route path="loan" element={<Loan />} />
+        <Route path="leaverequest" element={<LeaveRequest />} />
+        <Route path="leaves" element={<Leave />} />
+        <Route path="policy" element={<LeavePolicy />} />
+        <Route path="timesheet" element={<TimeSheet />} />
+        <Route path="attendence-request" element={<Attendence />} />
+        <Route path="attendence" element={<ViewAttendenceRequests />} />
+        <Route path="wfh" element={<WorkFromHomeRequest />} />
+        <Route path="view-wfh" element={< ViewWorkFromHome />} />
+        <Route path="profile" element={<UserProfile />} />
+        <Route path="settings" element={<Settings />} />
     </>
 }

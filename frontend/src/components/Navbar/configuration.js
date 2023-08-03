@@ -1,7 +1,7 @@
 import { faCalendarCheck, faCalendarDay, faCalendarDays, faCalendarPlus, faCalendarTimes, faCalendarWeek, faCediSign, faChartArea, faCircleDollarToSlot, faCodePullRequest, faCoffee, faFileAlt, faGear, faHome, faNetworkWired, faTimeline, faUser, faUserCircle, faUserClock, faUsers } from '@fortawesome/free-solid-svg-icons'
 
 export const Menus = [
-    { title: "Dashboard", access: "Admin", font:faHome, gap: true, child:[], to: "/dashboard/home"},
+    { title: "Dashboard", font:faHome, gap: true, child:[], to: "/dashboard/home"},
     {
         title: "Self Services",
         font: faUser,
@@ -28,6 +28,8 @@ export const Menus = [
     { title: "Departments", access:"Admin",font: faCalendarCheck, child:[], to:"/dashboard/departments"  },
     { title: "Branches", access:"Admin",font: faCalendarCheck, child:[], to:"/dashboard/branches"  },
     { title: "TimeSlots", access:"Admin",font: faCalendarCheck, child:[], to:"/dashboard/timeSlots"  },
+    { title: "EmployeementType",access:"Admin", font: faCalendarCheck, child:[], to:"/dashboard/employeement-type"  },
+
 
     {
         title: "Employee", 
