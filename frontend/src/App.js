@@ -7,6 +7,7 @@ import Dashboard from "./screens/Dashboard";
 import Error from "./screens/Error/404";
 import FirstUser from "./screens/FirstUser";
 import ForgotPassword from "./screens/ForgotPassword";
+import Landing from "./screens/Landing";
 import Login from "./screens/Login"
 import ResetPassword from "./screens/ResetPassword";
 import { getCurrentUser } from "./api/user";
@@ -23,7 +24,8 @@ function App() {
     
   return (
     <Routes>
-      <Route path="/" element={<Login/>} />
+      <Route path="/" element={<Landing />} />
+      <Route path="/login" element={<Login/>} />
       <Route path="/welcome" element={<FirstUser />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />

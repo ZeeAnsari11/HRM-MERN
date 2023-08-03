@@ -32,14 +32,17 @@ const FirstUser = () => {
           <div className="w-full text-gray-600">
             <div className="container flex flex-col px-5 tablet: py-4">
               <div className="flex flex-wrap tablet:mx-0 mx-auto">
-                <div className={`flex items-center justify-center w-1/3 py-3 font-medium leading-none tracking-wider ${page === 1 ? 'text-indigo-500 bg-gray-100 border-indigo-500' : ''} ${page > 1 ? 'text-green-500 border-green-500' : ''} rounded-t border-b-2 sm:px-6 sm:w-auto sm:justify-start title-font`}>
+                <div className={`flex items-center justify-center w-1/3 py-3 font-medium leading-none tracking-wider ${page === 1 ? 'text-blue-400 bg-gray-100 border-[#1567B1]' : ''} ${page > 1 ? 'text-green-500 border-green-500' : ''} rounded-t border-b-2 sm:px-6 sm:w-auto sm:justify-start title-font`}>
                   STEP 1
                 </div>
-                <div className={`inline-flex items-center justify-center w-1/3 py-3 font-medium leading-none tracking-wider ${page === 2 ? 'text-indigo-500 bg-gray-100 border-indigo-500' : ''} ${page > 2 ? 'text-green-500 border-green-500' : ''} border-b-2 border-gray-200 sm:px-6 sm:w-auto sm:justify-start title-font hover:text-gray-900`}>
+                <div className={`inline-flex items-center justify-center w-1/3 py-3 font-medium leading-none tracking-wider ${page === 2 ? 'text-blue-400 bg-gray-100 border-[#1567B1]' : ''} ${page > 2 ? 'text-green-500 border-green-500' : ''} border-b-2 border-gray-200 sm:px-6 sm:w-auto sm:justify-start title-font hover:text-gray-900`}>
                   STEP 2
                 </div>
-                <div className={`inline-flex items-center justify-center w-1/3 py-3 font-medium leading-none tracking-wider ${page === 3 ? 'text-indigo-500 bg-gray-100 border-indigo-500' : ''} border-b-2 border-gray-200 sm:px-6 sm:w-auto sm:justify-start title-font hover:text-gray-900`}>
+                <div className={`inline-flex items-center justify-center w-1/3 py-3 font-medium leading-none tracking-wider ${page === 3 ? 'text-blue-400 bg-gray-100 border-[#1567B1]' : ''} ${page > 3 ? 'text-green-500 border-green-500' : ''} border-b-2 border-gray-200 sm:px-6 sm:w-auto sm:justify-start title-font hover:text-gray-900`}>
                   STEP 3
+                </div>
+                <div className={`inline-flex items-center justify-center w-1/3 py-3 font-medium leading-none tracking-wider ${page === 4 ? 'text-blue-400 bg-gray-100 border-[#1567B1]' : ''} border-b-2 border-gray-200 sm:px-6 sm:w-auto sm:justify-start title-font hover:text-gray-900`}>
+                  STEP 4
                 </div>
               </div>
               <div className="flex flex-col tablet:w-fill text-center">
