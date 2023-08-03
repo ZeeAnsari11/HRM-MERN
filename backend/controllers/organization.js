@@ -1,5 +1,6 @@
 import { deleteById, getAll, getById, handleCatch, updateById } from '../utils/common.js';
 
+import { BranchModel } from '../models/branchSchema.js';
 import { OrganizationModel } from '../models/organizationSchema.js';
 import { PermissionsModel } from '../models/permissions.js';
 import { addingUser } from './user.js';
@@ -21,9 +22,13 @@ export const createOrganization = (req, res, next) => {
                 .then((org) => {
                     createPermissionsObjects(org[0]._id, res, next, session)
                     req.body.organization = org[0]._id
+                    req.body.branch.organization = org[0]._id
                     req.body.roleType = 'admin'
                     delete req.body.timeZone
-                    addingUser(req, res, next) 
+                    // addingUser(req, res, next) 
+                    let request = { body: req.body.branch };
+
+                    createBranchWithFirstUser(request, res, next, req)
                 })
                 .catch((err) => {
                     session.endSession();
@@ -44,7 +49,6 @@ export const getOrganizationById = (req, res, next) => {
     let id = req.params.id;
     getById(id, res, next, OrganizationModel)
 }
-
 
 export const deleteOrganizationById = (req, res, next) => {
     let id = req.params.id;
@@ -98,3 +102,15 @@ const createPermissionsObjects = (organizationId, res, next, session) => {
 };
 
 
+const createBranchWithFirstUser = (req, res, next, actualReq) => {
+
+    req.body.unique_id = req.body.organization + req.body.name?.replace(/\s/g, "").toLowerCase()
+    BranchModel.create(req.body)
+        .then((branch) => {
+            delete actualReq.body.branch;
+            actualReq.body.branch = branch._id
+            actualReq.body.isLineManager = true
+            addingUser(actualReq, res, next)
+        })
+        .catch((err) => { handleCatch(err, res, 500, next) })
+}

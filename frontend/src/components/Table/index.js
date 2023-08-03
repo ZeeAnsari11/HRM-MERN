@@ -3,10 +3,9 @@ import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon, ChevronLeftIcon, Chevron
 import { SortDownIcon, SortIcon, SortUpIcon } from './shared/Icons'
 import { useAsyncDebounce, useFilters, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
+import User from '../../assets/default-avatar.png'
 import { classNames } from './shared/Utils'
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -103,7 +102,7 @@ export function AvatarCell({ value, column, row }) {
   return (
     <div className="flex items-center">
       <div className="flex-shrink-0 h-10 w-10">
-        <img className="h-10 w-10 rounded-full" src={row.original[column.imgAccessor]} alt="" />
+        <img className="h-10 w-10 rounded-full" src={row.original[column.imgAccessor] ? row.original[column.imgAccessor] : User} alt="" />
       </div>
       <div className="ml-4">
         <div className="text-sm font-medium text-gray-900">{value}</div>

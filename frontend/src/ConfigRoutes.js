@@ -5,6 +5,7 @@ import Attendence from "./screens/Attendence";
 import Branches from "./screens/Branches";
 import Departments from "./screens/Departments";
 import Desiginations from "./screens/Desiginations";
+import EmployeementType from "./screens/EmployeementType";
 import Leave from "./screens/Leave";
 import LeavePolicy from "./screens/LeavePolicy";
 import LeaveRequest from "./screens/LeaveRequest";
@@ -42,6 +43,8 @@ export const privateRoutes = () => {
       <Route path="payslips" element={<Payslips />} />
       <Route path="manage-assets" element={<ManageAssets />} />
       <Route path="leave-type" element={<LeaveType />} />
+      <Route path="employeement-type" element={<EmployeementType/>} />
+
 
     </>
   }

@@ -14,7 +14,6 @@ const placeHolder = '0001-01-01T';
 //// Create User ////
 export const addingUser = (req, res, next) => {
     if(req.body.firstUser == true){
-        console.log("============1===========",req.body);
         createNew(req, res, next, UserModel, false)
     }
     else{ 
@@ -22,7 +21,6 @@ export const addingUser = (req, res, next) => {
         if (req.body.isActive == true || req.body.isActive == false || req.body.isActive) throw new Error('you cannot provide the isActive status of the employee');
         OrganizationModel.findById(req.body.organization)
             .then((organization) => {
-                console.log("=======2===========");
                 if (!organization) throw new Error("organization dont exist")
                 BranchModel.findById(req.body.branch)
                     .then((branch) => {

@@ -18,7 +18,7 @@ function App() {
   const dispatcher = useDispatch();
   
   React.useEffect(() => {
-    getCurrentUser(dispatcher);
+    getCurrentUser(dispatcher, null);
   }, [isAdmin])
     
   return (

@@ -28,6 +28,8 @@ export const Menus = [
     { title: "Departments", access:"Admin",font: faCalendarCheck, child:[], to:"/dashboard/departments"  },
     { title: "Branches", access:"Admin",font: faCalendarCheck, child:[], to:"/dashboard/branches"  },
     { title: "TimeSlots", access:"Admin",font: faCalendarCheck, child:[], to:"/dashboard/timeSlots"  },
+    { title: "EmployeementType",access:"Admin", font: faCalendarCheck, child:[], to:"/dashboard/employeement-type"  },
+
 
     {
         title: "Employee", 

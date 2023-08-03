@@ -33,9 +33,10 @@ const userSchema = mongoose.Schema({
     grade: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Grade',
-        required: function () {
-            return !this.firstUser; // Set unique to false when firstUser is true
-        },
+        // TODO: Need Improvement
+        // required: function () {
+        //     return !this.firstUser; // Set unique to false when firstUser is true
+        // },
     },
     phoneNumber: {
         type: String,
