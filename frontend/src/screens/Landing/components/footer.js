@@ -14,15 +14,12 @@ export default function Footer() {
   return (
     <div className="relative">
       <Container>
-        <div className="grid max-w-screen-xl grid-cols-1 gap-10 pt-10 mx-auto mt-5 border-t border-gray-100 dark:border-trueGray-700 lg:grid-cols-5 px-8 tablet:px-2">
-          <div className="lg:col-span-2">
-            <div>
-              {" "}
-              <a href="/">
-                <img src="https://nexius.ai/wp-content/uploads/2023/05/nexius-hghres.webp" alt="N" width="32" height="32" class="w-1/3"/>
-                </a>
-            </div>
-
+        <div className="flex flex-wrap tablet:space-y-4 max-w-screen-xl justify-between pt-10 mt-5 border-t border-gray-100 px-8 tablet:px-2">
+          <div>
+            <a href="/">
+              <img src="https://nexius.ai/wp-content/uploads/2023/05/nexius-hghres.webp" alt="N" width="32" height="32" class="w-1/3"/>
+            </a>
+          
             <div className="max-w-md mt-4 text-gray-500 dark:text-gray-400">
               Nextly is a free landing page & marketing website
               template for startups and indie projects. Its built with
@@ -30,8 +27,6 @@ export default function Footer() {
             </div>
           </div>
           <div>
-          </div>
-          <div className="">
             <div>Follow us</div>
             <div className="flex mt-5 space-x-5 text-gray-400 dark:text-gray-500">
               <a

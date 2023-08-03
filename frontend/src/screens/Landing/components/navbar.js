@@ -1,7 +1,7 @@
 import { Disclosure } from "@headlessui/react";
 import { Link } from "react-router-dom";
 
-const Navbar = ({themeColor}) => {
+const Navbar = () => {
   const navigation = [
     "Features",
     "Services",
@@ -29,7 +29,7 @@ const Navbar = ({themeColor}) => {
 
                 <Disclosure.Button
                   aria-label="Toggle Menu"
-                  className={`px-2 ml-auto text-gray-500 rounded-md lg:hidden hover:text-[${themeColor}] focus:text-[${themeColor}] focus:outline-none`}>
+                  className={`px-2 ml-auto text-gray-500 rounded-md lg:hidden hover:text-[#1567B1] focus:text-[#1567B1] focus:outline-none`}>
                   <svg
                     className="w-6 h-6 fill-current"
                     xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +53,7 @@ const Navbar = ({themeColor}) => {
                 <Disclosure.Panel className="flex flex-wrap w-full my-5 lg:hidden">
                   <>
                     {navigation.map((item, index) => (
-                      <a key={index} href="/" className={`w-full px-4 py-2 -ml-4 text-gray-500 rounded-md hover:text- focus:text-[${themeColor}] focus:bg-indigo-100 focus:outline-none`}>
+                      <a key={index} href="/" className={`w-full px-4 py-2 -ml-4 text-gray-500 rounded-md hover:text- focus:text-[#1567B1] focus:bg-indigo-100 focus:outline-none`}>
                           {item}
                       </a>
                     ))}
@@ -69,7 +69,7 @@ const Navbar = ({themeColor}) => {
           <ul className="items-center justify-end flex-1 pt-6 list-none lg:pt-0 lg:flex">
             {navigation.map((menu, index) => (
               <li className="mr-3 nav__item" key={index}>
-                <a href="/" className={`inline-block px-4 py-2 text-lg font-normal text-gray-800 no-underline rounded-md hover:text-[${themeColor}] focus:text-[${themeColor}] focus:bg-indigo-100 focus:outline-none`}>
+                <a href="/" className={`inline-block px-4 py-2 text-lg font-normal text-gray-800 no-underline rounded-md hover:text-[#1567B1] focus:text-[#1567B1] focus:bg-indigo-100 focus:outline-none`}>
                     {menu}
                 </a>
               </li>
@@ -78,7 +78,7 @@ const Navbar = ({themeColor}) => {
         </div>
 
         <div className="hidden mr-3 space-x-4 lg:flex nav__item">
-          <a href="/" className={`px-6 py-2 text-white bg-[${themeColor}] rounded-md md:ml-5`}>
+          <a href="/" className={`px-6 py-2 text-white bg-[#1567B1] rounded-md md:ml-5`}>
               Get Started
           </a>
         </div>

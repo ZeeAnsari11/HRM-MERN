@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
-const Faq = ({themeColor}) => {
+const Faq = () => {
   return (
     <Container className="!p-0">
       <div className="w-full max-w-2xl p-2 mx-auto rounded-2xl">
@@ -18,7 +18,7 @@ const Faq = ({themeColor}) => {
                     <FontAwesomeIcon icon={faChevronDown}
                       className={`${
                         open ? "transform rotate-180" : ""
-                      } w-5 h-5 text-[${themeColor}]`}
+                      } w-5 h-5 text-[#1567B1]`}
                     />
                   </Disclosure.Button>
                   <Disclosure.Panel className="px-4 pt-4 pb-2 text-gray-500">

@@ -1,11 +1,11 @@
 import Container from "./container";
 
-const Hero = ({themeColor}) => {
+const Hero = () => {
   return (
     <div className="px-8 tablet:px-2 pt-32">
       <Container className="flex flex-wrap h-full">
         <div className="flex items-center w-full lg:w-1/2">
-          <div className="max-w-2xl mb-8 space-y-4">
+          <div className="max-w-2xl mb-8 space-y-4 tablet:text-center">
             <h1 className="text-4xl font-bold leading-snug text-gray-700 lg:text-4xl lg:leading-tight xl:text-6xl xl:leading-tight">
             Unlock the Power of Nex-HR
             </h1>
@@ -14,12 +14,12 @@ const Hero = ({themeColor}) => {
 If you are here to automate your HR operations, Get a free trial & consultation that will save you time, money & boost your company's productivity 100% Guaranteed.
             </p>
 
-            <div className="flex flex-col items-start space-y-3 sm:space-x-4 sm:space-y-0 sm:items-center sm:flex-row">
+            <div className="flex flex-col items-start tablet:items-center space-y-3 sm:space-x-4 sm:space-y-0 sm:items-center sm:flex-row">
               <a
                 href="https://web3templates.com/templates/nextly-landing-page-template-for-startups"
                 target="_blank"
                 rel="noopener"
-                className={`px-8 py-4 text-lg font-medium text-center text-white bg-[${themeColor}] rounded-md`}>
+                className={`px-8 py-4 text-lg font-medium text-center text-white bg-[#1567B1] rounded-md`}>
                 Start a free trial
               </a>
             </div>

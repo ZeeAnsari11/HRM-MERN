@@ -12,18 +12,17 @@ import Testimonials from "./components/testimonials";
 const Landing = () => {
   return (
     <div className="scroll-smooth">
-        <div className="h-screen">
-            <Navbar themeColor={"#1567B1"}/>
-            <Hero themeColor={"#1567B1"}/>
+        <div className="h-screen tablet:h-full">
+            <Navbar />
+            <Hero />
         </div>
       <SectionTitle
-        themeColor={"#1567B1"}
         pretitle="Nexhr Benefits"
         title="Why should you use this NexHR ">
         NexHR is a system that automates complete HR operations support Integrations & guarantee speed without complexities If you are here to automate your HR operations.
       </SectionTitle>
-      <Benefits data={benefitOne} themeColor={"#1567B1"}/>
-      <Benefits imgPos="right" data={benefitTwo} themeColor={"#1567B1"}/>
+      <Benefits data={benefitOne} />
+      <Benefits imgPos="right" data={benefitTwo} />
       <SectionTitle
         pretitle="Testimonials"
         title="Here's what our customers said">
@@ -35,8 +34,8 @@ const Landing = () => {
         Answer your customers possible questions here, it will increase the
         conversion rate as well as support or chat requests.
       </SectionTitle>
-      <Faq themeColor={"#1567B1"}/>
-      <Cta themeColor={"#1567B1"}/>
+      <Faq />
+      <Cta />
       <Footer />
     </div>
   );
