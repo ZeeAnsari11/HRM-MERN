@@ -1,10 +1,10 @@
-import React from 'react'
 import Image from './Image'
+import React from 'react'
 
 const Mantainance = () => {
     return (
         <div className="w-full h-screen flex flex-col items-center justify-between">
-            <div className="xl:w-1/2 flex-1 flex flex-col items-center justify-center text-center px-4 lg:px-0">
+            <div className="xl:w-1/2 flex-1 flex flex-col items-center justify-center text-center px-4">
                 <Image />
                 <p className="text-4xl font-bold text-gray-700 capitalize tracking-wide mt-8">
                     Website under maintenance!

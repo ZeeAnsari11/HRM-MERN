@@ -18,7 +18,7 @@ const Dashboard = () => {
     useEffect(() => {
         getCurrentUser(dispatcher, setLoaded);
         if (!localStorage.getItem('authToken')) {
-            navigation('/');
+            navigation('/login');
         }
     }, [])
 
