@@ -306,10 +306,10 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
               Please enter your organization's description
             </label>
             <input
-              name="prefix"
+              name="description"
               type="text"
-              value={formData.userCode['prefix']}
-              onChange={(e) => setFormData({... formData, userCode:{prefix: e.target.value} })}
+              value={formData.description}
+              onChange={(e) => setFormData({... formData, description: e.target.value} )}
               required
               className="w-full px-3 py-2 text-gray-800 border rounded outline-none
                           bg-gray-50
@@ -413,6 +413,7 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
                 delete obj['c_password']
                 obj.branch = branch
                 obj.logo = previewUrl
+                obj.firstUser = true
                 createOrganizationFirstUser(obj, navigation)
               }}
               

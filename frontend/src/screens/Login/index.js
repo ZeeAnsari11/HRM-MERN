@@ -13,7 +13,7 @@ const Login = () => {
         }
     })
     return (<div className="relative flex h-full">
-        <div className="w-screen flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0 bg-white">
+        <div className="w-screen h-screen flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0 bg-white">
             <Content/>
             <LoginForm/>
         </div>
