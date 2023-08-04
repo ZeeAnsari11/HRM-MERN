@@ -18,6 +18,8 @@ const LeaveType = () => {
     shortName: '',
     organization: orgId,
     accumulativeCount: '',
+    shortLeave: false,
+    attachmentRequired: false
   });
 
   useEffect(() => {
@@ -32,17 +34,25 @@ const LeaveType = () => {
     getLeaveTypeByOrgId(orgId, setLeaveType)
   }
 
+  // const handleInputChange = (e) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  // };
+
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    setFormData({ ...formData, [name]: newValue });
   };
 
-const handleCreateLeaveType = (trigger) => {
+  const handleCreateLeaveType = (trigger) => {
     createLeaveType(formData, changeToggler, trigger);
     setFormData({
       name: '',
       shortName: '',
       organization: orgId,
       accumulativeCount: '',
+      shortLeave: false,
+      attachmentRequired: false
     });
   };
 
@@ -60,19 +70,25 @@ const handleCreateLeaveType = (trigger) => {
       accessor: 'accumulativeCount',
     },
     {
+      Header: 'Short Leave',
+      accessor: 'shortLeave',
+    },
+    {
       Header: 'Action',
       accessor: 'action',
       Cell: ({ row }) => (
-        <LeaveTypeView data={row.original}/>
+        <LeaveTypeView data={row.original} />
       )
     },
   ];
-
+console.log("==data",leaveType);
   const data = leaveType.map(obj => ({
     id: obj._id,
-    name : obj.name,
+    name: obj.name,
     shortName: obj.shortName,
     accumulativeCount: obj.accumulativeCount,
+    shortLeave: obj.shortLeave ? "Yes" : "No",
+    attachmentRequired : obj.attachmentRequired
   }));
 
   const btnConfig = [
@@ -81,9 +97,9 @@ const handleCreateLeaveType = (trigger) => {
       handler: handleCreateLeaveType,
     }
   ]
-  
+
   return (
-    <div className='my-4'>
+    <form className='my-4'>
       <Modal
         action="Create Leave Type"
         title="Create Leave Type"
@@ -95,7 +111,7 @@ const handleCreateLeaveType = (trigger) => {
           <Table columns={columns} data={data} />
         </main>
       </div>
-    </div>
+    </form>
   );
 };
 
