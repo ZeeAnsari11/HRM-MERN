@@ -1,8 +1,8 @@
 import { UserModel } from "../models/userSchema.js";
-import { sendToken } from "../utils/jwtToken.js";
-import { sendEmail } from "../utils/emailManager.js";
 import crypto from "crypto";
 import { handleCatch } from "../utils/common.js";
+import { sendEmail } from "../utils/emailManager.js";
+import { sendToken } from "../utils/jwtToken.js";
 
 export const login = (req, res, next) => {
     try {
@@ -64,7 +64,8 @@ export const forgotPassword = (req, res, next) => {
             const resetToken = user.getResetPasswordToken(user);
             user.save({ validateBeforeSave: false })
                 .then(() => {
-                    const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/password/reset/${resetToken}`;
+                    //const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/password/reset/${resetToken}`;
+                    const resetUrl = `http://127.0.0.1:3001/reset-password/${resetToken}`
                     const resetPswdEmail = `Trouble signing in? Resetting your password is easy. Just click on the link below and follow the instructions. Link[${resetUrl}] We'll have you up and running in no time. If you did not make this request then please ignore this email.`;
                     try {
                         sendEmail({
@@ -79,9 +80,12 @@ export const forgotPassword = (req, res, next) => {
                             .then(() => {
                                 handleCatch(error, res, 500, next)
                             })
+                            .catch((err) => { handleCatch(err, res, err.statusCode || 400, next) })
+
                     }
                 })
         })
+        .catch((err) => { handleCatch(err, res, err.statusCode || 400, next) })
 }
 
 export const resetPassword = (req, res, next) => {

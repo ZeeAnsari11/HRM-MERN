@@ -1,10 +1,28 @@
+import { ToastContainer, toast } from 'react-toastify';
+
+import Loader from '../../components/Loader';
 import React from 'react'
+import axios from 'axios';
+import { toastMessage } from '../../AlertConfigs';
 import { useNavigate } from 'react-router-dom'
 
 const ForgotPassword = () => {
+    const [email, setEmail] = React.useState('');
+    const [loader, setLoader] = React.useState(false);
     const navigation = useNavigate();
+    const submitForgotPasswordRequest = () => {
+        setLoader(true)
+        axios.post('http://127.0.0.1:4000/api/v1/password/forgot', {email})
+        .then((response) => {
+            toastMessage("success", response.data.message, toast)
+        })
+        .catch(() => {
+            toastMessage("error", "Something went wrong! Try again later.", toast)
+        })
+    }
     return (
         <div className="flex justify-center items-center w-screen h-screen px-4 mobile:px-8 bg-lightBgColor">
+            <ToastContainer/>
             <div className="w-1/2 mobile:w-full tablet:w-3/4 p-5 pt-8 rounded-lg bg-white shadow-lg">
                 <div className="px-8 tablet:px-2 mb-4 text-center">
                     <h3 className="pt-4 mb-2 text-2xl mobile:text-xl font-bold">Forgot Your Password?</h3>
@@ -22,15 +40,18 @@ const ForgotPassword = () => {
                             className="w-full p-3 text-sm leading-tight text-gray-700 border rounded-md shadow appearance-none focus:outline-none focus:shadow-outline"
                             id="email"
                             type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             placeholder="Enter Email Address..."
                         />
                     </div>
                     <div className="mb-6 text-center">
                         <button
+                            onClick={submitForgotPasswordRequest}
                             className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700 focus:outline-none focus:shadow-outline"
                             type="button"
                         >
-                            Reset Password
+                            Reset Password {(loader) && <span className='h-full'><Loader color={'white'}/></span>}
                         </button>
                     </div>
                     <hr className="mb-6 border-t" />
