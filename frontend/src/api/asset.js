@@ -1,8 +1,9 @@
-import axios from "axios";
+import { allAssets, asset, assetManagment, assetType, getAsset } from "./configuration";
 import { setAllAssets, setAllocation, setAssetHistory, setAssetTypes } from "../states/reducers/slices/backend/Assets";
-import { asset, assetManagment, assetType, allAssets, getAsset } from "./configuration";
-import { toastMessage } from "../AlertConfigs";
+
+import axios from "axios";
 import { toast } from "react-toastify";
+import { toastMessage } from "../AlertConfigs";
 
 export const saveAssetFormData = (formData) => {
     axios.post(asset.setAsset, formData)
@@ -19,8 +20,8 @@ export const getAssetTypesByOrganizationId = (organizationId, dispatcher) => {
     .then((response) => {
        dispatcher(setAssetTypes(response.data.response))
     })
-    .catch(() => {
-        toastMessage("error", "Fetching asset types failed!", toast);
+    .catch((e) => {
+        console.log(e)
     })
 }
 
@@ -29,8 +30,8 @@ export const getAssetByOrganizationId = (organizationId, dispatcher) => {
     .then((response) => {
        dispatcher(setAllAssets(response.data.response))
     })
-    .catch(() => {
-        toastMessage("error", "Fetching assets failed!", toast);
+    .catch((e) => {
+        console.log(e)
     })
 }
 
