@@ -171,7 +171,7 @@ const Asset = () => {
           >
             <option value="">Select Asset Type</option>
             {assetType.map((type) => {
-              return <option value={type._id}>{type.type}</option>
+              return <option key={type._id} value={type._id}>{type.type}</option>
             })}
           </select>
         </div>

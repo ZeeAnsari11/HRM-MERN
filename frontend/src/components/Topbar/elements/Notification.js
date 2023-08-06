@@ -1,19 +1,27 @@
-import React from 'react'
-import Logo from '../../../assets/default-avatar.png';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectMenuOpen, setTogglers } from '../../../states/reducers/slices/frontend/Navbar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { selectMenuOpen, setTogglers } from '../../../states/reducers/slices/frontend/Navbar';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Logo from '../../../assets/default-avatar.png';
+import React from 'react'
 
 const Notification = ({ styled }) => {
     const key = 'notification';
     const dispatcher = useDispatch();
     let isMenuOpen = useSelector(selectMenuOpen);
     return (
-        <div className={styled.iconsContainer} onClick={() => dispatcher(setTogglers(key))}>
+        <div className={styled.iconsContainer} onClick={() => {
+            if (!isMenuOpen[key]) 
+                dispatcher(setTogglers(key))
+            }}>
             <FontAwesomeIcon className={styled.textColor} icon={faBell}/>
             <div style={{ maxWidth: (isMenuOpen[key]) ? '400px' : '0' }} className="overflow-hidden cursor-default duration-300 fixed z-50 right-0 top-0 h-screen bg-lightBgColor divide-y divide-gray-100 rounded-lg shadow-lg">
-                <div className='p-4 w-full'><FontAwesomeIcon className='cursor-pointer' onClick={() => dispatcher(setTogglers(key))} icon={faXmark}/></div>
+                <FontAwesomeIcon className='cursor-pointer p-4' 
+                    onClick={() => { 
+                        if (isMenuOpen[key]) 
+                            dispatcher(setTogglers(key))
+                    }} icon={faXmark}/>
                 <div className="divide-y divide-gray-100">
                     <div className="flex px-4 py-3 hover:bg-gray-100 cursor-pointer">
                         <div className="flex-shrink-0">

@@ -1,10 +1,11 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
 import { selectMenuOpen, setTogglers } from '../../../states/reducers/slices/frontend/Navbar';
+import { useDispatch, useSelector } from 'react-redux';
+
 import Logo from '../../../assets/default-avatar.png';
+import React from 'react'
 import { logout } from '../../../api/user';
-import { useNavigate } from 'react-router-dom';
 import { selectCurrentUser } from '../../../states/reducers/slices/backend/UserSlice';
+import { useNavigate } from 'react-router-dom';
 
 const User = () => {
     const key = 'user';
