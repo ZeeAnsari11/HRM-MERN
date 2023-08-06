@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { useSelector } from 'react-redux';
-import { selectCurrentUser } from "../../states/reducers/slices/backend/UserSlice";
+import { commonStyles } from "../../styles/common";
 import { saveFormDataForMissingPunches } from "../../api/missingPunchesRequests";
+import { selectCurrentUser } from "../../states/reducers/slices/backend/UserSlice";
+import { useSelector } from 'react-redux';
+import { useState } from "react";
 
 export default function Attendence() {
   let user = useSelector(selectCurrentUser)
@@ -22,13 +23,13 @@ export default function Attendence() {
   };
 
   return (
-    <div className="flex items-center justify-center h-[80vh] mobile:h-screen">
+    <div className="flex items-center justify-center py-4 mobile:h-screen">
       <div className="w-full mx-auto px-4">
         <h1 className="text-2xl font-bold mb-4">Missing Punch Request</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="punchType" className="block mb-1">
-              Punch Type:
+              Punch Type
             </label>
             <select
               id="punchType"
@@ -45,7 +46,7 @@ export default function Attendence() {
           </div>
           <div>
             <label htmlFor="date" className="block mb-1">
-              Date:
+              Date
             </label>
             <input
               type="date"
@@ -59,7 +60,7 @@ export default function Attendence() {
           </div>
           <div>
             <label htmlFor="expectedTime" className="block mb-1">
-              Expected Time:
+              Expected Time
             </label>
             <input
               type="time"
@@ -74,9 +75,9 @@ export default function Attendence() {
           <div>
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+              className={commonStyles.btnDark}
             >
-              Submit
+              Submit Request
             </button>
           </div>
         </form>

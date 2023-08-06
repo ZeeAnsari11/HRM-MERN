@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import axios from 'axios';
+import { commonStyles } from '../../styles/common';
 import { createDesigination } from '../../api/designation';
 import { organizationRoutes } from '../../api/configuration';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
@@ -91,7 +92,7 @@ const Desiginations = () => {
     ], [])
 
     const data = desiginations.map(obj => ({
-        id : obj._id,
+        id: obj._id,
         title: obj.title,
         shortForm: obj.shortForm.toUpperCase()
     }));
@@ -104,22 +105,19 @@ const Desiginations = () => {
     ]
 
     return (
-        <div>
-            <Modal
-                action="Create Designation"
-                title="Create Designation"
-                Element={<CDForm formData={formData} handleInputChange={handleInputChange} />}
-                btnConfig={btnConfig}
-            />
-            <div className="bg-gray-100 text-gray-900">
-                <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-                    <div className="mt-6">
-                        <Table columns={columns} data={data} />
-                    </div>
-                </main>
+        <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+            <div className="mt-6">
+                <Table columns={columns} data={data} element={
+                    <Modal
+                        action="Create Designation"
+                        title="Create Designation"
+                        btnStyle={commonStyles.btnDark}
+                        Element={<CDForm formData={formData} handleInputChange={handleInputChange} />}
+                        btnConfig={btnConfig}
+                    />
+                } />
             </div>
-
-        </div>
+        </main>
     );
 };
 

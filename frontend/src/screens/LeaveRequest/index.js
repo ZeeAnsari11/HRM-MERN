@@ -6,6 +6,7 @@ import { selectOrgId, selectUID, selectUserLeaveTypes } from "../../states/reduc
 import { useDispatch, useSelector } from "react-redux";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { commonStyles } from "../../styles/common";
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import { useDropzone } from "react-dropzone";
 
@@ -71,7 +72,6 @@ const LeaveRequest = () => {
   const handleStartTime = (e) => {
     const time = e.target.value
     setStartTime(time);
-    // const startDateObj = parseISO(time);
     const endDateObj = addHours(new Date('2020-10-10T' + time), 4);
     let concater = '';
     if (endDateObj.getHours() < 10) concater = '0';
@@ -100,19 +100,18 @@ const LeaveRequest = () => {
       organization,
       reason
     };
-    // // setFormData(newFormData);
     saveFormData(newFormData)
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-      <h2 className="text-lg font-medium mb-4 ">Create Leave Request</h2>
+    <form onSubmit={handleSubmit} className="p-4">
+      <h2 className="text-xl  mb-4 ">Create Leave Request</h2>
       <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2 pl-1" htmlFor="leave-type">
+        <label className="block text-gray-700 mb-2" htmlFor="leave-type">
           Leave Type
         </label>
         <select
-          className="shadow appearance-none border border-backgroundDark rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+          className={commonStyles.input}
           id="leave-type"
           value={leaveType}
           onChange={(e) => setLeaveType(e.target.value)}
@@ -128,9 +127,9 @@ const LeaveRequest = () => {
         </select>
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2 pl-1 pr-4 py-2" htmlFor="short">
+        <label className="block text-gray-700  mb-2 pr-4 py-2" htmlFor="short">
           <input
-            className="mr-2 border border-backgroundDark leading-tight"
+            className={commonStyles.input}
             type="checkbox"
             id="short"
             checked={short}
@@ -140,12 +139,12 @@ const LeaveRequest = () => {
         </label>
       </div>
       {short && (
-        <div className="mb-4 " >
-          <label className="block text-gray-700 font-bold mb-2 pl-1" htmlFor="short-leave-type">
+        <div className="mb-4">
+          <label className="block text-gray-700  mb-2 " htmlFor="short-leave-type">
             Short Leave Type
           </label>
           <select
-            className="shadow appearance-none border-backgroundDark border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+            className={commonStyles.input}
             id="short-leave-type"
             value={shortLeaveType}
             onChange={(e) => setShortLeaveType(e.target.value)}
@@ -163,11 +162,11 @@ const LeaveRequest = () => {
 
       {short && (
         <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2 pl-1" htmlFor="start-time">
+          <label className="block text-gray-700  mb-2 " htmlFor="start-time">
             Start Time
           </label>
           <input
-            className="shadow appearance-none border border-backgroundDark rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+            className={commonStyles.input}
             id="start-time"
             type="time"
             value={startTime}
@@ -179,11 +178,11 @@ const LeaveRequest = () => {
 
       {short && (
         <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2 pl-1" htmlFor="end-time">
+          <label className="block text-gray-700  mb-2 " htmlFor="end-time">
             End Time
           </label>
           <input
-            className="shadow appearance-none border border-backgroundDark rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+            className={commonStyles.input}
             id="end-time"
             value={endTime}
             type="time"
@@ -194,11 +193,11 @@ const LeaveRequest = () => {
       )}
 
       <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2 pl-1" htmlFor="available-leaves">
+        <label className="block text-gray-700  mb-2 " htmlFor="available-leaves">
           Available Leaves
         </label>
         <input
-          className="shadow appearance-none border border-backgroundDark rounded w-full py-2 px-3 text-gray-700 leading-tight bg-gray-100"
+          className={commonStyles.input}
           id="available-leaves"
           type="text"
           value={availableLeaves}
@@ -206,11 +205,11 @@ const LeaveRequest = () => {
         />
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2 pl-1" htmlFor="start-date">
+        <label className="block text-gray-700  mb-2 " htmlFor="start-date">
           Start Date
         </label>
         <input
-          className="shadow appearance-none border border-backgroundDark rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+          className={commonStyles.input}
           id="start-date"
           type="date"
           value={startDate}
@@ -219,11 +218,11 @@ const LeaveRequest = () => {
         />
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2 pl-1" htmlFor="end-date">
+        <label className="block text-gray-700  mb-2 " htmlFor="end-date">
           End Date
         </label>
         <input
-          className="shadow appearance-none border border-backgroundDark rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+          className={commonStyles.input}
           id="end-date"
           type="date"
           value={endDate}
@@ -232,11 +231,11 @@ const LeaveRequest = () => {
         />
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2 pl-1" htmlFor="count">
+        <label className="block text-gray-700  mb-2 " htmlFor="count">
           Count
         </label>
         <input
-          className="shadow appearance-none border border-backgroundDark rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+          className={commonStyles.input}
           id="count"
           type="number"
           value={count}
@@ -244,7 +243,7 @@ const LeaveRequest = () => {
         />
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2 pl-1 " htmlFor="attachment">
+        <label className="block text-gray-700  mb-2  " htmlFor="attachment">
           Attachment
         </label>
         <div {...getRootProps()} className="border border-dashed p-4 border-backgroundDark ">
@@ -261,11 +260,11 @@ const LeaveRequest = () => {
 
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2 pl-1" htmlFor="reason">
+        <label className="block text-gray-700 mb-2" htmlFor="reason">
           Reason
         </label>
         <textarea
-          className="shadow appearance-none border border-backgroundDark rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+          className={commonStyles.input}
           id="reason"
           rows="4"
           value={reason}
@@ -275,7 +274,7 @@ const LeaveRequest = () => {
       </div>
       <div className="flex items-center justify-between">
         <button
-          className="bg-backgroundDark hover:bg-white hover:text-backgroundDark border border-backgroundDark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className={commonStyles.btnDark}
           type="submit"
         >
           Submit

@@ -6,6 +6,7 @@ import ATForm from './ATForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
+import { commonStyles } from '../../styles/common';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
 
@@ -110,15 +111,15 @@ const AssetTypes = () => {
   
   return (
     <div className='my-4'>
-      <Modal
-        action="Create Asset Type"
-        title="Create Asset Type"
-        Element={<ATForm formData={formData} handleInputChange={handleInputChange} />}
-        btnConfig={btnConfig}
-      />
-      <div className="bg-gray-100 text-gray-900 py-4 px-8">
-       <Table data={data} columns={columns}/> 
-      </div>
+       <Table data={data} columns={columns} element={
+          <Modal
+            action="Create Asset Type"
+            title="Create Asset Type"
+            Element={<ATForm formData={formData} handleInputChange={handleInputChange} />}
+            btnConfig={btnConfig}
+            btnStyle={commonStyles.btnDark}
+          />
+       }/> 
     </div>
   );
 };

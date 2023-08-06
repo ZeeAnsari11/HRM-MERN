@@ -4,6 +4,7 @@ import BranchesView from './BranchesView';
 import CBForm from './CBForm';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
+import { commonStyles } from '../../styles/common';
 import { createBranch } from '../../api/branches';
 import { getBranchesByOrgId } from '../../api/branches';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
@@ -70,7 +71,7 @@ const Branches = () => {
       Header: 'Action',
       accessor: 'action',
       Cell: ({ row }) => (
-        <BranchesView data={row.original}/>
+        <BranchesView data={row.original} />
       ),
     },
   ];
@@ -91,19 +92,18 @@ const Branches = () => {
   ]
 
   return (
-    <div className='my-4'>
-      <Modal
-        action="Create Branch"
-        title="Create Branch"
-        Element={<CBForm formData={formData} handleInputChange={handleInputChange} />}
-        btnConfig={btnConfig}
-      />
-      <div className="bg-gray-100 text-gray-900">
-        <main className="mx-auto px-4 sm:px-6 pt-4">
-          <Table columns={columns} data={data} />
-        </main>
-      </div>
-    </div>
+    <main className="mx-auto px-4 sm:px-6 pt-4">
+      <Table columns={columns} data={data}
+        element={
+          <Modal
+            action="Create Branch"
+            title="Create Branch"
+            btnStyle={commonStyles.btnDark}
+            Element={<CBForm formData={formData} handleInputChange={handleInputChange} />}
+            btnConfig={btnConfig}
+          />
+        } />
+    </main>
   );
 };
 

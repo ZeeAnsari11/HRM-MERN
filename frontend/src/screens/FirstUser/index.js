@@ -26,7 +26,9 @@ const FirstUser = () => {
             </h2>
 
             <p className="max-w-screen-md mx-auto text-center text-gray-500 md:text-lg">
-              Please fill in the details to start your organization
+              {page < 3 && "Please fill in the details to start your organization"}
+              {page === 3 && "Please fill in the organization details"}
+              {page === 4 && "Please fill in the organization's branch details"}
             </p>
           </div>
           <div className="text-gray-600 w-full">

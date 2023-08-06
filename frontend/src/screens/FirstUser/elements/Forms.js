@@ -210,7 +210,7 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
         </form>)
       }
       {
-        (page === 3) && (<form className="mx-auto" onSubmit={(e) => {
+        (page === 3) && (<form className="mx-auto max-h-[400px] overflow-auto" onSubmit={(e) => {
           e.preventDefault()
           handleNextPage()
         }}>

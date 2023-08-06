@@ -5,6 +5,7 @@ import EmployeementTypeForm from './EmployeementTypeForm';
 import EmployeementTypeView from './EmployeementTypeView';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
+import { commonStyles } from '../../styles/common';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
 
@@ -69,19 +70,18 @@ console.log("=======employmentTypes====",employmentTypes);
   ]
 
   return (
-    <div className='my-4'>
-      <Modal
-        action="Create Employeement Type"
-        title="Create Employeement Type"
-        Element={<EmployeementTypeForm formData={formData} handleInputChange={handleInputChange} />}
-        btnConfig={btnConfig}
-      />
-      <div className="bg-gray-100 text-gray-900">
         <main className="mx-auto px-4 sm:px-6 pt-4">
-          <Table columns={columns} data={data} />
+          <Table columns={columns} data={data} 
+            element={      
+              <Modal
+                action="Create Employment Type"
+                title="Create Employment Type"
+                btnStyle={commonStyles.btnDark}
+                Element={<EmployeementTypeForm formData={formData} handleInputChange={handleInputChange} />}
+                btnConfig={btnConfig}
+              />}
+          />
         </main>
-      </div>
-    </div>
   );
 };
 

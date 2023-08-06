@@ -3,7 +3,7 @@ import { Fragment, useState } from 'react'
 
 import Loader from '../Loader'
 
-export default function Modal({ action, title, Element, btnConfig, onClose=null }) {
+export default function Modal({ action, title, Element, btnConfig, onClose=null, btnStyle }) {
 
   let [isOpen, setIsOpen] = useState(false);
   let [isLoader, setIsLoader] = useState(false);
@@ -28,7 +28,7 @@ export default function Modal({ action, title, Element, btnConfig, onClose=null 
         title={title}
         type="button"
         onClick={openModal}
-        className="rounded-md bg-gray-300 px-4 py-2 text-sm font-medium text-white hover:bg-lightText hover:text-primaryColorLight"
+        className={btnStyle}
       >
         {action}
       </button>

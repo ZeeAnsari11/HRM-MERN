@@ -1,10 +1,11 @@
-import { faEnvelope, faMailBulk, faPhoneSquare, faPencil } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
-import Modal from '../../../components/Modal'
+import { faEnvelope, faMailBulk, faPencil, faPhoneSquare } from '@fortawesome/free-solid-svg-icons'
+
 import CUForm from './common/CUForm'
-import { updateUserById } from '../../../api/user'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Modal from '../../../components/Modal'
+import React from 'react'
 import { selectUID } from '../../../states/reducers/slices/backend/UserSlice'
+import { updateUserById } from '../../../api/user'
 import { useSelector } from 'react-redux'
 
 const ContactInfo = ({ data }) => {
@@ -48,7 +49,7 @@ const ContactInfo = ({ data }) => {
     }]
     return (
         <>
-        <div className="flex justify-between items-center border-l-8 border-backgroundDark font-bold text-lg tablet:pr-6">
+        <div className="flex justify-between items-center border-l-8 border-backgroundDark font-bold text-lg tablet:pr-6 pr-4">
                 <h1 className="px-4 text-2xl mobile:text-xl">{title}</h1>
                 <Modal
                     action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}

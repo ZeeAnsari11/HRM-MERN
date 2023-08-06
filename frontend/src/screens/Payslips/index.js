@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Table, { StatusPill } from './src/Table';
+import Table, { StatusPill } from '../../components/Table';
 import { selectPayslips, selectUID } from '../../states/reducers/slices/backend/UserSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -69,13 +69,9 @@ function Payslips() {
   ], []);
 
   return (
-    <div className="bg-gray-100 text-gray-900">
-      <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <div className="mt-6">
-          <Table columns={columns} data={data} />
-        </div>
+      <main className="mx-auto px-4 sm:px-6 lg:px-8 mt-6 pt-4">
+        <Table columns={columns} data={data} />
       </main>
-    </div>
   );
 }
 

@@ -3,8 +3,8 @@ import Success from './Success'
 
 const Multistep = ({ index, setIndex }) => {
     return (
-        <ol className="flex text-gray-500">
-            <li className="mb-10 ml-6">
+        <ol className="flex flex-wrap space-x-4 pb-6 text-gray-500">
+            <li className="flex justify-center items-center flex-col">
                 <span onClick={() => setIndex(1)} className={` flex items-center justify-center w-8 h-8 ${(index > 1) ? 'bg-green-200 text-green-500' : null} bg-gray-100 rounded-full -left-4 ring-4 ring-white`}>
                     {
                         (index === 1) ? <svg
@@ -23,9 +23,8 @@ const Multistep = ({ index, setIndex }) => {
                     }
                 </span>
                 <h3 className="font-bold leading-tight">Personal Info</h3>
-                <p className="text-sm">Step details here</p>
             </li>
-            <li className="mb-10 ml-6">
+            <li className="flex justify-center items-center flex-col">
                 <span
                     onClick={() => setIndex(index >= 2 ? 2 : index)}
                     className={`flex items-center justify-center w-8 h-8 ${index > 2 ? 'bg-green-200 text-green-500' : null
@@ -50,10 +49,9 @@ const Multistep = ({ index, setIndex }) => {
                     )}
                 </span>
                 <h3 className="font-bold leading-tight">User Info</h3>
-                <p className="text-sm">Step details here</p>
             </li>
 
-            <li className="mb-10 ml-6">
+            <li className="flex justify-center items-center flex-col">
                 <span onClick={() => setIndex(index >= 3 ? 3 : index)} className={` flex items-center justify-center w-8 h-8 ${(index > 3) ? 'bg-green-200 text-green-500' : null} bg-gray-100 rounded-full -left-4 ring-4 ring-white`}>
                     {
                         (index <= 3) ?
@@ -73,9 +71,8 @@ const Multistep = ({ index, setIndex }) => {
                     }
                 </span>
                 <h3 className="font-bold leading-tight">Organization Info</h3>
-                <p className="text-sm">Step details here</p>
             </li>
-            <li className="mb-10 ml-6">
+            <li className="flex justify-center items-center flex-col">
                 <span onClick={() => setIndex(index >= 4 ? 4 : index)} className={` flex items-center justify-center w-8 h-8 ${(index > 3) ? 'bg-green-200 text-green-500' : null} bg-gray-100 rounded-full -left-4 ring-4 ring-white`}>
                     {
                         (index <= 3) ? <svg
@@ -95,9 +92,8 @@ const Multistep = ({ index, setIndex }) => {
                     }
                 </span>
                 <h3 className="font-medium leading-tight">Confirguration</h3>
-                <p className="text-sm">Step details here</p>
             </li>
-            <li className="ml-6">
+            <li className="flex justify-center items-center flex-col">
                 <span className=" flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -left-4 ring-4 ring-white">
                     <svg
                         aria-hidden="true"
@@ -115,7 +111,6 @@ const Multistep = ({ index, setIndex }) => {
                     </svg>
                 </span>
                 <h3 className="font-medium leading-tight">Confirmation</h3>
-                <p className="text-sm">Step details here</p>
             </li>
         </ol>
     )

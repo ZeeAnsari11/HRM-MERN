@@ -1,8 +1,8 @@
 import React from 'react'
 
 const Skeleton = () => {
-    return (
-        <>
+    return ( 
+    <>
             <div role="status" className="grid grid-cols-1 py-4 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {/* Dashboard Elements */}
                 <div class="flex-1 rounded-md p-6 shadow">

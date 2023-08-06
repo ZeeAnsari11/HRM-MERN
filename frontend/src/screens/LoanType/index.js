@@ -6,6 +6,7 @@ import LoanTypeView from './LoanTypeView';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import axios from 'axios';
+import { commonStyles } from '../../styles/common';
 import { organizationRoutes } from '../../api/configuration';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { setOrganizationDesignation } from '../../states/reducers/slices/backend/Designation';
@@ -106,19 +107,17 @@ const LoanType = () => {
     },
   ];
   return (
-    <div className="my-4">
-      <Modal
-        action="Create Loan Type"
-        title="Create Loan Type"
-        Element={<LoanTypeForm formData={formData} handleInputChange={handleInputChange} desiginationsList={desiginations} />}
-        btnConfig={btnConfig}
-      />
-      <div className="bg-gray-100 text-gray-900">
         <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-          <Table columns={columns} data={data} />
+          <Table columns={columns} data={data} element={
+                <Modal
+                  action="Create Loan Type"
+                  title="Create Loan Type"
+                  btnStyle={commonStyles.btnDark}
+                  Element={<LoanTypeForm formData={formData} handleInputChange={handleInputChange} desiginationsList={desiginations} />}
+                  btnConfig={btnConfig}
+                />
+          }/>
         </main>
-      </div>
-    </div>
   );
 };
 

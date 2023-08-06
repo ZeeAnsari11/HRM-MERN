@@ -5,6 +5,7 @@ import AllowanceForm from './AllowanceForm';
 import AllowanceView from './AllowanceView';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
+import { commonStyles } from '../../styles/common';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
 
@@ -75,19 +76,17 @@ const Allowances = () => {
   ]
 
   return (
-    <div className='my-4'>
-      <Modal
-        action="Create Allowance"
-        title="Create Allowance"
-        Element={<AllowanceForm formData={formData} handleInputChange={handleInputChange} />}
-        btnConfig={btnConfig}
-      />
-      <div className="bg-gray-100 text-gray-900">
-      <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-          <Table columns={columns} data={data} />
+      <main className="py-4">
+          <Table columns={columns} data={data} element={
+             <Modal
+             action="Create Allowance"
+             title="Create Allowance"
+             btnStyle={commonStyles.btnDark}
+             Element={<AllowanceForm formData={formData} handleInputChange={handleInputChange} />}
+             btnConfig={btnConfig}
+           />
+          }/>
         </main>
-      </div>
-    </div>
   );
 };
 

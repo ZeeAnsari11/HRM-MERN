@@ -63,10 +63,10 @@ const UserProfile = () => {
     { title: 'Qualifications', Component: <Qualification userID={currentUser?._id} /> },
   ]
   return (
-    <>
-      <div className="flex justify-between flex-wrap p-4 h-26 border rounded-xl mobile:space-y-4">
+    <div className="py-4">
+      <div className="flex justify-between flex-wrap p-4 h-26 border rounded-xl mobile:space-y-4 bg-white shadow">
         <div className="flex items-center space-x-6 mobile:flex-col mobile:text-center mobile:space-y-4">
-          <div className="flex flex-row space-x-2 mobile:!ml-0">
+          <div className="flex flex-row space-x-6 mobile:!ml-0">
             <div
               className="relative cursor-pointer"
               onMouseEnter={handleMouseEnter}
@@ -114,13 +114,13 @@ const UserProfile = () => {
       <div className="grid grid-cols-2 gap-4 tablet:grid-cols-1 w-full mt-4">
         {config.map((element, index) => {
           return (
-            <div className="py-4 border rounded-xl" key={index}>
+            <div className="py-4 border rounded-xl bg-white shadow" key={index}>
               {element?.Component}
             </div>
           )
         })}
       </div>
-    </>
+    </div>
   );
 };
 

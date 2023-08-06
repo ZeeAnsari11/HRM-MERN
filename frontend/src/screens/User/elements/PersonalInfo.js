@@ -1,11 +1,12 @@
-import React from 'react'
 import Countries from './Countries'
-
+import React from 'react'
+import { commonStyles } from '../../../styles/common';
 
 const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButton }) => {
     return (
         <form className="lg:col-span-2" onSubmit={(e) => {
             e.preventDefault();
+            //TOOD: Validate Fields
             changePageNumber();
         }}>
             <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
@@ -17,7 +18,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                             name="firstName"
                             id="firstName"
                             placeholder="First Name"
-                            className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                            className={commonStyles.input}
                             onChange={handleInputChange}
                             value={formData.firstName}
                             required
@@ -33,7 +34,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                             name="lastName"
                             id="lastName"
                             placeholder="Last Name"
-                            className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                            className={commonStyles.input}
                             onChange={handleInputChange}
                             value={formData.lastName}
                             required
@@ -47,7 +48,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         type="text"
                         name="email"
                         id="email"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                        className={commonStyles.input}
                         onChange={handleInputChange}
                         placeholder="email@domain.com"
                         value={formData.email}
@@ -60,7 +61,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         type="password"
                         name="password"
                         id="password"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                        className={commonStyles.input}
                         onChange={handleInputChange}
                         value={formData.password}
                         placeholder="********"
@@ -74,7 +75,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         name="personalEmail"
                         id="personalEmail"
                         value={formData.personalEmail}
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                        className={commonStyles.input}
                         onChange={handleInputChange}
                         placeholder="email@domain.com"
                         required
@@ -86,7 +87,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         name="gender"
                         id="gender"
                         onChange={handleInputChange}
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                        className={commonStyles.input}
                         value={formData.gender}
                         required
                     >
@@ -104,7 +105,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         name="address"
                         id="address"
                         value={formData.address}
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                        className={commonStyles.input}
                         placeholder="Full Address"
                         onChange={handleInputChange}
                         required
@@ -210,22 +211,29 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                     </div>
                     <div className="md:col-span-2">
                         <label htmlFor="blood-group">Blood Group</label>
-                        <input
-                            type="text"
+                        <select
                             name="blood-group"
                             value={formData["blood-group"]}
                             onChange={handleInputChange}
                             id="blood-group"
                             className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                            placeholder="Blood G"
-                            defaultValue=""
-                        />
+                        >
+                            <option value="">Select Blood Group</option>
+                            <option value="A+">A+</option>
+                            <option value="B+">B+</option>
+                            <option value="A-">A-</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
                     </div>
                 </div>
             </div>
             <div className='md:col-span-2'>
                 <div className="md:col-span-5 text-right">
-                    {showButton ? <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    {showButton ? <button type='submit' className={commonStyles.btnDark}>
                         Next
                     </button> : ""}
                 </div>

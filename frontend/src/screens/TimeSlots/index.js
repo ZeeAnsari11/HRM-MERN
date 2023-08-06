@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import TimeSlotsView from './TimeSlotsView';
+import { commonStyles } from '../../styles/common';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
 
@@ -151,19 +152,18 @@ const TimeSlots = () => {
   ]
 
   return (
-    <div>
-      <Modal
-        action="Create Timeslot"
-        title="Create Timeslot"
-        Element={<CTForm formData={formData} handleInputChange={handleInputChange} />}
-        btnConfig={btnConfig}
-      />
       <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <div className="mt-6">
-          <Table columns={columns} data={data} />
-        </div>
+          <Table columns={columns} data={data} 
+            element={
+              <Modal
+                action="Create Timeslot"
+                title="Create Timeslot"
+                btnStyle={commonStyles.btnDark}
+                Element={<CTForm formData={formData} handleInputChange={handleInputChange} />}
+                btnConfig={btnConfig}
+              />
+            }/>
       </main>
-    </div>
   );
 };
 

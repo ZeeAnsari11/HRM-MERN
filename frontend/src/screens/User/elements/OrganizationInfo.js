@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import RestDays from './RestDays';
 import SelectForm from '../../../components/SelectForm';
+import { commonStyles } from '../../../styles/common';
 import { loadAllOrganizationsInfo } from '../../../api/user';
 import { selectEmploymentTypes } from '../../../states/reducers/slices/backend/EmploymentType';
 import { selectOrganizationDesignation } from '../../../states/reducers/slices/backend/Designation';
@@ -50,7 +51,7 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
             <div className="md:col-span-5">
                 <label htmlFor="full_name">Department</label>
                 <div className="flex space-x-2">
-                    <select name='department' id="department" value={formData.department} onChange={handleInputChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    <select name='department' id="department" value={formData.department} onChange={handleInputChange} className={commonStyles.input} required>
                         <option value={''}>Select Department</option>
                         {
                             departments.map((department) => {
@@ -76,7 +77,7 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
             <div className="md:col-span-5">
                 <label htmlFor="full_name">Employment Type</label>
                 <div className="flex space-x-2">
-                    <select name='employmentType'  id="employmentType" value={formData.employmentType} onChange={handleInputChange} className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" required>
+                    <select name='employmentType'  id="employmentType" value={formData.employmentType} onChange={handleInputChange} className={commonStyles.input} required>
                         <option value={''}>Select Employment Type</option>
                         {
                             employmentTypes.map((employmentType) => {
@@ -89,7 +90,13 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
             <div className="md:col-span-5">
                 <label htmlFor="full_name">Employee Type</label>
                 <div className="flex space-x-2">
-                    <select name='employeeType'  id="employeeType" value={formData.employeeType}  onChange={handleInputChange} className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" required>
+                    <select 
+                        name='employeeType'  
+                        id="employeeType" 
+                        value={formData.employeeType} 
+                        onChange={handleInputChange} 
+                        className={commonStyles.input}  
+                        required>
                         <option value={''}>Select Employee Type</option>
                         {
                             employeeTypes.map((employeeType) => {
@@ -109,7 +116,7 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                     <select name='timeSlots' value={timeSlotValue} onChange={(event) => {
                         let val = event.target.value
                         handleInputChange({ target: { name: 'timeSlots', value: { timeSlots: val } } })
-                    }} className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" required>
+                    }} className={commonStyles.input} required>
                         <option value={''}>Select TimeSlot</option>
                         {timeSlots.map((timeSlot) => (
                             <option key={timeSlot._id} value={timeSlot._id}>
@@ -133,7 +140,7 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
             </div>
             <div className="md:col-span-5 text-right">
                 <div className="inline-flex items-end">
-                    {showButton ? <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    {showButton ? <button type='submit' className={commonStyles.btnDark}>
                         Next
                     </button> : ""}
                 </div>

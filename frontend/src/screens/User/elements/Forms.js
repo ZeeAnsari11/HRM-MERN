@@ -5,6 +5,7 @@ import Configuration from './Configuration'
 import OrganizationInfo from './OrganizationInfo'
 import PersonalInfo from './PersonalInfo'
 import UserInfo from './UserInfo'
+import { commonStyles } from '../../../styles/common'
 import { createUser } from '../../../api/user'
 import { useSelector } from 'react-redux'
 
@@ -41,7 +42,9 @@ const Forms = ({ formNumber, changePageNumber, formData, handleInputChange }) =>
             <UserInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false}/>
             <OrganizationInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false} />
             <Configuration formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false} />
-            <button onClick={handleSubmit}>Submit</button>
+            <div>
+            <button className={commonStyles.btnDark} onClick={handleSubmit}>Submit</button>
+            </div>
         </>
 }
 

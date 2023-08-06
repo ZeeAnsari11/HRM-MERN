@@ -1,9 +1,10 @@
 import React from 'react'
 import { Toggler } from '../../../components/FormItems/Toggler'
+import { commonStyles } from '../../../styles/common'
 
 const Configuration = ({ formData, changePageNumber, handleInputChange, showButton }) => {
   return (
-    <div>
+    <div className='space-y-2'>
       <Toggler
         title="Is Line Manager"
         name="isLineManager"
@@ -27,7 +28,7 @@ const Configuration = ({ formData, changePageNumber, handleInputChange, showButt
       />
 
       <div className='py-4'>
-        {showButton ? <button className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={changePageNumber}>Submit</button> : ""}
+        {showButton ? <button className={commonStyles.btnDark} onClick={changePageNumber}>Submit</button> : ""}
       </div>
     </div>
   )

@@ -5,6 +5,7 @@ import CDForm from './CDForm';
 import DepartmentsView from './DepartmentsView';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
+import { commonStyles } from '../../styles/common';
 import { getBranchesByOrgId } from '../../api/branches';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { toast } from 'react-toastify';
@@ -51,7 +52,7 @@ const Departments = () => {
         createDepartment(formData, changeToggler, toggler);
         setFormData({ name: "", organization: orgId, branch: "" });
     };
-    
+
     const columns = useMemo(() => [
         {
             Header: "Name",
@@ -69,7 +70,7 @@ const Departments = () => {
             ),
         }
     ], []);
-
+    
     const data = departments.map(obj => ({
         id: obj._id,
         name: obj.name,
@@ -84,20 +85,19 @@ const Departments = () => {
     ]
 
     return (
-        <div>
-            <Modal
-                action="Create Department"
-                title="Create Department"
-                Element={<CDForm branches={branches} formData={formData} handleInputChange={handleInputChange} />}
-                btnConfig={btnConfig}
-            />
-            <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-                <div className="mt-6">
-                    <Table columns={columns} data={data} />
-                </div>
-            </main>
-
-        </div>
+        <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+            <Table columns={columns} data={data} element={
+                <Modal
+                    action="Create Department"
+                    title="Create Department"
+                    btnStyle={commonStyles.btnDark}
+                    Element={
+                            <CDForm branches={branches} formData={formData} handleInputChange={handleInputChange} />
+                    }
+                    btnConfig={btnConfig}
+                />
+            } />
+        </main>
     );
 };
 
