@@ -1,10 +1,12 @@
 import { deleteById, getAll, getById, handleCatch, updateById } from '../utils/common.js';
 
 import { BranchModel } from '../models/branchSchema.js';
+import { LeaveTypeModel } from '../models/leaveTypeSchema.js';
 import { OrganizationModel } from '../models/organizationSchema.js';
 import { PermissionsModel } from '../models/permissions.js';
 import { addingUser } from './user.js';
 import app from '../app.js';
+import { createNewLeaveType } from './leaveType.js';
 import expressListEndpoints from "express-list-endpoints";
 import mongoose from "mongoose";
 
@@ -20,6 +22,7 @@ export const createOrganization = (req, res, next) => {
             session.startTransaction();
             OrganizationModel.create([req.body], { session: session })
                 .then((org) => {
+                    console.log("=============1==============");
                     createPermissionsObjects(org[0]._id, res, next, session)
                     req.body.organization = org[0]._id
                     req.body.branch.organization = org[0]._id
@@ -107,9 +110,29 @@ const createBranchWithFirstUser = (req, res, next, actualReq) => {
     req.body.unique_id = req.body.organization + req.body.name?.replace(/\s/g, "").toLowerCase()
     BranchModel.create(req.body)
         .then((branch) => {
-            delete actualReq.body.branch;
+           delete actualReq.body.branch;
             actualReq.body.branch = branch._id
             actualReq.body.isLineManager = true
+            let request = {
+                body: {
+                    name: "unpaid",
+                    shortName: "up",
+                    shortLeave: true,
+                    accumulativeCount: 365,
+                    organization: req.body.organization,
+                    firstUser: true
+                }
+            }
+            createLeaveTypeWithFirstUser(request, res, next, actualReq)
+            // addingUser(actualReq, res, next)
+        })
+        .catch((err) => { handleCatch(err, res, 500, next) })
+}
+
+export const createLeaveTypeWithFirstUser = (req, res, next, actualReq) => {
+    req.body.unique_id = req.body.organization + req.body.name.replace(/\s/g, "").toLowerCase()
+    LeaveTypeModel.create(req.body)
+        .then((leaveType) => {
             addingUser(actualReq, res, next)
         })
         .catch((err) => { handleCatch(err, res, 500, next) })

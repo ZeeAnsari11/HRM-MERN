@@ -3,7 +3,7 @@ import { Fragment, useState } from 'react'
 
 import Loader from '../Loader'
 
-export default function Modal({ action, title, Element, btnConfig, onClose=null }) {
+export default function Modal({ action, title, Element, btnConfig, onClose = null, check=null}) {
 
   let [isOpen, setIsOpen] = useState(false);
   let [isLoader, setIsLoader] = useState(false);
@@ -17,11 +17,17 @@ export default function Modal({ action, title, Element, btnConfig, onClose=null 
     setIsOpen(true)
   }
 
+  // function closeLoader() {
+  //   setIsLoader(false);
+  //   closeModal();
+  // }
+
   function closeLoader() {
     setIsLoader(false);
-    closeModal();
+    check(closeModal)
+    // Close the modal only if there were no errors during form submission
+   
   }
-
   return (
     <>
       <button
@@ -43,7 +49,7 @@ export default function Modal({ action, title, Element, btnConfig, onClose=null 
             leave="ease-in duration-200"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
-            
+
           >
             <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-[5px]" />
           </Transition.Child>
@@ -79,7 +85,7 @@ export default function Modal({ action, title, Element, btnConfig, onClose=null 
                     >
                       Close
                     </button>
-                    {
+                    {/* {
                       btnConfig.map((item, index) => {
                         return <button
                           key={index}
@@ -93,6 +99,25 @@ export default function Modal({ action, title, Element, btnConfig, onClose=null 
                           {item.title} {isLoader ? <Loader/> : ""}
                         </button>
                       })
+                    } */}
+                    {
+                      btnConfig.map((item, index) => (
+                        <button
+                          key={index}
+                          type="submit"
+                          className="inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+                          onClick={() => {
+                            setIsLoader(true);
+                            item.handler(() => {
+                              // Close the modal only when the form is successfully submitted.
+                              closeLoader();
+                              if (onClose !== null) onClose();
+                            });
+                          }}
+                        >
+                          {item.title} {isLoader ? <Loader /> : ""}
+                        </button>
+                      ))
                     }
                   </div>
                 </Dialog.Panel>

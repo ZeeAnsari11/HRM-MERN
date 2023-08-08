@@ -25,6 +25,11 @@ const Departments = () => {
         branch: ""
     });
 
+    const [validationErrors, setValidationErrors] = useState({
+        name: "",
+        branch: ""
+    });
+
     useEffect(() => {
         LoadData()
     }, [toggleChange]);
@@ -38,20 +43,38 @@ const Departments = () => {
         getBranchesByOrgId(orgId, setBranches)
     }
 
+    // const handleInputChange = (e) => {
+    //     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // };
     const handleInputChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
 
-    const handleCreateDepartment = (toggler) => {
-        if (!formData.name || !formData.branch) {
-            toastMessage("error", "Please fill in all the required fields.", toast);
-            toggler();
+        // Clear validation error when user starts typing again
+        setValidationErrors({
+            ...validationErrors,
+            [name]: "",
+        });
+    };
+    const handleCreateDepartment = (trigger) => {
+        const newValidationErrors = {};
+        if (formData.name.trim() === "") {
+            newValidationErrors.name = "Name is required.";
+        }
+        if (formData.branch.trim() === "") {
+            newValidationErrors.branch = "Branch Name is required.";
+        }
+
+        if (Object.keys(newValidationErrors).length > 0) {
+            // Set validation errors and prevent closing the modal
+            setValidationErrors(newValidationErrors);
+            trigger();
             return;
         }
-        createDepartment(formData, changeToggler, toggler);
+        createDepartment(formData, changeToggler, trigger);
         setFormData({ name: "", organization: orgId, branch: "" });
     };
-    
+
     const columns = useMemo(() => [
         {
             Header: "Name",
@@ -88,8 +111,14 @@ const Departments = () => {
             <Modal
                 action="Create Department"
                 title="Create Department"
-                Element={<CDForm branches={branches} formData={formData} handleInputChange={handleInputChange} />}
+                Element={<CDForm branches={branches} formData={formData} handleInputChange={handleInputChange} validationErrors={validationErrors}/>}
                 btnConfig={btnConfig}
+                validationErrors={validationErrors}
+                check={(closeModal) => {
+                    if (!validationErrors?.name && !validationErrors?.branch && formData?.name.trim() && formData?.branch.trim()) {
+                        closeModal()
+                    }
+                }}
             />
             <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
                 <div className="mt-6">

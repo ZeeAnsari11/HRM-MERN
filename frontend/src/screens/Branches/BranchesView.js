@@ -15,19 +15,33 @@ export default function BranchesView({ data }) {
         name: data.name,
     });
 
+    const [validationErrors, setValidationErrors] = useState({
+        name: '',
+        city: '',
+        country: '',
+        description: ''
+    });
+
     const handleUpdateBranches = (trigger) => {
-        updateBranchById(data.id ,formData, trigger);
+        updateBranchById(data.id, formData, trigger);
     };
 
     const ViewBtnConfig = [
         {
-          title: 'Update',
-          handler: handleUpdateBranches,
+            title: 'Update',
+            handler: handleUpdateBranches,
         },
     ];
 
     const handleInputChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+
+        // Clear validation error when user starts typing again
+        setValidationErrors({
+            ...validationErrors,
+            [name]: "",
+        });
     };
 
     const handleAction = (id) => {
@@ -35,17 +49,22 @@ export default function BranchesView({ data }) {
     }
 
     return <div className="flex items-center space-x-2 justify-center">
-            <Modal
-                action={<FontAwesomeIcon icon={faArrowAltCircleRight} />}
-                title={''}
-                Element={<CBForm handleInputChange={handleInputChange} formData={formData}/>}
-                btnConfig={ViewBtnConfig}
-            />
+        <Modal
+            action={<FontAwesomeIcon icon={faArrowAltCircleRight} />}
+            title={''}
+            Element={<CBForm handleInputChange={handleInputChange} formData={formData} validationErrors={validationErrors} />}
+            btnConfig={ViewBtnConfig}
+            check={(closeModal) => {
+                if (!validationErrors?.name && !validationErrors?.city && !validationErrors?.country && !validationErrors?.description && formData?.name.trim() && formData?.city.trim() && formData?.country.trim() && formData?.description.trim()) {
+                  closeModal()
+                }
+              }}
+        />
         <button
             className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
             onClick={() => handleAction(data.id)}
         >
-            <FontAwesomeIcon icon={faTrash}/>
+            <FontAwesomeIcon icon={faTrash} />
         </button>
     </div>
 }
