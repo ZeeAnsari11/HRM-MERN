@@ -1,10 +1,17 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { setAllocationAction, setAllocationId } from '../../../states/reducers/slices/backend/Assets';
 
-export default function MyModal({action,name, title, Form, id}) {
+export default function MyModal({action, name, title, Form, id}) {
 
   let [isOpen, setIsOpen] = useState(false)
   
+
+  const dispatch = useDispatch()
+  dispatch(setAllocationAction(action.props.title))
+  dispatch(setAllocationId(id))
+
   function closeModal() {
     setIsOpen(false)
   }

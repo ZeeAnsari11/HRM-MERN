@@ -25,16 +25,11 @@ const ManageAssets = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleSubmit = () => {
-    alert('Submited')
-  }
-
   const filteredAssets = assets.filter((asset) =>
     asset.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-console.log(filteredAssets)
 
-return (
+  return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-8 mobile:flex-col mobile:space-y-4">
         <div className="flex items-center justify-center">
@@ -43,15 +38,15 @@ return (
           </h2>
         </div>
         <div className="flex items-center relative">
-            <input
-              type="text"
-              placeholder="Search Assets"
-              className="w-64 p-2 border rounded-md mr-2"
-              onChange={handleSearch}
-            />
-            <div className="absolute inset-y-0 right-3 flex items-center pr-2">
-              <FontAwesomeIcon icon={faSearch} />
-            </div>
+          <input
+            type="text"
+            placeholder="Search Assets"
+            className="w-64 p-2 border rounded-md mr-2"
+            onChange={handleSearch}
+          />
+          <div className="absolute inset-y-0 right-3 flex items-center pr-2">
+            <FontAwesomeIcon icon={faSearch} />
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -69,22 +64,22 @@ return (
               <p className="text-sm text-gray-500 max-h-10 overflow-auto">{asset.description}</p>
               <div className="flex justify-evenly">
                 <MyModal
-                  action={<FontAwesomeIcon title="History" icon={faHistory}/>}
+                  action={<FontAwesomeIcon title="History" icon={faHistory} />}
                   title="Asset History"
-                  Form={<AssetHistoryPage data={asset._id}/>}
+                  Form={<AssetHistoryPage data={asset._id} />}
                   id={asset._id}
-                  name = {asset.name}
+                  name={asset.name}
                 />
                 <MyModal
                   title="Allocate Asset"
-                  action={<FontAwesomeIcon title="Allocate" icon={faDashboard}/>}
-                  Form={<FormGG/>}
+                  action={<FontAwesomeIcon title="allocate" icon={faDashboard} />}
+                  Form={<FormGG />}
                   id={asset._id}
                 />
                 <MyModal
                   title="De-Allocate Asset"
-                  action={<FontAwesomeIcon title="De-Allocate" icon={faDeleteLeft}/>}
-                  Form={<FormGG/>}
+                  action={<FontAwesomeIcon title="deallocate" icon={faDeleteLeft} />}
+                  Form={<FormGG />}
                   id={asset._id}
                 />
               </div>
