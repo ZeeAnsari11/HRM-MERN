@@ -23,13 +23,16 @@ const LeaveRequest = () => {
   const [endTime, setEndTime] = useState('');
   const [shortLeaveType, setShortLeaveType] = useState('');
   const [attachmentPreview, setAttachmentPreview] = useState(null);
+  const [selectedLeaveType, setSelectedLeaveType] = useState([]);
   
+  console.log("selected", selectedLeaveType)
   const dispatcher = useDispatch();
   const org_id = useSelector(selectOrgId);
   const leaveTypes = useSelector(selectLeaveTypes);
   const shortLeaveTypes = useSelector(selectShortLeaveTypes);
   const leavesCount = useSelector(selectUserLeaveTypes);
   const user = useSelector(selectUID)
+  
 
   useEffect(() => {
     getLeaveRequestByOrganizationId(org_id, dispatcher);
@@ -114,20 +117,25 @@ const LeaveRequest = () => {
           className={commonStyles.input}
           id="leave-type"
           value={leaveType}
-          onChange={(e) => setLeaveType(e.target.value)}
+          onChange={(e) => {
+            setLeaveType(e.target.value)
+            setSelectedLeaveType(leaveTypes.filter((leaveType) => {
+              if (leaveType._id === e.target.value) return leaveType;
+            })
+          )}}
           required
         >
           <option value="">Select leave type</option>
           {
             leaveTypes.map((type) => {
-              return <option value={type._id}>{type.name}</option>
+              return <option key={type._id} value={type._id}>{type.name}</option>
             })
           }
           
         </select>
       </div>
-      <div className="mb-4">
-        <label className="block text-gray-700  mb-2 pr-4 py-2" htmlFor="short">
+      {(selectedLeaveType[0]?.shortLeave) && <div className="mb-4">
+        <label className="block text-gray-700 font-bold mb-2 pl-1 pr-4 py-2" htmlFor="short">
           <input
             className={commonStyles.input}
             type="checkbox"
@@ -137,7 +145,7 @@ const LeaveRequest = () => {
           />
           <span className="text-sm font-medium">Short</span>
         </label>
-      </div>
+      </div>}
       {short && (
         <div className="mb-4">
           <label className="block text-gray-700  mb-2 " htmlFor="short-leave-type">
@@ -242,11 +250,12 @@ const LeaveRequest = () => {
           readOnly
         />
       </div>
-      <div className="mb-4">
-        <label className="block text-gray-700  mb-2  " htmlFor="attachment">
+      
+      {(selectedLeaveType[0]?.attachmentRequired) && <div className="mb-4">
+        <label className="block text-gray-700 font-bold mb-2 pl-1 " htmlFor="attachment">
           Attachment
         </label>
-        <div {...getRootProps()} className="border border-dashed p-4 border-backgroundDark ">
+         <div {...getRootProps()} className="border border-dashed p-4 border-backgroundDark ">
           <input {...getInputProps()} accept=".pdf,.doc,.docx,image/*" />
           {attachmentPreview ? (
             <img src={attachmentPreview} alt="Attachment Preview" />
@@ -257,8 +266,8 @@ const LeaveRequest = () => {
             </>
           )}
         </div>
-
-      </div>
+      </div>}
+      
       <div className="mb-4">
         <label className="block text-gray-700 mb-2" htmlFor="reason">
           Reason

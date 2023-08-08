@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CDForm = ({ branches, formData, handleInputChange }) => {
+const CDForm = ({ branches, formData, handleInputChange, validationErrors}) => {
 
     return (
         <form>
@@ -14,6 +14,9 @@ const CDForm = ({ branches, formData, handleInputChange }) => {
                     onChange={handleInputChange}
                     required
                 />
+                 {validationErrors.name && (
+                    <p className="text-red-500 text-xs mt-1">{validationErrors.name}</p>
+                )}
             </div>
             <div>
             <label className="block text-sm font-bold mb-1">Branch</label>
@@ -32,6 +35,9 @@ const CDForm = ({ branches, formData, handleInputChange }) => {
                     </option>
                 ))}
             </select>
+            {validationErrors.branch && (
+                    <p className="text-red-500 text-xs mt-1">{validationErrors.branch}</p>
+                )}
         </div>
         </form >
     )

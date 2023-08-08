@@ -13,15 +13,27 @@ export default function DepartmentsView({ data }) {
     const [formData, setFormData] = useState({
         name: data.name,
     });
-
+    const [validationErrors, setValidationErrors] = useState({
+        name: "",
+    });
     const handleUpdateDepartmennt = (trigger) => {
         updateDepartmentById(data.id, formData, trigger);
     };
 
+    // const handleInputChange = (e) => {
+    //     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // };
     const handleInputChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
 
+        // Clear validation error when user starts typing again
+        setValidationErrors({
+            ...validationErrors,
+            [name]: "",
+        });
+    };
+    
     let title = "Update Department"
     const formDataConfig = [
         {
@@ -56,7 +68,11 @@ export default function DepartmentsView({ data }) {
             title={title}
             Element={<CUForm config={formDataConfig} handleInputChange={handleInputChange} isFull={false} />}
             btnConfig={btnConfig}
-
+            check={(closeModal) => {
+                if (!validationErrors?.name  && formData?.name.trim()) {
+                    closeModal()
+                }
+            }}
         />
         <button
             className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"

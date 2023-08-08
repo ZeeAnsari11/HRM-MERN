@@ -22,6 +22,13 @@ const Branches = () => {
     country: '',
     description: ''
   });
+  const [validationErrors, setValidationErrors] = useState({
+    name: '',
+    city: '',
+    country: '',
+    description: ''
+  });
+
 
   useEffect(() => {
     LoadData()
@@ -36,10 +43,37 @@ const Branches = () => {
   }
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    // Clear validation error when user starts typing again
+    setValidationErrors({
+      ...validationErrors,
+      [name]: "",
+    });
   };
 
   const handleCreateBranch = (trigger) => {
+    const newValidationErrors = {};
+    if (formData.name.trim() === "") {
+      newValidationErrors.name = "Name is required.";
+    }
+    if (formData.city.trim() === "") {
+      newValidationErrors.city = "City Name is required.";
+    }
+    if (formData.country.trim() === "") {
+      newValidationErrors.country = "Country Name is required.";
+    }
+    if (formData.description.trim() === "") {
+      newValidationErrors.description = "Description Name is required.";
+    }
+
+    if (Object.keys(newValidationErrors).length > 0) {
+      // Set validation errors and prevent closing the modal
+      setValidationErrors(newValidationErrors);
+      trigger();
+      return;
+    }
     createBranch(formData, changeToggler, trigger);
     setFormData({
       name: '',
@@ -99,8 +133,14 @@ const Branches = () => {
             action="Create Branch"
             title="Create Branch"
             btnStyle={commonStyles.btnDark}
-            Element={<CBForm formData={formData} handleInputChange={handleInputChange} />}
+            Element={<CBForm formData={formData} handleInputChange={handleInputChange} validationErrors={validationErrors}/>}
             btnConfig={btnConfig}
+            validationErrors={validationErrors}
+        check={(closeModal) => {
+          if (!validationErrors?.name && !validationErrors?.city && !validationErrors?.country && !validationErrors?.description && formData?.name.trim() && formData?.city.trim() && formData?.country.trim() && formData?.description.trim()) {
+            closeModal()
+          }
+        }}
           />
         } />
     </main>

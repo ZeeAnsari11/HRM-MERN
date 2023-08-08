@@ -13,13 +13,29 @@ export default function DesiginationsView({ data }) {
         title: data.title,
         shortForm:data.shortForm
     });
+    
+    const [validationErrors, setValidationErrors] = useState({
+        title: "",
+        shortForm: "",
+    });
 
     const handleUpdateDepartmennt = (trigger) => {
         updateDesiginationById(data.id, formData, trigger);
     };
 
+    // const handleInputChange = (e) => {
+    //     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // };
+    
     const handleInputChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+
+        // Clear validation error when user starts typing again
+        setValidationErrors({
+            ...validationErrors,
+            [name]: "",
+        });
     };
 
     let title = "Update Department"
@@ -55,9 +71,13 @@ export default function DesiginationsView({ data }) {
         <Modal
             action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
             title={title}
-            Element={<CUForm config={formDataConfig} handleInputChange={handleInputChange} isFull={false} />}
+            Element={<CUForm config={formDataConfig} handleInputChange={handleInputChange} isFull={false} validationErrors={validationErrors} />}
             btnConfig={btnConfig}
-
+            check={(closeModal) => {
+                    if (!validationErrors?.title && !validationErrors?.shortForm && formData?.title.trim() && formData?.shortForm.trim()) {
+                        closeModal()
+                    }
+                }}
         />
         <button
             className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"

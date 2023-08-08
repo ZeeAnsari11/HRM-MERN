@@ -14,7 +14,8 @@ const placeHolder = '0001-01-01T';
 //// Create User ////
 export const addingUser = (req, res, next) => {
     if(req.body.firstUser == true){
-        createNew(req, res, next, UserModel, false)
+        addingUserLeaves(req, res, next, req.body.organization, false);
+        // createNew(req, res, next, UserModel, false)
     }
     else{ 
     try {
@@ -174,10 +175,11 @@ const userCreate = (req, res, next, organization) => {
     }
 }
 
-const addingUserLeaves = (req, res, next, organizationRef) => {
+const addingUserLeaves = (req, res, next, organizationRef,  show=true) => {
     req.body.leaveTypeDetails = []
     LeaveTypeModel.find({ organization: req.body.organization })
         .then((leaveTypes) => {
+            
             if (leaveTypes.length == 0) throw new Error("No leave types found")
             leaveTypes.forEach(leaveType => {
                 let x = {
@@ -188,20 +190,24 @@ const addingUserLeaves = (req, res, next, organizationRef) => {
             })
             UserModel.create(req.body)
                 .then((response) => {
+                    if(show){
                     organizationRef.userCode.currentCode = organizationRef.userCode.currentCode + 1;
                     res.status(200).json({
                         success: true,
                         response
                     })
+                }
                 })
                 .catch((error) => {
                     handleCatch(error, res, 500, next)
                 })
                 .finally(() => {
+                    if(show){
                     organizationRef.save()
                         .catch((error) => {
                             handleCatch(error, res, 500, next)
                         })
+                    }
                 })
         })
         .catch((error) => {

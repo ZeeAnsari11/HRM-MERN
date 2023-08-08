@@ -28,6 +28,11 @@ const Desiginations = () => {
         organization: orgId,
         shortForm: ""
     });
+    const [validationErrors, setValidationErrors] = useState({
+        title: "",
+        shortForm: "",
+    });
+
 
     useEffect(() => {
         LoadData(dispatcher);
@@ -46,30 +51,65 @@ const Desiginations = () => {
         setToggleChange(!toggleChange);
     }
 
+    // const handleInputChange = (e) => {
+    //     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // };
     const handleInputChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+
+        // Clear validation error when user starts typing again
+        setValidationErrors({
+            ...validationErrors,
+            [name]: "",
+        });
     };
+    //     const handleCreateDesigination = (trigger) => {
+    //         console.log("==",(formData.title.trim() === "" || formData.shortForm.trim() === ""));
+    //         if (formData.title.trim() === "" || formData.shortForm.trim() === "") {
+    //             toastMessage("error", "Please fill in all the required fields.", toast);
+    //             trigger()
+    //             return;
+    //         }
+    // console.log("==========",!shortFormRegex.test(formData.shortForm));
+    //         const shortFormRegex = /^[a-zA-Z0-9-]+$/;
+    //         if (!shortFormRegex.test(formData.shortForm)) {
+    //             toastMessage("error", "Short Name can only contain alphabets, numbers, and hyphens (-).", toast);
+    //             trigger()
+    //             return;
+    //         }
+    //         createDesigination(formData, changeToggler, trigger);
+    //         setFormData({
+    //             title: "",
+    //             organization: orgId,
+    //             shortForm: ""
+    //         })
+    //     };
 
     const handleCreateDesigination = (trigger) => {
-        if (formData.title.trim() === "" || formData.shortForm.trim() === "") {
-            toastMessage("error", "Please fill in all the required fields.", toast);
-            trigger()
-            return;
+        // Validate form data
+        const newValidationErrors = {};
+        if (formData.title.trim() === "") {
+            newValidationErrors.title = "Title is required.";
+        }
+        if (formData.shortForm.trim() === "") {
+            newValidationErrors.shortForm = "Short Name is required.";
         }
 
-        const shortFormRegex = /^[a-zA-Z0-9-]+$/;
-        if (!shortFormRegex.test(formData.shortForm)) {
-            toastMessage("error", "Short Name can only contain alphabets, numbers, and hyphens (-).", toast);
-            trigger()
+        if (Object.keys(newValidationErrors).length > 0) {
+            // Set validation errors and prevent closing the modal
+            setValidationErrors(newValidationErrors);
+            trigger();
             return;
         }
         createDesigination(formData, changeToggler, trigger);
+
         setFormData({
             title: "",
             organization: orgId,
             shortForm: ""
-        })
-    };
+        });
+    }
     const handleAction = (rowData) => {
 
     };
@@ -105,6 +145,7 @@ const Desiginations = () => {
     ]
 
     return (
+
         <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
             <div className="mt-6">
                 <Table columns={columns} data={data} element={
@@ -112,10 +153,17 @@ const Desiginations = () => {
                         action="Create Designation"
                         title="Create Designation"
                         btnStyle={commonStyles.btnDark}
-                        Element={<CDForm formData={formData} handleInputChange={handleInputChange} />}
+                        Element={<CDForm formData={formData} handleInputChange={handleInputChange} validationErrors={validationErrors} />}
                         btnConfig={btnConfig}
+                        validationErrors={validationErrors}
+                        check={(closeModal) => {
+                            if (!validationErrors?.title && !validationErrors?.shortForm && formData?.title.trim() && formData?.shortForm.trim()) {
+                                closeModal()
+                            }
+                        }}
                     />
                 } />
+
             </div>
         </main>
     );

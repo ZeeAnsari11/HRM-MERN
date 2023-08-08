@@ -19,6 +19,8 @@ const LeaveType = () => {
     shortName: '',
     organization: orgId,
     accumulativeCount: '',
+    shortLeave: false,
+    attachmentRequired: false
   });
 
   useEffect(() => {
@@ -33,8 +35,14 @@ const LeaveType = () => {
     getLeaveTypeByOrgId(orgId, setLeaveType)
   }
 
+  // const handleInputChange = (e) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  // };
+
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    setFormData({ ...formData, [name]: newValue });
   };
 
   const handleCreateLeaveType = (trigger) => {
@@ -44,6 +52,8 @@ const LeaveType = () => {
       shortName: '',
       organization: orgId,
       accumulativeCount: '',
+      shortLeave: false,
+      attachmentRequired: false
     });
   };
 
@@ -61,6 +71,10 @@ const LeaveType = () => {
       accessor: 'accumulativeCount',
     },
     {
+      Header: 'Short Leave',
+      accessor: 'shortLeave',
+    },
+    {
       Header: 'Action',
       accessor: 'action',
       Cell: ({ row }) => (
@@ -68,12 +82,14 @@ const LeaveType = () => {
       )
     },
   ];
-
+console.log("==data",leaveType);
   const data = leaveType.map(obj => ({
     id: obj._id,
     name: obj.name,
     shortName: obj.shortName,
     accumulativeCount: obj.accumulativeCount,
+    shortLeave: obj.shortLeave ? "Yes" : "No",
+    attachmentRequired : obj.attachmentRequired
   }));
 
   const btnConfig = [
