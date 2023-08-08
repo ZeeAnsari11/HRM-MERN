@@ -1,5 +1,5 @@
-import { allAssets, asset, assetManagment, assetType, getAsset } from "./configuration";
-import { setAllAssets, setAllocation, setAssetHistory, setAssetTypes } from "../states/reducers/slices/backend/Assets";
+import { allAssets, asset, assetManagment, assetType, getAsset, getAssetBy } from "./configuration";
+import { setAllAssets, setAllocation, setAsset, setAssetHistory, setAssetTypes } from "../states/reducers/slices/backend/Assets";
 
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -35,13 +35,18 @@ export const getAssetByOrganizationId = (organizationId, dispatcher) => {
     })
 }
 
-export const AllocateDeallocateAsset = (formData, dispatcher) => {
+export const AllocateDeallocateAsset = (formData, dispatcher, setShowLoading) => {
     axios.put(assetManagment.manageAsset, formData)
-    .then(() => {
+    .then((response) => {
        dispatcher(setAllocation(formData))
+       console.log('=======response===',response);
+       toastMessage("success", response.data.message, toast);
     })
-    .catch(() => {
-        toastMessage("error", "Updating assets failed!", toast);
+    .catch((err) => {
+        toastMessage("error", err.response.data.message, toast);
+    })
+    .finally(()=>{
+        setShowLoading(false)
     })
 }
 
@@ -50,6 +55,16 @@ export const getAssetHistoryById = (id , setHistory) => {
     .then((response) => {
         console.log("Response", response);
         setHistory(response?.data?.data);
+    })
+    .catch(() => {
+        toastMessage("error", "Fetching asset failed!", toast);
+    })
+}
+
+export const getAssetById = (id, dispatcher ) => {
+    axios.get(getAssetBy.id + id)
+    .then((response) => {
+        dispatcher(setAsset(response?.data?.asset));
     })
     .catch(() => {
         toastMessage("error", "Fetching asset failed!", toast);

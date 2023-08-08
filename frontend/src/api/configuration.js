@@ -83,6 +83,11 @@ export const  getAllUsers = {
     byOrganization: baseUrl+'/user/organization/'
 }
 
+export const  getAssetBy = {
+    id: baseUrl+'/asset/'
+}
+
+
 export const  getDesignation = {
     byId: baseUrl+'/designation/'
 }
