@@ -1,7 +1,7 @@
 import axios from "axios";
 import { loanType } from "./configuration";
-import { toastMessage } from "../AlertConfigs";
 import { toast } from "react-toastify";
+import { toastMessage } from "../AlertConfigs";
 
 export const createLoanType = (formData, changeToggler, trigger) => {
     axios.post(loanType.createLoanType, formData)
@@ -45,10 +45,6 @@ export const updateLoanTypeById = (id, formData, trigger) => {
     axios.put(loanType.updateLoanTypeById + id, formData)
         .then((response) => {
             toastMessage("success", response.data.Message, toast)
-             //TODO: Update required
-             setTimeout(() => {
-                window.location.href = "/dashboard/loan-type"
-            }, 2000)
         })
         .catch((error) => {
             toastMessage("error", error.response.data.Message, toast)

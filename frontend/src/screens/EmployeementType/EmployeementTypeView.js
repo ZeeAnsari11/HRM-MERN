@@ -1,5 +1,5 @@
 import { deleteEmployeementTypeById, updateEmployeementTypeById } from '../../api/employeementType';
-import { faArrowAltCircleRight, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faArrowAltCircleRight, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import EmployeementTypeForm from './EmployeementTypeForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,37 +12,64 @@ export default function EmployeementTypeView({ data }) {
         employmentType: data.employmentType,
     });
 
+    const [validationErrors, setValidationErrors] = useState({
+        employmentType: ''
+    });
+
     const handleUpdateEmployeementType = (trigger) => {
-        updateEmployeementTypeById(data.id ,formData, trigger);
+        const newValidationErrors = {};
+        if (formData.employmentType.trim() === "") {
+            newValidationErrors.employmentType = "Employment Type is required.";
+        }
+        if (Object.keys(newValidationErrors).length > 0) {
+            // Set validation errors and prevent closing the modal
+            setValidationErrors(newValidationErrors);
+            trigger();
+            return;
+        }
+        updateEmployeementTypeById(data.id, formData, trigger);
     };
 
     const ViewBtnConfig = [
         {
-          title: 'Update',
-          handler: handleUpdateEmployeementType,
+            title: 'Update',
+            handler: handleUpdateEmployeementType,
         },
     ];
 
     const handleInputChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+
+        // Clear validation error when user starts typing again
+        setValidationErrors({
+            ...validationErrors,
+            [name]: "",
+        });
     };
+
 
     const handleAction = (id) => {
         deleteEmployeementTypeById(id);
     }
 
     return <div className="flex items-center space-x-2 justify-center">
-            <Modal
-                action={<FontAwesomeIcon icon={faArrowAltCircleRight} />}
-                title={''}
-                Element={<EmployeementTypeForm handleInputChange={handleInputChange} formData={formData}/>}
-                btnConfig={ViewBtnConfig}
-            />
+        <Modal
+            action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
+            title={'Update EmployeementType'}
+            Element={<EmployeementTypeForm handleInputChange={handleInputChange} formData={formData} validationErrors={validationErrors} />}
+            btnConfig={ViewBtnConfig}
+            check={(closeModal) => {
+                if (!validationErrors?.employmentType && formData?.employmentType.trim()) {
+                    closeModal()
+                }
+            }}
+        />
         <button
             className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
             onClick={() => handleAction(data.id)}
         >
-            <FontAwesomeIcon icon={faTrash}/>
+            <FontAwesomeIcon icon={faTrash} />
         </button>
     </div>
 }

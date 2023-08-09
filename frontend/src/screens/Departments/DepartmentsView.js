@@ -14,15 +14,24 @@ export default function DepartmentsView({ data }) {
         name: data.name,
     });
     const [validationErrors, setValidationErrors] = useState({
-        name: "",
+        name: ""
     });
+
     const handleUpdateDepartmennt = (trigger) => {
+        const newValidationErrors = {};
+        if (formData.name.trim() === "") {
+            newValidationErrors.name = "Name is required.";
+        }
+        if (Object.keys(newValidationErrors).length > 0) {
+            // Set validation errors and prevent closing the modal
+            setValidationErrors(newValidationErrors);
+            trigger();
+            return;
+        }
+        
         updateDepartmentById(data.id, formData, trigger);
     };
 
-    // const handleInputChange = (e) => {
-    //     setFormData({ ...formData, [e.target.name]: e.target.value });
-    // };
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -66,13 +75,14 @@ export default function DepartmentsView({ data }) {
         <Modal
             action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
             title={title}
-            Element={<CUForm config={formDataConfig} handleInputChange={handleInputChange} isFull={false} />}
+            Element={<CUForm config={formDataConfig} handleInputChange={handleInputChange} isFull={false} validationErrors={validationErrors}/>}
             btnConfig={btnConfig}
             check={(closeModal) => {
-                if (!validationErrors?.name  && formData?.name.trim()) {
+                if (!validationErrors?.name && !validationErrors?.branch && formData?.name.trim() && formData?.branch.trim()) {
                     closeModal()
                 }
             }}
+
         />
         <button
             className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"

@@ -22,7 +22,13 @@ const LeaveType = () => {
     shortLeave: false,
     attachmentRequired: false
   });
-
+  
+  const [validationErrors, setValidationErrors] = useState({
+    name: '',
+    shortName: '',
+    accumulativeCount: '',
+  })
+  
   useEffect(() => {
     LoadData()
   }, [toggleChange]);
@@ -43,9 +49,29 @@ const LeaveType = () => {
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
     setFormData({ ...formData, [name]: newValue });
+    setValidationErrors({
+      ...validationErrors,
+      [name]: "",
+  });
   };
 
   const handleCreateLeaveType = (trigger) => {
+    const newValidationErrors = {};
+    if (formData.name.trim() === "") {
+        newValidationErrors.name = "Name is required.";
+    }
+    if (formData.shortName.trim() === "") {
+        newValidationErrors.shortName = "Short Name is required.";
+    }
+    if (formData.accumulativeCount === "") {
+      newValidationErrors.accumulativeCount = "Accumulative Count is required.";
+  }
+    if (Object.keys(newValidationErrors).length > 0) {
+        // Set validation errors and prevent closing the modal
+        setValidationErrors(newValidationErrors);
+        trigger();
+        return;
+    }
     createLeaveType(formData, changeToggler, trigger);
     setFormData({
       name: '',
@@ -100,17 +126,26 @@ console.log("==data",leaveType);
   ]
 
   return (
-    <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-      <Table columns={columns} data={data} element={
-        <Modal
-          action="Create Leave Type"
-          title="Create Leave Type"
-          btnStyle={commonStyles.btnDark}
-          Element={<LTForm formData={formData} handleInputChange={handleInputChange} />}
-          btnConfig={btnConfig}
-        />
-      } />
-    </main>
+      <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <div className="mt-6">
+          <Table columns={columns} data={data} element={
+              <Modal
+                  action="Create Leave Type"
+                  title="Create Leave Type"
+                  btnStyle={commonStyles.btnDark}
+                  Element={<LTForm formData={formData} handleInputChange={handleInputChange} validationErrors={validationErrors} />}
+                  btnConfig={btnConfig}
+                  validationErrors={validationErrors}
+                  check={(closeModal) => {
+                      if (!validationErrors?.name && !validationErrors?.shortName && !validationErrors?.accumulativeCount && formData?.name.trim() && formData?.shortName.trim() && formData?.accumulativeCount) {
+                          closeModal()
+                      }
+                  }}
+              />
+          } />
+
+      </div>
+  </main>
   );
 };
 

@@ -1,7 +1,7 @@
 import Countries from '../User/elements/Countries';
 import React from 'react';
 
-export default function EmployeementTypeForm({formData, handleInputChange}) {
+export default function EmployeementTypeForm({formData, handleInputChange, validationErrors}) {
     return <form>
           <div className="mb-4">
             <label className="block text-sm font-bold mb-1">Employeement Type</label>
@@ -13,6 +13,9 @@ export default function EmployeementTypeForm({formData, handleInputChange}) {
               onChange={handleInputChange}
               required
             />
+             {validationErrors.employmentType && (
+                    <p className="text-red-500 text-xs mt-1">{validationErrors.employmentType}</p>
+                )}
           </div>
         </form>
 }

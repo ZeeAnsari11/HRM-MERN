@@ -1,5 +1,6 @@
+import { createNew, deleteById, deleteInBulk, getAll, handleCatch, updateById } from "../utils/common.js";
+
 import { AssetTypeModel } from "../models/assetTypeSchema.js";
-import { deleteInBulk, getAll, deleteById, updateById, handleCatch, createNew } from "../utils/common.js";
 import { OrganizationModel } from "../models/organizationSchema.js";
 
 export const createAssetType = (req, res, next) => {
@@ -33,7 +34,7 @@ export const UpdateAssetTypeById = (req, res, next) => {
                 .catch((err) => { handleCatch(err, res, 404, next) })
         }
         else {
-            updateById(req, res, next, DesignationModel, "Designation Details")
+            updateById(req, res, next, AssetTypeModel, "AssetType")
         }
     }
     catch (err) { handleCatch(err, res, 400, next) }

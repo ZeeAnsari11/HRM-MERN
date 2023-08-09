@@ -21,8 +21,6 @@ const Dashboard = () => {
             navigation('/login');
         }
     }, [])
-
-    const bg = 'bg-[url(https://images.unsplash.com/32/Mc8kW4x9Q3aRR3RkP5Im_IMG_4417.jpg?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80)]'
     
     if (loaded === true) return <SceneLoader />
     return (

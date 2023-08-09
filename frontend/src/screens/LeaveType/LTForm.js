@@ -1,7 +1,7 @@
 import Countries from '../User/elements/Countries';
 import React from 'react';
 
-export default function LTForm({ formData, handleInputChange }) {
+export default function LTForm({ formData, handleInputChange ,validationErrors}) {
   return <div>
     <div className="mb-4">
       <label className="block text-sm font-bold mb-1">Name</label>
@@ -13,6 +13,9 @@ export default function LTForm({ formData, handleInputChange }) {
         onChange={handleInputChange}
         require
       />
+      {validationErrors.name && (
+                    <p className="text-red-500 text-xs mt-1">{validationErrors.name}</p>
+                )}
     </div>
 
     <div className="mb-4">
@@ -26,6 +29,9 @@ export default function LTForm({ formData, handleInputChange }) {
         onChange={handleInputChange}
         required
       />
+      {validationErrors.shortName && (
+                    <p className="text-red-500 text-xs mt-1">{validationErrors.shortName}</p>
+                )}
     </div>
     <div className="mb-4 flex space-x-2 items-center">
       <label className="block text-sm font-bold">Short</label>
@@ -36,6 +42,7 @@ export default function LTForm({ formData, handleInputChange }) {
         checked={formData.shortLeave}
         onChange={handleInputChange}
       />
+      
     </div>
     <div className="mb-4 flex space-x-2 items-center">
       <label className="block text-sm font-bold">Attachment Required</label>
@@ -58,6 +65,9 @@ export default function LTForm({ formData, handleInputChange }) {
         onChange={handleInputChange}
         required
       />
+      {validationErrors.accumulativeCount && (
+                    <p className="text-red-500 text-xs mt-1">{validationErrors.accumulativeCount}</p>
+                )}
     </div>
 
   </div>

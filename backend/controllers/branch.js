@@ -54,7 +54,7 @@ export const updateBranch = (req, res, next) => {
                 .catch((err) => { handleCatch(err, res, 404, next)})
         }
         else {
-            updateById(req, res, next, DesignationModel, "Designation Details")
+            updateById(req, res, next, BranchModel, "Branch Details")
         }
     }
     catch (err) { handleCatch(err, res, 400, next)}

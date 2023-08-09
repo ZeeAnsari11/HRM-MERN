@@ -1,5 +1,5 @@
 import { deleteLoanType, updateLoanTypeById } from '../../api/LoanType';
-import { faArrowAltCircleRight, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faArrowAltCircleRight, faEye, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LoanTypeForm from './LoanTypeForm';
@@ -14,8 +14,27 @@ export default function LoanTypeView({ data, desiginationsList }) {
         type: data.type,
         designations: data.designations,
     });
-
+    const [validationErrors, setValidationErrors] = useState({
+        type: "",
+        designations: "",
+    });
+    
     const handleUpdateLoanType = (trigger) => {
+        const newValidationErrors = {};
+        if (formData.type.trim() === "") {
+            newValidationErrors.type = "Type is required.";
+        }
+        if (formData.designations === "" || formData.designations == undefined || formData.designations.length <=0) {
+            newValidationErrors.designations = "Select at least one designation";
+        }
+
+        if (Object.keys(newValidationErrors).length > 0) {
+            // Set validation errors and prevent closing the modal
+            setValidationErrors(newValidationErrors);
+            trigger();
+            return;
+        }
+        
         updateLoanTypeById(formData.id ,formData, trigger);
     };
 
@@ -27,7 +46,14 @@ export default function LoanTypeView({ data, desiginationsList }) {
     ];
 
     const handleInputChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    
+        // Clear validation error when user starts typing again
+        setValidationErrors({
+            ...validationErrors,
+            [name]: "",
+        });
     };
 
     const handleAction = (id) => {
@@ -35,12 +61,17 @@ export default function LoanTypeView({ data, desiginationsList }) {
     }
 
     return <div className="flex items-center space-x-2 justify-center">
-            <Modal
-                action={<FontAwesomeIcon icon={faArrowAltCircleRight} />}
-                title={''}
-                Element={<LoanTypeForm handleInputChange={handleInputChange} desiginationsList={desiginationsList} formData={formData}/>}
-                btnConfig={ViewBtnConfig}
-            />
+             <Modal
+            action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
+            Element={<LoanTypeForm formData={formData} handleInputChange={handleInputChange} desiginationsList={desiginationsList} validationErrors={validationErrors} />}
+            btnConfig={ViewBtnConfig}
+            check={(closeModal) => {
+                console.log("ready to close")
+                if (!validationErrors?.type && !validationErrors?.designations && formData?.type.trim()) {
+                    closeModal()
+                }
+            }}
+        />
         <button
             className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
             onClick={() => handleAction(data.id)}

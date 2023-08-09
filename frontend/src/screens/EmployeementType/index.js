@@ -18,7 +18,9 @@ const EmployeementType = () => {
     employmentType: '',
     organization: orgId,
   });
-
+  const [validationErrors, setValidationErrors] = useState({
+    employmentType: ''
+  });
   useEffect(() => {
     LoadData()
   }, [toggleChange]);
@@ -32,10 +34,28 @@ const EmployeementType = () => {
   }
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    // Clear validation error when user starts typing again
+    setValidationErrors({
+      ...validationErrors,
+      [name]: "",
+    });
   };
 
   const handleCreateEmployeementType = (trigger) => {
+    const newValidationErrors = {};
+    if (formData.employmentType.trim() === "") {
+      newValidationErrors.employmentType = "Employment Type is required.";
+    }
+    if (Object.keys(newValidationErrors).length > 0) {
+    
+      // Set validation errors and prevent closing the modal
+      setValidationErrors(newValidationErrors);
+      trigger();
+      return;
+    }
     createEmployeementType(formData, changeToggler, trigger);
     setFormData({
       employmentType: '',
@@ -52,11 +72,11 @@ const EmployeementType = () => {
       Header: 'Action',
       accessor: 'action',
       Cell: ({ row }) => (
-        <EmployeementTypeView data={row.original}/>
+        <EmployeementTypeView data={row.original} />
       ),
     },
   ];
-console.log("=======employmentTypes====",employmentTypes);
+
   const data = employmentTypes.map(obj => ({
     id: obj?._id,
     employmentType: obj?.employmentType,
@@ -70,18 +90,26 @@ console.log("=======employmentTypes====",employmentTypes);
   ]
 
   return (
-        <main className="mx-auto px-4 sm:px-6 pt-4">
-          <Table columns={columns} data={data} 
-            element={      
-              <Modal
-                action="Create Employment Type"
-                title="Create Employment Type"
-                btnStyle={commonStyles.btnDark}
-                Element={<EmployeementTypeForm formData={formData} handleInputChange={handleInputChange} />}
-                btnConfig={btnConfig}
-              />}
-          />
-        </main>
+     <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+     <div className="mt-6">
+         <Table columns={columns} data={data} element={
+             <Modal
+                 action="Create Employment Type"
+                 title="Create Employment Type"
+                 btnStyle={commonStyles.btnDark}
+                 Element={<EmployeementTypeForm formData={formData} handleInputChange={handleInputChange}  validationErrors={validationErrors} />}
+                 btnConfig={btnConfig}
+                 validationErrors={validationErrors}
+                 check={(closeModal) => {
+                     if (!validationErrors?.employmentType && formData?.employmentType.trim()) {
+                         closeModal()
+                     }
+                 }}
+             />
+         } />
+
+     </div>
+ </main>
   );
 };
 

@@ -1,6 +1,7 @@
 import { deleteDesiginationById, updateDesiginationById } from '../../api/designation';
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 
+import CDForm from './CDForm';
 import CUForm from '../Profile/elements/common/CUForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
@@ -11,22 +12,36 @@ export default function DesiginationsView({ data }) {
 
     const [formData, setFormData] = useState({
         title: data.title,
-        shortForm:data.shortForm
+        shortForm: data.shortForm
     });
-    
+
     const [validationErrors, setValidationErrors] = useState({
         title: "",
         shortForm: "",
     });
 
-    const handleUpdateDepartmennt = (trigger) => {
+    const handleUpdateDesignations = (trigger) => {
+        const newValidationErrors = {};
+        if (formData.title === "") {
+            newValidationErrors.title = "Title is required.";
+        }
+        if (formData.shortForm === "") {
+            newValidationErrors.shortForm = "Short Name is required.";
+        }
+
+        if (Object.keys(newValidationErrors).length > 0) {
+            // Set validation errors and prevent closing the modal
+            setValidationErrors(newValidationErrors);
+            trigger();
+            return;
+        }
         updateDesiginationById(data.id, formData, trigger);
     };
 
     // const handleInputChange = (e) => {
     //     setFormData({ ...formData, [e.target.name]: e.target.value });
     // };
-    
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -58,7 +73,7 @@ export default function DesiginationsView({ data }) {
 
     const btnConfig = [{
         title: 'Update',
-        handler: handleUpdateDepartmennt,
+        handler: handleUpdateDesignations,
     }]
 
 
@@ -71,19 +86,19 @@ export default function DesiginationsView({ data }) {
         <Modal
             action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
             title={title}
-            Element={<CUForm config={formDataConfig} handleInputChange={handleInputChange} isFull={false} validationErrors={validationErrors} />}
+            Element={<CDForm formData={formData} handleInputChange={handleInputChange} validationErrors={validationErrors} />}
             btnConfig={btnConfig}
             check={(closeModal) => {
-                    if (!validationErrors?.title && !validationErrors?.shortForm && formData?.title.trim() && formData?.shortForm.trim()) {
-                        closeModal()
-                    }
-                }}
+                if (!validationErrors?.title && !validationErrors?.shortForm && formData?.title.trim() && formData?.shortForm.trim()) {
+                    closeModal()
+                }
+            }}
         />
-        <button
+        {/* <button
             className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
             onClick={() => handleAction(data.id)}
         >
             <FontAwesomeIcon icon={faTrash} />
-        </button>
+        </button> */}
     </div>
 }

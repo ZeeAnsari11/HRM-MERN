@@ -24,6 +24,7 @@ export default function Modal({ action, title, Element, btnConfig, onClose=null,
 
   function closeLoader() {
     setIsLoader(false);
+    console.log("I am readyu to close")
     check(closeModal)
     // Close the modal only if there were no errors during form submission
    
@@ -111,7 +112,7 @@ export default function Modal({ action, title, Element, btnConfig, onClose=null,
                             item.handler(() => {
                               // Close the modal only when the form is successfully submitted.
                               closeLoader();
-                              if (onClose !== null) onClose();
+                              // if (onClose !== null) onClose();
                             });
                           }}
                         >

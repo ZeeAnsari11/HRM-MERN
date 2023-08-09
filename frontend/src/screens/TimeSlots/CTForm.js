@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CTForm = ({ formData, handleInputChange }) => {
+const CTForm = ({ formData, handleInputChange , validationErrors}) => {
     return (
         <form>
             <div className="mb-4">
@@ -9,10 +9,13 @@ const CTForm = ({ formData, handleInputChange }) => {
                     className="border border-gray-300 rounded-md px-3 py-2 w-full bg-gray-50"
                     type="text"
                     name="name"
-                    value={formData.name}
+                    value={formData?.name}
                     onChange={handleInputChange}
                     required
                 />
+                {validationErrors?.name && (
+                    <p className="text-red-500 text-xs mt-1">{validationErrors?.name}</p>
+                )}
             </div>
             <div className="mb-4">
                 <label className="block text-sm font-bold mb-1">Start Time</label>
@@ -24,6 +27,9 @@ const CTForm = ({ formData, handleInputChange }) => {
                     onChange={handleInputChange}
                     required
                 />
+                {validationErrors?.startTime && (
+                    <p className="text-red-500 text-xs mt-1">{validationErrors?.startTime}</p>
+                )}
             </div>
             <div className="mb-4">
                 <label className="block text-sm font-bold mb-1">End Time</label>
@@ -35,6 +41,9 @@ const CTForm = ({ formData, handleInputChange }) => {
                     onChange={handleInputChange}
                     required
                 />
+                {validationErrors?.endTime && (
+                    <p className="text-red-500 text-xs mt-1">{validationErrors?.endTime}</p>
+                )}
             </div>
             <div className="mb-4">
                 <label className="block text-sm font-bold mb-1">Is Overnight</label>
@@ -62,6 +71,9 @@ const CTForm = ({ formData, handleInputChange }) => {
                     max={1440}
                     required
                 />
+                {validationErrors?.lateBuffer && (
+                    <p className="text-red-500 text-xs mt-1">{validationErrors?.lateBuffer}</p>
+                )}
             </div>
             <div className="mb-4">
                 <label className="block text-sm font-bold mb-1">Early Buffer</label>
@@ -76,6 +88,9 @@ const CTForm = ({ formData, handleInputChange }) => {
                     max={1440}
                     required
                 />
+                {validationErrors?.earlyBuffer && (
+                    <p className="text-red-500 text-xs mt-1">{validationErrors?.earlyBuffer}</p>
+                )}
             </div>
             <div className="mb-4">
                 <label className="block text-sm font-bold mb-1">Punch Buffer Start</label>
@@ -90,6 +105,9 @@ const CTForm = ({ formData, handleInputChange }) => {
                     max={1440}
                     required
                 />
+                {validationErrors?.punchBufferStart && (
+                    <p className="text-red-500 text-xs mt-1">{validationErrors?.punchBufferStart}</p>
+                )}
             </div>
             <div className="mb-4">
                 <label className="block text-sm font-bold mb-1">Punch Buffer End</label>
@@ -104,6 +122,9 @@ const CTForm = ({ formData, handleInputChange }) => {
                     max={1440}
                     required
                 />
+                {validationErrors?.punchBufferEnd && (
+                    <p className="text-red-500 text-xs mt-1">{validationErrors?.punchBufferEnd}</p>
+                )}
             </div>
             <div className="mb-4">
                 <label className="block text-sm font-bold mb-1">Break Name</label>
@@ -115,6 +136,9 @@ const CTForm = ({ formData, handleInputChange }) => {
                     onChange={handleInputChange}
                     required
                 />
+                {validationErrors?.break?.name && (
+                    <p className="text-red-500 text-xs mt-1">{validationErrors?.break?.name}</p>
+                )}
             </div>
             <div className="mb-4">
                 <label className="block text-sm font-bold mb-1">Break Start Time</label>
@@ -126,6 +150,9 @@ const CTForm = ({ formData, handleInputChange }) => {
                     onChange={handleInputChange}
                     required
                 />
+                {validationErrors?.break?.startTime && (
+                    <p className="text-red-500 text-xs mt-1">{validationErrors?.break?.startTime}</p>
+                )}
             </div>
             <div className="mb-4">
                 <label className="block text-sm font-bold mb-1">Break End Time</label>
@@ -137,6 +164,9 @@ const CTForm = ({ formData, handleInputChange }) => {
                     onChange={handleInputChange}
                     required
                 />
+                {validationErrors?.break?.endTime && (
+                    <p className="text-red-500 text-xs mt-1">{validationErrors?.break?.endTime}</p>
+                )}
             </div>
             <div className="mb-4">
                 <label className="block text-sm font-bold mb-1">Break Inclusive</label>
@@ -150,6 +180,7 @@ const CTForm = ({ formData, handleInputChange }) => {
                     <option value={true}>True</option>
                     <option value={false}>False</option>
                 </select>
+               
             </div>
         </form>
     )
