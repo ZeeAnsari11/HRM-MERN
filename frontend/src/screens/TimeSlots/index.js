@@ -3,7 +3,6 @@ import { createTimeSlot, getTimeSlotsByOrgId } from '../../api/timeSlots';
 import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
 
 import CTForm from './CTForm';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import TimeSlotsView from './TimeSlotsView';
@@ -32,6 +31,23 @@ const TimeSlots = () => {
     },
     organization: orgId,
   });
+  const [validationErrors, setValidationErrors] = useState({
+    name: '',
+    startTime: '',
+    endTime: '',
+    isOverNight: false,
+    lateBuffer: '',
+    earlyBuffer: '',
+    punchBufferStart: '',
+    punchBufferEnd: '',
+    break: {
+      name: '',
+      startTime: '',
+      endTime: '',
+      inclusive: true
+    },
+    organization: orgId,
+  })
 
   const handleInputChange = (e) => {
     if (e.target.name.startsWith('break.')) {
@@ -42,11 +58,23 @@ const TimeSlots = () => {
           [e.target.name.split('.')[1]]: e.target.value
         }
       });
+      setValidationErrors({
+        ...validationErrors,
+        "break": { ...validationErrors.break, [e.target.name]: "" },
+        [e.target.name]: "", // Add this line
+      });
+
     } else {
       setFormData({
         ...formData,
         [e.target.name]: e.target.value
       });
+      setValidationErrors({
+        ...validationErrors,
+        "break": { ...validationErrors.break, [e.target.name]: "" },
+        [e.target.name]: "", // Add this line
+      });
+
     }
   };
 
@@ -63,7 +91,48 @@ const TimeSlots = () => {
     getTimeSlotsByOrgId(orgId, setTimeSlots)
   }
 
-  const handleCreateBranch = (trigger) => {
+  const handleCreateTimeSlots = (trigger) => {
+    const newValidationErrors = {};
+    if (formData.name.trim() === "") {
+      newValidationErrors.name = "Name is required.";
+    }
+    if (formData.startTime.trim() === "") {
+      newValidationErrors.startTime = "Start Time is required.";
+    }
+    if (formData.endTime.trim() === "") {
+      newValidationErrors.endTime = "End Time is required.";
+    }
+    if (formData.lateBuffer.trim() === "") {
+      newValidationErrors.lateBuffer = "Late Buffer is required.";
+    }
+    if (formData.earlyBuffer.trim() === "") {
+      newValidationErrors.earlyBuffer = "Early Buffer Time is required.";
+    }
+    if (formData.punchBufferStart.trim() === "") {
+      newValidationErrors.punchBufferStart = "Punch BufferStart Time is required.";
+    }
+    if (formData.punchBufferEnd.trim() === "") {
+      newValidationErrors.punchBufferEnd = "Punch BufferEnd Time is required.";
+    }
+
+    if (formData.break.name.trim() === "") {
+      newValidationErrors.break = {}
+      newValidationErrors.break.name = "Break Name is required.";
+    }
+    if (formData.break.startTime.trim() === "") {
+      newValidationErrors.break = {...newValidationErrors.break}
+      newValidationErrors.break.startTime = "Break startTime is required.";
+    }
+    if (formData.break.endTime.trim() === "") {
+      newValidationErrors.break = {...newValidationErrors.break}
+      newValidationErrors.break.endTime = "Break endTime is required.";
+    }
+    if (Object.keys(newValidationErrors).length > 0) {
+      // Set validation errors and prevent closing the modal
+      setValidationErrors(newValidationErrors);
+      trigger();
+      return;
+    }
     createTimeSlot(formData, changeToggler, trigger);
     setFormData({
       name: '',
@@ -119,14 +188,14 @@ const TimeSlots = () => {
     const formattedMinute = minute.toString().padStart(2, '0');
 
     return `${formattedHour}:${formattedMinute} ${meridiem}`;
-};
-// console.log("=====time", timeSlots[0].startTime);
+  };
+  // console.log("=====time", timeSlots[0].startTime);
   const data = timeSlots.map((obj) => ({
     id: obj._id,
     name: obj.name,
     startTime: obj.startTime,
     endTime: obj.endTime,
-    slotTime : `${convertToAMPM(obj.startTime)} - ${convertToAMPM(obj.endTime)}`,
+    slotTime: `${convertToAMPM(obj.startTime)} - ${convertToAMPM(obj.endTime)}`,
     bufferTime: `${obj.punchBufferStart} - ${obj.punchBufferEnd}`,
     breakTime: `${convertToAMPM(obj.break.startTime)} - ${convertToAMPM(obj.break.endTime)}`,
     lateBuffer: obj.lateBuffer,
@@ -147,23 +216,51 @@ const TimeSlots = () => {
   const btnConfig = [
     {
       title: 'Create',
-      handler: handleCreateBranch,
+      handler: handleCreateTimeSlots,
     }
   ]
 
   return (
-      <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-          <Table columns={columns} data={data} 
-            element={
-              <Modal
-                action="Create Timeslot"
-                title="Create Timeslot"
-                btnStyle={commonStyles.btnDark}
-                Element={<CTForm formData={formData} handleInputChange={handleInputChange} />}
-                btnConfig={btnConfig}
-              />
-            }/>
-      </main>
+    <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <div className="mt-6">
+        <Table columns={columns} data={data} element={
+          <Modal
+            action="Create TimeSlots"
+            title="Create TimeSlots"
+            btnStyle={commonStyles.btnDark}
+            Element={<CTForm formData={formData} handleInputChange={handleInputChange} validationErrors={validationErrors} />}
+            btnConfig={btnConfig}
+            validationErrors={validationErrors}
+            check={(closeModal) => {
+              if (
+                !validationErrors.name &&
+                !validationErrors.startTime &&
+                !validationErrors.endTime &&
+                !validationErrors.lateBuffer &&
+                !validationErrors.earlyBuffer &&
+                !validationErrors.punchBufferStart &&
+                !validationErrors.punchBufferEnd &&
+                !validationErrors.break?.name &&
+                !validationErrors.break?.startTime &&
+                !validationErrors.break?.endTime &&
+                formData?.name.trim() &&
+                formData.startTime &&
+                formData.endTime &&
+                formData.lateBuffer &&
+                formData.earlyBuffer &&
+                formData.punchBufferStart &&
+                formData.punchBufferEnd &&
+                formData.break?.name.trim() &&
+                formData.break?.startTime &&
+                formData.break?.endTime
+              ) {
+                closeModal();
+              }
+            }}
+          />
+        } />
+      </div>
+    </main>
   );
 };
 

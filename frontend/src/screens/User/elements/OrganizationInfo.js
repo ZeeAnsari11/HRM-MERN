@@ -37,12 +37,22 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
     }, []);
 
 
+    // const convertToAMPM = (time) => {
+    //     const [hours, minutes] = time.split(':');
+    //     const formattedTime = new Date();
+    //     formattedTime.setHours(hours, minutes);
+    //     return formattedTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+    // }
     const convertToAMPM = (time) => {
         const [hours, minutes] = time.split(':');
-        const formattedTime = new Date();
-        formattedTime.setHours(hours, minutes);
-        return formattedTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
-    }
+        const hour = parseInt(hours, 10);
+        const minute = parseInt(minutes, 10);
+        const meridiem = hour >= 12 ? 'PM' : 'AM';
+        const formattedHour = hour % 12 || 12;
+        const formattedMinute = minute.toString().padStart(2, '0');
+    
+        return `${formattedHour}:${formattedMinute} ${meridiem}`;
+      };
     return (
         <form className="lg:col-span-2 space-y-4" onSubmit={(e) => {
             e.preventDefault();

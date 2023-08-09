@@ -32,6 +32,9 @@ export const deleteAssetType = (id) => {
     axios.delete(assetType.deleteAssetType+id)
     .then((response) => {
         toastMessage("success", response.data.Message, toast) 
+        setTimeout(() => {
+            window.location.href = "/dashboard/asset-type"
+        }, 2000)
     })
     .catch((err) => { 
         toastMessage("error", err.response.data.Message, toast) 
@@ -42,6 +45,9 @@ export const updateAssetType = (id, data, trigger) => {
     axios.put(assetType.deleteAssetType+id, data)
     .then((response) => {
         toastMessage("success", response.data.Message, toast)
+        setTimeout(() => {
+            window.location.href = "/dashboard/asset-type"
+        }, 2000)
     })
     .catch((err) => { 
         toastMessage("error", err.response.data.Message, toast) 

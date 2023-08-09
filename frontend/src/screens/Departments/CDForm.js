@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CDForm = ({ branches, formData, handleInputChange, validationErrors}) => {
+const CDForm = ({ branches, formData, handleInputChange ,validationErrors}) => {
 
     return (
         <form>

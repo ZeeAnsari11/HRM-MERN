@@ -23,7 +23,10 @@ const LoanType = () => {
     type: '',
     organization: orgId,
   });
-
+  const [validationErrors, setValidationErrors] = useState({
+    type: "",
+    designations: "",
+});
   useEffect(() => {
     LoadData();
   }, [toggleChange]);
@@ -44,16 +47,37 @@ const LoanType = () => {
   };
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
 
+    // Clear validation error when user starts typing again
+    setValidationErrors({
+        ...validationErrors,
+        [name]: "",
+    });
+};
 
 
   const handleUpdateLoanType = (trigger) => {
+    const newValidationErrors = {};
+        if (formData.type.trim() === "") {
+            newValidationErrors.type = "Type is required.";
+        }
+        if (formData.designations === "" || formData.designations == undefined || formData.designations.length <=0) {
+            newValidationErrors.designations = "Select at least one designation";
+        }
+
+        if (Object.keys(newValidationErrors).length > 0) {
+            // Set validation errors and prevent closing the modal
+            setValidationErrors(newValidationErrors);
+            trigger();
+            return;
+        }
+        
     createLoanType(formData, changeToggler, trigger);
     setFormData({
       type: '',
-      designations: [],
+      designations: '',
       organization: orgId,
     });
   };
@@ -107,17 +131,26 @@ const LoanType = () => {
     },
   ];
   return (
-        <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-          <Table columns={columns} data={data} element={
-                <Modal
-                  action="Create Loan Type"
-                  title="Create Loan Type"
-                  btnStyle={commonStyles.btnDark}
-                  Element={<LoanTypeForm formData={formData} handleInputChange={handleInputChange} desiginationsList={desiginations} />}
-                  btnConfig={btnConfig}
-                />
-          }/>
-        </main>
+         <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+         <div className="mt-6">
+             <Table columns={columns} data={data} element={
+                 <Modal
+                     action="Create Loan Type"
+                     title="Create Loan Type"
+                     btnStyle={commonStyles.btnDark}
+                     Element={<LoanTypeForm formData={formData} handleInputChange={handleInputChange} desiginationsList={desiginations.filter((designation)=>designation.title!="")} validationErrors={validationErrors} />}
+                     btnConfig={btnConfig}
+                     validationErrors={validationErrors}
+                     check={(closeModal) => {
+                         if (!validationErrors?.type && !validationErrors?.designations && formData?.type.trim()) {
+                             closeModal()
+                         }
+                     }}
+                 />
+             } />
+
+         </div>
+     </main>
   );
 };
 

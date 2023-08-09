@@ -15,27 +15,60 @@ export default function LeaveTypeView({ data }) {
         name: data.name,
     });
 
+    const [validationErrors, setValidationErrors] = useState({
+        name: '',
+        shortName: '',
+        accumulativeCount: '',
+    })
+
     const handleUpdateLeaveType = (trigger) => {
-        updateLeaveTypeById(data.id ,formData, trigger);
+        const newValidationErrors = {};
+        if (formData.name.trim() === "") {
+            newValidationErrors.name = "Name is required.";
+        }
+        if (formData.shortName.trim() === "") {
+            newValidationErrors.shortName = "Short Name is required.";
+        }
+        if (formData.accumulativeCount === "") {
+            newValidationErrors.accumulativeCount = "Accumulative Count is required.";
+        }
+        if (Object.keys(newValidationErrors).length > 0) {
+            // Set validation errors and prevent closing the modal
+            setValidationErrors(newValidationErrors);
+            trigger();
+            return;
+        }
+        updateLeaveTypeById(data.id, formData, trigger);
     };
 
     const ViewBtnConfig = [
         {
-          title: 'Update',
-          handler: handleUpdateLeaveType,
+            title: 'Update',
+            handler: handleUpdateLeaveType,
         },
     ];
 
     const handleInputChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value, type, checked } = e.target;
+        const newValue = type === 'checkbox' ? checked : value;
+        setFormData({ ...formData, [name]: newValue });
+        setValidationErrors({
+            ...validationErrors,
+            [name]: "",
+        });
     };
 
     return <div className="flex items-center space-x-2">
-            <Modal
-                action={<FontAwesomeIcon icon={faArrowAltCircleRight} />}
-                title={''}
-                Element={<LTForm handleInputChange={handleInputChange} formData={formData}/>}
-                btnConfig={ViewBtnConfig}
-            />
+        <Modal
+            action={<FontAwesomeIcon icon={faArrowAltCircleRight} />}
+            title={''}
+            Element={<LTForm handleInputChange={handleInputChange} formData={formData} validationErrors={validationErrors}/>}
+            btnConfig={ViewBtnConfig}
+            check={(closeModal) => {
+                if (!validationErrors?.name && !validationErrors?.shortName && !validationErrors?.accumulativeCount && formData?.name.trim() && formData?.shortName.trim() && formData?.accumulativeCount) {
+                    closeModal()
+                }
+            }}
+        />
     </div>
 }

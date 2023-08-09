@@ -19,6 +19,10 @@ const Allowances = () => {
     percrentageOfBaseSalary: '',
     organization: orgId,
   });
+  const [validationErrors, setValidationErrors] = useState({
+    allowanceName: '',
+    percrentageOfBaseSalary: ''
+  })
 
   useEffect(() => {
     LoadData()
@@ -33,10 +37,32 @@ const Allowances = () => {
   }
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    // Clear validation error when user starts typing again
+    setValidationErrors({
+      ...validationErrors,
+      [name]: "",
+    });
   };
 
   const handleCreateAssetType = (trigger) => {
+    const newValidationErrors = {};
+    if (formData.allowanceName.trim() === "") {
+      newValidationErrors.allowanceName = "Allowance Name is required.";
+    }
+    if (formData.percrentageOfBaseSalary.trim() === "") {
+      newValidationErrors.percrentageOfBaseSalary = "% of Base Salary is required.";
+    }
+
+    if (Object.keys(newValidationErrors).length > 0) {
+      // Set validation errors and prevent closing the modal
+      setValidationErrors(newValidationErrors);
+      trigger();
+      return;
+    }
+    
     createAllowance(formData, changeToggler, trigger);
     setFormData({
       allowanceName: '',
@@ -76,17 +102,25 @@ const Allowances = () => {
   ]
 
   return (
-      <main className="py-4">
-          <Table columns={columns} data={data} element={
-             <Modal
-             action="Create Allowance"
-             title="Create Allowance"
-             btnStyle={commonStyles.btnDark}
-             Element={<AllowanceForm formData={formData} handleInputChange={handleInputChange} />}
-             btnConfig={btnConfig}
-           />
-          }/>
-        </main>
+
+        <main className="mx-auto px-4 sm:px-6 pt-4">
+        <Table columns={columns} data={data}
+          element={
+            <Modal
+              action="Create Allowance"
+              title="Create Allowance"
+              btnStyle={commonStyles.btnDark}
+              Element={<AllowanceForm formData={formData} handleInputChange={handleInputChange} validationErrors={validationErrors}/>}
+              btnConfig={btnConfig}
+              validationErrors={validationErrors}
+          check={(closeModal) => {
+            if (!validationErrors?.allowanceName && !validationErrors?.percrentageOfBaseSalary  && formData?.allowanceName.trim() && formData?.percrentageOfBaseSalary ) {
+              closeModal()
+            }
+          }}
+            />
+          } />
+      </main>
   );
 };
 

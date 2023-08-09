@@ -6,7 +6,7 @@ import React from 'react';
 import logo from '../../assets/logo-white.png';
 import logoNoText from '../../assets/logo-no-text.png';
 import { selectCurrentUser } from '../../states/reducers/slices/backend/UserSlice';
-import {useSelector} from 'react-redux'
+import { useSelector } from 'react-redux'
 
 const Navbar = () => {
     let open = useSelector(selectNavState);
