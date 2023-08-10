@@ -6,6 +6,7 @@ import Loader from '../../../components/Loader';
 import OrganizationalInfo from './OrganizationalInfo';
 import RestDays from '../../User/elements/RestDays';
 import UserName from './UserName';
+import { commonStyles } from '../../../styles/common';
 import { createOrganizationFirstUser } from '../../../api/organization';
 import { useNavigate } from 'react-router-dom';
 
@@ -185,17 +186,9 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
         (page === 4) && (
           <>
           <CBForm validationErrors={validationErrors} disableFields={loader} formData={branch} handleInputChange={handleInputChangeBranch}/>
-          <div className='w-full'>
+          <div className='w-full text-right'>
           <button
-              className="px-6
-                          py-2
-                          text-sm text-white
-                          bg-[#1567B1]
-                          rounded-lg
-                          outline-none
-                          hover:bg-[#1567D7]
-                          flex float-right
-                        "
+              className={commonStyles.btnDark}
               onClick={() => {
                 if (handleUpdateBranches()) {
                   setLoader(true)
