@@ -1,6 +1,6 @@
 import { Disclosure } from "@headlessui/react";
 import { Link } from "react-router-dom";
-
+import image from "../../../assets/NexHr.webp"
 const Navbar = () => {
   const navigation = [
     "Features",
@@ -11,7 +11,7 @@ const Navbar = () => {
 
   return (
     <div className="w-full backdrop-blur-lg fixed px-8 tablet:px-2 shadow-md">
-      <nav className="container flex flex-wrap items-center justify-between p-8 mx-auto lg:justify-between xl:px-0">
+      <nav className="container flex flex-wrap items-center justify-between px-8 py-2 mx-auto lg:justify-between xl:px-0">
         {/* Logo  */}
         <Disclosure>
           {({ open }) => (
@@ -19,11 +19,11 @@ const Navbar = () => {
               <div className="flex flex-wrap items-center justify-between w-full lg:w-auto">
                 <Link to="/">
                       <img
-                        src='https://nexius.ai/wp-content/uploads/2023/05/nexius-hghres.webp'
+                        src={image}
                         alt="N"
                         width="32"
                         height="32"
-                        className="w-2/3"
+                        className="w-[160px]"
                       />
                 </Link>
 

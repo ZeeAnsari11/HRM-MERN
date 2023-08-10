@@ -6,23 +6,9 @@ import Loader from '../../../components/Loader';
 import OrganizationalInfo from './OrganizationalInfo';
 import RestDays from '../../User/elements/RestDays';
 import UserName from './UserName';
-import { commonStyles } from '../../../styles/common';
 import { createOrganizationFirstUser } from '../../../api/organization';
 import { useNavigate } from 'react-router-dom';
 
-// email: '',
-// pswd: '',
-//    cpswd: '',
-//     orgName: '',
-//     orgLogo: '',
-//     orgAddress: '',
-//     orgPrefix: '',
-//     orgDescription: '',
-//     orgRestDays: '',
-//     branchName: '',
-//     branchCountry: '',
-//     branchCity: '',
-//     branchDescription: '',
 const Forms = ({ page, handlePrevPage, handleNextPage }) => {
   const navigation = useNavigate()
   const [file, setFile] = useState(null);
@@ -40,8 +26,13 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
     restDays: [],
   })
   const [loader, setLoader] = useState(false)
-  const [isButtonDisabled, setButtonDisabled] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
+  const [validationErrors, setValidationErrors] = useState({
+    name: '',
+    city: '',
+    country: '',
+    description:'',
+  })
   const [formData, setFormData] = React.useState({
     firstName: '',
     lastName: '',
@@ -69,7 +60,12 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
     timeZone: "EST",
     start: Date.now(),
   })
-  const [branch, setBranch] = useState({})
+  const [branch, setBranch] = useState({
+    name: '',
+    city: '',
+    country: '',
+    description:'',
+  })
   
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -83,6 +79,10 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
   
   const handleInputChangeBranch = ({target: {name, value}}) => {
     setBranch(branch => ({...branch, [name]: value}));
+    setValidationErrors({
+      ...validationErrors,
+      [name]: "",
+    });
   };
 
   const ValidateStepOne = () => {
@@ -119,15 +119,34 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
     setError(newErrors);
     return (Object.keys(newErrors).length === 0)
   }
+  const handleUpdateBranches = () => {
+    const newValidationErrors = {};
+    if (branch.name.trim() === "") {
+      newValidationErrors.name = "Name is required.";
+    }
+    if (branch.city.trim() === "") {
+      newValidationErrors.city = "City Name is required.";
+    }
+    if (branch.country.trim() === "") {
+      newValidationErrors.country = "Country Name is required.";
+    }
+    if (branch.description.trim() === "") {
+      newValidationErrors.description = "Description Name is required.";
+    }
+
+    setValidationErrors(newValidationErrors);
+    
+    return (Object.keys(newValidationErrors).length === 0)
+  };
   
   const ValidateStepThree = () => {
     const newErrors = {};
     if (!formData.name) {
       newErrors.name = 'Organization name is required';
     }
-    if (!formData.name) {
-      newErrors.logo = 'Organization logo is required';
-    }
+    // if (!formData.logo) {
+    //   newErrors.logo = 'Organization logo is required';
+    // }
     if (!formData.userCode.prefix) {
       newErrors.prefix = 'Organization prefix is required';
     }
@@ -151,7 +170,6 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
       [name]: value ? '' : `${name} is required`,
     }));
   };
-  console.log("Form Data", formData)
   return (
     <div>
       {
@@ -166,7 +184,7 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
       {
         (page === 4) && (
           <>
-          <CBForm disableFields={loader} formData={branch} handleInputChange={handleInputChangeBranch}/>
+          <CBForm validationErrors={validationErrors} disableFields={loader} formData={branch} handleInputChange={handleInputChangeBranch}/>
           <div className='w-full'>
           <button
               className="px-6
@@ -179,16 +197,19 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
                           flex float-right
                         "
               onClick={() => {
-                setLoader(true)
-                let restDays = formData.roaster.restDays;
-                let obj = {...formData}
-                obj['restDays'] = restDays
-                delete obj['roaster']
-                delete obj['c_password']
-                obj.branch = branch
-                obj.logo = previewUrl
-                obj.firstUser = true
-                createOrganizationFirstUser(obj, navigation)
+                if (handleUpdateBranches()) {
+                  setLoader(true)
+                  let restDays = formData.roaster.restDays;
+                  let obj = {...formData}
+                  obj['restDays'] = restDays
+                  delete obj['roaster']
+                  delete obj['c_password']
+                  obj.branch = branch
+                  obj.logo = previewUrl
+                  obj.firstUser = true
+                  console.log(obj)
+                  createOrganizationFirstUser(obj, navigation) 
+                }
               }}
               disabled={loader}
               

@@ -1,6 +1,7 @@
 import Container from "./container";
 import { Link } from "react-router-dom";
 import React from "react";
+import image from "../../../assets/NexHr.webp"
 
 export default function Footer() {
   const navigation = [
@@ -17,7 +18,7 @@ export default function Footer() {
         <div className="flex flex-wrap tablet:space-y-4 max-w-screen-xl justify-between pt-10 mt-5 border-t border-gray-100 px-8 tablet:px-2">
           <div>
             <a href="/">
-              <img src="https://nexius.ai/wp-content/uploads/2023/05/nexius-hghres.webp" alt="N" width="32" height="32" className="w-1/3"/>
+              <img src={image} alt="N" width="32" height="32"  className="w-[160px] -my-8 "/>
             </a>
           
             <div className="max-w-md mt-4 text-gray-500 dark:text-gray-400">
