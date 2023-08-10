@@ -3,15 +3,16 @@ import { ToastContainer, toast } from 'react-toastify';
 import Loader from '../../components/Loader';
 import React from 'react'
 import axios from 'axios';
+import { commonStyles } from '../../styles/common';
 import { toastMessage } from '../../AlertConfigs';
 import { useNavigate } from 'react-router-dom'
 
 const ForgotPassword = () => {
     const [email, setEmail] = React.useState('');
+    const [error, setError] = React.useState('');
     const [loader, setLoader] = React.useState(false);
     const navigation = useNavigate();
-    const submitForgotPasswordRequest = () => {
-        setLoader(true)
+    const requestForgotPassword = () => {
         axios.post('http://127.0.0.1:4000/api/v1/password/forgot', {email})
         .then((response) => {
             toastMessage("success", response.data.message, toast)
@@ -19,6 +20,20 @@ const ForgotPassword = () => {
         .catch(() => {
             toastMessage("error", "Something went wrong! Try again later.", toast)
         })
+        .finally(() => setLoader(false))
+    }
+    const submitForgotPasswordRequest = (e) => {
+        e.preventDefault()
+        setLoader(true)
+        if (email.trim() === '') {
+            setError('Email is required')
+            setLoader(false)
+        }
+        else {
+            requestForgotPassword()
+            setError('')   
+        }
+
     }
     return (
         <div className="flex justify-center items-center w-screen h-screen px-4 mobile:px-8 bg-lightBgColor">
@@ -31,7 +46,7 @@ const ForgotPassword = () => {
                         link to reset your password!
                     </p>
                 </div>
-                <form className="px-8 tablet:px-2 pt-6 pb-8 mb-4 rounded">
+                <form onSubmit={submitForgotPasswordRequest} className="px-8 tablet:px-2 pt-6 pb-8 mb-4 rounded">
                     <div className="mb-4">
                         <label className="sr-only" htmlFor="email">
                             Email
@@ -43,13 +58,15 @@ const ForgotPassword = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Enter Email Address..."
+                            disabled={loader}
                         />
+                        { (error !== '') && <p className={commonStyles.error}>{error}</p> }
                     </div>
                     <div className="mb-6 text-center">
                         <button
-                            onClick={submitForgotPasswordRequest}
+                            disabled={loader}
                             className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-                            type="button"
+                            type="submit"
                         >
                             Reset Password {(loader) && <span className='h-full'><Loader color={'white'}/></span>}
                         </button>
