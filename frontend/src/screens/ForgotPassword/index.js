@@ -25,7 +25,7 @@ const ForgotPassword = () => {
     const submitForgotPasswordRequest = (e) => {
         e.preventDefault()
         setLoader(true)
-        if (email === '') {
+        if (email.trim() === '') {
             setError('Email is required')
             setLoader(false)
         }

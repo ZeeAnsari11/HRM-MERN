@@ -4,7 +4,7 @@ import Logo from '../../../components/Logo';
 
 const Hero = () => {
   return (
-    <div className="px-8 tablet:px-2 pt-32">
+    <div className="px-8 tablet:px-2 pt-32 h-screen">
       <Container className="flex flex-wrap h-full">
         <div className="flex items-center w-full lg:w-1/2">
           <div className="max-w-2xl mb-8 space-y-4 tablet:text-center">

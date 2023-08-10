@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import Block from './Block';
+import { commonStyles } from '../../../styles/common';
 
 const plans = [
   {
@@ -33,7 +34,7 @@ const plans = [
   },
 ];
 
-export default function RestDays({ handleInputChange, value }) {
+export default function RestDays({ handleInputChange, value, error=null }) {
   const [restDays, setRestDays] = useState([]);
 
   useEffect(() => {
@@ -56,16 +57,19 @@ export default function RestDays({ handleInputChange, value }) {
   };
 
   return (
-    <div className='grid grid-cols-5 mobile:grid-cols-2 tablet:grid-cols-3 mx-auto gap-4 py-2'>
-      {plans.map((item) => (
-        <Block
-          handleRestDays={handleRestDays}
-          key={item.index}
-          item={item}
-          selected={restDays.includes(item.index)}
-        />
-      ))}
-    </div>
+    <>
+      <div className='grid grid-cols-5 mobile:grid-cols-2 tablet:grid-cols-3 mx-auto gap-4 py-2'>
+        {plans.map((item) => (
+          <Block
+            handleRestDays={handleRestDays}
+            key={item.index}
+            item={item}
+            selected={restDays.includes(item.index)}
+          />
+        ))}
+      </div>
+      {error && <p className={`text-left ${commonStyles.error}`}>{error}</p>}
+    </>
   );
 }
 

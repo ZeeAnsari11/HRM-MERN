@@ -1,17 +1,60 @@
 import React, { useState } from 'react'
 
 import CBForm from '../../Branches/CBForm';
+import Credential from './Credential';
 import Loader from '../../../components/Loader';
+import OrganizationalInfo from './OrganizationalInfo';
 import RestDays from '../../User/elements/RestDays';
+import UserName from './UserName';
+import { commonStyles } from '../../../styles/common';
 import { createOrganizationFirstUser } from '../../../api/organization';
 import { useNavigate } from 'react-router-dom';
 
+// email: '',
+// pswd: '',
+//    cpswd: '',
+//     orgName: '',
+//     orgLogo: '',
+//     orgAddress: '',
+//     orgPrefix: '',
+//     orgDescription: '',
+//     orgRestDays: '',
+//     branchName: '',
+//     branchCountry: '',
+//     branchCity: '',
+//     branchDescription: '',
 const Forms = ({ page, handlePrevPage, handleNextPage }) => {
   const navigation = useNavigate()
   const [file, setFile] = useState(null);
+  const [error, setError] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    c_password: '',
+    name: '',
+    logo: '',
+    address: '',
+    prefix: '',
+    description: '',
+    restDays: [],
+  })
   const [loader, setLoader] = useState(false)
   const [previewUrl, setPreviewUrl] = useState('');
   const [formData, setFormData] = React.useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    c_password: '',
+    name: '',
+    roaster: {
+      restDays: [],
+    },
+    logo: '',
+    address: '',
+    description: '',
+    restDays: [],
     location: {
       type: "Point 2",
       coordinates: [
@@ -26,368 +69,98 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
     start: Date.now(),
   })
   const [branch, setBranch] = useState({})
+  
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     setFile(selectedFile);
     setPreviewUrl(URL.createObjectURL(selectedFile));
+    setError((prevErrors) => ({
+      ...prevErrors,
+      [event.target.name]: event.target.value ? '' : `${event.target.name} is required`,
+    }));
   };
-  const handleInputChange = ({target: {name, value}}) => {
-    setFormData(formData => ({...formData, [name]: value}));
-  };
+  
   const handleInputChangeBranch = ({target: {name, value}}) => {
     setBranch(branch => ({...branch, [name]: value}));
   };
+
+  const ValidateStepOne = () => {
+    const newErrors = {};
+    if (!formData.firstName) {
+      newErrors.firstName = 'First name is required';
+    }
+    if (!formData.lastName) {
+      newErrors.lastName = 'Last name is required';
+    }
+
+    setError(newErrors);
+
+    return (Object.keys(newErrors).length === 0)
+  }
+
+  const ValidateStepTwo = () => {
+
+    const newErrors = {}
+    
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    }
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    }
+    if (!formData.c_password) {
+      newErrors.c_password = 'Confirm Password is required';
+    } 
+    else if (formData.password !== formData.c_password) {
+      newErrors.c_password = 'Passwords do not match';
+    }
+
+    setError(newErrors);
+    return (Object.keys(newErrors).length === 0)
+  }
+  
+  const ValidateStepThree = () => {
+    const newErrors = {};
+    if (!formData.name) {
+      newErrors.name = 'Organization name is required';
+    }
+    if (!formData.name) {
+      newErrors.logo = 'Organization logo is required';
+    }
+    if (!formData.userCode.prefix) {
+      newErrors.prefix = 'Organization prefix is required';
+    }
+    if (!formData.description) {
+      newErrors.description = 'Organization description is required';
+    }
+    if (!formData.address) {
+      newErrors.address = 'Organization address is required';
+    }
+    if (formData.roaster.restDays.length === 0) {
+      newErrors.restDays = 'Rest Days are required';
+    }
+    setError(newErrors);
+    return (Object.keys(newErrors).length === 0)
+  }
+
+  const handleInputChange = ({target: {name, value}}) => {
+    setFormData(formData => ({...formData, [name]: value}));
+    setError((prevErrors) => ({
+      ...prevErrors,
+      [name]: value ? '' : `${name} is required`,
+    }));
+  };
+  console.log("Form Data", formData)
   return (
     <div>
       {
-        (page === 1) && (
-        <form className="mx-auto" onSubmit={(e) => {
-          e.preventDefault();
-          handleNextPage();
-        }}>
-          <div className="flex flex-col mb-4">
-            <label
-              htmlFor="firstName"
-              className="inline-flex mb-2 text-sm text-gray-800"
-            >
-              Please enter your first name
-            </label>
-            <input
-              required
-              name="firstName"
-              value={formData['firstName']}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 text-gray-800 border rounded outline-none bg-gray-50 focus:ring "
-            />
-          </div>
-
-          <div className="flex flex-col mb-4">
-            <label
-              htmlFor="lastName"
-              className="inline-flex mb-2 text-sm text-gray-800"
-            >
-              Please enter your last name
-            </label>
-            <input required
-              name="lastName"
-              value={formData['lastName']}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 text-gray-800 border rounded outline-none bg-gray-50 focus:ring "
-            />
-          </div>
-
-          <div className="flex items-center py-4 justify-end">
-            {
-              (page < 3) && (
-                <button type='submit'
-                  className="px-6 py-2 text-sm text-white bg-[#1567B1] rounded-lg outline-none hover:bg-[#1567D7] "
-                >
-                  Next
-                </button>
-              )
-            }
-          </div>
-        </form>)
+        (page === 1) && ( <UserName page={page} validate={ValidateStepOne} handleNextPage={handleNextPage} formData={formData} error={error} handleInputChange={handleInputChange}/> )
       }
       {
-        (page === 2) && (<form className="mx-auto" onSubmit={(e) => {
-          e.preventDefault();
-          if (formData['password'] === formData['c_password']) handleNextPage();
-        }}>
-          <div className="flex flex-col mb-4">
-            <label
-              htmlFor="email"
-              className="inline-flex mb-2 text-sm text-gray-800"
-            >
-              Please enter your email
-            </label>
-            <input
-              name="email"
-              type="email"
-              value={formData['email']}
-              onChange={handleInputChange}
-              required
-              className="w-full px-3 py-2 text-gray-800 border rounded outline-none
-                          bg-gray-50
-                          focus:ring
-                          
-                        "
-            />
-          </div>
-
-          <div className="flex flex-col mb-4">
-            <label
-              htmlFor="password"
-              className="inline-flex mb-2 text-sm text-gray-800"
-            >
-              Please enter your password
-            </label>
-            <input
-              name="password"
-              required
-              value={formData['password']}
-              onChange={handleInputChange}
-              type="password"
-              className="
-                          w-full
-                          px-3
-                          py-2
-                          text-gray-800
-                          border
-                          rounded
-                          outline-none
-                          bg-gray-50
-                          focus:ring
-                          
-                        "
-            />
-          </div>
-
-          <div className="flex flex-col mb-4">
-            <label
-              htmlFor="c_password"
-              className="inline-flex mb-2 text-sm text-gray-800"
-            >
-              Confirm your password
-            </label>
-            <input
-              required
-              name="c_password"
-              type="password"
-              value={formData['c_password']}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 text-gray-800 border rounded outline-none bg-gray-50 focus:ring "
-            />
-          </div>
-
-          <div className="flex items-center py-4 justify-between">
-                <button
-                  onClick={handlePrevPage}
-                  className="
-                          inline-flex
-                          items-center
-                          px-6
-                          py-2
-                          text-sm text-gray-800
-                          rounded-lg
-                          shadow
-                          outline-none
-                          gap-x-1
-                          hover:bg-gray-100
-                        "
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                    />
-                  </svg>
-                  Back
-                </button>
-                <button type='submit'
-                  className="
-                          px-6
-                          py-2
-                          text-sm text-white
-                          bg-[#1567B1]
-                          rounded-lg
-                          outline-none
-                          hover:bg-[#1567D7]
-                          
-                        "
-                >
-                  Next
-                </button>
-          </div>
-        </form>)
+        (page === 2) && ( <Credential validate={ValidateStepTwo} handlePrevPage={handlePrevPage} handleNextPage={handleNextPage} formData={formData} error={error} handleInputChange={handleInputChange}/>)
       }
       {
-        (page === 3) && (<form className="mx-auto max-h-[400px] overflow-auto" onSubmit={(e) => {
-          e.preventDefault()
-          handleNextPage()
-        }}>
-          <div className="flex flex-col mb-4">
-            <label
-              htmlFor="name"
-              className="inline-flex mb-2 text-sm text-gray-800"
-            >
-              Please enter your organization's name
-            </label>
-            <input
-              name="name"
-              type="text"
-              value={formData['name']}
-              onChange={handleInputChange}
-              required
-              className="w-full px-3 py-2 text-gray-800 border rounded outline-none
-                          bg-gray-50
-                          focus:ring
-                          
-                        "
-            />
-            </div>
-
-            <div className="flex flex-col mb-4">
-            <label
-              htmlFor="logo"
-              className="inline-flex mb-2 text-sm text-gray-800"
-            >
-              Please enter your organization's logo
-            </label>
-            <input
-              name="logo"
-              type="file"
-              onChange={handleFileChange}
-              accept=".png, .jpg, .jpeg"
-              required
-              className="w-full px-3 py-2 text-gray-800 border rounded outline-none
-                          bg-gray-50
-                          focus:ring
-                          
-                        "
-            />
-            </div>
-
-            <div className="flex flex-col mb-4">
-            <label
-              htmlFor="address"
-              className="inline-flex mb-2 text-sm text-gray-800"
-            >
-              Please enter your organization's address
-            </label>
-            <input
-              name="address"
-              type="text"
-              value={formData['address']}
-              onChange={handleInputChange}
-              required
-              className="w-full px-3 py-2 text-gray-800 border rounded outline-none
-                          bg-gray-50
-                          focus:ring
-                          
-                        "
-            />
-            </div>
-
-            <div className="flex flex-col mb-4">
-            <label
-              htmlFor="prefix"
-              className="inline-flex mb-2 text-sm text-gray-800"
-            >
-              Please enter your organization's prefix
-            </label>
-            <input
-              name="prefix"
-              type="text"
-              value={formData.userCode['prefix']}
-              onChange={(e) => setFormData({... formData, userCode:{prefix: e.target.value} })}
-              required
-              className="w-full px-3 py-2 text-gray-800 border rounded outline-none
-                          bg-gray-50
-                          focus:ring
-                          
-                        "
-            />
-            </div>
-
-            <div className="flex flex-col mb-4">
-            <label
-              htmlFor="restdays"
-              className="inline-flex mb-2 text-sm text-gray-800"
-            >
-              Please enter your organization's description
-            </label>
-            <input
-              name="description"
-              type="text"
-              value={formData.description}
-              onChange={(e) => setFormData({... formData, description: e.target.value} )}
-              required
-              className="w-full px-3 py-2 text-gray-800 border rounded outline-none
-                          bg-gray-50
-                          focus:ring
-                          
-                        "
-            />
-            </div>
-            <RestDays firstUser={true} handleInputChange={handleInputChange} value={formData['restDays']}/>
-          <div className="flex items-start mb-6">
-            <div className="flex items-center h-5">
-              <input onChange={handleInputChange} required id="terms" type="checkbox" value="" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"/>
-            </div>
-            <label htmlFor="terms" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I agree with the <a href="#" className="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a></label>
-          </div>
-
-          <div className="flex items-center mb-4">
-            <input onChange={handleInputChange} id="checkbox-2" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-            <label htmlFor="checkbox-2" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I want to get promotional offers</label>
-          </div>
-
-          <div className="flex items-center py-4 justify-between">
-            {
-              (page > 1) && (
-                <button
-                  onClick={handlePrevPage}
-                  className="
-                          inline-flex
-                          items-center
-                          px-6
-                          py-2
-                          text-sm text-gray-800
-                          rounded-lg
-                          shadow
-                          outline-none
-                          gap-x-1
-                          hover:bg-gray-100
-                        "
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                    />
-                  </svg>
-                  Back
-                </button>
-              )
-            }
-            {
-              (page < 4) && (
-                
-                <button onClick={handleNextPage}
-                  className="
-                          px-6
-                          py-2
-                          text-sm text-white
-                          bg-[#1567B1]
-                          rounded-lg
-                          outline-none
-                          hover:bg-[#1567D7]
-                          
-                        "
-                >
-                  Next
-                </button>
-              )
-            }
-          </div>
-        </form>)
+        (page === 3) && ( <OrganizationalInfo RestDays={RestDays} setError={setError} page={page} validate={ValidateStepThree} handlePrevPage={handlePrevPage} handleFileChange={handleFileChange} handleNextPage={handleNextPage} formData={formData} error={error} handleInputChange={handleInputChange} setFormData={setFormData}/>)
       }
       {
         (page === 4) && (
@@ -416,13 +189,14 @@ const Forms = ({ page, handlePrevPage, handleNextPage }) => {
                 obj.firstUser = true
                 createOrganizationFirstUser(obj, navigation)
               }}
+              disabled={loader}
               
             >
               Create Account
               {(loader) && <span className='px-3'><Loader color={'white'}/></span>}
             </button>
             </div>
-            </>
+          </>
         )
       }
     </div>

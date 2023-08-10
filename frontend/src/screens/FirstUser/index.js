@@ -4,7 +4,7 @@ import Forms from "./elements/Forms";
 import Image from '../../assets/placer.svg'
 
 const FirstUser = () => {
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(3);
     
     const handleNextPage = () => {
         setPage(page+1);
