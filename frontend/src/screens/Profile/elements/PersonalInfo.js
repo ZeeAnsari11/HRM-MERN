@@ -8,6 +8,7 @@ import { selectUID } from '../../../states/reducers/slices/backend/UserSlice'
 import { updateUserById } from '../../../api/user'
 import { useSelector } from 'react-redux'
 
+
 const PersonalInfo = ({ data }) => {
     const userId = useSelector(selectUID);
     const [formData, setFormData] = React.useState({

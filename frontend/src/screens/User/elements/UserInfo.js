@@ -6,6 +6,62 @@ import { commonStyles } from '../../../styles/common';
 import { loadAllOrganizationsInfo } from '../../../api/user';
 
 const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton }) => {
+    const [errors, setErrors] = React.useState({
+        roleType: false,
+        grade: false,
+        drivingLiscenceNumber: false,
+        grossSalary: false,
+        passportNumber: false,
+        nicNumber: false,
+        expiry: false,
+        joiningDate: false,
+    });
+    
+    const validator = () => {
+        let newErrors = { ...errors };
+        let hasErrors = false;
+
+        for (const field in newErrors) {
+            if (!formData[field]) {
+                newErrors[field] = true;
+                hasErrors = true;
+            }
+        }
+
+        if (!formData.nic.number) {
+            newErrors.nicNumber = true;
+            hasErrors = true;
+        }
+
+        if (!formData.drivingLiscence.number) {
+            newErrors.drivingLiscenceNumber = true;
+            hasErrors = true;
+        }
+
+        if (!formData.passport.number) {
+            newErrors.passportNumber = true;
+            hasErrors = true;
+        }
+
+        setErrors(newErrors);
+        return hasErrors;
+    }
+
+    const handleFormSubmit = (event) => {
+        event.preventDefault();
+        if (!validator()) {
+            changePageNumber();
+        }
+    };
+
+    const handler = (e) => {
+        handleInputChange(e);
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [e.target.name]: e.target.value ? false : true,
+        }));
+    };
+
     const dispatcher = useDispatch();
     const userOrgId = useSelector(selectCurrentUserOrg);
     const branchId = useSelector(selectCurrentUserBranch);
@@ -30,61 +86,63 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
     };
 
     return (
-        <form className="lg:col-span-2 space-y-4" onSubmit={(e) => {
-            e.preventDefault();
-            changePageNumber();
-        }}>
+        <form className="lg:col-span-2 space-y-4" onSubmit={handleFormSubmit}>
             <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
                 <div className="md:col-span-3">
-                    <label  htmlFor="gender">Enter Role Type</label>
+                    <label htmlFor="gender">Enter Role Type</label>
                     <select
                         name="roleType"
                         id="roleType"
                         value={formData.roleType}
-                        onChange={handleInputChange}
-                        className={commonStyles.input}
-                        required
+                        onChange={handler} // Using the handler function for validation
+                        className={errors.roleType ? `${commonStyles.input} border-red-500` : commonStyles.input}
                     >
-                        <option value=''>Select Role Type</option>
-                        <option value='admin'>Admin</option>
-                        <option value='user'>User</option>
-                        <option value='manager'>Manager</option>
+                        <option value="">Select Role Type</option>
+                        <option value="admin">Admin</option>
+                        <option value="user">User</option>
+                        <option value="manager">Manager</option>
                     </select>
+                    {errors.roleType && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
 
                 <div className="md:col-span-2">
                     <label htmlFor="full_name">Grades</label>
                     <div className="flex space-x-2">
-                        <select name='grade' value={formData.grade} onChange={handleInputChange} className={commonStyles.input}>
-                            <option value={''}>Select Grade</option>
-                            {
-                                grades.map((grade) => {
-                                    return <option key={grade._id} value={grade._id}>{grade.name}</option>
-                                })
-                            }
+                        <select name="grade" value={formData.grade} onChange={handler} className={errors.grade ? `${commonStyles.input} border-red-500` : commonStyles.input}>
+                            <option value="">Select Grade</option>
+                            {grades.map((grade) => {
+                                return <option key={grade._id} value={grade._id}>{grade.name}</option>
+                            })}
                         </select>
                     </div>
+                    {errors.grade && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
+
                 <div className="md:col-span-3">
-                    <label  htmlFor="drivingLiscence">Driving License</label>
+                    <label htmlFor="drivingLiscence">Driving License</label>
                     <div className="flex space-x-2">
                         <input
                             type="number"
-                            name="drivingLiscence" // Corrected the attribute name
+                            name="drivingLiscence"
                             id="drivingLiscence"
-                            value={formData.drivingLiscence?.number}
+                            pattern="[0-9]*"
+                            value={formData?.drivingLiscence?.number}
                             placeholder="3510319187449"
-                            className={commonStyles.input}
+                            className={errors.drivingLiscenceNumber ? `${commonStyles.input} border-red-500` : commonStyles.input}
                             onChange={(event) => {
-                                handleInputChange({ target: { name: 'drivingLiscence', value: { number: event.target.value } } })
+                                handleInputChange({ target: { name: 'drivingLiscence', value: { number: event.target.value } } });
+                                setErrors((prevErrors) => ({
+                                    ...prevErrors,
+                                    "drivingLiscenceNumber": event.target.value ? false : true,
+                                }));
                             }}
-                            required
                         />
                     </div>
+                    {errors?.drivingLiscenceNumber && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
 
                 <div className="md:col-span-2">
-                    <label htmlFor="gross Salary">Gross Salary</label>
+                    <label htmlFor="grossSalary">Gross Salary</label>
                     <div className="flex space-x-2">
                         <input
                             type="number"
@@ -92,78 +150,87 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
                             id="grossSalary"
                             value={formData.grossSalary}
                             placeholder="100000000000"
-                            className={commonStyles.input}
-                            onChange={handleInputChange}
-                            required
+                            className={errors.grossSalary ? `${commonStyles.input} border-red-500` : commonStyles.input}
+                            onChange={handler}
+
                         />
                     </div>
+                    {errors.grossSalary && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
 
                 <div className="md:col-span-3">
-                    <label  htmlFor="cnic">Passport</label>
+                    <label htmlFor="passport">Passport</label>
                     <div className="flex space-x-2">
                         <input
-                            type="number"
+                            type="text"
                             name="passport"
                             id="passport"
                             value={formData.passport?.number}
                             placeholder="3510319187449"
-                            className={commonStyles.input}
-                            onChange={
-                                (event) => {
-                                    handleInputChange({ target: { name: 'passport', value: { number: event.target.value } } })
-                                }
-                            }
-                            required
+                            className={errors.passportNumber ? `${commonStyles.input} border-red-500` : commonStyles.input}
+                            onChange={(event) => {
+                                const newErrors = { ...errors };
+                                newErrors.passportNumber = false;
+                                setErrors(newErrors);
+                                handleInputChange({ target: { name: 'passport', value: { number: event.target.value } } });
+                            }}
+
                         />
                     </div>
+                    {errors?.passportNumber && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
+
                 <div className="md:col-span-2">
-                    <label  htmlFor="cnic">Enter CNIC</label>
+                    <label htmlFor="number">Enter CNIC</label>
                     <div className="flex space-x-2">
                         <input
                             type="number"
                             name="number"
                             id="number"
+                            pattern="[0-9]*"
                             value={formData.nic?.number}
                             placeholder="3510319187449"
-                            className={commonStyles.input}
-                            onChange={
-                                (event) => {
-                                    handleInputChange({ target: { name: 'nic', value: { number: event.target.value, expiry: '', attachment: { front: '', back: '' } } } })
-                                }
-                            }
-                            required
+                            className={errors?.nicNumber ? `${commonStyles.input} border-red-500` : commonStyles.input}
+                            onChange={(event) => {
+                                const newErrors = { ...errors };
+                                newErrors.nicNumber = false;
+                                setErrors(newErrors);
+                                handleInputChange({ target: { name: 'nic', value: { number: event.target.value, expiry: '', attachment: { front: '', back: '' } } } });
+                            }}
                         />
                     </div>
+                    {errors?.nicNumber && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
+
                 <div className="md:col-span-5">
                     <div className="mb-3">
                         <label htmlFor="formFileLg" className="mb-2 inline-block text-neutral-700">
                             CNIC Front Attachment
                         </label>
                         <input
-                            className="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] font-normal leading-[2.15] text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none"
+                            className={`relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] font-normal leading-[2.15] text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none ${errors.front ? 'border-red-500' : ''}`}
                             id="front"
                             type="file"
                             onChange={handleFrontFileChange}
-                            required
                         />
                     </div>
+                    {errors.front && <span className="text-red-500">Please upload the front attachment.</span>}
                 </div>
+
                 <div className="md:col-span-5">
                     <div className="mb-3">
                         <label htmlFor="formFileLg" className="mb-2 inline-block text-neutral-700">
                             CNIC Back Attachment
                         </label>
                         <input
-                            className="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] font-normal leading-[2.15] text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none"
+                            className={`relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] font-normal leading-[2.15] text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none ${errors.back ? 'border-red-500' : ''
+                                }`}
                             id="back"
                             type="file"
                             onChange={handleBackFileChange}
-                            required
                         />
                     </div>
+                    {errors.back && <span className="text-red-500">Please upload the back attachment.</span>}
                 </div>
 
                 <div className="md:col-span-3">
@@ -171,36 +238,43 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
                     <input
                         type="date"
                         name="expiry"
+                        pattern="[0-9]*"
                         value={formData.expiry}
-                        onChange={handleInputChange}
+                        onChange={handler}
                         id="expiry"
-                        required
-                        className={commonStyles.input}
+                        className={errors.expiry ? `${commonStyles.input} border-red-500` : commonStyles.input}
                     />
+                    {errors.expiry && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
+
                 <div className="md:col-span-2">
-                    <label  htmlFor="dob">Enter Joining Date</label>
+                    <label htmlFor="dob">Enter Joining Date</label>
                     <input
                         type="date"
                         name="joiningDate"
                         value={formData.joiningDate}
-                        onChange={handleInputChange}
+                        onChange={handler}
                         id="joiningDate"
-                        required
-                        className={commonStyles.input}
+                        className={errors.joiningDate ? `${commonStyles.input} border-red-500` : commonStyles.input}
                     />
+                    {errors.joiningDate && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
             </div>
 
             <div className="md:col-span-5 text-right">
                 <div className="inline-flex items-end">
-                    {showButton ? <button type='submit' className={commonStyles.btnDark}>
-                        Next
-                    </button> : ""}
+                    {showButton ? (
+                        <button type="submit" className={commonStyles.btnDark}>
+                            Next
+                        </button>
+                    ) : (
+                        ""
+                    )}
                 </div>
             </div>
-        </form >
-    )
+        </form>
+    );
+
 }
 
 export default UserInfo

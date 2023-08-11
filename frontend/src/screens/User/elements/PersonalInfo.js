@@ -3,12 +3,53 @@ import React from 'react'
 import { commonStyles } from '../../../styles/common';
 
 const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButton }) => {
-    return (
-        <form className="lg:col-span-2" onSubmit={(e) => {
-            e.preventDefault();
-            //TOOD: Validate Fields
+
+    const [errors, setErrors] = React.useState({
+        firstName: false,
+        lastName: false,
+        email: false,
+        password: false,
+        personalEmail: false,
+        gender: false,
+        address: false,
+        country: false,
+        state: false,
+        zipcode: false,
+        dob: false,
+        religion: false,
+        nationality: false,
+        phoneNumber: false,
+        bloodGroup: false,
+    });
+    
+    const validator = () => {
+        const newErrors = { ...errors };
+        let hasErrors = false;
+        for (const field in newErrors) {
+            console.log("field",formData[field])
+            if (formData[field] === undefined || formData[field] === "") {
+                newErrors[field] = true;
+                hasErrors = true;
+            } else {
+                newErrors[field] = false;
+            }
+        }
+        setErrors(newErrors);
+        return hasErrors
+    }
+    const handleFormSubmit = (event) => {
+        event.preventDefault();
+        if (!validator()) {
             changePageNumber();
-        }}>
+        }
+    };
+    const handler = (e) => {
+        validator();
+        handleInputChange(e)
+    }
+
+    return (
+        <form className="lg:col-span-2" onSubmit={handleFormSubmit}>
             <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
                 <div className="md:col-span-3">
                     <label htmlFor="firstName">First Name</label>
@@ -18,12 +59,12 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                             name="firstName"
                             id="firstName"
                             placeholder="First Name"
-                            className={commonStyles.input}
-                            onChange={handleInputChange}
+                            className={errors.firstName ? `${commonStyles.input} border-red-500` : commonStyles.input}
+                            onChange={handler}
                             value={formData.firstName}
-                            required
                         />
                     </div>
+                    {errors.firstName && <span className="text-red-500">Please fill out this field.</span>}
 
                 </div>
                 <div className="md:col-span-2">
@@ -34,12 +75,13 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                             name="lastName"
                             id="lastName"
                             placeholder="Last Name"
-                            className={commonStyles.input}
-                            onChange={handleInputChange}
+                            className={errors.lastName ? `${commonStyles.input} border-red-500` : commonStyles.input}
+                            onChange={handler}
                             value={formData.lastName}
-                            required
+                        
                         />
                     </div>
+                    {errors.lastName && <span className="text-red-500">Please fill out this field.</span>}
 
                 </div>
                 <div className="md:col-span-3">
@@ -48,54 +90,59 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         type="text"
                         name="email"
                         id="email"
-                        className={commonStyles.input}
-                        onChange={handleInputChange}
+                        className={errors.email ? `${commonStyles.input} border-red-500` : commonStyles.input}
+                        onChange={handler}
                         placeholder="email@domain.com"
                         value={formData.email}
-                        required
+                        
                     />
+                    {errors.email && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
+
                 <div className="md:col-span-2">
                     <label htmlFor="password">Password</label>
                     <input
                         type="password"
                         name="password"
                         id="password"
-                        className={commonStyles.input}
-                        onChange={handleInputChange}
+                        className={errors.password ? `${commonStyles.input} border-red-500` : commonStyles.input}
+                        onChange={handler}
                         value={formData.password}
                         placeholder="********"
-                        required
+                        
                     />
+                    {errors.password && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
                 <div className="md:col-span-3">
-                    <label htmlFor="email">Personal Email</label>
+                    <label htmlFor="personalEmail">Personal Email</label>
                     <input
                         type="text"
                         name="personalEmail"
                         id="personalEmail"
                         value={formData.personalEmail}
-                        className={commonStyles.input}
-                        onChange={handleInputChange}
+                        className={errors.personalEmail ? `${commonStyles.input} border-red-500` : commonStyles.input}
+                        onChange={handler}
                         placeholder="email@domain.com"
-                        required
+                        
                     />
+                    {errors.personalEmail && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
                 <div className="md:col-span-2">
                     <label htmlFor="gender">Gender</label>
                     <select
                         name="gender"
                         id="gender"
-                        onChange={handleInputChange}
-                        className={commonStyles.input}
+                        onChange={handler}
+                        className={errors.gender ? `${commonStyles.input} border-red-500` : commonStyles.input}
                         value={formData.gender}
-                        required
+                        
                     >
-                        <option value=''>Select Gender</option>
-                        <option value='male'>Male</option>
-                        <option value='female'>Female</option>
-                        <option value='others'>Others</option>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="others">Others</option>
                     </select>
+                    {errors.gender && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
 
                 <div className="md:col-span-3">
@@ -105,11 +152,12 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         name="address"
                         id="address"
                         value={formData.address}
-                        className={commonStyles.input}
+                        className={errors.address ? `${commonStyles.input} border-red-500` : commonStyles.input}
                         placeholder="Full Address"
-                        onChange={handleInputChange}
-                        required
+                        onChange={handler}
+                        
                     />
+                    {errors.address && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
                 <div className="md:col-span-2">
                     <label htmlFor="country">Country</label>
@@ -118,16 +166,15 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                             name="country"
                             id="country"
                             value={formData.country}
-                            placeholder="Country"
-                            onChange={handleInputChange}
-                            className="px-4 outline-none text-gray-800 w-full bg-transparent"
-                            required
+                            className={errors.country ? `px-4 outline-none text-gray-800 w-full bg-transparent border-red-500` : `px-4 outline-none text-gray-800 w-full bg-transparent`}
+                            onChange={handler}
+                            
                         >
-                            <option value=''>Select Country</option>
+                            <option value="">Select Country</option>
                             <Countries />
                         </select>
-
                     </div>
+                    {errors.country && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
                 <div className="md:col-span-2">
                     <label htmlFor="state">State / province</label>
@@ -136,24 +183,26 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                             name="state"
                             id="state"
                             value={formData.state}
-                            onChange={handleInputChange}
+                            onChange={handler}
+                            className={errors.state ? `px-4 outline-none text-gray-800 w-full bg-transparent border-red-500` : `px-4 outline-none text-gray-800 w-full bg-transparent`}
                             placeholder="State"
-                            className="px-4 outline-none text-gray-800 w-full bg-transparent"
-                            required
+                            
                         />
                     </div>
+                    {errors.state && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
                 <div className="md:col-span-1">
                     <label htmlFor="zipcode">Zipcode</label>
                     <input
                         type="text"
                         value={formData.zipcode}
-                        onChange={handleInputChange}
+                        onChange={handler}
                         name="zipcode"
                         id="zipcode"
-                        className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                        className={errors.zipcode ? `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 border-red-500` : `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50`}
                         placeholder="Zipcode"
                     />
+                    {errors.zipcode && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
                 <div className="md:col-span-2">
                     <label htmlFor="dob">Date Of Birth</label>
@@ -161,11 +210,12 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         type="date"
                         name="dob"
                         value={formData.dob}
-                        onChange={handleInputChange}
+                        onChange={handler}
                         id="dob"
-                        required
-                        className="transition-all h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                        
+                        className={errors.dob ? `transition-all h-10 border mt-1 rounded px-4 w-full bg-gray-50 border-red-500` : `transition-all h-10 border mt-1 rounded px-4 w-full bg-gray-50`}
                     />
+                    {errors.dob && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
                 <div className="md:col-span-2">
                     <div className="md:col-span-3">
@@ -174,12 +224,13 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                             type="text"
                             name="religion"
                             value={formData.religion}
-                            onChange={handleInputChange}
+                            onChange={handler}
                             id="religion"
-                            className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                            className={errors.religion ? `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 border-red-500` : `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50`}
                             placeholder="Religion"
                             defaultValue=""
                         />
+                        {errors.religion && <span className="text-red-500">Please fill out this field.</span>}
                     </div>
                     <div className="md:col-span-2">
                         <label htmlFor="nationality">Nationality</label>
@@ -187,12 +238,13 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                             type="text"
                             name="nationality"
                             value={formData.nationality}
-                            onChange={handleInputChange}
+                            onChange={handler}
                             id="nationality"
-                            required
-                            className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                            
+                            className={errors.nationality ? `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 border-red-500` : `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50`}
                             placeholder="Nationality"
                         />
+                        {errors.nationality && <span className="text-red-500">Please fill out this field.</span>}
                     </div>
                 </div>
                 <div className="md:col-span-2">
@@ -202,21 +254,22 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                             type="text"
                             name="phoneNumber"
                             value={formData.phoneNumber}
-                            onChange={handleInputChange}
+                            onChange={handler}
                             id="phoneNumber"
-                            className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                            className={errors.phoneNumber ? `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 border-red-500` : `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50`}
                             placeholder="Contact Number"
-                            required
+                            
                         />
+                        {errors.phoneNumber && <span className="text-red-500">Please fill out this field.</span>}
                     </div>
                     <div className="md:col-span-2">
-                        <label htmlFor="blood-group">Blood Group</label>
+                        <label htmlFor="bloodGroup">Blood Group</label>
                         <select
-                            name="blood-group"
-                            value={formData["blood-group"]}
-                            onChange={handleInputChange}
-                            id="blood-group"
-                            className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                            name="bloodGroup"
+                            value={formData.bloodGroup}
+                            onChange={handler}
+                            id="bloodGroup"
+                            className={errors.bloodGroup ? `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 border-red-500` : `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50`}
                         >
                             <option value="">Select Blood Group</option>
                             <option value="A+">A+</option>
@@ -228,8 +281,12 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                             <option value="O+">O+</option>
                             <option value="O-">O-</option>
                         </select>
+                        {errors.bloodGroup && <span className="text-red-500">Please fill out this field.</span>}
                     </div>
                 </div>
+
+
+
             </div>
             <div className='md:col-span-2'>
                 <div className="md:col-span-5 text-right">

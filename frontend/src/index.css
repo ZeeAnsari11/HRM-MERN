@@ -122,3 +122,9 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+
+#error_show_element {
+  color: red;
+  font: 14px;
+}
