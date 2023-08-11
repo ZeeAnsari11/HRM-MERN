@@ -1,18 +1,19 @@
+import { setClickState, setUserExperiences } from "../states/reducers/slices/backend/Experiences";
+
 import axios from "axios";
 import { experiences } from "./configuration";
-import { toastMessage } from "../AlertConfigs";
-import { toast } from "react-toastify";
-import { setUserExperiences, setClickState } from "../states/reducers/slices/backend/Experiences";
 import { setProfileCompletion } from "../states/reducers/slices/backend/UserSlice";
+import { toast } from "react-toastify";
+import { toastMessage } from "../AlertConfigs";
 
 export const createExperience = (data, trigger) => {
     console.log("Crate called")
     axios.post(experiences.createExperience, data)
     .then(() => {
         toastMessage('success', "Experience Added Successfully", toast);
-        setTimeout(() => {
-            window.location.href = "/dashboard/profile"
-        }, 2000)
+        // setTimeout(() => {
+        //     window.location.href = "/dashboard/profile"
+        // }, 2000)
     })
     .catch((err) => {
         toastMessage('error', err.response.data.Message, toast);

@@ -26,11 +26,11 @@ const QualificationBlock = ({ item }) => {
       </div>
     </span>
     <div className={`absolute flex justify-evenly items-center transition-opacity delay-75 top-0 !mt-0 rounded-md bg-lightText w-full h-full ${hoverState ? 'opacity-100' : 'opacity-0'}`}>
-      <FontAwesomeIcon className='cursor-pointer hover:text-gray-600' onClick={() => deleteQualification(item._id, dispatcher)} icon={faTrash}/>
+      <FontAwesomeIcon className='cursor-pointer hover:text-gray-600' onClick={() => deleteQualification(item._id, dispatcher)} icon={faTrash} />
       <div className='w-[2px] h-1/2 bg-gray-500'></div>
-      <FontAwesomeIcon className='cursor-pointer  hover:text-gray-600' onClick={() => dispatcher(setClickState(item))} icon={faPencil}/>
+      <FontAwesomeIcon className='cursor-pointer  hover:text-gray-600' onClick={() => dispatcher(setClickState(item))} icon={faPencil} />
     </div>
-    </div>
+  </div>
 }
 
 const Qualification = ({ userID }) => {
@@ -49,7 +49,27 @@ const Qualification = ({ userID }) => {
     })
   }, [selectedExperience])
 
+  const [validationErrors, setValidationErrors] = React.useState({
+    instituteName: '',
+    degreeTitle: ''
+  });
+
   const handleSubmit = (trigger) => {
+
+    const newValidationErrors = {};
+    if (formData.instituteName == '' || formData.instituteName == undefined) {
+      newValidationErrors.instituteName = "Institute Name is required.";
+    }
+    if (formData.degreeTitle == '' || formData.degreeTitle == undefined) {
+      newValidationErrors.degreeTitle = "DegreeTitle is required.";
+    }
+
+    if (Object.keys(newValidationErrors).length > 0) {
+      setValidationErrors(newValidationErrors);
+      trigger();
+      return;
+    }
+
     if (formData.id === undefined || formData.id === '') {
       createQualification(formData, trigger)
     }
@@ -65,17 +85,25 @@ const Qualification = ({ userID }) => {
       updateQualification(id, updateObj, dispatcher, trigger);
     }
     setFormData({
-        id: '',
-        instituteName: '',
-        degreeTitle:'',
-        isDegreeCompleted: false,
-        starting: '',
-        ending: ''
+      id: '',
+      instituteName: '',
+      degreeTitle: '',
+      isDegreeCompleted: false,
+      starting: '',
+      ending: ''
     })
   }
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+
+    (type === 'checkbox') ? setFormData({ ...formData, [name]: checked }) : setFormData({ ...formData, [name]: value })
+    
+    // Clear validation error when user starts typing again
+    setValidationErrors({
+      ...validationErrors,
+      [name]: "",
+    });
   };
 
   const btnConfig = [{
@@ -90,7 +118,11 @@ const Qualification = ({ userID }) => {
       name: 'instituteName',
       value: formData.instituteName,
       onChange: handleInputChange,
-      isRequired: true
+      isRequired: true,
+      error: {
+        status: false,
+        message: validationErrors.instituteName
+      }
     },
     {
       label: 'Degree Title',
@@ -98,7 +130,11 @@ const Qualification = ({ userID }) => {
       name: 'degreeTitle',
       value: formData.degreeTitle,
       onChange: handleInputChange,
-      isRequired: true
+      isRequired: true,
+      error: {
+        status: false,
+        message: validationErrors.degreeTitle
+      }
     },
     {
       label: 'Is Degree Completed',
@@ -106,7 +142,11 @@ const Qualification = ({ userID }) => {
       name: 'isDegreeCompleted',
       value: formData.isDegreeCompleted,
       onChange: handleInputChange,
-      isRequired: true
+      isRequired: true,
+      error: {
+        status: false,
+        message: ''
+      }
     },
     {
       label: 'Starting Date',
@@ -114,7 +154,11 @@ const Qualification = ({ userID }) => {
       name: 'starting',
       value: formData.starting,
       onChange: handleInputChange,
-      isRequired: true
+      isRequired: true,
+      error: {
+        status: false,
+        message: ''
+      }
     },
     {
       label: 'Ending Date',
@@ -122,7 +166,11 @@ const Qualification = ({ userID }) => {
       name: 'ending',
       value: formData.ending,
       onChange: handleInputChange,
-      isRequired: false
+      isRequired: false,
+      error: {
+        status: false,
+        message: ''
+      }
     }
   ]
 
@@ -136,19 +184,28 @@ const Qualification = ({ userID }) => {
           onClose={() => resetStates(dispatcher)}
           Element={
             <>
-            <div className='flex justify-between mobile:flex-col mobile:space-y-4'>
-              <div className='space-y-4 max-h-[400px] mobile:w-full overflow-auto w-[300px]'>
-                  {
+              <div className='flex justify-between mobile:flex-col mobile:space-y-4'>
+                {allUserExperiences.length > 0 &&
+                  <div className='space-y-4 max-h-[400px] mobile:w-full overflow-auto w-[300px]'>
+                    {
                       allUserExperiences?.map((item, index) => {
-                          return <QualificationBlock item={item} key={index} />
+                        return <QualificationBlock item={item} key={index} />
                       })
-                  }
+                    }
+                  </div>
+                }
+                <CUForm config={formDataConfig} handleInputChange={handleInputChange} isFull={allUserExperiences.length > 0 ? true : false} validationErrors={validationErrors} />
               </div>
-              <CUForm config={formDataConfig} handleInputChange={handleInputChange} />
-            </div>
             </>
           }
           btnConfig={btnConfig}
+          validationErrors={validationErrors}
+          check={(closeModal) => {
+            if (!validationErrors?.instituteName && !validationErrors?.degreeTitle && !validationErrors?.isDegreeCompleted && !validationErrors?.starting && !validationErrors?.ending &&
+              formData?.instituteName && formData?.degreeTitle && formData?.isDegreeCompleted && formData?.starting && formData?.ending) {
+              closeModal()
+            }
+          }}
         />
       </div>
       <div className='max-h-[250px] overflow-auto'>
@@ -157,8 +214,8 @@ const Qualification = ({ userID }) => {
             return <div key={index} className="flex flex-col space-y-4">
               <span className="text-gray-600 p-4">
                 <div className="text-lg font-semibold"><FontAwesomeIcon icon={faMailBulk} className="w-8 mr-2" />{item?.instituteName}</div>
-                  <p className='text-md px-10'>{item?.degreeTitle}</p>
-                  <p className='text-sm px-10'>{getYear(item?.starting)} - {getYear(item?.ending)}</p>
+                <p className='text-md px-10'>{item?.degreeTitle}</p>
+                <p className='text-sm px-10'>{getYear(item?.starting)} - {getYear(item?.ending)}</p>
               </span>
             </div>
           })

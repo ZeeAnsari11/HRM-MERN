@@ -16,7 +16,7 @@ const qualificationSchema = new mongoose.Schema({
         default: false
     },
     starting: {
-        type: Date,
+        type: String,
         required: [true, "Please enter starting date."]
     },
     ending: {

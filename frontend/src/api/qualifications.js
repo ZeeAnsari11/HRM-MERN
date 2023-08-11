@@ -1,17 +1,18 @@
+import { setClickState, setUserQualifications } from "../states/reducers/slices/backend/QualificationSlice";
+
 import axios from "axios";
 import { qualification } from "./configuration";
-import { toastMessage } from "../AlertConfigs";
-import { toast } from "react-toastify";
-import { setUserQualifications, setClickState } from "../states/reducers/slices/backend/QualificationSlice";
 import { setProfileCompletion } from "../states/reducers/slices/backend/UserSlice";
+import { toast } from "react-toastify";
+import { toastMessage } from "../AlertConfigs";
 
 export const createQualification = (data, trigger) => {
     axios.post(qualification.createQualification, data)
     .then(() => {
         toastMessage('success', "Qualification Added Successfully", toast);
-        setTimeout(() => {
-            window.location.href = "/dashboard/profile"
-        }, 2000)
+        // setTimeout(() => {
+        //     window.location.href = "/dashboard/profile"
+        // }, 2000)
     })
     .catch((err) => {
         toastMessage('error', err.response.data.Message, toast);

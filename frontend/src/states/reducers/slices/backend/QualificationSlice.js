@@ -19,6 +19,9 @@ export const QualificationSlice = createSlice({
         state.qualifications = action.payload;
     },
     setClickState: (state, action) => {
+      console.log("====action",action);
+      console.log("====state",state);
+
         state.clickState = action.payload._id;
         state.selectedQualification = {
             id: action.payload._id,

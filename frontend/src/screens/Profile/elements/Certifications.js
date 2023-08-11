@@ -22,9 +22,9 @@ const CertificationBlock = ({ item }) => {
       </div>
     </span>
     <div className={`absolute flex cursor-pointer justify-evenly items-center transition-opacity top-0 !mt-0 rounded-md bg-lightText w-full h-full ${hoverState ? 'opacity-100' : 'opacity-0'}`}>
-      <FontAwesomeIcon className='hover:text-gray-600' onClick={() => deleteCertifications(item._id,dispatcher)} icon={faTrash}/>
+      <FontAwesomeIcon className='hover:text-gray-600' onClick={() => deleteCertifications(item._id, dispatcher)} icon={faTrash} />
       <div className='w-[2px] h-1/2 bg-gray-500'></div>
-      <FontAwesomeIcon className='hover:text-gray-600'  onClick={() => dispatcher(setClickState(item))} icon={faPencil}/>
+      <FontAwesomeIcon className='hover:text-gray-600' onClick={() => dispatcher(setClickState(item))} icon={faPencil} />
     </div>
   </div>
 }
@@ -38,6 +38,13 @@ const Certifications = ({ userID }) => {
     ...selectedCertifications, user: userID
   })
 
+  const [validationErrors, setValidationErrors] = React.useState({
+    instituteName: '',
+    certificateTitle: '',
+    certificationYear: ''
+
+  });
+
   useEffect(() => {
     getCertifications(userID, dispatcher);
     console.log("Something changed")
@@ -47,6 +54,24 @@ const Certifications = ({ userID }) => {
   }, [selectedCertifications])
 
   const handleSubmit = (trigger) => {
+    const newValidationErrors = {};
+    if (formData.instituteName == '' || formData.instituteName == undefined) {
+      newValidationErrors.instituteName = "Institute Name is required.";
+    }
+    if (formData.certificateTitle == '' || formData.certificateTitle == undefined) {
+      newValidationErrors.certificateTitle = "Certificate Title is required.";
+    }
+    if (formData.certificationYear == '' || formData.certificationYear == undefined) {
+      newValidationErrors.certificationYear = "Certification Year is required.";
+    }
+
+    if (Object.keys(newValidationErrors).length > 0) {
+      // Set validation errors and prevent closing the modal
+      setValidationErrors(newValidationErrors);
+      trigger();
+      return;
+    }
+
     if (formData.id === undefined || formData.id === '') {
       createCertification(formData, trigger)
     }
@@ -60,15 +85,22 @@ const Certifications = ({ userID }) => {
       updateCertification(id, updateObj, dispatcher, trigger);
     }
     setFormData({
-        id: '',
-        instituteName: '',
-        certificateTitle:'',
-        certificationYear: '',
+      id: '',
+      instituteName: '',
+      certificateTitle: '',
+      certificationYear: '',
     })
   }
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    // Clear validation error when user starts typing again
+    setValidationErrors({
+      ...validationErrors,
+      [name]: "",
+    });
   };
 
   const btnConfig = [{
@@ -83,7 +115,11 @@ const Certifications = ({ userID }) => {
       name: 'instituteName',
       value: formData.instituteName,
       onChange: handleInputChange,
-      isRequired: true
+      isRequired: true,
+      error: {
+        status: false,
+        message: validationErrors.instituteName
+      }
     },
     {
       label: 'Certification Titile',
@@ -91,7 +127,11 @@ const Certifications = ({ userID }) => {
       name: 'certificateTitle',
       value: formData.certificateTitle,
       onChange: handleInputChange,
-      isRequired: true
+      isRequired: true,
+      error: {
+        status: false,
+        message: validationErrors.certificateTitle
+      }
     },
     {
       label: 'Certification Year',
@@ -99,7 +139,11 @@ const Certifications = ({ userID }) => {
       name: 'certificationYear',
       value: formData.certificationYear,
       onChange: handleInputChange,
-      isRequired: true
+      isRequired: true,
+      error: {
+        status: false,
+        message: validationErrors.certificationYear
+      }
     }
   ]
 
@@ -113,19 +157,28 @@ const Certifications = ({ userID }) => {
           onClose={() => resetStates(dispatcher)}
           Element={
             <>
-            <div className='flex justify-between mobile:flex-col mobile:space-y-4'>
-              <div className='space-y-4 max-h-[400px] mobile:w-full overflow-auto w-[300px]'>
-                  {
+              <div className='flex justify-between mobile:flex-col mobile:space-y-4'>
+              { allUserCertifications.length > 0 &&
+                <div className='space-y-4 max-h-[400px] mobile:w-full overflow-auto w-[300px]'>
+                  { 
                       allUserCertifications?.map((item, index) => {
                           return <CertificationBlock item={item} key={index} />
                       })
                   }
               </div>
-              <CUForm config={formDataConfig} handleInputChange={handleInputChange} />
-            </div>
+              }
+                <CUForm config={formDataConfig} handleInputChange={handleInputChange} az/>
+              </div>
             </>
           }
           btnConfig={btnConfig}
+          validationErrors={validationErrors}
+          check={(closeModal) => {
+            if (!validationErrors?.certificationYear && !validationErrors?.certificateTitle && !validationErrors?.instituteName &&
+              formData?.certificationYear && formData?.certificateTitle && formData?.instituteName) {
+              closeModal()
+            }
+          }}
         />
       </div>
       <div className='max-h-[250px] overflow-auto'>
@@ -135,8 +188,8 @@ const Certifications = ({ userID }) => {
               <span className="text-gray-600 p-4">
                 <div className="text-lg font-semibold"><FontAwesomeIcon icon={faMailBulk} className="w-8 mr-2" />{item?.instituteName}</div>
                 <div className='flex justify-between items-center px-10'>
-                    <p>{item?.certificateTitle}</p>
-                    <p>{item?.certificationYear}</p>
+                  <p>{item?.certificateTitle}</p>
+                  <p>{item?.certificationYear}</p>
                 </div>
               </span>
             </div>

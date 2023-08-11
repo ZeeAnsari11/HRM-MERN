@@ -21,7 +21,12 @@ const PersonalInfo = ({ data }) => {
         passport: {number: data?.passport?.number},
         drivingLiscence: {number: data?.drivingLiscence?.number}
     });
-
+    const [validationErrors, setValidationErrors] = React.useState({
+        nic: '',
+        passport: '',
+        drivingLiscence: '',
+      });
+    
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevFormData) => ({
@@ -31,11 +36,32 @@ const PersonalInfo = ({ data }) => {
             number: value,
           },
         }));
+        setValidationErrors({
+            ...validationErrors,
+            [name]: "",
+          });
       };
 
     const title = "Personal Info"
     
     const handleSubmit = (trigger) => {
+        const newValidationErrors = {};
+    if (formData.nic?.number == undefined) {
+      newValidationErrors.nic = "CNIC is required.";
+    }
+    if (formData.passport?.number == undefined) {
+      newValidationErrors.passport = "Passport is required.";
+    }
+    if (formData.drivingLiscence?.number == undefined) {
+      newValidationErrors.drivingLiscence = "DrivingLiscence is required.";
+    }
+
+    if (Object.keys(newValidationErrors).length > 0) {
+      // Set validation errors and prevent closing the modal
+      setValidationErrors(newValidationErrors);
+      trigger();
+      return;
+    }
         updateUserById(userId, formData, trigger);
     }
     const btnConfig = [{
@@ -49,7 +75,11 @@ const PersonalInfo = ({ data }) => {
             name: 'nic',
             value: formData.nic?.number,
             onChange: handleInputChange,
-            isRequired: true
+            isRequired: true,
+            error: {
+                status: false,
+                message: validationErrors.nic
+            }
         },
         {
             label: 'Passport Number',
@@ -57,7 +87,11 @@ const PersonalInfo = ({ data }) => {
             name: 'passport',
             value: formData.passport?.number,
             onChange: handleInputChange,
-            isRequired: true
+            isRequired: true,
+            error: {
+                status: false,
+                message: validationErrors.passport
+            }
         },
         {
             label: 'Driving License Number',
@@ -65,7 +99,11 @@ const PersonalInfo = ({ data }) => {
             name: 'drivingLiscence',
             value:  formData.drivingLiscence?.number,
             onChange: handleInputChange,
-            isRequired: true
+            isRequired: true,
+            error: {
+                status: false,
+                message: validationErrors.drivingLiscence
+            }
         }
     ]
     return (
@@ -75,8 +113,14 @@ const PersonalInfo = ({ data }) => {
                 <Modal
                     action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
                     title={title}
-                    Element={<CUForm config={config} handleInputChange={handleInputChange} isFull={false} />}
+                    Element={<CUForm config={config} handleInputChange={handleInputChange} isFull={false} validationErrors={validationErrors}/>}
                     btnConfig={btnConfig}
+                    validationErrors={validationErrors}
+                    check={(closeModal) => {
+                      if (!validationErrors?.nic && !validationErrors?.password && !validationErrors?.drivingLiscence && formData?.nic?.number && formData?.passport && formData?.drivingLiscence) {
+                        closeModal()
+                      }
+                    }}
                 />
             </div>
             <div className="flex flex-col p-4 space-y-4">
