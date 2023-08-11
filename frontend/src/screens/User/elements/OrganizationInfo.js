@@ -79,7 +79,7 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                             })
                         }
                     </select>
-                    <Link to={'/dashboard/designations'} className='bg-gray-100 flex justify-center items-start rounded-md hover:bg-gray-300'><FontAwesomeIcon icon={faPlus} className='w-3 h-3 p-4'/></Link>
+                    <Link to={'/dashboard/desiginations'} className='bg-gray-100 flex justify-center items-start rounded-md hover:bg-gray-300'><FontAwesomeIcon icon={faPlus} className='w-3 h-3 p-4'/></Link>
                 </div>
             </div>
             <div className="md:col-span-5">
@@ -143,7 +143,7 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                 <div className="flex space-x-2">
                     <RestDays
                         handleInputChange={handleInputChange}
-                        value={restDaysValue} // Set value to formData.restDays
+                        value={restDaysValue}
                     />
                 </div>
             </div>

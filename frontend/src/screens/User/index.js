@@ -7,7 +7,7 @@ import Multistep from "./elements/Multistep";
 
 const User = () => {
   const dispatcher = useDispatch()
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState(3);
   const data = useSelector(selectUserForm)
   const [formData, setFormData] = React.useState(data);
   const changePageNumber = () => {
