@@ -16,23 +16,55 @@ const ContactInfo = ({ data }) => {
         personalEmail: data.personalEmail,
         phoneNumber: data.phoneNumber,
     });
+    const [validationErrors, setValidationErrors] = React.useState({
+        personalEmail: '',
+        phoneNumber: ''
+      });
 
-    const handleInputChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+    // const handleInputChange = (e) => {
+    //     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
 
+    // Clear validation error when user starts typing again
+    setValidationErrors({
+      ...validationErrors,
+      [name]: "",
+    });
+  };
+  
     const handleSubmit = (trigger) => {
+        const newValidationErrors = {};
+        if (formData.personalEmail == '' ||formData.personalEmail == undefined) {
+          newValidationErrors.personalEmail = "Personal Email is required.";
+        }
+        if (formData.phoneNumber == '' ||formData.personalEmail == undefined) {
+          newValidationErrors.phoneNumber = "Phone Number is required.";
+        }
+    
+        if (Object.keys(newValidationErrors).length > 0) {
+          // Set validation errors and prevent closing the modal
+          setValidationErrors(newValidationErrors);
+          trigger();
+          return;
+        }
         updateUserById(userId, formData, trigger);
     }
 
     const config = [
         {
             label: 'Personal Email',
-            type: 'text',
+            type: 'email',
             name: 'personalEmail',
             value: formData.personalEmail,
             onChange: handleInputChange,
-            isRequired: true
+            isRequired: true,
+            error: {
+                status: false,
+                message: validationErrors.personalEmail
+            }
         },
         {
             label: 'Phone Number',
@@ -40,7 +72,11 @@ const ContactInfo = ({ data }) => {
             name: 'phoneNumber',
             value: formData.phoneNumber,
             onChange: handleInputChange,
-            isRequired: true
+            isRequired: true,
+            error: {
+                status: false,
+                message: validationErrors.phoneNumber
+            }
         },
     ]
     const btnConfig = [{
@@ -54,8 +90,14 @@ const ContactInfo = ({ data }) => {
                 <Modal
                     action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
                     title={title}
-                    Element={<CUForm config={config} handleInputChange={handleInputChange} isFull={false}/>}
+                    Element={<CUForm config={config} handleInputChange={handleInputChange} isFull={false} validationErrors={validationErrors}/>}
                     btnConfig={btnConfig}
+                    validationErrors={validationErrors}
+                    check={(closeModal) => {
+                      if (!validationErrors?.personalEmail && !validationErrors?.phoneNumber && formData?.phoneNumber && formData?.personalEmail) {
+                        closeModal()
+                      }
+                    }}
                 />
             </div>
         <div className="flex flex-col p-4 space-y-4">

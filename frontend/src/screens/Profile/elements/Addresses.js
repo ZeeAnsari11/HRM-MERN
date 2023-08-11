@@ -14,10 +14,22 @@ const Addresses = ({ data }) => {
         permanentAddress: data.permanentAddress,
         temporaryAddress: data.temporaryAddress,
     });
+    const [validationErrors, setValidationErrors] = React.useState({
+        permanentAddress: '',
+        temporaryAddress: ''
+      });
 
-    const handleInputChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+      const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    
+        // Clear validation error when user starts typing again
+        setValidationErrors({
+          ...validationErrors,
+          [name]: "",
+        });
+      };
+      
     const config = [
         {
             label: 'Permamanet Address',
@@ -25,7 +37,11 @@ const Addresses = ({ data }) => {
             name: 'permanentAddress',
             value: formData.permanentAddress,
             onChange: handleInputChange,
-            isRequired: true
+            isRequired: true,
+            error: {
+                status: false,
+                message: validationErrors.permanentAddress
+            }
         },
         {
             label: 'Temporary Address',
@@ -33,13 +49,32 @@ const Addresses = ({ data }) => {
             name: 'temporaryAddress',
             value: formData.temporaryAddress,
             onChange: handleInputChange,
-            isRequired: true
+            isRequired: true,
+            error: {
+                status: false,
+                message: validationErrors.temporaryAddress
+            }
         },
     ]
 
 
     const title = "Addresses Info"
     const handleSubmit = (trigger) => {
+        const newValidationErrors = {};
+        if (formData.permanentAddress == '' ||formData.permanentAddress == undefined) {
+          newValidationErrors.permanentAddress = "Permanent Address is required.";
+        }
+        if (formData.temporaryAddress == '' ||formData.temporaryAddress == undefined) {
+          newValidationErrors.temporaryAddress = "Temporary Address is required.";
+        }
+    
+        if (Object.keys(newValidationErrors).length > 0) {
+          // Set validation errors and prevent closing the modal
+          setValidationErrors(newValidationErrors);
+          trigger();
+          return;
+        }
+        
         updateUserById(userId, formData, trigger);
     }
     const btnConfig = [{
@@ -54,8 +89,14 @@ const Addresses = ({ data }) => {
                 <Modal
                     action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
                     title={title}
-                    Element={<CUForm config={config} handleInputChange={handleInputChange} isFull={false} />}
+                    Element={<CUForm config={config} handleInputChange={handleInputChange} isFull={false} validationErrors={validationErrors}/>}
                     btnConfig={btnConfig}
+                    validationErrors={validationErrors}
+                    check={(closeModal) => {
+                      if (!validationErrors?.personalEmail && !validationErrors?.phoneNumber && formData?.phoneNumber && formData?.personalEmail) {
+                        closeModal()
+                      }
+                    }}
                 />
             </div>
 

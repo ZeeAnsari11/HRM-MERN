@@ -45,7 +45,35 @@ const RelativesForm = ({ userID }) => {
     })
   }, [selectedRelative])
 
+  const [validationErrors, setValidationErrors] = React.useState({
+    name : '',
+    relationship : '',
+    cellNumber : '',
+    landLineNumber : '',
+  });
+
   const handleSubmit = (trigger) => {
+    const newValidationErrors = {};
+        if (formData.name == '' ||formData.name == undefined) {
+          newValidationErrors.name = "Name is required.";
+        }
+        if (formData.relationship == '' ||formData.relationship == undefined) {
+          newValidationErrors.relationship = "Relationship is required.";
+        }
+        if (formData.cellNumber == '' ||formData.cellNumber == undefined) {
+          newValidationErrors.cellNumber = "Cell Numberr is required.";
+        }
+        if (formData.landLineNumber == '' ||formData.landLineNumber == undefined) {
+          newValidationErrors.landLineNumber = "landLine Number is required.";
+        }
+        
+        if (Object.keys(newValidationErrors).length > 0) {
+          // Set validation errors and prevent closing the modal
+          setValidationErrors(newValidationErrors);
+          trigger();
+          return;
+        }
+        
     if (formData.id === undefined || formData.id === '') {
       createRelative(formData, trigger)
     }
@@ -71,9 +99,17 @@ const RelativesForm = ({ userID }) => {
   }
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    const { name, value, type, checked } = e.target;
 
+    (type === 'checkbox') ? setFormData({ ...formData, [name]: checked }) : setFormData({ ...formData, [name]: value })
+    
+    // Clear validation error when user starts typing again
+    setValidationErrors({
+      ...validationErrors,
+      [name]: "",
+    });
+  };
+  
   const btnConfig = [{
     title: (formData.id === undefined || formData.id === '') ? 'Create' : 'Update',
     handler: handleSubmit,
@@ -86,7 +122,11 @@ const RelativesForm = ({ userID }) => {
       name: 'name',
       value: formData.name,
       onChange: handleInputChange,
-      isRequired: true
+      isRequired: true,
+      error: {
+        status: false,
+        message: validationErrors.name
+    }
     },
     {
       label: 'Relationship',
@@ -94,7 +134,11 @@ const RelativesForm = ({ userID }) => {
       name: 'relationship',
       value: formData.relationship,
       onChange: handleInputChange,
-      isRequired: true
+      isRequired: true,
+      error: {
+        status: false,
+        message: validationErrors.relationship
+    }
     },
     {
       label: 'Cell Number',
@@ -102,7 +146,11 @@ const RelativesForm = ({ userID }) => {
       name: 'cellNumber',
       value: formData.cellNumber,
       onChange: handleInputChange,
-      isRequired: true
+      isRequired: true,
+      error: {
+        status: false,
+        message: validationErrors.cellNumber
+    }
     },
     {
       label: 'Landline Number',
@@ -110,7 +158,11 @@ const RelativesForm = ({ userID }) => {
       name: 'landLineNumber',
       value: formData.landLineNumber,
       onChange: handleInputChange,
-      isRequired: true
+      isRequired: true,
+      error: {
+        status: false,
+        message: validationErrors.landLineNumber
+    }
     },
     {
       label: 'isDependent',
@@ -118,7 +170,11 @@ const RelativesForm = ({ userID }) => {
       name: 'isDependent',
       value: formData.isDependent,
       onChange: handleInputChange,
-      isRequired: false
+      isRequired: false,
+      error: {
+        status: false,
+        message: ''
+    }
     }
 
   ]
@@ -133,18 +189,27 @@ const RelativesForm = ({ userID }) => {
           Element={
             <>
             <div className='flex justify-between mobile:flex-col mobile:space-y-4'>
-              <div className='space-y-4 max-h-[400px] mobile:w-full overflow-auto w-[300px]'>
-                  {
+              { allUserRelatives.length > 0 &&
+                <div className='space-y-4 max-h-[400px] mobile:w-full overflow-auto w-[300px]'>
+                  { 
                       allUserRelatives?.map((item, index) => {
                           return <RelativeBlock item={item} key={index} />
                       })
                   }
               </div>
-              <CUForm config={formDataConfig} handleInputChange={handleInputChange} />
+              }
+              <CUForm config={formDataConfig} handleInputChange={handleInputChange}  isFull={allUserRelatives.length >0 ? true : false} validationErrors={validationErrors}/>
             </div>
             </>
           }
           btnConfig={btnConfig}
+          validationErrors={validationErrors}
+          check={(closeModal) => {
+            if (!validationErrors?.name && !validationErrors?.relationship && !validationErrors?.cellNumber && !validationErrors?.landLineNumber
+              && formData?.name && formData?.relationship && formData?.cellNumber && formData?.landLineNumber ) {
+              closeModal()
+            }
+          }}
         />
       </div>
       <div className='max-h-[250px] overflow-auto'>

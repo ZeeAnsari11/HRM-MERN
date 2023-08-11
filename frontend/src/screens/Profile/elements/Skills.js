@@ -11,23 +11,51 @@ const Skills = ({ data }) => {
     const title = "Skills"
     const userId = useSelector(selectUID);
     const [formData, setFormData] = React.useState(data?.skills?.join(','));
+    const [validationErrors, setValidationErrors] = React.useState({
+        skills: [],
+    });
 
     const handleInputChange = (e) => {
-        setFormData(e.target.value.replace(/\s/g, ''));
+        const { name,value } = e.target;
+        setFormData(value.replace(' ', ''));
+
+        // Clear validation error when user starts typing again
+        setValidationErrors({
+            ...validationErrors,
+            [name]: "",
+        });
     };
 
     const handleSubmit = (trigger) => {
-        const skillData = { skills : formData.split(',') };
+
+        const skillData = { skills: formData.split(',') };
+        
+        const newValidationErrors = {};
+        if (!formData) {
+          newValidationErrors.skills = "Skills are required";
+        }
+        if (Object.keys(newValidationErrors).length > 0) {
+            console.log("=====newValidationErrors==",newValidationErrors);
+          // Set validation errors and prevent closing the modal
+          setValidationErrors(newValidationErrors);
+          trigger();
+          return;
+        }
+        
         updateUserById(userId, skillData, trigger);
     }
-    
+
     const config = [
         {
             type: 'text',
             name: 'skills',
             value: formData,
             onChange: handleInputChange,
-            isRequired: true
+            isRequired: true,
+            error: {
+                status: false,
+                message: validationErrors.skills
+            }
         }
     ]
 
@@ -44,11 +72,17 @@ const Skills = ({ data }) => {
                     title={title}
                     Element={
                         <>
-                            <CUForm config={config} handleInputChange={handleInputChange} isFull={false} />
+                            <CUForm config={config} handleInputChange={handleInputChange} isFull={false}   validationErrors={validationErrors}/>
                             <p className='text-xs text-gray-600 font-semibold'><span className='text-red-700'>Important Note :</span> Input should be comma-spererated. (e.g. Marketing,Accounting,Developer, etc)</p>
                         </>
                     }
                     btnConfig={btnConfig}
+                    validationErrors={validationErrors}
+                    check={(closeModal) => {
+                      if (!validationErrors?.personalEmail && !validationErrors?.phoneNumber && formData?.phoneNumber && formData?.personalEmail) {
+                        closeModal()
+                      }
+                    }}
                 />
             </div>
             <div className="flex flex-wrap -mx-2 px-10 py-4">

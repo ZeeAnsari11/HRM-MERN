@@ -21,9 +21,9 @@ const ExperiencesBlock = ({ item }) => {
       </div>
     </span>
     <div className={`absolute flex cursor-pointer justify-evenly items-center transition-opacity top-0 !mt-0 rounded-md bg-lightText w-full h-full ${hoverState ? 'opacity-100' : 'opacity-0'}`}>
-      <FontAwesomeIcon className='hover:text-gray-600' onClick={() => deleteExperience(item._id,dispatcher)} icon={faTrash}/>
+      <FontAwesomeIcon className='hover:text-gray-600' onClick={() => deleteExperience(item._id, dispatcher)} icon={faTrash} />
       <div className='w-[2px] h-1/2 bg-gray-500'></div>
-      <FontAwesomeIcon className='hover:text-gray-600'  onClick={() => dispatcher(setClickState(item))} icon={faPencil}/>
+      <FontAwesomeIcon className='hover:text-gray-600' onClick={() => dispatcher(setClickState(item))} icon={faPencil} />
     </div>
   </div>
 }
@@ -36,6 +36,14 @@ const Experiences = ({ userID }) => {
   const [formData, setFormData] = useState({
     ...selectedExperience, user: userID
   })
+  const [validationErrors, setValidationErrors] = React.useState({
+    designation: '',
+    organization: '',
+    experienceLetter: '',
+    stack: '',
+    reasonForLeaving : ''
+
+  });
 
   useEffect(() => {
     getExperiences(userID, dispatcher);
@@ -45,6 +53,30 @@ const Experiences = ({ userID }) => {
   }, [selectedExperience])
 
   const handleSubmit = (trigger) => {
+    const newValidationErrors = {};
+    if (formData.designation == '' || formData.designation == undefined) {
+      newValidationErrors.designation = "Designation is required.";
+    }
+    if (formData.organization == '' || formData.organization == undefined) {
+      newValidationErrors.organization = "Organization Name is required.";
+    }
+    if (formData.experienceLetter == '' || formData.experienceLetter == undefined) {
+      newValidationErrors.experienceLetter = "ExperienceLetter is required.";
+    }
+    if (formData.stack == '' || formData.stack == undefined) {
+      newValidationErrors.stack = "Stack is required.";
+    }
+    if (formData.reasonForLeaving == '' || formData.reasonForLeaving == undefined) {
+      newValidationErrors.reasonForLeaving = "ReasonForLeaving is required.";
+    }
+    
+    if (Object.keys(newValidationErrors).length > 0) {
+      // Set validation errors and prevent closing the modal
+      setValidationErrors(newValidationErrors);
+      trigger();
+      return;
+    }
+
     if (formData.id === undefined || formData.id === '') {
       createExperience(formData, trigger)
     }
@@ -59,17 +91,24 @@ const Experiences = ({ userID }) => {
       updateExperience(id, updateObj, dispatcher, trigger);
     }
     setFormData({
-        id: '',
-        designation: '',
-        organization:'',
-        experienceLetter: '',
-        stack: '',
-        reasonForLeaving: ''
+      id: '',
+      designation: '',
+      organization: '',
+      experienceLetter: '',
+      stack: '',
+      reasonForLeaving: ''
     })
   }
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    // Clear validation error when user starts typing again
+    setValidationErrors({
+      ...validationErrors,
+      [name]: "",
+    });
   };
 
   const btnConfig = [{
@@ -84,7 +123,11 @@ const Experiences = ({ userID }) => {
       name: 'designation',
       value: formData.designation,
       onChange: handleInputChange,
-      isRequired: true
+      isRequired: true,
+      error: {
+        status: false,
+        message: validationErrors.designation
+      }
     },
     {
       label: 'Organization',
@@ -92,7 +135,11 @@ const Experiences = ({ userID }) => {
       name: 'organization',
       value: formData.organization,
       onChange: handleInputChange,
-      isRequired: true
+      isRequired: true,
+      error: {
+        status: false,
+        message: validationErrors.organization
+      }
     },
     {
       label: 'Experience Letter',
@@ -100,7 +147,11 @@ const Experiences = ({ userID }) => {
       name: 'experienceLetter',
       value: formData.experienceLetter,
       onChange: handleInputChange,
-      isRequired: true
+      isRequired: true,
+      error: {
+        status: false,
+        message: validationErrors.experienceLetter
+      }
     },
     {
       label: 'Stack',
@@ -108,7 +159,11 @@ const Experiences = ({ userID }) => {
       name: 'stack',
       value: formData.stack,
       onChange: handleInputChange,
-      isRequired: true
+      isRequired: true,
+      error: {
+        status: false,
+        message: validationErrors.stack
+      }
     },
     {
       label: 'Reason For Leaving',
@@ -116,7 +171,11 @@ const Experiences = ({ userID }) => {
       name: 'reasonForLeaving',
       value: formData.reasonForLeaving,
       onChange: handleInputChange,
-      isRequired: false
+      isRequired: false,
+      error: {
+        status: false,
+        message: validationErrors.reasonForLeaving
+      }
     }
   ]
 
@@ -130,19 +189,28 @@ const Experiences = ({ userID }) => {
           onClose={() => resetStates(dispatcher)}
           Element={
             <>
-            <div className='flex justify-between mobile:flex-col mobile:space-y-4'>
-              <div className='space-y-4 max-h-[400px] mobile:w-full overflow-auto w-[300px]'>
+              <div className='flex justify-between mobile:flex-col mobile:space-y-4'>
+              { allUserExperiences.length > 0 &&
+                <div className='space-y-4 max-h-[400px] mobile:w-full overflow-auto w-[300px]'>
                   {
-                      allUserExperiences?.map((item, index) => {
-                          return <ExperiencesBlock item={item} key={index} />
-                      })
+                    allUserExperiences?.map((item, index) => {
+                      return <ExperiencesBlock item={item} key={index} />
+                    })
                   }
               </div>
-              <CUForm config={formDataConfig} handleInputChange={handleInputChange} />
-            </div>
+              }
+                <CUForm config={formDataConfig} handleInputChange={handleInputChange} isFull={allUserExperiences.length >0 ? true : false} validationErrors={validationErrors}/>
+              </div>
             </>
           }
           btnConfig={btnConfig}
+          validationErrors={validationErrors}
+          check={(closeModal) => {
+            if (!validationErrors?.designation && !validationErrors?.organization && !validationErrors?.experienceLetter && !validationErrors?.stack && !validationErrors?.experienceLetter && !validationErrors.reasonForLeaving &&
+              formData?.designation && formData?.organization && formData?.experienceLetter && formData?.stack && formData?.experienceLetter && formData?.reasonForLeaving) {
+              closeModal()
+            }
+          }}
         />
       </div>
       <div className='max-h-[250px] overflow-auto'>
@@ -152,8 +220,8 @@ const Experiences = ({ userID }) => {
               <span className="text-gray-600 p-4">
                 <div className="text-lg font-semibold"><FontAwesomeIcon icon={faMailBulk} className="w-8 mr-2" />{item?.organization}</div>
                 <div className='flex justify-between items-center px-10'>
-                    <p>{item?.designation}</p>
-                    <p>{item?.stack}</p>
+                  <p>{item?.designation}</p>
+                  <p>{item?.stack}</p>
                 </div>
               </span>
             </div>

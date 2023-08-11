@@ -1,17 +1,18 @@
+import { setClickState, setUserCertifications } from "../states/reducers/slices/backend/Certificates";
+
 import axios from "axios";
 import { certification } from "./configuration";
-import { toastMessage } from "../AlertConfigs";
-import { toast } from "react-toastify";
-import { setUserCertifications, setClickState } from "../states/reducers/slices/backend/Certificates";
 import { setProfileCompletion } from "../states/reducers/slices/backend/UserSlice";
+import { toast } from "react-toastify";
+import { toastMessage } from "../AlertConfigs";
 
 export const createCertification = (data, trigger) => {
     axios.post(certification.createCertification, data)
     .then(() => {
         toastMessage('success', "Certification Added Successfully", toast);
-        setTimeout(() => {
-            window.location.href = "/dashboard/profile"
-        }, 2000)
+        // setTimeout(() => {
+        //     window.location.href = "/dashboard/profile"
+        // }, 2000)
     })
     .catch((err) => {
         toastMessage('error', err.response.data.Message, toast);

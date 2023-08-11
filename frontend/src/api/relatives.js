@@ -1,18 +1,19 @@
+import { setClickState, setUserRelatives } from "../states/reducers/slices/backend/RelativesSlice";
+
 import axios from "axios";
 import { relatives } from "./configuration";
-import { toastMessage } from "../AlertConfigs";
-import { toast } from "react-toastify";
-import { setClickState, setUserRelatives } from "../states/reducers/slices/backend/RelativesSlice";
 import { setProfileCompletion } from "../states/reducers/slices/backend/UserSlice";
+import { toast } from "react-toastify";
+import { toastMessage } from "../AlertConfigs";
 
 export const createRelative = (data, trigger) => {
     console.log("Crate called")
     axios.post(relatives.createRelative, data)
     .then(() => {
         toastMessage('success', "Relative Created Successfully", toast);
-        setTimeout(() => {
-            window.location.href = "/dashboard/profile"
-        }, 2000)
+        // setTimeout(() => {
+        //     window.location.href = "/dashboard/profile"
+        // }, 2000)
     })
     .catch((err) => {
         toastMessage('error', err.response.data.Message, toast);
