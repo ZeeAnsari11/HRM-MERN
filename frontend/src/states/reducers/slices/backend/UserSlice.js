@@ -5,6 +5,7 @@ export const UserSlice = createSlice({
   name: 'user',
   initialState: {
     currentUser: {},
+    userForm: {},
     userAuthToken: null,
     teamLeads: [],
     finalAuthority: [],
@@ -75,15 +76,23 @@ export const UserSlice = createSlice({
     },
     setIsAdmin: (state, action) => {
       state.isAdmin = action.payload;
+    },
+    setUserForm: (state, action) => {
+      state.userForm = action.payload;
     }
   }
 });
 
 // Action Methods
 export const {
-  setCurrentUser, setAuth, logout,
-  setOrganization, setTeamLeadList, 
-  setFinalAuthority, setTimeSLots,
+  setUserForm,
+  setCurrentUser, 
+  setAuth, 
+  logout,
+  setOrganization, 
+  setTeamLeadList, 
+  setFinalAuthority, 
+  setTimeSLots,
   setAllUsers,
   setIsAdmin,
   setUserGrades,
@@ -98,6 +107,7 @@ export const {
 
 // Selector Methods
 export const selectCurrentUser = (state) => state.user.currentUser;
+export const selectUserForm = (state) => state.user.userForm;
 export const selectIsAdmin = (state) => state.user.isAdmin;
 export const selectCurrentUserOrg = (state) => state.user.currentUser.organization._id;
 export const selectCurrentUserBranch = (state) => state.user.currentUser.branch._id;

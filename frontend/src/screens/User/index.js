@@ -1,11 +1,15 @@
 import React, { useState } from "react";
+import { selectUserForm, setUserForm } from "../../states/reducers/slices/backend/UserSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 import Forms from "./elements/Forms";
 import Multistep from "./elements/Multistep";
 
 const User = () => {
+  const dispatcher = useDispatch()
   const [pageNumber, setPageNumber] = useState(1);
-  const [formData, setFormData] = React.useState({});
+  const data = useSelector(selectUserForm)
+  const [formData, setFormData] = React.useState(data);
   const changePageNumber = () => {
     setPageNumber(pageNumber + 1);
   }
@@ -26,6 +30,7 @@ const User = () => {
         [name]: value,
       }));
     }
+    dispatcher(setUserForm(formData))
   };
 
   return (

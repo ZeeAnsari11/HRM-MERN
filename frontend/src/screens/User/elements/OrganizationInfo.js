@@ -2,9 +2,12 @@ import React, { useEffect } from 'react'
 import { selectCurrentUserBranch, selectCurrentUserOrg, selectFinalAuthority, selectTimeSlots } from '../../../states/reducers/slices/backend/UserSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom'
 import RestDays from './RestDays';
 import SelectForm from '../../../components/SelectForm';
 import { commonStyles } from '../../../styles/common';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { loadAllOrganizationsInfo } from '../../../api/user';
 import { selectEmploymentTypes } from '../../../states/reducers/slices/backend/EmploymentType';
 import { selectOrganizationDesignation } from '../../../states/reducers/slices/backend/Designation';
@@ -36,13 +39,6 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
         loadAllOrganizationsInfo(dispatcher, userOrgId, branchId);
     }, []);
 
-
-    // const convertToAMPM = (time) => {
-    //     const [hours, minutes] = time.split(':');
-    //     const formattedTime = new Date();
-    //     formattedTime.setHours(hours, minutes);
-    //     return formattedTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
-    // }
     const convertToAMPM = (time) => {
         const [hours, minutes] = time.split(':');
         const hour = parseInt(hours, 10);
@@ -52,7 +48,7 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
         const formattedMinute = minute.toString().padStart(2, '0');
     
         return `${formattedHour}:${formattedMinute} ${meridiem}`;
-      };
+    };
     return (
         <form className="lg:col-span-2 space-y-4" onSubmit={(e) => {
             e.preventDefault();
@@ -69,6 +65,7 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                             })
                         }
                     </select>
+                    <Link to={'/dashboard/departments'} className='bg-gray-100 flex justify-center items-start rounded-md hover:bg-gray-300'><FontAwesomeIcon icon={faPlus} className='w-3 h-3 p-4'/></Link>
                 </div>
             </div>
             <div className="md:col-span-5">
@@ -82,6 +79,7 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                             })
                         }
                     </select>
+                    <Link to={'/dashboard/designations'} className='bg-gray-100 flex justify-center items-start rounded-md hover:bg-gray-300'><FontAwesomeIcon icon={faPlus} className='w-3 h-3 p-4'/></Link>
                 </div>
             </div>
             <div className="md:col-span-5">
@@ -95,6 +93,7 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                             })
                         }
                     </select>
+                    <Link to={'/dashboard/employeement-type'} className='bg-gray-100 flex justify-center items-start rounded-md hover:bg-gray-300'><FontAwesomeIcon icon={faPlus} className='w-3 h-3 p-4'/></Link>
                 </div>
             </div>
             <div className="md:col-span-5">
