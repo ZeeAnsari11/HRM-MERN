@@ -88,9 +88,9 @@ export const loadAllOrganizationsInfo = (dispatcher, orgId, branchId) => {
          .catch((e) => console.log(e));
 }
 
-export const createUser = (data) => {
+export const createUser = (data, setLoader) => {
     axios.post(userRoutes.createUser, data)
-    .then((response) => {
+    .then(() => {
         toastMessage("success", "User Created Succefully", toast)
         setTimeout(() => {
             window.location.href = "/dashboard/view-employees"
@@ -98,6 +98,9 @@ export const createUser = (data) => {
     })
     .catch((error) => {
         toastMessage("error", error.response.data.Message, toast);
+    })
+    .finally(() =>{
+        setLoader(false)
     })
 }
 

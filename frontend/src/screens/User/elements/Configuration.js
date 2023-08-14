@@ -2,7 +2,7 @@ import React from 'react'
 import { Toggler } from '../../../components/FormItems/Toggler'
 import { commonStyles } from '../../../styles/common'
 
-const Configuration = ({ formData, changePageNumber, handleInputChange, showButton }) => {
+const Configuration = ({ disabled, formData, changePageNumber, handleInputChange, showButton }) => {
   return (
     <div className='space-y-2'>
       <Toggler
@@ -11,6 +11,7 @@ const Configuration = ({ formData, changePageNumber, handleInputChange, showButt
         handleInputChange={handleInputChange}
         value={formData.isLineManager}
         defaultChecked={formData.isLineManager}
+        disabled={disabled}
       />
       <Toggler
         title="Is Head Of Department"
@@ -18,6 +19,7 @@ const Configuration = ({ formData, changePageNumber, handleInputChange, showButt
         handleInputChange={handleInputChange}
         value={formData.isHOD}
         defaultChecked={formData.isHOD}
+        disabled={disabled}
       />
       <Toggler
         title="Is Team Lead"
@@ -25,10 +27,11 @@ const Configuration = ({ formData, changePageNumber, handleInputChange, showButt
         handleInputChange={handleInputChange}
         value={formData.isTeamLead}
         defaultChecked={formData.isTeamLead}
+        disabled={disabled}
       />
 
       <div className='py-4'>
-        {showButton ? <button className={commonStyles.btnDark} onClick={changePageNumber}>Submit</button> : ""}
+        {showButton ? <button className={commonStyles.btnDark} disabled={disabled} onClick={changePageNumber}>Submit</button> : ""}
       </div>
     </div>
   )

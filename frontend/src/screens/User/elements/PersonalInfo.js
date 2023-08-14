@@ -2,7 +2,7 @@ import Countries from './Countries'
 import React from 'react'
 import { commonStyles } from '../../../styles/common';
 
-const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButton }) => {
+const PersonalInfo = ({ disabled, changePageNumber, handleInputChange, formData, showButton }) => {
 
     const [errors, setErrors] = React.useState({
         firstName: false,
@@ -26,8 +26,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
         const newErrors = { ...errors };
         let hasErrors = false;
         for (const field in newErrors) {
-            console.log("field",formData[field])
-            if (formData[field] === undefined || formData[field] === "") {
+            if (!formData[field]) {
                 newErrors[field] = true;
                 hasErrors = true;
             } else {
@@ -44,8 +43,11 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
         }
     };
     const handler = (e) => {
-        validator();
-        handleInputChange(e)
+        handleInputChange(e);
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [e.target.name]: e.target.value ? false : true,
+        }));
     }
 
     return (
@@ -56,6 +58,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                     <div className="flex space-x-2">
                         <input
                             type="text"
+                            disabled={disabled}
                             name="firstName"
                             id="firstName"
                             placeholder="First Name"
@@ -73,6 +76,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         <input
                             type="text"
                             name="lastName"
+                            disabled={disabled}
                             id="lastName"
                             placeholder="Last Name"
                             className={errors.lastName ? `${commonStyles.input} border-red-500` : commonStyles.input}
@@ -92,6 +96,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         id="email"
                         className={errors.email ? `${commonStyles.input} border-red-500` : commonStyles.input}
                         onChange={handler}
+                        disabled={disabled}
                         placeholder="email@domain.com"
                         value={formData.email}
                         
@@ -107,6 +112,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         id="password"
                         className={errors.password ? `${commonStyles.input} border-red-500` : commonStyles.input}
                         onChange={handler}
+                        disabled={disabled}
                         value={formData.password}
                         placeholder="********"
                         
@@ -119,6 +125,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         type="text"
                         name="personalEmail"
                         id="personalEmail"
+                        disabled={disabled}
                         value={formData.personalEmail}
                         className={errors.personalEmail ? `${commonStyles.input} border-red-500` : commonStyles.input}
                         onChange={handler}
@@ -131,6 +138,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                     <label htmlFor="gender">Gender</label>
                     <select
                         name="gender"
+                        disabled={disabled}
                         id="gender"
                         onChange={handler}
                         className={errors.gender ? `${commonStyles.input} border-red-500` : commonStyles.input}
@@ -152,6 +160,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         name="address"
                         id="address"
                         value={formData.address}
+                        disabled={disabled}
                         className={errors.address ? `${commonStyles.input} border-red-500` : commonStyles.input}
                         placeholder="Full Address"
                         onChange={handler}
@@ -165,6 +174,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         <select
                             name="country"
                             id="country"
+                            disabled={disabled}
                             value={formData.country}
                             className={errors.country ? `px-4 outline-none text-gray-800 w-full bg-transparent border-red-500` : `px-4 outline-none text-gray-800 w-full bg-transparent`}
                             onChange={handler}
@@ -182,6 +192,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         <input
                             name="state"
                             id="state"
+                            disabled={disabled}
                             value={formData.state}
                             onChange={handler}
                             className={errors.state ? `px-4 outline-none text-gray-800 w-full bg-transparent border-red-500` : `px-4 outline-none text-gray-800 w-full bg-transparent`}
@@ -194,9 +205,10 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                 <div className="md:col-span-1">
                     <label htmlFor="zipcode">Zipcode</label>
                     <input
-                        type="text"
+                        type="number"
                         value={formData.zipcode}
                         onChange={handler}
+                        disabled={disabled}
                         name="zipcode"
                         id="zipcode"
                         className={errors.zipcode ? `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 border-red-500` : `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50`}
@@ -211,6 +223,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                         name="dob"
                         value={formData.dob}
                         onChange={handler}
+                        disabled={disabled}
                         id="dob"
                         
                         className={errors.dob ? `transition-all h-10 border mt-1 rounded px-4 w-full bg-gray-50 border-red-500` : `transition-all h-10 border mt-1 rounded px-4 w-full bg-gray-50`}
@@ -225,6 +238,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                             name="religion"
                             value={formData.religion}
                             onChange={handler}
+                            disabled={disabled}
                             id="religion"
                             className={errors.religion ? `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 border-red-500` : `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50`}
                             placeholder="Religion"
@@ -239,6 +253,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                             name="nationality"
                             value={formData.nationality}
                             onChange={handler}
+                            disabled={disabled}
                             id="nationality"
                             
                             className={errors.nationality ? `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 border-red-500` : `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50`}
@@ -251,10 +266,11 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                     <div className="md:col-span-3">
                         <label htmlFor="phoneNumber">Contact Number</label>
                         <input
-                            type="text"
+                            type="number"
                             name="phoneNumber"
                             value={formData.phoneNumber}
                             onChange={handler}
+                            disabled={disabled}
                             id="phoneNumber"
                             className={errors.phoneNumber ? `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 border-red-500` : `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50`}
                             placeholder="Contact Number"
@@ -268,6 +284,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
                             name="bloodGroup"
                             value={formData.bloodGroup}
                             onChange={handler}
+                            disabled={disabled}
                             id="bloodGroup"
                             className={errors.bloodGroup ? `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 border-red-500` : `transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50`}
                         >
@@ -290,7 +307,7 @@ const PersonalInfo = ({ changePageNumber, handleInputChange, formData, showButto
             </div>
             <div className='md:col-span-2'>
                 <div className="md:col-span-5 text-right">
-                    {showButton ? <button type='submit' className={commonStyles.btnDark}>
+                    {showButton ? <button disabled={disabled} type='submit' className={commonStyles.btnDark}>
                         Next
                     </button> : ""}
                 </div>

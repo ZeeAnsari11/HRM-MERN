@@ -5,44 +5,44 @@ import { useDispatch, useSelector } from 'react-redux';
 import { commonStyles } from '../../../styles/common';
 import { loadAllOrganizationsInfo } from '../../../api/user';
 
-const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton }) => {
+const UserInfo = ({ disabled, formData, changePageNumber, handleInputChange, showButton }) => {
     const [errors, setErrors] = React.useState({
         roleType: false,
-        grade: false,
-        drivingLiscenceNumber: false,
         grossSalary: false,
-        passportNumber: false,
-        nicNumber: false,
         expiry: false,
         joiningDate: false,
     });
+
+    const [numError , setNumError] = React.useState({
+        drivingLiscenceNumber: false,
+        passportNumber: false,
+        nicNumber: false,
+    })
     
     const validator = () => {
         let newErrors = { ...errors };
+        let numbersError = {}
         let hasErrors = false;
 
         for (const field in newErrors) {
-            if (!formData[field]) {
+            if ( !formData[field]) {
                 newErrors[field] = true;
                 hasErrors = true;
             }
+            if(!formData?.drivingLiscence?.number){
+                numbersError.drivingLiscenceNumber = true;
+                 hasErrors = true;
+            }
+            if(!formData?.passport?.number){
+                numbersError.passportNumber = true;
+                 hasErrors = true;
+            }
+            if(!formData?.nic?.number){
+                numbersError.nicNumber = true;
+                 hasErrors = true;
+            }  
         }
-
-        if (!formData.nic.number) {
-            newErrors.nicNumber = true;
-            hasErrors = true;
-        }
-
-        if (!formData.drivingLiscence.number) {
-            newErrors.drivingLiscenceNumber = true;
-            hasErrors = true;
-        }
-
-        if (!formData.passport.number) {
-            newErrors.passportNumber = true;
-            hasErrors = true;
-        }
-
+        setNumError(numbersError)
         setErrors(newErrors);
         return hasErrors;
     }
@@ -93,8 +93,9 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
                     <select
                         name="roleType"
                         id="roleType"
+                        disabled={disabled}
                         value={formData.roleType}
-                        onChange={handler} // Using the handler function for validation
+                        onChange={handler}
                         className={errors.roleType ? `${commonStyles.input} border-red-500` : commonStyles.input}
                     >
                         <option value="">Select Role Type</option>
@@ -108,14 +109,13 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
                 <div className="md:col-span-2">
                     <label htmlFor="full_name">Grades</label>
                     <div className="flex space-x-2">
-                        <select name="grade" value={formData.grade} onChange={handler} className={errors.grade ? `${commonStyles.input} border-red-500` : commonStyles.input}>
+                        <select name="grade" value={formData.grade} disabled={disabled} onChange={handler} className={commonStyles.input}>
                             <option value="">Select Grade</option>
                             {grades.map((grade) => {
                                 return <option key={grade._id} value={grade._id}>{grade.name}</option>
                             })}
                         </select>
                     </div>
-                    {errors.grade && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
 
                 <div className="md:col-span-3">
@@ -124,21 +124,22 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
                         <input
                             type="number"
                             name="drivingLiscence"
+                            disabled={disabled}
                             id="drivingLiscence"
                             pattern="[0-9]*"
                             value={formData?.drivingLiscence?.number}
                             placeholder="3510319187449"
-                            className={errors.drivingLiscenceNumber ? `${commonStyles.input} border-red-500` : commonStyles.input}
+                            className={numError.drivingLiscenceNumber ? `${commonStyles.input} border-red-500` : commonStyles.input}
                             onChange={(event) => {
                                 handleInputChange({ target: { name: 'drivingLiscence', value: { number: event.target.value } } });
-                                setErrors((prevErrors) => ({
+                                setNumError((prevErrors) => ({
                                     ...prevErrors,
                                     "drivingLiscenceNumber": event.target.value ? false : true,
                                 }));
                             }}
                         />
                     </div>
-                    {errors?.drivingLiscenceNumber && <span className="text-red-500">Please fill out this field.</span>}
+                    {numError?.drivingLiscenceNumber && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
 
                 <div className="md:col-span-2">
@@ -148,6 +149,7 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
                             type="number"
                             name="grossSalary"
                             id="grossSalary"
+                            disabled={disabled}
                             value={formData.grossSalary}
                             placeholder="100000000000"
                             className={errors.grossSalary ? `${commonStyles.input} border-red-500` : commonStyles.input}
@@ -162,22 +164,24 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
                     <label htmlFor="passport">Passport</label>
                     <div className="flex space-x-2">
                         <input
-                            type="text"
+                            type="number"
+                            disabled={disabled}
                             name="passport"
                             id="passport"
                             value={formData.passport?.number}
                             placeholder="3510319187449"
-                            className={errors.passportNumber ? `${commonStyles.input} border-red-500` : commonStyles.input}
+                            className={numError?.passportNumber ? `${commonStyles.input} border-red-500` : commonStyles.input}
                             onChange={(event) => {
-                                const newErrors = { ...errors };
-                                newErrors.passportNumber = false;
-                                setErrors(newErrors);
+                                setNumError((prevErrors) => ({
+                                    ...prevErrors,
+                                    "passportNumber": event.target.value ? false : true,
+                                }));
                                 handleInputChange({ target: { name: 'passport', value: { number: event.target.value } } });
                             }}
 
                         />
                     </div>
-                    {errors?.passportNumber && <span className="text-red-500">Please fill out this field.</span>}
+                    {numError?.passportNumber && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
 
                 <div className="md:col-span-2">
@@ -188,18 +192,20 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
                             name="number"
                             id="number"
                             pattern="[0-9]*"
+                            disabled={disabled}
                             value={formData.nic?.number}
                             placeholder="3510319187449"
-                            className={errors?.nicNumber ? `${commonStyles.input} border-red-500` : commonStyles.input}
+                            className={numError?.nicNumber ? `${commonStyles.input} border-red-500` : commonStyles.input}
                             onChange={(event) => {
-                                const newErrors = { ...errors };
-                                newErrors.nicNumber = false;
-                                setErrors(newErrors);
+                                setNumError((prevErrors) => ({
+                                    ...prevErrors,
+                                    "nicNumber": event.target.value ? false : true,
+                                }));
                                 handleInputChange({ target: { name: 'nic', value: { number: event.target.value, expiry: '', attachment: { front: '', back: '' } } } });
                             }}
                         />
                     </div>
-                    {errors?.nicNumber && <span className="text-red-500">Please fill out this field.</span>}
+                    {numError?.nicNumber && <span className="text-red-500">Please fill out this field.</span>}
                 </div>
 
                 <div className="md:col-span-5">
@@ -211,6 +217,7 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
                             className={`relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] font-normal leading-[2.15] text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none ${errors.front ? 'border-red-500' : ''}`}
                             id="front"
                             type="file"
+                            disabled={disabled}
                             onChange={handleFrontFileChange}
                         />
                     </div>
@@ -227,6 +234,7 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
                                 }`}
                             id="back"
                             type="file"
+                            disabled={disabled}
                             onChange={handleBackFileChange}
                         />
                     </div>
@@ -239,6 +247,7 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
                         type="date"
                         name="expiry"
                         pattern="[0-9]*"
+                        disabled={disabled}
                         value={formData.expiry}
                         onChange={handler}
                         id="expiry"
@@ -254,6 +263,7 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
                         name="joiningDate"
                         value={formData.joiningDate}
                         onChange={handler}
+                        disabled={disabled}
                         id="joiningDate"
                         className={errors.joiningDate ? `${commonStyles.input} border-red-500` : commonStyles.input}
                     />
@@ -264,7 +274,7 @@ const UserInfo = ({ formData, changePageNumber, handleInputChange, showButton })
             <div className="md:col-span-5 text-right">
                 <div className="inline-flex items-end">
                     {showButton ? (
-                        <button type="submit" className={commonStyles.btnDark}>
+                        <button type="submit" disabled={disabled} className={commonStyles.btnDark}>
                             Next
                         </button>
                     ) : (

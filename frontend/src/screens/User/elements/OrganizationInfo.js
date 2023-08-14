@@ -10,7 +10,7 @@ import { selectEmploymentTypes } from '../../../states/reducers/slices/backend/E
 import { selectOrganizationDesignation } from '../../../states/reducers/slices/backend/Designation';
 import { selectUserDepartment } from '../../../states/reducers/slices/backend/Department';
 
-const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showButton }) => {
+const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputChange, showButton }) => {
     const dispatcher = useDispatch();
     const userOrgId = useSelector(selectCurrentUserOrg);
     const branchId = useSelector(selectCurrentUserBranch);
@@ -19,11 +19,9 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
     const lineManager = useSelector(selectFinalAuthority);
     const timeSlots = useSelector(selectTimeSlots);
 
-    const timeSlotValue = formData.timeSlots ? formData.timeSlots.timeSlots : '';
+    const timeSlotValue = formData.timeSlots ? formData.timeSlots : '';
     const restDaysValue = formData.roaster ? formData.roaster.restDays : [];
     const employmentTypes = useSelector(selectEmploymentTypes)
-
-
 
     const [errors, setErrors] = React.useState({
         department: false,
@@ -38,34 +36,42 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
     const validator = () => {
         const newErrors = { ...errors };
         let hasErrors = false;
-
         for (const field in newErrors) {
             if (!formData[field]) {
-                console.log("field", formData[field])
                 newErrors[field] = true;
                 hasErrors = true;
-                if (field === 'restDays' && formData?.roaster?.restDays?.length > 0) {
-                    newErrors[field] = false;
-                }
             } else {
                 newErrors[field] = false;
             }
         }
+        
+        if (formData.roaster?.restDays?.length === 0) {
+            newErrors['restDays'] = true
+            hasErrors = true;
+        }
+        else {
+            newErrors['restDays'] = false
+            hasErrors = false;
+        }
+        
         setErrors(newErrors);
+        
         return hasErrors;
     };
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
-        console.log();
         if (!validator()) {
             changePageNumber();
         }
     };
 
     const handleInputChangeWithValidation = (e) => {
-        validator();
         handleInputChange(e);
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [e.target.name]: e.target.value ? false : true,
+        }));
     };
 
     const employeeTypes = [
@@ -93,7 +99,7 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
             <div className="md:col-span-5">
                 <label htmlFor="full_name">Department</label>
                 <div className="flex space-x-2">
-                    <select name='department' id="department" value={formData.department} className={
+                    <select name='department' id="department" disabled={disabled} value={formData.department} className={
                         errors.department
                             ? `${commonStyles.input} border-red-500`
                             : commonStyles.input
@@ -113,7 +119,7 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
             <div className="md:col-span-5">
                 <label htmlFor="full_name">Designation</label>
                 <div className="flex space-x-2">
-                    <select name='designation' id="designation" value={formData.designation} onChange={handleInputChangeWithValidation} className={
+                    <select disabled={disabled} name='designation' id="designation" value={formData.designation} onChange={handleInputChangeWithValidation} className={
                         errors.designation
                             ? `${commonStyles.input} border-red-500`
                             : commonStyles.input
@@ -133,7 +139,7 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
             <div className="md:col-span-5">
                 <label htmlFor="full_name">Employment Type</label>
                 <div className="flex space-x-2">
-                    <select name='employmentType' id="employmentType" value={formData.employmentType} onChange={handleInputChangeWithValidation} className={
+                    <select name='employmentType' disabled={disabled} id="employmentType" value={formData.employmentType} onChange={handleInputChangeWithValidation} className={
                         errors.employmentType
                             ? `${commonStyles.input} border-red-500`
                             : commonStyles.input
@@ -155,6 +161,7 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                 <div className="flex space-x-2">
                     <select
                         name='employeeType'
+                        disabled={disabled}
                         id="employeeType"
                         value={formData.employeeType}
                         onChange={handleInputChangeWithValidation}
@@ -188,12 +195,9 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                 )}
             </div>
             <div className="md:col-span-5">
-                <label htmlFor="timeSlots">Roster</label>
+                <label htmlFor="timeSlots">Time Slots</label>
                 <div className="flex space-x-2">
-                    <select name='timeSlots' value={timeSlotValue} onChange={(event) => {
-                        let val = event.target.value
-                        handleInputChangeWithValidation({ target: { name: 'timeSlots', value: { timeSlots: val } } })
-                    }} className={
+                    <select name='timeSlots' disabled={disabled} value={timeSlotValue} onChange={handleInputChangeWithValidation} className={
                         errors.timeSlots
                             ? `${commonStyles.input} border-red-500`
                             : commonStyles.input
@@ -224,14 +228,14 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                                 : commonStyles.input
                         }
                     />
-                    {errors.restDays && (
-                        <span className="text-red-500">Please select Rest Days.</span>
-                    )}
                 </div>
+                {errors.restDays && (
+                    <span className="text-red-500">Please select Rest Days.</span>
+                )}
             </div>
             <div className="md:col-span-5 text-right">
                 <div className="inline-flex items-end">
-                    {showButton ? <button type='submit' className={commonStyles.btnDark}>
+                    {showButton ? <button disabled={disabled} type='submit' className={commonStyles.btnDark}>
                         Next
                     </button> : ""}
                 </div>
