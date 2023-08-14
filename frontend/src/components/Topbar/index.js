@@ -34,12 +34,6 @@ const Topbar = () => {
                     onClick={() => dispatcher(setNavbarState(!open))}>
                     <FontAwesomeIcon icon={faBars} />
                 </div>
-                <div className="relative">
-                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <FontAwesomeIcon icon={faSearch}/>
-                    </div>
-                    <input type="text" className="bg-[#f1f4fb] text-gray-900 text-sm rounded-lg focus:ring-primaryColorLight block w-full pl-10 p-3.5" placeholder="Search Mockups, Logos, Design Templates..." required />
-                </div>
             </div>
             <div className={tailwindStyle.toglerContainer}>
                 <div className={tailwindStyle.iconsContainer} onClick={() => toggleFullScreen()}>

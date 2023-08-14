@@ -75,10 +75,6 @@ function ViewAttendenceRequests() {
                 console.log(error);
             });
     }, []);
-
-    const handleSearch = (event) => {
-        setSearchTerm(event.target.value);
-    };
     
     const filteredAttendenceHistory = AttendenceRequestHistory.filter((entry) =>
         entry.status.toLowerCase().includes(searchTerm.toLowerCase()))

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { selectCurrentUserBranch, selectOrgId } from '../../../states/reducers/slices/backend/UserSlice'
 
 import Configuration from './Configuration'
+import Loader from '../../../components/Loader'
 import OrganizationInfo from './OrganizationInfo'
 import PersonalInfo from './PersonalInfo'
 import UserInfo from './UserInfo'
@@ -12,38 +13,39 @@ import { useSelector } from 'react-redux'
 const Forms = ({ formNumber, changePageNumber, formData, handleInputChange }) => {
     const organization = useSelector(selectOrgId);
     const branch = useSelector(selectCurrentUserBranch);
-
+    const [loader, setLoader] = React.useState(false); 
     useEffect(() => {
         handleInputChange({ target: { name: 'organization', value: organization } });
         handleInputChange({ target: { name: 'branch', value: branch } });
     }, [])
     const handleSubmit = () => {
+        setLoader(true)
         let element = {
-            timeSlots: formData.timeSlots ? formData.timeSlots.timeSlots : [],
+            timeSlots: formData.timeSlots ? formData.timeSlots : [],
             restDays: formData.roaster ? formData.roaster.restDays : [],
         };
         formData.userRoster = element
         formData.nic.expiry = formData.expiry
         formData.nic.attachment.front = "front.png"
         formData.nic.attachment.back = "back.png"
-        createUser(formData);
+        createUser(formData, setLoader);
     }
     if (formNumber === 1)
-        return <PersonalInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={true} />
+        return <PersonalInfo disabled={loader} formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={true} />
     if (formNumber === 2)
-        return <UserInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={true}/>
+        return <UserInfo disabled={loader} formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={true}/>
     if (formNumber === 3)
-        return <OrganizationInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={true} />
+        return <OrganizationInfo disabled={loader} formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={true} />
     if (formNumber === 4)
-        return <Configuration formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={true} />
+        return <Configuration disabled={loader} formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={true} />
     if (formNumber === 5)
         return <>
-            <PersonalInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton = {false}/>
-            <UserInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false}/>
-            <OrganizationInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false} />
-            <Configuration formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false} />
+            <PersonalInfo disabled={loader} formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton = {false}/>
+            <UserInfo disabled={loader} formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false}/>
+            <OrganizationInfo disabled={loader} formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false} />
+            <Configuration disabled={loader} formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false} />
             <div>
-            <button className={commonStyles.btnDark} onClick={handleSubmit}>Submit</button>
+            <button disabled={loader} className={commonStyles.btnDark} onClick={handleSubmit}>Submit {loader && <Loader color={'white'}/>}</button>
             </div>
         </>
 }

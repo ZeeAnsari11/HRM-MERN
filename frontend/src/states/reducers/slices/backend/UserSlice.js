@@ -5,7 +5,17 @@ export const UserSlice = createSlice({
   name: 'user',
   initialState: {
     currentUser: {},
-    userForm: {},
+    userForm: {
+      nic: {
+        number: ''
+      },
+      drivingLiscence: {
+        number: ''
+      },
+      passport: {
+        number: ''
+      }
+    },
     userAuthToken: null,
     teamLeads: [],
     finalAuthority: [],

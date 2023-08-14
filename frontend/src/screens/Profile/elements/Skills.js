@@ -85,13 +85,16 @@ const Skills = ({ data }) => {
                     }}
                 />
             </div>
-            <div className="flex flex-wrap -mx-2 px-10 py-4">
+            {
+                data?.skills?.length > 0 &&
+                <div className="flex flex-wrap -mx-2 px-10 py-4">
                 {
                     data?.skills?.map((skill, index) => {
                         return <div key={index} className="px-2 py-1 bg-gray-200 text-gray-700 rounded-full text-sm font-medium mr-2 mb-2">{skill}</div>
                     })
                 }
-            </div>
+                </div>
+            }
         </>
     )
 }

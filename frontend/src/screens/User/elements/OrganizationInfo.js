@@ -13,7 +13,7 @@ import { selectEmploymentTypes } from '../../../states/reducers/slices/backend/E
 import { selectOrganizationDesignation } from '../../../states/reducers/slices/backend/Designation';
 import { selectUserDepartment } from '../../../states/reducers/slices/backend/Department';
 
-const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showButton }) => {
+const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputChange, showButton }) => {
     const dispatcher = useDispatch();
     const userOrgId = useSelector(selectCurrentUserOrg);
     const branchId = useSelector(selectCurrentUserBranch);
@@ -22,9 +22,60 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
     const lineManager = useSelector(selectFinalAuthority);
     const timeSlots = useSelector(selectTimeSlots);
 
-    const timeSlotValue = formData.timeSlots ? formData.timeSlots.timeSlots : '';
+    const timeSlotValue = formData.timeSlots ? formData.timeSlots : '';
     const restDaysValue = formData.roaster ? formData.roaster.restDays : [];
     const employmentTypes = useSelector(selectEmploymentTypes)
+
+    const [errors, setErrors] = React.useState({
+        department: false,
+        designation: false,
+        employmentType: false,
+        employeeType: false,
+        lineManager: false,
+        timeSlots: false,
+        restDays: false,
+    });
+
+    const validator = () => {
+        const newErrors = { ...errors };
+        let hasErrors = false;
+        for (const field in newErrors) {
+            if (!formData[field]) {
+                newErrors[field] = true;
+                hasErrors = true;
+            } else {
+                newErrors[field] = false;
+            }
+        }
+        
+        if (formData.roaster?.restDays?.length === 0) {
+            newErrors['restDays'] = true
+            hasErrors = true;
+        }
+        else {
+            newErrors['restDays'] = false
+            hasErrors = false;
+        }
+        
+        setErrors(newErrors);
+        
+        return hasErrors;
+    };
+
+    const handleFormSubmit = (event) => {
+        event.preventDefault();
+        if (!validator()) {
+            changePageNumber();
+        }
+    };
+
+    const handleInputChangeWithValidation = (e) => {
+        handleInputChange(e);
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [e.target.name]: e.target.value ? false : true,
+        }));
+    };
 
     const employeeTypes = [
         {
@@ -50,14 +101,15 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
         return `${formattedHour}:${formattedMinute} ${meridiem}`;
     };
     return (
-        <form className="lg:col-span-2 space-y-4" onSubmit={(e) => {
-            e.preventDefault();
-            changePageNumber();
-        }}>
+        <form className="lg:col-span-2 space-y-4" onSubmit={handleFormSubmit}>
             <div className="md:col-span-5">
                 <label htmlFor="full_name">Department</label>
                 <div className="flex space-x-2">
-                    <select name='department' id="department" value={formData.department} onChange={handleInputChange} className={commonStyles.input} required>
+                    <select name='department' id="department" disabled={disabled} value={formData.department} className={
+                        errors.department
+                            ? `${commonStyles.input} border-red-500`
+                            : commonStyles.input
+                    } onChange={handleInputChangeWithValidation}>
                         <option value={''}>Select Department</option>
                         {
                             departments.map((department) => {
@@ -67,11 +119,18 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                     </select>
                     <Link to={'/dashboard/departments'} className='bg-gray-100 flex justify-center items-start rounded-md hover:bg-gray-300'><FontAwesomeIcon icon={faPlus} className='w-3 h-3 p-4'/></Link>
                 </div>
+                {errors.department && (
+                    <span className="text-red-500">Please select a department.</span>
+                )}
             </div>
             <div className="md:col-span-5">
                 <label htmlFor="full_name">Designation</label>
                 <div className="flex space-x-2">
-                    <select name='designation' id="designation" value={formData.designation} onChange={handleInputChange} className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" required>
+                    <select disabled={disabled} name='designation' id="designation" value={formData.designation} onChange={handleInputChangeWithValidation} className={
+                        errors.designation
+                            ? `${commonStyles.input} border-red-500`
+                            : commonStyles.input
+                    }>
                         <option value={''}>Select Designation</option>
                         {
                             designations.map((designation) => {
@@ -81,11 +140,18 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                     </select>
                     <Link to={'/dashboard/desiginations'} className='bg-gray-100 flex justify-center items-start rounded-md hover:bg-gray-300'><FontAwesomeIcon icon={faPlus} className='w-3 h-3 p-4'/></Link>
                 </div>
+                {errors.designation && (
+                    <span className="text-red-500">Please select a designation.</span>
+                )}
             </div>
             <div className="md:col-span-5">
                 <label htmlFor="full_name">Employment Type</label>
                 <div className="flex space-x-2">
-                    <select name='employmentType'  id="employmentType" value={formData.employmentType} onChange={handleInputChange} className={commonStyles.input} required>
+                    <select name='employmentType' disabled={disabled} id="employmentType" value={formData.employmentType} onChange={handleInputChangeWithValidation} className={
+                        errors.employmentType
+                            ? `${commonStyles.input} border-red-500`
+                            : commonStyles.input
+                    } >
                         <option value={''}>Select Employment Type</option>
                         {
                             employmentTypes.map((employmentType) => {
@@ -95,17 +161,25 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                     </select>
                     <Link to={'/dashboard/employeement-type'} className='bg-gray-100 flex justify-center items-start rounded-md hover:bg-gray-300'><FontAwesomeIcon icon={faPlus} className='w-3 h-3 p-4'/></Link>
                 </div>
+                {errors.employmentType && (
+                    <span className="text-red-500">Please Select Employment Type.</span>
+                )}
             </div>
             <div className="md:col-span-5">
                 <label htmlFor="full_name">Employee Type</label>
                 <div className="flex space-x-2">
-                    <select 
-                        name='employeeType'  
-                        id="employeeType" 
-                        value={formData.employeeType} 
-                        onChange={handleInputChange} 
-                        className={commonStyles.input}  
-                        required>
+                    <select
+                        name='employeeType'
+                        disabled={disabled}
+                        id="employeeType"
+                        value={formData.employeeType}
+                        onChange={handleInputChangeWithValidation}
+                        className={
+                            errors.employeeType
+                                ? `${commonStyles.input} border-red-500`
+                                : commonStyles.input
+                        }
+                    >
                         <option value={''}>Select Employee Type</option>
                         {
                             employeeTypes.map((employeeType) => {
@@ -114,18 +188,29 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                         }
                     </select>
                 </div>
+                {errors.employeeType && (
+                    <span className="text-red-500">Please select an Employee Type.</span>
+                )}
             </div>
             <div className="md:col-span-5">
                 <p>Line Manager</p>
-                {(lineManager.length > 0) && <SelectForm name='lineManager' title={'Line Manager'} people={lineManager} handleInputChange={handleInputChange} value={formData.lineManager} />}
+                {(lineManager.length > 0) && <SelectForm className={
+                    errors.lineManager
+                        ? `${commonStyles.input} border-red-500`
+                        : commonStyles.input
+                } name='lineManager' title={'Line Manager'} people={lineManager} handleInputChange={handleInputChangeWithValidation} value={formData.lineManager} />}
+                {errors.lineManager && (
+                    <span className="text-red-500">Please select Line Manager.</span>
+                )}
             </div>
             <div className="md:col-span-5">
-                <label htmlFor="timeSlots">Roster</label>
+                <label htmlFor="timeSlots">Time Slots</label>
                 <div className="flex space-x-2">
-                    <select name='timeSlots' value={timeSlotValue} onChange={(event) => {
-                        let val = event.target.value
-                        handleInputChange({ target: { name: 'timeSlots', value: { timeSlots: val } } })
-                    }} className={commonStyles.input} required>
+                    <select name='timeSlots' disabled={disabled} value={timeSlotValue} onChange={handleInputChangeWithValidation} className={
+                        errors.timeSlots
+                            ? `${commonStyles.input} border-red-500`
+                            : commonStyles.input
+                    }>
                         <option value={''}>Select TimeSlot</option>
                         {timeSlots.map((timeSlot) => (
                             <option key={timeSlot._id} value={timeSlot._id}>
@@ -134,8 +219,10 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                             </option>
                         ))}
                     </select>
-
                 </div>
+                {errors.timeSlots && (
+                    <span className="text-red-500">Please select Time Slots.</span>
+                )}
             </div>
 
             <div className="md:col-span-5">
@@ -146,10 +233,13 @@ const OrganizationInfo = ({ formData, changePageNumber, handleInputChange, showB
                         value={restDaysValue}
                     />
                 </div>
+                {errors.restDays && (
+                    <span className="text-red-500">Please select Rest Days.</span>
+                )}
             </div>
             <div className="md:col-span-5 text-right">
                 <div className="inline-flex items-end">
-                    {showButton ? <button type='submit' className={commonStyles.btnDark}>
+                    {showButton ? <button disabled={disabled} type='submit' className={commonStyles.btnDark}>
                         Next
                     </button> : ""}
                 </div>
