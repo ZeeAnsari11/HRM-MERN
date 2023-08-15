@@ -1,7 +1,7 @@
-import axios from "axios";
-import { setCreatingLoan, setLoanTypes, setUserLoan } from "../states/reducers/slices/backend/Loan";
 import { getLoanTypeBy, getUserLoan } from "./configuration";
+import { setCreatingLoan, setLoanTypes, setUserLoan } from "../states/reducers/slices/backend/Loan";
 
+import axios from "axios";
 
 export const getUserLoanById = (userId, dispatcher) => {
     axios.get(getUserLoan.byId+userId)
@@ -9,7 +9,7 @@ export const getUserLoanById = (userId, dispatcher) => {
        dispatcher(setUserLoan(response.data.loans))
     })
     .catch((err) => {
-        console.log(err);
+        // console.log(err);
     })
 }
 

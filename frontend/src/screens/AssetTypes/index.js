@@ -21,7 +21,6 @@ const AssetTypeForm = ({ data }) => {
       newValidationErrors.name = "Asset Type is required.";
     }
     if (Object.keys(newValidationErrors).length > 0) {
-      console.log("=========",newValidationErrors);
       // Set validation errors and prevent closing the modal
       setValidationErrors(newValidationErrors);
       trigger();

@@ -136,8 +136,8 @@ const CreateLoanRequest = () => {
             required>
             <option value="">Select Loan & Advances Type</option>
             {
-              loanTypes.map((type) => {
-                return <option value={type._id}>{type.type}</option>
+              loanTypes.map((type, index) => {
+                return <option  key={index} value={type._id}>{type.type}</option>
               })
             }
           </select>

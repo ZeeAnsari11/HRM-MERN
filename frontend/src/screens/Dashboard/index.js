@@ -1,6 +1,6 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import React, { useEffect } from 'react';
-import { selectNavState, selectWidth } from '../../states/reducers/slices/frontend/Navbar';
+import { selectNavState, selectWidth, setChangeMenuChildState, setChangeMenuState } from '../../states/reducers/slices/frontend/Navbar';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Navbar from '../../components/Navbar';
@@ -19,8 +19,17 @@ const Dashboard = () => {
         getCurrentUser(dispatcher, setLoaded);
         if (!localStorage.getItem('authToken')) {
             navigation('/login');
+        } else {
+            const storedSelectedMenuItem = localStorage.getItem('selectedMenuItem');
+            const storedSelectedMenuChildItem = localStorage.getItem('selectedMenuChildItem');
+            if (storedSelectedMenuItem) {
+                dispatcher(setChangeMenuState(storedSelectedMenuItem));
+            }
+            if (storedSelectedMenuChildItem) {
+                dispatcher(setChangeMenuChildState(storedSelectedMenuChildItem));
+            }
         }
-    }, [])
+    }, []);
     
     if (loaded === true) return <SceneLoader />
     return (

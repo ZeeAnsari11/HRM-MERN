@@ -6,7 +6,6 @@ import { toastMessage } from "../AlertConfigs";
 export const getTimeSlotsByOrgId = (orgId, setTimeSlots) => {
     axios.get(timeSlotsRoute.getTimeSlotsByOrgId+orgId)
     .then((response) => {
-        console.log(response.data.response);
         setTimeSlots(response.data.response)
     })
     .catch((err) => {
@@ -18,8 +17,9 @@ export const getTimeSlotsByOrgId = (orgId, setTimeSlots) => {
 export const createTimeSlot = (formData, changeToggler, trigger) => {
     axios.post(timeSlotsRoute.createTimeSlot, formData)
     .then((response) => {
+        toastMessage("success", "Asset Type created successfully,", toast);
         changeToggler();
-       console.log("Desigination created successfully frontend");
+
     })
     .catch((err) => {
         console.log(err);
