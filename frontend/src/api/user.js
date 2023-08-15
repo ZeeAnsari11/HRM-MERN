@@ -42,7 +42,9 @@ export const logout = (dispatcher, navigation) => {
             dispatcher(setAuth({ token: null, user: { _id: null } }));
             localStorage.removeItem('authToken');
             localStorage.removeItem('currentUser');
-            navigation('/login');
+            localStorage.removeItem('selectedMenuItem');
+            localStorage.removeItem('selectedMenuChildItem');
+            navigation('/');
         })
         .catch((error) => {
             console.log(error.response.data);

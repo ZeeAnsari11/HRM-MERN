@@ -20,7 +20,7 @@ export const createAllowance = (formData, changeToggler, trigger) => {
 export const getAllowancesByOrgId = (orgId, setAssetTypes) => {
     axios.get(allowances.getAllowancesByOrgId + orgId)
         .then((response) => {
-            console.log(response);
+
             setAssetTypes(response.data.response)
         })
         .catch((err) => {

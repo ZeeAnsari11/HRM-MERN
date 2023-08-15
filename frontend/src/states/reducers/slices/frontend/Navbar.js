@@ -9,7 +9,7 @@ export const NavbarSlice = createSlice({
       user: false,
       notification: false,
     },
-    selectedItem: "",
+    selectedItem: "Dashboard",
     selectedChildItem: ""
   },
   reducers: {

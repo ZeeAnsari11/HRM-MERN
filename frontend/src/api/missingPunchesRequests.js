@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { missingPunchesRoute } from './configuration';
-import { toastMessage } from '../AlertConfigs';
 import { toast } from 'react-toastify';
+import { toastMessage } from '../AlertConfigs';
 
 export const saveFormDataForMissingPunches = (formData) => {
     axios.post(missingPunchesRoute.setUserMissingPunchesRquest, formData)
@@ -21,6 +21,6 @@ export const getMissingPunchesRquestsOfUser = (id) => {
       .get(missingPunchesRoute.getMissingPunchesHistoryByUserId+`?userId=${id}&month=${currentMonth}&year=${currentYear}`)
       .then((response) => response.data.response)
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };

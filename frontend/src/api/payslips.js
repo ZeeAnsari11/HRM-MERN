@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { setPayslips } from '../states/reducers/slices/backend/UserSlice';
 import { paySlips } from './configuration';
+import { setPayslips } from '../states/reducers/slices/backend/UserSlice';
 
 export const getPayslips = (userId, dispatcher) => {
     axios.get(paySlips.ofUser + userId)
@@ -8,7 +8,7 @@ export const getPayslips = (userId, dispatcher) => {
         dispatcher(setPayslips(response.data.response));
     })
     .catch((error) => {
-        console.log(error.response.data);
+        // console.log(error.response.data);
     });
    
 }

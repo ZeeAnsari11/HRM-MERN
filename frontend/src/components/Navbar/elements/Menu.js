@@ -17,7 +17,10 @@ const Menu = ({ menu, user }) => {
             <Link to={menu.to} onMouseOver={() => setHoverEffect('text-white')} onMouseOut={() => { setHoverEffect('text-lightText') }}
                 className={`flex px-4 cursor-pointer items-center justify-between ${menu.gap ? "mt-9" : "mt-2"} rounded text-center px-2 py-1 hover:bg-gray-700 hover:shadow-md hover:text-lightText ${selectedMenuItem === menu.title ? 'bg-gray-700 text-white': ''}`}
                 onClick={() => {
-                    if (menu.title !== selectedMenuItem) diapatcher(setChangeMenuState(menu.title)) 
+                    if (menu.title !== selectedMenuItem) {
+                        diapatcher(setChangeMenuState(menu.title));
+                        localStorage.setItem('selectedMenuItem', menu.title);
+                    }
                 }}>
                 <div className={`flex py-1 text-gray-300 text-sm items-center gap-x-4`}>
                     <FontAwesomeIcon icon={menu.font} className={`text-white p-2 bg-gray-600 rounded-md`} width={'15'} />
@@ -37,7 +40,10 @@ const Menu = ({ menu, user }) => {
                             to={menuItem.to}  
                             key={index} 
                             onClick={() => {
-                                if (menuItem.title !== selectedMenuChildItem) diapatcher(setChangeMenuChildState(menuItem.title))
+                                if (menuItem.title !== selectedMenuChildItem) {
+                                    diapatcher(setChangeMenuChildState(menuItem.title));
+                                    localStorage.setItem('selectedMenuChildItem', menuItem.title);
+                                }
                             }}>
                             <FontAwesomeIcon icon={menuItem.font} className='text-white p-2 bg-gray-600 rounded-md' width={'20'} />
                             <div className={`origin-left duration-200 text-white`}>

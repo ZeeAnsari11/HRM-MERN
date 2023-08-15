@@ -1,8 +1,9 @@
-import axios from 'axios';
-import { setTimeSheet, setUserWFH } from '../states/reducers/slices/backend/UserSlice';
 import { createWfh, deleteRequest, getAllWfh, getTime, updateWfh } from './configuration';
-import { toastMessage } from '../AlertConfigs';
+import { setTimeSheet, setUserWFH } from '../states/reducers/slices/backend/UserSlice';
+
+import axios from 'axios';
 import { toast } from 'react-toastify';
+import { toastMessage } from '../AlertConfigs';
 
 export const CreateWfhRequest = (formData, toggler) => {
     axios.post(createWfh.request , formData)
@@ -15,7 +16,6 @@ export const CreateWfhRequest = (formData, toggler) => {
     .finally(()=>{
         toggler()
     })
-   
 }
 
 export const getAllWfhOfUser = (userId, dispatcher) => {
@@ -24,9 +24,8 @@ export const getAllWfhOfUser = (userId, dispatcher) => {
         dispatcher(setUserWFH(response.data.response));
     })
     .catch((error) => {
-        console.log(error.response.data);
+        // console.log(error.response.data);
     });
-   
 }
 
 export const getTimeSheet = (data, dispatcher) => {
@@ -37,7 +36,6 @@ export const getTimeSheet = (data, dispatcher) => {
     .catch((error) => {
         console.log(error.response.data);
     });
-   
 }
 
 export const deleteWfhRequest = (id) => {
@@ -47,7 +45,6 @@ export const deleteWfhRequest = (id) => {
         setTimeout(() => {
             window.location.href = "/dashboard/view-wfh"
         }, 2000)
-        console.log(response);
     })
     .catch((error) => {
         console.log(error.response.data);

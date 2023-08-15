@@ -36,7 +36,6 @@ const probations = {
 const Probation = () => {
   const { employment, duration, end_date, status } = probations;
   const currentUser = useSelector(selectCurrentUser)
-  console.log(currentUser, "qwertyuiop");
   return (
     <div className="p-8">
       <div className="flex flex-col md:flex-row justify-between ">

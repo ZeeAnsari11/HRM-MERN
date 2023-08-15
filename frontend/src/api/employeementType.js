@@ -22,7 +22,6 @@ export const createEmployeementType = (formData, changeToggler, trigger) => {
 export const getEmployementTypesByOrgId = (orgId, setEmploymentTypes) => {
     axios.get(organizationRoutes.getEmployementTypesByOrgId + orgId)
         .then((response) => {
-            console.log("=======response====",response);
             setEmploymentTypes(response.data.response)
         })
         .catch((err) => {

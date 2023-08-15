@@ -47,7 +47,6 @@ const Certifications = ({ userID }) => {
 
   useEffect(() => {
     getCertifications(userID, dispatcher);
-    console.log("Something changed")
     setFormData({
       ...selectedCertifications, user: userID
     })
