@@ -78,8 +78,8 @@ const Navbar = () => {
         </div>
 
         <div className="hidden mr-3 space-x-4 lg:flex nav__item">
-          <Link to="/welcome" className={`px-6 py-2 text-white bg-[#1567B1] rounded-md md:ml-5`}>
-              Get Started
+          <Link to="/login" className={`px-6 py-2 text-white bg-[#1567B1] rounded-md md:ml-5`}>
+              Login
           </Link>
         </div>
       </nav>

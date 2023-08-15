@@ -30,7 +30,8 @@ function App() {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       <Route path="/dashboard" element={<Dashboard/>}>
-        {(isAdmin === true) && privateRoutes()}
+        {/* {(isAdmin === true) && privateRoutes()} */}
+        {privateRoutes()}
         {publicRoutes()}
       </Route>
       <Route path="/*" element={<Error />} />

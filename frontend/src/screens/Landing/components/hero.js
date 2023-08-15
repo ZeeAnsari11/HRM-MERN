@@ -1,6 +1,5 @@
 import Container from "./container";
 import { Link } from "react-router-dom";
-import Logo from '../../../components/Logo';
 import myImage from '../../../assets/NexHr.webp'
 
 const Hero = () => {
@@ -12,7 +11,7 @@ const Hero = () => {
             <div className=" text-3xl tablet:text-3xl font-bold leading-snug text-gray-700 lg:leading-tight xl:leading-tight">
               Unlock the Power of
               <div className="flex items-center justify-center lg:justify-start">
-                <img src={myImage} alt="nexius logo" className="w-[300px] tablet:w-[200px] tablet:my-4" />
+                <img src={myImage} alt="nexius logo" className="w-[200px] tablet:w-[100px] tablet:my-4" />
               </div>
             </div>
             <p className="text-xl leading-normal text-gray-500 lg:text-lg xl:text-2xl">
@@ -22,7 +21,7 @@ const Hero = () => {
 
             <div className="flex mt-10 flex-col tablet:justify-center tablet:items-center space-y-3 sm:space-x-4 sm:space-y-0 sm:items-center sm:flex-row">
               <Link
-                to='/'
+                to='/welcome'
                 target="_blank"
                 rel="noopener"
                 className={`px-8 py-4 text-lg font-medium text-center text-white bg-[#1567B1] rounded-md`}>
