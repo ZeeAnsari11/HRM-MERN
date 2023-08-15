@@ -21,14 +21,19 @@ const Forms = ({ formNumber, changePageNumber, formData, handleInputChange }) =>
     const handleSubmit = () => {
         setLoader(true)
         let element = {
-            timeSlots: formData.timeSlots ? formData.timeSlots : [],
-            restDays: formData.roaster ? formData.roaster.restDays : [],
+            timeSlots: formData.timeSlots,
+            restDays: formData.roaster.restDays,
         };
-        formData.userRoster = element
-        formData.nic.expiry = formData.expiry
-        formData.nic.attachment.front = "front.png"
-        formData.nic.attachment.back = "back.png"
-        createUser(formData, setLoader);
+        let nic = {
+            number: formData.nic.number,
+            expiry: formData.expiry,
+            attachment: {
+                back: "back.png",
+                front: "front.png",
+            }
+        }
+        let data = {...formData, "userRoster": element, "nic":nic}
+        createUser(data, setLoader);
     }
     if (formNumber === 1)
         return <PersonalInfo disabled={loader} formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={true} />

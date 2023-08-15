@@ -21,9 +21,6 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
     const designations = useSelector(selectOrganizationDesignation);
     const lineManager = useSelector(selectFinalAuthority);
     const timeSlots = useSelector(selectTimeSlots);
-
-    const timeSlotValue = formData.timeSlots ? formData.timeSlots : '';
-    const restDaysValue = formData.roaster ? formData.roaster.restDays : [];
     const employmentTypes = useSelector(selectEmploymentTypes)
 
     const [errors, setErrors] = React.useState({
@@ -206,7 +203,7 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
             <div className="md:col-span-5">
                 <label htmlFor="timeSlots">Time Slots</label>
                 <div className="flex space-x-2">
-                    <select name='timeSlots' disabled={disabled} value={timeSlotValue} onChange={handleInputChangeWithValidation} className={
+                    <select name='timeSlots' disabled={disabled} value={formData?.timeSlots} onChange={handleInputChangeWithValidation} className={
                         errors.timeSlots
                             ? `${commonStyles.input} border-red-500`
                             : commonStyles.input
@@ -230,7 +227,7 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
                 <div className="flex space-x-2">
                     <RestDays
                         handleInputChange={handleInputChange}
-                        value={restDaysValue}
+                        value={formData?.roaster?.restDays}
                     />
                 </div>
                 {errors.restDays && (

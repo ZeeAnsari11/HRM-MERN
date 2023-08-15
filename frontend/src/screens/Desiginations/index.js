@@ -51,9 +51,6 @@ const Desiginations = () => {
         setToggleChange(!toggleChange);
     }
 
-    // const handleInputChange = (e) => {
-    //     setFormData({ ...formData, [e.target.name]: e.target.value });
-    // };
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -64,27 +61,6 @@ const Desiginations = () => {
             [name]: "",
         });
     };
-    //     const handleCreateDesigination = (trigger) => {
-    //         console.log("==",(formData.title.trim() === "" || formData.shortForm.trim() === ""));
-    //         if (formData.title.trim() === "" || formData.shortForm.trim() === "") {
-    //             toastMessage("error", "Please fill in all the required fields.", toast);
-    //             trigger()
-    //             return;
-    //         }
-    // console.log("==========",!shortFormRegex.test(formData.shortForm));
-    //         const shortFormRegex = /^[a-zA-Z0-9-]+$/;
-    //         if (!shortFormRegex.test(formData.shortForm)) {
-    //             toastMessage("error", "Short Name can only contain alphabets, numbers, and hyphens (-).", toast);
-    //             trigger()
-    //             return;
-    //         }
-    //         createDesigination(formData, changeToggler, trigger);
-    //         setFormData({
-    //             title: "",
-    //             organization: orgId,
-    //             shortForm: ""
-    //         })
-    //     };
 
     const handleCreateDesigination = (trigger) => {
         // Validate form data
@@ -110,9 +86,7 @@ const Desiginations = () => {
             shortForm: ""
         });
     }
-    const handleAction = (rowData) => {
-
-    };
+    
     const columns = useMemo(() => [
         {
             Header: "Title",

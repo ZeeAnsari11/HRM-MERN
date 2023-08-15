@@ -111,7 +111,6 @@ const checkingProbation = (req, res, next, organization) => {
 
 const userRoster = (req, res, next) => {
     try {
-        console.log("userRoster", req.body.userRoster.timeSlots);
         if (!req.body.userRoster || !req.body.userRoster?.timeSlots || !req.body.userRoster?.restDays) throw new Error('Kindly Provide Data for Roster')
         req.body.userRoster.restDays.forEach(restDay => {
             if (restDay < 0 || restDay > 6) throw new Error('Invalid Rest Days.')

@@ -36,7 +36,7 @@ const AssetTypeForm = ({ data }) => {
     }
   ]
   return (
-    <div className="flex items-center justify-center space-x-2">
+    <div className="flex items-center space-x-2">
       <Modal
         action={<FontAwesomeIcon icon={faArrowAltCircleRight} />}
         title={'Update Asset Type'}

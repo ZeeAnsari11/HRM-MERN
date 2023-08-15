@@ -77,10 +77,10 @@ export default function DesiginationsView({ data }) {
     }]
 
 
-
-    const handleAction = (id) => {
-        deleteDesiginationById(id);
-    }
+    // TODO : Future
+    // const handleAction = (id) => {
+    //     deleteDesiginationById(id);
+    // }
 
     return <div className="flex items-center space-x-2">
         <Modal

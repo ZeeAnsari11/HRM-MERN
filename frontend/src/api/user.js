@@ -42,7 +42,7 @@ export const logout = (dispatcher, navigation) => {
             dispatcher(setAuth({ token: null, user: { _id: null } }));
             localStorage.removeItem('authToken');
             localStorage.removeItem('currentUser');
-            navigation('/');
+            navigation('/login');
         })
         .catch((error) => {
             console.log(error.response.data);
@@ -89,6 +89,7 @@ export const loadAllOrganizationsInfo = (dispatcher, orgId, branchId) => {
 }
 
 export const createUser = (data, setLoader) => {
+    console.log("DATA", data)
     axios.post(userRoutes.createUser, data)
     .then(() => {
         toastMessage("success", "User Created Succefully", toast)
