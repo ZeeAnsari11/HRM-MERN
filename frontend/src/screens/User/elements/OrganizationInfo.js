@@ -51,7 +51,6 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
         }
         else {
             newErrors['restDays'] = false
-            hasErrors = false;
         }
         
         setErrors(newErrors);
@@ -62,7 +61,7 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
     const handleFormSubmit = (event) => {
         event.preventDefault();
         if (!validator()) {
-            changePageNumber();
+            //changePageNumber();
         }
     };
 
@@ -216,6 +215,7 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
                             </option>
                         ))}
                     </select>
+                    <Link to={'/dashboard/timeSlots'} className='bg-gray-100 flex justify-center items-start rounded-md hover:bg-gray-300'><FontAwesomeIcon icon={faPlus} className='w-3 h-3 p-4'/></Link>
                 </div>
                 {errors.timeSlots && (
                     <span className="text-red-500">Please select Time Slots.</span>
