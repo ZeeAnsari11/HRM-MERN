@@ -1,8 +1,9 @@
 import { deleteLeave, leaveRequestRoutes, leaveType, shortLeaveRoutes, updateLeave, userLeaveRoute } from "./configuration"
-import axios from 'axios';
 import { setLeaveTypes, setShortLeaveTypes, setUserLeaves } from "../states/reducers/slices/backend/LeaveRequest";
-import { toastMessage } from "../AlertConfigs";
+
+import axios from 'axios';
 import { toast } from "react-toastify";
+import { toastMessage } from "../AlertConfigs";
 
 export const getLeaveRequestByOrganizationId = (org_id, dispatcher) => {
     axios.get(leaveRequestRoutes.getLeaveTypes+org_id)
@@ -10,18 +11,17 @@ export const getLeaveRequestByOrganizationId = (org_id, dispatcher) => {
         dispatcher(setLeaveTypes(response.data.data))
     })
     .catch((err) => {
-        console.log(err);
+        // console.log(err);
     })
 }
 
 export const getShortLeaveTypesByOrganizationId = (org_id, dispatcher) => {
     axios.get(shortLeaveRoutes.getShortLeaveTypes+org_id)
     .then((response) => {
-        console.log(response.data.response);
         dispatcher(setShortLeaveTypes(response.data.response))
     })
     .catch((err) => {
-        console.log(err);
+        // console.log(err);
     })
 }
 
@@ -56,7 +56,7 @@ export const getUserLeaves = (user_id, dispatcher) => {
         dispatcher(setUserLeaves(response.data.leaves))
     })
     .catch((err) => {
-        console.log(err);
+        // console.log(err);
     })
 }
 

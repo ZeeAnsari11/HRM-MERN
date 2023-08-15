@@ -25,7 +25,6 @@ const LeaveRequest = () => {
   const [attachmentPreview, setAttachmentPreview] = useState(null);
   const [selectedLeaveType, setSelectedLeaveType] = useState([]);
   
-  console.log("selected", selectedLeaveType)
   const dispatcher = useDispatch();
   const org_id = useSelector(selectOrgId);
   const leaveTypes = useSelector(selectLeaveTypes);
@@ -196,7 +195,6 @@ const LeaveRequest = () => {
             type="time"
             readOnly={true}
           />
-
         </div>
       )}
 

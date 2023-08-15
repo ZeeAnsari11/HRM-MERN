@@ -1,13 +1,14 @@
-import React from 'react';
-import { useEffect } from 'react';
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { selectUID, selectUserLeaveDetails } from '../../states/reducers/slices/backend/UserSlice';
 import { useDispatch, useSelector } from 'react-redux'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+
+import { FaFlask } from 'react-icons/fa';
 import { FaLeaf } from 'react-icons/fa';
 import { MdLocalFlorist } from 'react-icons/md';
-import { FaFlask } from 'react-icons/fa';
+import React from 'react';
 import { RiPlantFill } from 'react-icons/ri';
 import { getUserLeaveDetails } from '../../api/user';
-import { selectUID, selectUserLeaveDetails } from '../../states/reducers/slices/backend/UserSlice';
+import { useEffect } from 'react';
 
 const leaveData = [
   { leaveType: 'Annual Leaves', balance: 20, availed: 10, available: 10 },
@@ -31,13 +32,10 @@ const LeavePolicy = () => {
 
   const dispatch = useDispatch()
   const user_id =  useSelector(selectUID)
-  console.log("userId",user_id);
   useEffect(() => {
     getUserLeaveDetails(user_id, dispatch)
   }, [])
   const leaveDetails = useSelector(selectUserLeaveDetails)
-  console.log("Leave Details", leaveDetails);
-
   
   const totalLeaves = leaveData.reduce((sum, item) => sum + item.balance, 0);
   const leavesBullet = leaveData.map((leave) => {

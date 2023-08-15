@@ -108,7 +108,6 @@ const LeaveType = () => {
       )
     },
   ];
-console.log("==data",leaveType);
   const data = leaveType.map(obj => ({
     id: obj._id,
     name: obj.name,

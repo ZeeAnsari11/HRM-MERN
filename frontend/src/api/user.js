@@ -139,6 +139,6 @@ export const getUserLeaveDetails = (userId, dispatch) => {
         dispatch(setUserLeaveDetails(response.data.result))
     })
     .catch((error) => {
-        console.log(error)
+        // console.log(error)
     })
 }
