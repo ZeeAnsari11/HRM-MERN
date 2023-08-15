@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="flex flex-wrap tablet:space-y-4 max-w-screen-xl justify-between pt-10 mt-5 border-t border-gray-100 px-8 tablet:px-2">
           <div>
             <a href="/">
-              <img src={image} alt="N" width="32" height="32"  className="w-[160px]container p-8 mx-auto xl:px-0  "/>
+              <img src={image} alt="N" width="32" height="32"  className="w-[160px] xl:px-0  "/>
             </a>
           
             <div className="max-w-md mt-4 text-gray-500 dark:text-gray-400">
@@ -20,21 +20,21 @@ export default function Footer() {
             <div>Follow us</div>
             <div className="flex mt-5 space-x-5 text-gray-400 dark:text-gray-500">
               <a
-                href="https://twitter.com/web3templates"
+                href="https://twitter.com/"
                 target="_blank"
                 rel="noopener">
                 <span className="sr-only">Twitter</span>
                 <Twitter />
               </a>
               <a
-                href="https://facebook.com/web3templates"
+                href="https://facebook.com/"
                 target="_blank"
                 rel="noopener">
                 <span className="sr-only">Facebook</span>
                 <Facebook />
               </a>
               <a
-                href="https://instagram.com/web3templates"
+                href="https://instagram.com/"
                 target="_blank"
                 rel="noopener">
                 <span className="sr-only">Instagram</span>

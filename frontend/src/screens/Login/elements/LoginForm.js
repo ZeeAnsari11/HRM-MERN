@@ -32,7 +32,7 @@ const LoginForm = ({showOtherLoginTypes}) => {
         }
         if (password === '') {
             newError.password = 'Password is required';
-        } 
+        } else
         if (password.length <= 8) {
             newError.password = 'Please enter a password having at least 9 characters';
         }
@@ -45,7 +45,6 @@ const LoginForm = ({showOtherLoginTypes}) => {
     const handleLogin = (e) => {
         e.preventDefault();
         setLoading(true);
-        console.log(validate())
         if (validate()) {
             loginAuth(dispatcher, { email:email.toLowerCase(), password }, navigation, toast, setLoading)
         }
@@ -73,7 +72,8 @@ const LoginForm = ({showOtherLoginTypes}) => {
                             <FontAwesomeIcon icon={faEnvelope} />
                         </div>
                         <input disabled={loading} type="email" onChange={(e) => {
-                                validate()
+                                if (!e.target.value) setError({...error, email: 'Email is required'})
+                                else setError({...error, email: ''})
                                 setEmail(e.target.value)
                             }} className="disabled:cursor-not-allowed bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Email"/>
                         {(error.email !== '') && <p className={commonStyles.error}>{error.email}</p>}
@@ -83,7 +83,8 @@ const LoginForm = ({showOtherLoginTypes}) => {
                             <FontAwesomeIcon icon={faCode} />
                         </div>
                         <input disabled={loading} type={showPassword?"text":"password"} onChange={(e) => {
-                                validate()
+                                if (!e.target.value) setError({...error, password: 'Password is required'})
+                                else setError({...error, password: ''})
                                 setPassword(e.target.value)
                             }} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Password"/>
                         {(error.password !== '') && <p className={commonStyles.error}>{error.password}</p>}
