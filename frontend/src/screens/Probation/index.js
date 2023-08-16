@@ -37,12 +37,12 @@ const Probation = () => {
   const { employment, duration, end_date, status } = probations;
   const currentUser = useSelector(selectCurrentUser)
   return (
-    <div className="p-8">
-      <div className="flex flex-col md:flex-row justify-between ">
+    <div className="p-4 tablet:p-8">
+      <div className="flex flex-col tablet:flex-row justify-between">
         {status === "Completed" && (
-          <div className="w-full md:w-1/2 mb-6 md:mb-0 ">
-            <h3 className="text-md font-bold mb-4 pr-40 ">Probation Period</h3>
-            <table className="table-auto py-4 ">
+          <div className="w-full tablet:w-1/2 mb-4 tablet:mb-0 tablet:pr-8">
+            <h3 className="text-md font-bold mb-2 tablet:mb-4 ">Probation Period</h3>
+            <table className="table-auto">
               <tbody >
                 <tr>
                   <td className="pr-30 py-2 font-medium">
@@ -86,7 +86,7 @@ const Probation = () => {
         )}
       </div>
       {probations.histories.length > 0 && (
-        <div className="w-full md:w-1/2 py-10">
+        <div className="w-full tablet:w-1/2 py-4">
           <h3 className="text-md font-bold mb-4">Probation Histories</h3>
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
