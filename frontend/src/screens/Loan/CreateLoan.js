@@ -53,10 +53,6 @@ const CreateLoanRequest = () => {
     });
   };
 
-  const submit = e => {
-    e.preventDefault();
-  };
-
   const addFields = () => {
     setFormFields(prevFormFields => [
       ...prevFormFields,
@@ -136,8 +132,8 @@ const CreateLoanRequest = () => {
             required>
             <option value="">Select Loan & Advances Type</option>
             {
-              loanTypes.map((type, index) => {
-                return <option  key={index} value={type._id}>{type.type}</option>
+              loanTypes.map((type) => {
+                return <option value={type._id}>{type.type}</option>
               })
             }
           </select>
@@ -213,7 +209,7 @@ const CreateLoanRequest = () => {
         </div>
         <div className="App">
           <h1 className="text-2xl block text-gray-700 font-bold mb-2 pr-4 py-2">Create Repayment Schedule</h1>
-          <form onSubmit={submit}>
+          <div>
             {formFields.map((form, index) => {
               return (
                 <div key={index}>
@@ -247,7 +243,7 @@ const CreateLoanRequest = () => {
                 </div>
               );
             })}
-          </form>
+          </div>
           <button className="mt-4 bg-backgroundDark hover:bg-white hover:text-backgroundDark border border-backgroundDark text-white font-bold py-2 px-5 rounded focus:outline-none focus:shadow-outline" onClick={addFields}>Add</button>
           <br />
         </div>
