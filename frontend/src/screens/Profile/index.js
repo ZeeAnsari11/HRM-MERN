@@ -28,9 +28,7 @@ const UserProfile = () => {
   const [pic, setpic] = React.useState(currentUser?.profile);
 
   const inputRef = useRef(null);
-
-  // eslint-disable-next-line no-template-curly-in-string
-  console.log("======={`${base}${pic}`}=======",`${pic}`);
+  
   const handleMouseEnter = () => {
     setShowEditButton(true);
   };

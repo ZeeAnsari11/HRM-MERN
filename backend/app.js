@@ -29,6 +29,7 @@ import { fileURLToPath } from 'url';
 import fs from 'fs'
 import { gradeBenefitsRoute } from "./routes/gradeBenefits.js";
 import { gradeRoute } from "./routes/grade.js";
+import { handleCatch } from './utils/common.js';
 import helmet from "helmet";
 import { holidayRoute } from "./routes/holiday.js";
 import { leaveRequestRoute } from "./routes/leaveRequest.js";
@@ -37,7 +38,6 @@ import { leaveTypeRoute } from "./routes/leaveType.js";
 import { loanRepaymentRoute } from "./routes/loanRepayment.js";
 import { loanRoute } from "./routes/loan.js";
 import { loanTypeRoute } from "./routes/loanType.js";
-import { log } from "console";
 import { missingPunchesRequestRoute } from "./routes/missingPunches.js";
 import multer from "multer"
 import { organizationRoute } from "./routes/organization.js";
@@ -92,7 +92,6 @@ app.post(`${apiVersion}/upload/:id`, upload.single('profile'), (req, res) => {
         return res.status(400).json({ error: 'No file uploaded.' });
     }
     const filePath = req.file.path;
-    console.log("====filePath=filePath==", filePath);
     UserModel.findById(req.params.id)
         .then(user => {
             if (!user) {
@@ -104,7 +103,7 @@ app.post(`${apiVersion}/upload/:id`, upload.single('profile'), (req, res) => {
             if (user.profile) {
                 fs.unlink(user.profile, err => {
                     if (err) {
-                        console.error('Error deleting existing file:', err);
+                        handleCatch(err, res, next, 500)
                     }
                 });
             }
