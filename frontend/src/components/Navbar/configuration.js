@@ -9,7 +9,7 @@ export const Menus = [
         child: [
             { title: "Probation",    font:faUserClock, to:"/dashboard/probation" },
             { title: "Roaster",    font:faCalendarPlus, to:"/dashboard/roaster"},
-            // { title: "Chart",    font:faChartArea, to:"/dashboard/chart" },
+            { title: "Chart",    font:faChartArea, to:"/dashboard/chart" },
             { title: "Loan & Advance",    font:faCircleDollarToSlot, to:"/dashboard/loan" },
         ] 
     },

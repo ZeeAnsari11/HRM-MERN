@@ -30,6 +30,8 @@ export const UserSlice = createSlice({
     updatedLeave: {},
     userLeaveDetails: [],
     isAdmin: false,
+    userChart: [],
+    userById: {}
   },
   reducers: {
     setCurrentUser: (state, action) => {
@@ -89,6 +91,12 @@ export const UserSlice = createSlice({
     },
     setUserForm: (state, action) => {
       state.userForm = action.payload;
+    },
+    setUserChart: (state, action) => {
+      state.userChart = action.payload;
+    },
+    setUserById: (state, action) => {
+      state.userById = action.payload;
     }
   }
 });
@@ -113,6 +121,8 @@ export const {
   setUpdatedWfh,
   setUpdatedLeave,
   setUserLeaveDetails,
+  setUserChart,
+  setUserById
 } = UserSlice.actions;
 
 // Selector Methods
@@ -131,6 +141,8 @@ export const selectUserLeaveTypes = (state) => state.user.currentUser.leaveTypeD
 export const selectAllUsers = (state) => state.user.allUsers
 export const selectPayslips = (state) => state.user.payslips
 
+export const selectUserChart = (state) => state.user.userChart
+export const selectUserById = (state) => state.user.userById
 export const selectUserGrades = (state) => state.user.grades
 export const selectUserWfh = (state) => state.user.wfh
 export const selectTimeSheet = (state) => state.user.timeSheet
@@ -139,5 +151,4 @@ export const selecteUpdatedWfh = (state) => state.user.updatedWfh
 export const selecteUpdatedLeave = (state) => state.user.updatedLeave
 export const selectUserLeaveDetails = (state) => state.user.userLeaveDetails
 
-// Reducer
 export const UserReducer = UserSlice.reducer;

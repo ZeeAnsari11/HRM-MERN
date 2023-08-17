@@ -726,9 +726,11 @@ export const deleteSkillFromUser = (req, res, next) => {
 }
 
 export const getChildsByUserId = (req, res, next) => {
+
     try {
-        if (!req.body.id) throw new Error("Please provide the Id for which you want to retrieve childs")
-        UserModel.find({ lineManager: req.body.id, isActive: true })
+        console.log("fdfghj", req.params.id);
+        if (!req.params.id) throw new Error("Please provide the Id for which you want to retrieve childs")
+        UserModel.find({ lineManager: req.params.id, isActive: true })
             .then((childs) => {
                 if (childs.length == 0) {
                     throw new Error("No childs found")
