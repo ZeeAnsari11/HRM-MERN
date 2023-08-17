@@ -27,6 +27,8 @@ import ViewAttendenceRequests from "./screens/ViewAttendenceRequests";
 import ViewEmployees from "./screens/ViewEmployees";
 import ViewWorkFromHome from "./screens/WorkFromHome";
 import WorkFromHomeRequest from "./screens/WorkFromHomeRequest";
+import ChartPage from "./screens/Chart/src";
+;
 
 export const privateRoutes = () => {
     return <>
@@ -54,7 +56,7 @@ export const publicRoutes = () => {
         <Route path="home" element={<Skeleton />} />
         <Route path="probation" element={<Probation />} />
         <Route path="roaster" element={<Roaster />} />
-        {/* <Route path="chart" element={<ChartPage />}/> */}
+        <Route path="chart" element={<ChartPage />}/>
         <Route path="loan" element={<Loan />} />
         <Route path="leaverequest" element={<LeaveRequest />} />
         <Route path="leaves" element={<Leave />} />

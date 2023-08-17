@@ -21,12 +21,14 @@
     "country-state-city": "^3.1.4",
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.8",
+    "faker": "5.5.5",
     "feather-icons-react": "^0.6.2",
     "focus-trap-react": "^10.1.1",
     "moment": "^2.29.4",
     "primeflex": "^3.3.0",
     "primeicons": "^6.0.1",
     "primereact": "^9.3.1",
+    "randomcolor": "0.6.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",
     "react-calendly": "^4.1.1",
@@ -36,6 +38,7 @@
     "react-helmet": "^6.1.0",
     "react-icons": "^4.8.0",
     "react-modal": "^3.16.1",
+    "react-organizational-chart": "1.1.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
@@ -76,6 +79,9 @@
     ]
   },
   "devDependencies": {
-    "tailwindcss": "^3.2.7"
+    "@types/faker": "^6.6.9",
+    "faker": "^5.5.3",
+    "tailwindcss": "^3.2.7",
+    "typescript": "3.8.3"
   }
 }

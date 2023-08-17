@@ -1,5 +1,5 @@
-import { authentication, getOrganization, organizationRoutes, timeSlots, userLeave, userRoutes } from './configuration';
-import { setAllUsers, setAuth, setCurrentUser, setFinalAuthority, setIsAdmin, setProfileCompletion, setTimeSLots, setUserGrades, setUserLeaveDetails } from '../states/reducers/slices/backend/UserSlice';
+import { authentication, getOrganization, organizationRoutes, timeSlots, userChart, userLeave, userRoutes } from './configuration';
+import { setAllUsers, setAuth, setCurrentUser, setFinalAuthority, setIsAdmin, setProfileCompletion, setTimeSLots, setUserById, setUserChart, setUserGrades, setUserLeaveDetails } from '../states/reducers/slices/backend/UserSlice';
 
 import axios from 'axios';
 import { getAllUsers } from './configuration';
@@ -140,5 +140,29 @@ export const getUserLeaveDetails = (userId, dispatch) => {
     })
     .catch((error) => {
         // console.log(error)
+    })
+}
+
+export const getUserChart = (id, dispatcher) => {
+    console.log("form", id)
+    axios.get(userChart.details+id)
+    .then((response) => {
+        dispatcher(setUserChart(response.data.childs))
+    })
+    .catch((error) => {
+        
+    })
+}
+
+export const getUserById = (id, dispatcher, setLoader) => {
+    axios.get(userRoutes.getUserById + id)
+    .then((response) => {
+        dispatcher(setUserById(response.data.user))
+    })
+    .catch((error) => {
+        
+    })
+    .finally(() => {
+        setLoader(false)
     })
 }

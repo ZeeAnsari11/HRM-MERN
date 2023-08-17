@@ -38,6 +38,10 @@ export const userLeave = {
     details: baseUrl+'/user/leave-quota/'
 }
 
+export const userChart = {
+    details: baseUrl+'/user/chart/my-chart/'
+}
+
 export const leaveType = {
     getLeaveType: baseUrl+'/leaveType/'
 }
@@ -179,7 +183,6 @@ export const timeSlotsRoute = {
 
 export const  paySlips = {
     ofUser: baseUrl+'/paySlip/user/'
-
 }
 
 export const relatives = {
