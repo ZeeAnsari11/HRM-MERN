@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { selectCurrentUser, selectProfileCompletion } from "../../states/reducers/slices/backend/UserSlice";
 
 import Addresses from "./elements/Addresses";
@@ -11,15 +11,25 @@ import PersonalInfo from "./elements/PersonalInfo";
 import Qualification from "./elements/Qualification";
 import RelativesForm from "./elements/RelativesForm";
 import Skills from "./elements/Skills";
+import { base } from "../../api/configuration";
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { getCurrentUser } from "../../api/user";
+// import photo  from '../../../../backend/uploads/profile-1692196104362.jpg'
+import { uploadFile } from "../../api/uploadImage";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
 const UserProfile = () => {
+  const dispatcher = useDispatch();
+
   const currentUser = useSelector(selectCurrentUser);
   const profileCompletion = useSelector(selectProfileCompletion);
   const [showEditButton, setShowEditButton] = React.useState(false);
+  const [pic, setpic] = React.useState(currentUser?.profile);
+
   const inputRef = useRef(null);
 
+  console.log("======={`${base}${pic}`}=======",`${base}${pic}`);
   const handleMouseEnter = () => {
     setShowEditButton(true);
   };
@@ -32,23 +42,15 @@ const UserProfile = () => {
     inputRef.current.click();
   };
 
-  const handleFileChange = event => {
+  const handleFileChange = async (event) => {
     const fileObj = event.target.files && event.target.files[0];
     if (!fileObj) {
       return;
     }
 
-    console.log('fileObj is', fileObj);
-
-    // 👇️ reset file input
-    event.target.value = null;
-
-    // 👇️ is now empty
-    console.log(event.target.files);
-
-    // 👇️ can still access file object here
-    console.log(fileObj);
-    console.log(fileObj.name);
+    const formData = new FormData();
+    formData.append('profile', fileObj);
+    uploadFile(formData, currentUser._id, setpic, dispatcher);
   };
 
   const config = [
@@ -74,8 +76,9 @@ const UserProfile = () => {
             >
               <img
                 className="w-28 h-28 rounded-xl"
-                src="https://randomuser.me/api/portraits/men/2.jpg" // Replace with the actual image URL
-                alt="dfghjk"
+                src={`${base}${pic}`}
+                alt="Profile Picture"
+                loading="lazy"
               />
               {showEditButton && (
                 <button className=" absolute top-0 left-0 bg-gray-500 text-white px-2 py-1 rounded">
@@ -85,7 +88,6 @@ const UserProfile = () => {
                     onChange={handleFileChange}
                     ref={inputRef}
                     className="hidden"
-                    // onChange={(e) => handleFileUpload(e)}
                   />
                 </button>
               )}

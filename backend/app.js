@@ -1,4 +1,7 @@
+import path, {dirname} from 'path';
+
 import { PermssionsRoute } from "./routes/permissions.js";
+import { UserModel } from "./models/userSchema.js";
 import { addressRoute } from "./routes/address.js";
 import { allowanceRoute } from "./routes/allowance.js";
 import { assetRevisionRoute } from "./routes/assetsRevisions.js";
@@ -21,6 +24,7 @@ import { evaluationRatingRoute } from "./routes/evaluationRatings.js";
 import { expenseRoute } from "./routes/expense.js";
 import { experienceRoute } from "./routes/experience.js";
 import express from "express";
+import fs from 'fs'
 import { gradeBenefitsRoute } from "./routes/gradeBenefits.js";
 import { gradeRoute } from "./routes/grade.js";
 import helmet from "helmet";
@@ -31,7 +35,9 @@ import { leaveTypeRoute } from "./routes/leaveType.js";
 import { loanRepaymentRoute } from "./routes/loanRepayment.js";
 import { loanRoute } from "./routes/loan.js";
 import { loanTypeRoute } from "./routes/loanType.js";
+import { log } from "console";
 import { missingPunchesRequestRoute } from "./routes/missingPunches.js";
+import multer from "multer"
 import { organizationRoute } from "./routes/organization.js";
 import { paySlipRoute } from "./routes/paySlip.js";
 import { permissionsMiddlewre } from "./middlewares/permissions.js";
@@ -51,14 +57,71 @@ import { userRoute } from './routes/user.js';
 import { wfhRoute } from "./routes/wfh.js";
 
 const app = express();
+const apiVersion = '/api/v1';
+
 
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(helmet())
 
-const apiVersion = '/api/v1';
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); // Destination folder for uploaded files
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage });
+
+// to upload the profile pic multer
+app.post(`${apiVersion}/upload/:id`, upload.single('profile'), (req, res) => {
+    console.log('==============================');
+    if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded.' });
+    }
+    const filePath = req.file.path;
+    console.log("====filePath=filePath==", filePath);
+    // You can now process the file (e.g., save the path in a database, etc.)
+    UserModel.findById(req.params.id)
+        .then(user => {
+            if (!user) {
+                return res.status(404).json({ error: 'User not found.' });
+            }
+
+            // Delete the existing profile file, if it exists
+
+            if (user.profile) {
+                fs.unlink(user.profile, err => {
+                    if (err) {
+                        console.error('Error deleting existing file:', err);
+                    }
+                });
+            }
+
+            // Update the user's profile with the new file path
+            user.profile = filePath;
+            return user.save();
+        })
+        .then(updatedUser => {
+            res.status(200).json(
+                {
+                    message: 'File uploaded successfully and user profile updated.',
+                    data : filePath
+                });
+        })
+        .catch(error => {
+            console.error('Error uploading file and updating user:', error);
+            res.status(500).json({ error: 'An error occurred.' });
+        });
+});
 // app.use(permissionsMiddlewre);
+
+// app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+app.use('/uploads', express.static('uploads'));
 app.use(apiVersion, organizationRoute);
 app.use(apiVersion, branchRoute);
 app.use(apiVersion, assetsRoute);

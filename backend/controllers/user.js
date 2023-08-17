@@ -8,50 +8,66 @@ import { LeaveTypeModel } from '../models/leaveTypeSchema.js'
 import { OrganizationModel } from '../models/organizationSchema.js'
 import { TimeSlotsModel } from "../models/timeSlotsSchema.js";
 import { UserModel } from '../models/userSchema.js'
+import fs from 'fs';
 import multer from 'multer';
+import path from 'path';
+
+const storage = multer.diskStorage({
+    destination: 'uploads/', // Set your desired upload directory
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+const upload = multer({ storage: storage });
+
 
 const placeHolder = '0001-01-01T';
 //// Create User ////
 export const addingUser = (req, res, next) => {
-    if(req.body.firstUser == true){
+    if (req.body.firstUser == true) {
         addingUserLeaves(req, res, next, req.body.organization, false);
         // createNew(req, res, next, UserModel, false)
     }
-    else{ 
-    try {
-        if (req.body.isActive == true || req.body.isActive == false || req.body.isActive) throw new Error('you cannot provide the isActive status of the employee');
-        OrganizationModel.findById(req.body.organization)
-            .then((organization) => {
-                if (!organization) throw new Error("organization dont exist")
-                BranchModel.findById(req.body.branch)
-                    .then((branch) => {
-                        if (!branch) throw new Error("branch dont exist")
-                        else if (req.body.organization !== branch.organization.toString()) throw new Error("branch not found in organization")
-                        else if (req.body.areaBounded?.isBounded == true && !req.body.areaBounded.addArea) throw new Error('Kindly Add the area')
-                        else if (req.body.HOD?.isHOD == true && !req.body.HOD.department) throw new Error('Kindly provide the department name of HOD')
-                        else if (req.body.HOD?.isHOD == true && req.body.HOD.department) {
-                            DepartmentModel.findById(req.body.HOD.department)
-                                .then((department) => {
-                                    if (!department) throw new Error('No Such Department')
-                                    if (department.organization.toString() !== req.body.organization.toString()) throw new Error(`Department does not match with org.`)
-                                    injection(req, res, next, organization);
-                                })
-                                .catch((error) => {
-                                    handleCatch(error, res, 404, next)
-                                })
+    else {
+        try {
+            if (req.body.isActive == true || req.body.isActive == false || req.body.isActive) throw new Error('you cannot provide the isActive status of the employee');
+            OrganizationModel.findById(req.body.organization)
+                .then((organization) => {
+                    if (!organization) throw new Error("organization dont exist")
+                    upload.single('profile')(req, res, (err) => {
+                        if (err) {
+                            return handleCatch(err, res, 400, next);
                         }
-                        else injection(req, res, next, organization);
                     })
-                    .catch((error) => {
-                        handleCatch(error, res, 404, next)
-                    })
-            })
-            .catch((err) => { handleCatch(err, res, 404, next) })
+                    BranchModel.findById(req.body.branch)
+                        .then((branch) => {
+                            if (!branch) throw new Error("branch dont exist")
+                            else if (req.body.organization !== branch.organization.toString()) throw new Error("branch not found in organization")
+                            else if (req.body.areaBounded?.isBounded == true && !req.body.areaBounded.addArea) throw new Error('Kindly Add the area')
+                            else if (req.body.HOD?.isHOD == true && !req.body.HOD.department) throw new Error('Kindly provide the department name of HOD')
+                            else if (req.body.HOD?.isHOD == true && req.body.HOD.department) {
+                                DepartmentModel.findById(req.body.HOD.department)
+                                    .then((department) => {
+                                        if (!department) throw new Error('No Such Department')
+                                        if (department.organization.toString() !== req.body.organization.toString()) throw new Error(`Department does not match with org.`)
+                                        injection(req, res, next, organization);
+                                    })
+                                    .catch((error) => {
+                                        handleCatch(error, res, 404, next)
+                                    })
+                            }
+                            else injection(req, res, next, organization);
+                        })
+                        .catch((error) => {
+                            handleCatch(error, res, 404, next)
+                        })
+                })
+                .catch((err) => { handleCatch(err, res, 404, next) })
+        }
+        catch (error) {
+            handleCatch(error, res, 400, next)
+        }
     }
-    catch (error) {
-        handleCatch(error, res, 400, next)
-    }
-}
 }
 
 const injection = (req, res, next, organization) => {
@@ -143,7 +159,7 @@ const creatingRoster = (req, res, next, user = null, timeSlot = null) => {
                 day: i.getUTCDay(),
                 date: i.toISOString(),
                 workingHours: slotTimeStart + " - " + slotTimeEnd,
-                plannedHours: Math.abs(new Date(placeHolder+timeSlot.endTime) - new Date(placeHolder+timeSlot.startTime)) / (60 * 60 * 1000),
+                plannedHours: Math.abs(new Date(placeHolder + timeSlot.endTime) - new Date(placeHolder + timeSlot.startTime)) / (60 * 60 * 1000),
             };
             user ? user.roster.employeeRosterDetails.push(x) : req.body.roster.employeeRosterDetails.push(x);
         }
@@ -174,11 +190,11 @@ const userCreate = (req, res, next, organization) => {
     }
 }
 
-const addingUserLeaves = (req, res, next, organizationRef,  show=true) => {
+const addingUserLeaves = (req, res, next, organizationRef, show = true) => {
     req.body.leaveTypeDetails = []
     LeaveTypeModel.find({ organization: req.body.organization })
         .then((leaveTypes) => {
-            
+
             if (leaveTypes.length == 0) throw new Error("No leave types found")
             leaveTypes.forEach(leaveType => {
                 let x = {
@@ -189,23 +205,23 @@ const addingUserLeaves = (req, res, next, organizationRef,  show=true) => {
             })
             UserModel.create(req.body)
                 .then((response) => {
-                    if(show){
-                    organizationRef.userCode.currentCode = organizationRef.userCode.currentCode + 1;
-                    res.status(200).json({
-                        success: true,
-                        response
-                    })
-                }
+                    if (show) {
+                        organizationRef.userCode.currentCode = organizationRef.userCode.currentCode + 1;
+                        res.status(200).json({
+                            success: true,
+                            response
+                        })
+                    }
                 })
                 .catch((error) => {
                     handleCatch(error, res, 500, next)
                 })
                 .finally(() => {
-                    if(show){
-                    organizationRef.save()
-                        .catch((error) => {
-                            handleCatch(error, res, 500, next)
-                        })
+                    if (show) {
+                        organizationRef.save()
+                            .catch((error) => {
+                                handleCatch(error, res, 500, next)
+                            })
                     }
                 })
         })
@@ -810,7 +826,7 @@ export const getUserLeaveQuota = (req, res, next) => {
                 select: 'name accumulativeCount'
             })
             .then((result) => {
-                if(!result) throw new Error("No Leave Quota not found")
+                if (!result) throw new Error("No Leave Quota not found")
                 res.status(200).json({
                     success: true,
                     result
@@ -827,54 +843,54 @@ export const getUserLeaveQuota = (req, res, next) => {
 
 // Controller function for handling image upload
 export const updateProfilePicture = (req, res, next) => {
-  try {
-    const storage = multer.diskStorage({
-        destination: (req, file, cb) => {
-          cb(null, 'uploads'); // Save the uploaded files to the "uploads" folder
-        },
-        filename: (req, file, cb) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          const fileExtension = file.originalname.split('.').pop();
-          cb(null, file.fieldname + '-' + uniqueSuffix + '.' + fileExtension);
-        },
-      });
-      const upload = multer({ storage });
-    upload.single('image')(req, res, (err) => {
-      if (err instanceof multer.MulterError) {
-        return res.status(400).json({ error: 'Error uploading image.' });
-      } else if (err) {
-        return res.status(400).json({ error: err.message });
-      }
-
-      if (!req.file) {
-        return res.status(400).json({ error: 'No image file received.' });
-      }
-
-      const userId = req.params.id;
-      const imagePath = req.file.path;
-      user.profile = imagePath;
-      User.findById(userId, (err, user) => {
-        if (err) {
-          return res.status(500).json({ error: 'Error finding the user.' });
-        }
-    
-        if (!user) {
-          return res.status(404).json({ error: 'User not found.' });
-        }
-    
-        // Update the user profile field with the imagePath
-        user.profile = imagePath
-        user.save((err, updatedUser) => {
-          if (err) {
-            return res.status(500).json({ error: 'Error updating user profile.' });
-          }
-    
-          res.json(updatedUser); // Respond with the updated user object
+    try {
+        const storage = multer.diskStorage({
+            destination: (req, file, cb) => {
+                cb(null, 'uploads'); // Save the uploaded files to the "uploads" folder
+            },
+            filename: (req, file, cb) => {
+                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+                const fileExtension = file.originalname.split('.').pop();
+                cb(null, file.fieldname + '-' + uniqueSuffix + '.' + fileExtension);
+            },
         });
-      });
-    });
-  } catch (err) {
-    // Handle any other unexpected errors
-    handleCatch(err, res, 400, next);
-  }
+        const upload = multer({ storage });
+        upload.single('image')(req, res, (err) => {
+            if (err instanceof multer.MulterError) {
+                return res.status(400).json({ error: 'Error uploading image.' });
+            } else if (err) {
+                return res.status(400).json({ error: err.message });
+            }
+
+            if (!req.file) {
+                return res.status(400).json({ error: 'No image file received.' });
+            }
+
+            const userId = req.params.id;
+            const imagePath = req.file.path;
+            user.profile = imagePath;
+            User.findById(userId, (err, user) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Error finding the user.' });
+                }
+
+                if (!user) {
+                    return res.status(404).json({ error: 'User not found.' });
+                }
+
+                // Update the user profile field with the imagePath
+                user.profile = imagePath
+                user.save((err, updatedUser) => {
+                    if (err) {
+                        return res.status(500).json({ error: 'Error updating user profile.' });
+                    }
+
+                    res.json(updatedUser); // Respond with the updated user object
+                });
+            });
+        });
+    } catch (err) {
+        // Handle any other unexpected errors
+        handleCatch(err, res, 400, next);
+    }
 };

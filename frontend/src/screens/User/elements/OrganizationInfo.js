@@ -61,8 +61,8 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
     const handleFormSubmit = (event) => {
         event.preventDefault();
         console.log(validator(), "validator")
-        if (!validator()) {
-            //changePageNumber();
+        if (validator()) {
+            changePageNumber();
         }
     };
 

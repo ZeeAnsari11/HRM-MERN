@@ -91,7 +91,12 @@ export const loadAllOrganizationsInfo = (dispatcher, orgId, branchId) => {
 }
 
 export const createUser = (data, setLoader) => {
-    console.log("DATA", data)
+    let nm = new FormData()
+    Object.keys(data).forEach((key) => {
+        nm.append(key, data[key]);
+    })
+   
+    console.log("DATA", nm)
     axios.post(userRoutes.createUser, data)
     .then(() => {
         toastMessage("success", "User Created Succefully", toast)
