@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "react";
+/* eslint-disable jsx-a11y/img-redundant-alt */
+import React, { useRef } from "react";
 import { selectCurrentUser, selectProfileCompletion } from "../../states/reducers/slices/backend/UserSlice";
 
 import Addresses from "./elements/Addresses";
@@ -14,7 +15,6 @@ import Skills from "./elements/Skills";
 import { base } from "../../api/configuration";
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { getCurrentUser } from "../../api/user";
-// import photo  from '../../../../backend/uploads/profile-1692196104362.jpg'
 import { uploadFile } from "../../api/uploadImage";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -29,7 +29,8 @@ const UserProfile = () => {
 
   const inputRef = useRef(null);
 
-  console.log("======={`${base}${pic}`}=======",`${base}${pic}`);
+  // eslint-disable-next-line no-template-curly-in-string
+  console.log("======={`${base}${pic}`}=======",`${pic}`);
   const handleMouseEnter = () => {
     setShowEditButton(true);
   };
@@ -64,6 +65,9 @@ const UserProfile = () => {
     { title: 'Experiences', Component: <Experiences userID={currentUser?._id} /> },
     { title: 'Qualifications', Component: <Qualification userID={currentUser?._id} /> },
   ]
+
+  const imgUrl = `http://127.0.0.1:4000/${pic}`
+
   return (
     <div className="py-4">
       <div className="flex justify-between flex-wrap p-4 h-26 border rounded-xl mobile:space-y-4 bg-white shadow">
@@ -76,9 +80,8 @@ const UserProfile = () => {
             >
               <img
                 className="w-28 h-28 rounded-xl"
-                src={`${base}${pic}`}
+                src={imgUrl}
                 alt="Profile Picture"
-                loading="lazy"
               />
               {showEditButton && (
                 <button className=" absolute top-0 left-0 bg-gray-500 text-white px-2 py-1 rounded">

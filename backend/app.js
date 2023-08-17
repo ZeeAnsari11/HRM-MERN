@@ -1,4 +1,4 @@
-import path, {dirname} from 'path';
+import { dirname, join } from 'path';
 
 import { PermssionsRoute } from "./routes/permissions.js";
 import { UserModel } from "./models/userSchema.js";
@@ -10,6 +10,7 @@ import { assetsRoute } from "./routes/assets.js";
 import { attendenceRoute } from "./routes/attendance.js";
 import { authRoute } from "./routes/auth.js";
 import { bankRoute } from "./routes/bank.js";
+import bodyParser from 'body-parser';
 import { branchRoute } from "./routes/branch.js";
 import { certificateRoute } from "./routes/certificate.js";
 import { commonQuestionsRoute } from "./routes/commonQuestions.js";
@@ -24,6 +25,7 @@ import { evaluationRatingRoute } from "./routes/evaluationRatings.js";
 import { expenseRoute } from "./routes/expense.js";
 import { experienceRoute } from "./routes/experience.js";
 import express from "express";
+import { fileURLToPath } from 'url';
 import fs from 'fs'
 import { gradeBenefitsRoute } from "./routes/gradeBenefits.js";
 import { gradeRoute } from "./routes/grade.js";
@@ -39,6 +41,7 @@ import { log } from "console";
 import { missingPunchesRequestRoute } from "./routes/missingPunches.js";
 import multer from "multer"
 import { organizationRoute } from "./routes/organization.js";
+import path from 'path';
 import { paySlipRoute } from "./routes/paySlip.js";
 import { permissionsMiddlewre } from "./middlewares/permissions.js";
 import { probEvalAttributesRoute } from "./routes/probEvalAttributes.js";
@@ -58,17 +61,23 @@ import { wfhRoute } from "./routes/wfh.js";
 
 const app = express();
 const apiVersion = '/api/v1';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
+app.use('/uploads', express.static('uploads'));
 
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(helmet())
+app.use(bodyParser.urlencoded({extended:false}))
+app.use(bodyParser.json())
 
 
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // Destination folder for uploaded files
+        cb(null, 'uploads/'); 
     },
     filename: (req, file, cb) => {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -79,13 +88,11 @@ const upload = multer({ storage });
 
 // to upload the profile pic multer
 app.post(`${apiVersion}/upload/:id`, upload.single('profile'), (req, res) => {
-    console.log('==============================');
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded.' });
     }
     const filePath = req.file.path;
     console.log("====filePath=filePath==", filePath);
-    // You can now process the file (e.g., save the path in a database, etc.)
     UserModel.findById(req.params.id)
         .then(user => {
             if (!user) {
@@ -120,8 +127,6 @@ app.post(`${apiVersion}/upload/:id`, upload.single('profile'), (req, res) => {
 });
 // app.use(permissionsMiddlewre);
 
-// app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
-app.use('/uploads', express.static('uploads'));
 app.use(apiVersion, organizationRoute);
 app.use(apiVersion, branchRoute);
 app.use(apiVersion, assetsRoute);
