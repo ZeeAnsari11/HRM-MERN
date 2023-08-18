@@ -54,6 +54,7 @@ import { requestTypeRoute } from "./routes/requestType.js";
 import { salaryRoute } from "./routes/salary.js";
 import { shortLeaveTypeRoute } from "./routes/shortLeaveType.js";
 import { taxRuleRoute } from "./routes/taxRule.js";
+import { themeRoute } from './routes/theme.js';
 import { timeSlotsRoute } from "./routes/timeSlots.js";
 import { userRoleRoute } from "./routes/userRole.js";
 import { userRoute } from './routes/user.js';
@@ -103,7 +104,7 @@ app.post(`${apiVersion}/upload/:id`, upload.single('profile'), (req, res) => {
             if (user.profile) {
                 fs.unlink(user.profile, err => {
                     if (err) {
-                        handleCatch(err, res, next, 500)
+                      console.log("===========error in deleting the file",err);
                     }
                 });
             }
@@ -172,6 +173,8 @@ app.use(apiVersion, taxRuleRoute)
 app.use(apiVersion, holidayRoute)
 app.use(apiVersion, expenseRoute)
 app.use(apiVersion, PermssionsRoute)
+app.use(apiVersion, themeRoute)
+
 
 
 app.use((err, req, res, next) => {
