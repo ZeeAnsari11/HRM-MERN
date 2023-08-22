@@ -3,6 +3,7 @@ import { selectNavState, selectWidth } from '../../states/reducers/slices/fronte
 import MenuRenderer from './elements/Menu';
 import { Menus } from './configuration';
 import React from 'react';
+import { base } from '../../api/configuration';
 import logo from '../../assets/logo-white.png';
 import logoNoText from '../../assets/logo-no-text.png';
 import { selectCurrentUser } from '../../states/reducers/slices/backend/UserSlice';
@@ -11,6 +12,7 @@ import { useSelector } from 'react-redux'
 const Navbar = () => {
     let open = useSelector(selectNavState);
     let width = useSelector(selectWidth);
+    let currentUser = useSelector(selectCurrentUser)
     const user = useSelector(selectCurrentUser).roleType;
     const tailwindStyleSheet = {
         mainContainer: `bg-primaryColorLight h-full tablet:w-0 duration-300 fixed mobile:z-50 overflow-auto`,
@@ -23,7 +25,8 @@ const Navbar = () => {
     return (
         <div className={tailwindStyleSheet.mainContainer} style={{width: width}}>
             <div className={tailwindStyleSheet.imgContainer}>
-                <img src={open ? logo : logoNoText}
+                <img 
+                src={`${base}${currentUser?.organization.logo}`}
                     className={tailwindStyleSheet.img} alt="company logo"
                 />
             </div>

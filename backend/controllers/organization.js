@@ -137,20 +137,3 @@ export const createLeaveTypeWithFirstUser = (req, res, next, actualReq) => {
         })
         .catch((err) => { handleCatch(err, res, 500, next) })
 }
-
-export const deleteLogo = (req, res, next) => {
-    fs.unlink(req.body.name, err => {
-        if (err) {
-            res.status(404).json({
-                success: false,
-                error: err
-            })
-        }
-        else {
-            delete req.body.name;
-            req.body.logo = 'null';
-            updateOrganizationById(req, res, next)
-        }
-    })
-
-}

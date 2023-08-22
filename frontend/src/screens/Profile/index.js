@@ -64,7 +64,7 @@ const UserProfile = () => {
     { title: 'Qualifications', Component: <Qualification userID={currentUser?._id} /> },
   ]
 
-  const imgUrl = `http://127.0.0.1:4000/${pic}`
+  const imgUrl = `${base}${pic}`
 
   return (
     <div className="py-4">
