@@ -52,7 +52,9 @@ const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'image/png' || file.mimetype === 'image/webp') {
         cb(null, true); // Accept the file
     } else {
-        cb(new Error('Invalid file type. Only PNG and WebP files are allowed.'), false);
+        // cb(new Error('Invalid file type. Only PNG and WebP files are allowed.'), false);
+        const error = new Error('Invalid file type. Only PNG and WebP files are allowed.');
+        cb(error, false);
     }
 };
 
