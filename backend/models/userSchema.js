@@ -414,6 +414,9 @@ const userSchema = mongoose.Schema({
     permanentAddress: {
         type: String,
     },
+    bgShifterAddress: {
+        type: String,
+    },
     createdAt: {
         type: Date,
         default: Date.now
@@ -490,7 +493,7 @@ userSchema.methods.getJwtToken = function () {
 }
 
 userSchema.methods.comparePassword = function (password) {
-    console.log("======response===2=", password);
+    // console.log("======response===2=", password);
     return bcrypt.compare(password, this.password)
 }
 
