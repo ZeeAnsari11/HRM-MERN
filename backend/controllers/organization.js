@@ -6,8 +6,8 @@ import { OrganizationModel } from '../models/organizationSchema.js';
 import { PermissionsModel } from '../models/permissions.js';
 import { addingUser } from './user.js';
 import app from '../app.js';
-import { createNewLeaveType } from './leaveType.js';
 import expressListEndpoints from "express-list-endpoints";
+import fs from 'fs'
 import mongoose from "mongoose";
 
 export const createOrganization = (req, res, next) => {
@@ -61,7 +61,7 @@ export const deleteOrganizationById = (req, res, next) => {
 export const updateOrganizationById = (req, res, next) => {
     OrganizationModel.findById(req.params.id)
         .then((response) => {
-            if (req.body.userCode.currentCode >= 0) throw new Error("Can't update pre defined code.")
+            if (req.body?.userCode?.currentCode >= 0) throw new Error("Can't update pre defined code.")
             if (!response) throw new Error(`Organization Not Found`)
             if (req.body.restDays) {
                 const restDays = [...new Set(req.body.restDays)];
@@ -69,7 +69,7 @@ export const updateOrganizationById = (req, res, next) => {
                     if (restDay < 0 || restDay > 8) { throw new Error("Rest days must be in between 1 and 7 ") }
                 })
             }
-            req.body.userCode.currentCode = response.userCode.currentCode;
+            // req.body.userCode.currentCode = response.userCode.currentCode;
             updateById(req, res, next, OrganizationModel, "Organization")
         })
         .catch((error) => { handleCatch(error, res, 400, next) })
@@ -110,7 +110,7 @@ const createBranchWithFirstUser = (req, res, next, actualReq) => {
     req.body.unique_id = req.body.organization + req.body.name?.replace(/\s/g, "").toLowerCase()
     BranchModel.create(req.body)
         .then((branch) => {
-           delete actualReq.body.branch;
+            delete actualReq.body.branch;
             actualReq.body.branch = branch._id
             actualReq.body.isLineManager = true
             let request = {
@@ -136,4 +136,21 @@ export const createLeaveTypeWithFirstUser = (req, res, next, actualReq) => {
             addingUser(actualReq, res, next)
         })
         .catch((err) => { handleCatch(err, res, 500, next) })
+}
+
+export const deleteLogo = (req, res, next) => {
+    fs.unlink(req.body.name, err => {
+        if (err) {
+            res.status(404).json({
+                success: false,
+                error: err
+            })
+        }
+        else {
+            delete req.body.name;
+            req.body.logo = 'null';
+            updateOrganizationById(req, res, next)
+        }
+    })
+
 }

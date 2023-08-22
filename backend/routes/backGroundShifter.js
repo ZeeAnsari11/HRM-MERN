@@ -11,13 +11,11 @@ export const backgroundShifterRoute = express.Router();
 
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 // To upload the background shifter images
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const destinationPath = path.join('uploads', 'bgShifter');
-        console.log("======designation====", destinationPath);
         fs.mkdirSync(destinationPath, { recursive: true }); // Create the directory if it doesn't exist
         cb(null, destinationPath);
     },

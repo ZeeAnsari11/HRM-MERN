@@ -6,22 +6,22 @@ const themeSchema = mongoose.Schema({
         validate: /^#[a-f0-9]{4,6}$/,
         // validate: {
         //     validator: function (value) {
-        //         return /^#[a-f0-9]{4,6}$/.test(value);
+        //         return /^#[a-fA-F0-9]{4,6}$/.test(value);
         //     },
         //     message: props => `Invalid code format: ${props.value}`
         // },
     },
     secondary: {
         type: 'string',
-        validate: /^#[a-f0-9]{4,6}$/,
+        validate: /^#[a-fA-F0-9]{4,6}$/,
     },
     dark_primary: {
         type: 'string',
-        validate: /^#[a-f0-9]{4,6}$/,
+        validate: /^#[a-fA-F0-9]{4,6}$/,
     },
     dark_secondary: {
         type: 'string',
-        validate: /^#[a-f0-9]{4,6}$/,
+        validate: /^#[a-fA-F0-9]{4,6}$/,
     },
     organization: {
         type: mongoose.Schema.Types.ObjectId,
