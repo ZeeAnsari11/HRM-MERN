@@ -217,3 +217,9 @@ export const qualification = {
 export const organization = {
     createOrganization: baseUrl+'/organization/new'
 }
+
+export const theme = {
+    createTheme: baseUrl+'/theme/new',
+    updateTheme: baseUrl+'/theme/org/',
+    getTheme: baseUrl+'/theme/org/'
+}

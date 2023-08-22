@@ -52,6 +52,7 @@ export const deleteThemeConfiguration = (req, res, next) => {
 export const getThemeConfiguration = (req, res, next) => {
     ThemeModel.find({ organization: req.params.id })
         .then((theme) => {
+            if(theme.length == 0) throw new Error("No theme found")
             res.status(200).json({
                 success: true,
                 response: theme[0]
