@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { defaultTheme } from '../../../../styles/theme';
 
 // Slice for Storing Current User
 export const UserSlice = createSlice({
@@ -31,7 +32,13 @@ export const UserSlice = createSlice({
     userLeaveDetails: [],
     isAdmin: false,
     userChart: [],
-    userById: {}
+    userById: {},
+    organizationTheme : {
+      primary : "#17263a",
+      secondary : "#25274a",
+      dark_primary : "#aab3cc",
+      dark_secondary : "#FFFFFF",
+    }
   },
   reducers: {
     setCurrentUser: (state, action) => {
@@ -97,6 +104,9 @@ export const UserSlice = createSlice({
     },
     setUserById: (state, action) => {
       state.userById = action.payload;
+    },
+    setOrganizationTheme: (state, action) => {
+      state.organizationTheme = action.payload;
     }
   }
 });
@@ -104,6 +114,7 @@ export const UserSlice = createSlice({
 // Action Methods
 export const {
   setUserForm,
+  setOrganizationTheme,
   setCurrentUser, 
   setAuth, 
   logout,
@@ -127,6 +138,7 @@ export const {
 
 // Selector Methods
 export const selectCurrentUser = (state) => state.user.currentUser;
+export const selectOrgTheme = (state) => state.user.organizationTheme;
 export const selectUserForm = (state) => state.user.userForm;
 export const selectIsAdmin = (state) => state.user.isAdmin;
 export const selectCurrentUserOrg = (state) => state.user.currentUser.organization._id;

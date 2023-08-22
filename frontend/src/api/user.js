@@ -1,7 +1,8 @@
-import { authentication, getOrganization, organizationRoutes, timeSlots, userChart, userLeave, userRoutes } from './configuration';
-import { setAllUsers, setAuth, setCurrentUser, setFinalAuthority, setIsAdmin, setProfileCompletion, setTimeSLots, setUserById, setUserChart, setUserGrades, setUserLeaveDetails } from '../states/reducers/slices/backend/UserSlice';
+import { authentication, getOrganization, organizationRoutes, theme, timeSlots, userChart, userLeave, userRoutes } from './configuration';
+import { setAllUsers, setAuth, setCurrentUser, setFinalAuthority, setIsAdmin, setOrganizationTheme, setProfileCompletion, setTimeSLots, setUserById, setUserChart, setUserGrades, setUserLeaveDetails } from '../states/reducers/slices/backend/UserSlice';
 
 import axios from 'axios';
+import { getAllTheme } from './theme';
 import { getAllUsers } from './configuration';
 import { setEmploymentTypes } from '../states/reducers/slices/backend/EmploymentType';
 import { setOrganizationDesignation } from '../states/reducers/slices/backend/Designation';
@@ -62,10 +63,10 @@ export const getCurrentUser = (dispatcher, setLoaded=null) => {
             if (user.data.user.profile)  dispatcher(setProfileCompletion(10))
             if (user.data.user.nic?.number)  dispatcher(setProfileCompletion(5))
             if (user.data.user.drivingLinsence?.number)  dispatcher(setProfileCompletion(5))
-            if (setLoaded !== null) setLoaded(false);
             if (user.data.user.roleType === "admin") {
                 dispatcher(setIsAdmin(true));
-            }
+            }   
+            getAllTheme(user.data.user.organization._id, dispatcher, setLoaded)
         })
         .catch(() => {
             dispatcher(setCurrentUser({}))

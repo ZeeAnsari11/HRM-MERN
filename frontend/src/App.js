@@ -10,17 +10,19 @@ import ForgotPassword from "./screens/ForgotPassword";
 import Landing from "./screens/Landing";
 import Login from "./screens/Login"
 import ResetPassword from "./screens/ResetPassword";
-import { getCurrentUser } from "./api/user";
-import { selectIsAdmin } from "./states/reducers/slices/backend/UserSlice";
+
+// import { getCurrentUser } from "./api/user";
+
+// import { selectIsAdmin } from "./states/reducers/slices/backend/UserSlice";
 
 function App() {
   
-  const isAdmin = useSelector(selectIsAdmin);
-  const dispatcher = useDispatch();
+  //const isAdmin = useSelector(selectIsAdmin);
+  //const dispatcher = useDispatch();
   
-  React.useEffect(() => {
-    getCurrentUser(dispatcher, null);
-  }, [isAdmin])
+  // React.useEffect(() => {
+  //   getCurrentUser(dispatcher, null);
+  // }, [])
     
   return (
     <Routes>

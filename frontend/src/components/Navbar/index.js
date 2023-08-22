@@ -1,3 +1,4 @@
+import { selectCurrentUser, selectOrgTheme } from '../../states/reducers/slices/backend/UserSlice';
 import { selectNavState, selectWidth } from '../../states/reducers/slices/frontend/Navbar';
 
 import MenuRenderer from './elements/Menu';
@@ -5,15 +6,15 @@ import { Menus } from './configuration';
 import React from 'react';
 import logo from '../../assets/logo-white.png';
 import logoNoText from '../../assets/logo-no-text.png';
-import { selectCurrentUser } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux'
 
 const Navbar = () => {
     let open = useSelector(selectNavState);
     let width = useSelector(selectWidth);
+    const themeBack = useSelector(selectOrgTheme);
     const user = useSelector(selectCurrentUser).roleType;
     const tailwindStyleSheet = {
-        mainContainer: `bg-primaryColorLight h-full tablet:w-0 duration-300 fixed mobile:z-50 overflow-auto`,
+        mainContainer: `h-full tablet:w-0 duration-300 fixed mobile:z-50 overflow-auto`,
         imgContainer: 'flex justify-center items-center shadow-lg',
         img: `cursor-pointer duration-500 px-5 h-24`,
         separaterLine: 'h-[1.5px] bg-gray-700 w-full',
@@ -21,7 +22,7 @@ const Navbar = () => {
     }
     
     return (
-        <div className={tailwindStyleSheet.mainContainer} style={{width: width}}>
+        <div className={tailwindStyleSheet.mainContainer} style={{width: width, backgroundColor:themeBack.primary}}>
             <div className={tailwindStyleSheet.imgContainer}>
                 <img src={open ? logo : logoNoText}
                     className={tailwindStyleSheet.img} alt="company logo"
