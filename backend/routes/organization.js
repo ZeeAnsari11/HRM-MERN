@@ -11,6 +11,7 @@ import { dirname } from 'path';
 import express from "express";
 import { fileURLToPath } from 'url';
 import fs from 'fs'
+import { handleCatch } from '../utils/common.js';
 import multer from "multer"
 import path from 'path';
 
@@ -52,7 +53,10 @@ const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'image/png' || file.mimetype === 'image/webp') {
         cb(null, true); // Accept the file
     } else {
-        cb(new Error('Invalid file type. Only PNG and WebP files are allowed.'), false);
+        res.status(404).json({
+            success: false,
+            error: 'Invalid file type. Only PNG and WebP files are allowed.'
+        })
     }
 };
 
