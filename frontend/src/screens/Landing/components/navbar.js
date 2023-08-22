@@ -11,7 +11,7 @@ const Navbar = () => {
 
   return (
     <div className="w-full backdrop-blur-lg fixed px-8 tablet:px-2 shadow-md">
-      <nav className="container flex flex-wrap items-center justify-between px-8 py-2 mx-auto lg:justify-between xl:px-0">
+      <nav className="flex flex-wrap items-center justify-between px-8 py-2 lg:justify-between xl:px-0">
         {/* Logo  */}
         <Disclosure>
           {({ open }) => (

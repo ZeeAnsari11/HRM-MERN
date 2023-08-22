@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { privateRoutes, publicRoutes } from "./ConfigRoutes";
-import { useDispatch, useSelector } from "react-redux";
 
 import Dashboard from "./screens/Dashboard";
 import Error from "./screens/Error/404";
