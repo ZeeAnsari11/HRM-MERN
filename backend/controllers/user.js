@@ -841,8 +841,6 @@ export const getUserLeaveQuota = (req, res, next) => {
     }
 }
 
-
-
 // Controller function for handling image upload
 export const updateProfilePicture = (req, res, next) => {
     try {
@@ -896,3 +894,20 @@ export const updateProfilePicture = (req, res, next) => {
         handleCatch(err, res, 400, next);
     }
 };
+
+export const selectUserBG_Shifter = (req, res, next) => {
+    
+    UserModel.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true, runValidators: true })
+    .then((updatedDocument) => {
+        if (!updatedDocument) {
+            throw new Error(`User Not Found`);
+        }
+        res.status(200).json({
+            success: true,
+            Message: `BackGround Shifter Selected`
+        });
+    })
+    .catch((error) => {
+        handleCatch(error, res, 500, next);
+    });
+}

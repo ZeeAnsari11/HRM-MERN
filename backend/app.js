@@ -9,6 +9,7 @@ import { assetTypeRoute } from "./routes/assetType.js";
 import { assetsRoute } from "./routes/assets.js";
 import { attendenceRoute } from "./routes/attendance.js";
 import { authRoute } from "./routes/auth.js";
+import { backgroundShifterRoute } from './routes/backGroundShifter.js';
 import { bankRoute } from "./routes/bank.js";
 import bodyParser from 'body-parser';
 import { branchRoute } from "./routes/branch.js";
@@ -74,20 +75,21 @@ app.use(helmet())
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(bodyParser.json())
 
-
-// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/'); 
+        const destinationPath = path.join('uploads', 'profile');
+        fs.mkdirSync(destinationPath, { recursive: true }); // Create the directory if it doesn't exist
+        cb(null, destinationPath);
     },
     filename: (req, file, cb) => {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
 });
 
+
 const upload = multer({ storage });
 
-// to upload the profile pic multer
+// to upload the profile pic use multer
 app.post(`${apiVersion}/upload/:id`, upload.single('profile'), (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded.' });
@@ -104,7 +106,10 @@ app.post(`${apiVersion}/upload/:id`, upload.single('profile'), (req, res) => {
             if (user.profile) {
                 fs.unlink(user.profile, err => {
                     if (err) {
-                      console.log("===========error in deleting the file",err);
+                        res.status(404).json({
+                            success : false,
+                            error : err
+                        })
                     }
                 });
             }
@@ -174,6 +179,8 @@ app.use(apiVersion, holidayRoute)
 app.use(apiVersion, expenseRoute)
 app.use(apiVersion, PermssionsRoute)
 app.use(apiVersion, themeRoute)
+app.use(apiVersion, backgroundShifterRoute)
+
 
 
 

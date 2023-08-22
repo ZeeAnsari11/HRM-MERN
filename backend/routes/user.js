@@ -1,11 +1,28 @@
-import express from "express";
 import {
-    addingUser, getAllUsersByOrganizationId, getAllUsersByBranchId, updateUserById,
-    deleteUserById, getUserById, updateUserEmployment, addSkillsToUser, deleteSkillFromUser, 
-    filterUserByOrganizationId, getLineManagerByuserId, getHODByDepartmentId,
-    getAttendanceExemptUsers, getEmployeeTypeByOrganizationId, getRoleTypeByOrganizationId,
-    getChildsByUserId, validateUserToken, addNewLeavesToUsers,getUserLeaveQuota, updateProfilePicture
+    addNewLeavesToUsers,
+    addSkillsToUser,
+    addingUser,
+    deleteSkillFromUser,
+    deleteUserById,
+    filterUserByOrganizationId,
+    getAllUsersByBranchId,
+    getAllUsersByOrganizationId,
+    getAttendanceExemptUsers,
+    getChildsByUserId,
+    getEmployeeTypeByOrganizationId,
+    getHODByDepartmentId,
+    getLineManagerByuserId,
+    getRoleTypeByOrganizationId,
+    getUserById,
+    getUserLeaveQuota,
+    selectUserBG_Shifter,
+    updateProfilePicture,
+    updateUserById,
+    updateUserEmployment,
+    validateUserToken
 } from '../controllers/user.js'
+
+import express from "express";
 
 export const userRoute = express.Router();
 
@@ -28,4 +45,4 @@ userRoute.route('/user/chart/my-chart/:id').get(getChildsByUserId);
 userRoute.route('/user/newLeaves/:id').put(addNewLeavesToUsers);
 userRoute.route('/user/leave-quota/:id').get(getUserLeaveQuota);
 userRoute.route('/user/edit-profile/:id').put(updateProfilePicture);
-
+userRoute.route('/bg-shifter/user/:id').put(selectUserBG_Shifter)
