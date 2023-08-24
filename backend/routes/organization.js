@@ -53,6 +53,7 @@ const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'image/png' || file.mimetype === 'image/webp') {
         cb(null, true); // Accept the file
     } else {
+
         res.status(404).json({
             success: false,
             error: 'Invalid file type. Only PNG and WebP files are allowed.'
