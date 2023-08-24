@@ -2,7 +2,7 @@ import React from 'react'
 import { commonStyles } from '../../../../styles/common';
 
 const CUForm = ({ config, handleInputChange, isFull=true , validationErrors}) => {
-    console.log("======validationErrors",config);
+
     return <div className={isFull ? 'w-1/2 mobile:w-full' : 'w-full'}>
             
             {

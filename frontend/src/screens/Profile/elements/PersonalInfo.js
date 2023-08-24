@@ -46,13 +46,13 @@ const PersonalInfo = ({ data }) => {
     
     const handleSubmit = (trigger) => {
         const newValidationErrors = {};
-    if (formData.nic?.number == undefined) {
+    if (formData.nic?.number == undefined || formData.nic?.number == '') {
       newValidationErrors.nic = "CNIC is required.";
     }
-    if (formData.passport?.number == undefined) {
+    if (formData.passport?.number == undefined  || formData.passport?.number == '') {
       newValidationErrors.passport = "Passport is required.";
     }
-    if (formData.drivingLiscence?.number == undefined) {
+    if (formData.drivingLiscence?.number == undefined || formData.drivingLiscence?.number == '') {
       newValidationErrors.drivingLiscence = "DrivingLiscence is required.";
     }
 

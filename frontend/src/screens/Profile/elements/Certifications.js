@@ -47,7 +47,6 @@ const Certifications = ({ userID }) => {
 
   useEffect(() => {
     getCertifications(userID, dispatcher);
-    console.log("Something changed")
     setFormData({
       ...selectedCertifications, user: userID
     })
@@ -58,6 +57,7 @@ const Certifications = ({ userID }) => {
     if (formData.instituteName == '' || formData.instituteName == undefined) {
       newValidationErrors.instituteName = "Institute Name is required.";
     }
+
     if (formData.certificateTitle == '' || formData.certificateTitle == undefined) {
       newValidationErrors.certificateTitle = "Certificate Title is required.";
     }
@@ -167,7 +167,7 @@ const Certifications = ({ userID }) => {
                   }
               </div>
               }
-                <CUForm config={formDataConfig} handleInputChange={handleInputChange} az/>
+                <CUForm config={formDataConfig} handleInputChange={handleInputChange} isFull={allUserCertifications.length >0 ? true : false} validationErrors={validationErrors}/>
               </div>
             </>
           }
