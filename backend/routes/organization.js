@@ -37,15 +37,23 @@ organizationRoute.route('/organization/:id').get(getOrganizationById).delete(del
 //     }
 // });
 const storage = multer.diskStorage({
+    // destination: (req, file, cb) => {
+    //     const destinationPath = path.join('uploads', 'logos');
+    //     fs.mkdirSync(destinationPath, { recursive: true }); // Create the directory if it doesn't exist
+    //     cb(null, destinationPath);
+    // },
+    // filename: (req, file, cb) => {
+    //     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    //     const extension = path.extname(file.originalname).toLowerCase();
+    //     cb(null, uniqueSuffix + extension);
+    // }
     destination: (req, file, cb) => {
         const destinationPath = path.join('uploads', 'logos');
         fs.mkdirSync(destinationPath, { recursive: true }); // Create the directory if it doesn't exist
         cb(null, destinationPath);
     },
     filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        const extension = path.extname(file.originalname).toLowerCase();
-        cb(null, uniqueSuffix + extension);
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
 });
 

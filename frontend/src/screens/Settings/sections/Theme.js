@@ -9,7 +9,7 @@ import { commonStyles } from '../../../styles/common'
 const Theme = () => {
     const themeBack = useSelector(selectOrgTheme);
     const currUserOrg = useSelector(selectCurrentUserOrg);
-    const org_id = themeBack?.organization;
+    const org_id = useSelector(selectCurrentUserOrg);
     const [themeType, setThemeType] = useState(themeBack);
     const [isValidColors, setIsValidColors] = useState({
         primary: true,
@@ -64,7 +64,7 @@ const Theme = () => {
     }
     
     return (
-            <form onSubmit={handleSubmit} className="bg-white my-3 w-full rounded shadow-lg p-4 px-4 md:p-8 mb-6">
+            <form onSubmit={handleSubmit} className="bg-white/50 backdrop-blur-sm my-3 w-full rounded shadow-lg p-4 px-4 md:p-8 mb-6">
                 <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
                     
                     <div className="text-gray-600">
@@ -117,8 +117,7 @@ const Theme = () => {
                 <div className='text-right pt-6'>
                     <button type='submit' disabled={loader} className={`${commonStyles.btnDark} flex space-x-2`}>Save {loader && <Loader color={'white'}/>}</button>
                 </div>
-            </form>
-            
+            </form>  
     )
 }
 

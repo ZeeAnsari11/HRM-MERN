@@ -1,4 +1,4 @@
-import { createNew, handleCatch, updateById } from "../utils/common.js";
+import { createNew, handleCatch } from "../utils/common.js";
 
 import { OrganizationModel } from "../models/organizationSchema.js"
 import { ThemeModel } from "../models/themeSchema.js";

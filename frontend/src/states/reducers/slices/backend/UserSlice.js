@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { defaultTheme } from '../../../../styles/theme';
 
 // Slice for Storing Current User
 export const UserSlice = createSlice({
@@ -33,6 +32,8 @@ export const UserSlice = createSlice({
     isAdmin: false,
     userChart: [],
     userById: {},
+    userId: '',
+    background: '',
     organizationTheme : {
       primary : "#17263a",
       secondary : "#25274a",
@@ -86,7 +87,6 @@ export const UserSlice = createSlice({
     setUpdatedWfh: (state, action) => {
       state.updatedWfh = action.payload;
     },
-
     setUpdatedLeave: (state, action) => {
       state.updatedLeave = action.payload;
     },
@@ -107,6 +107,12 @@ export const UserSlice = createSlice({
     },
     setOrganizationTheme: (state, action) => {
       state.organizationTheme = action.payload;
+    },
+    setBackground: (state, action) => {
+      if (action.payload === 'default') {
+        state.background = ''
+      }
+      else state.background = action.payload;
     }
   }
 });
@@ -116,8 +122,9 @@ export const {
   setUserForm,
   setOrganizationTheme,
   setCurrentUser, 
-  setAuth, 
+  setAuth,
   logout,
+  setBackground,
   setOrganization, 
   setTeamLeadList, 
   setFinalAuthority, 
@@ -138,6 +145,7 @@ export const {
 
 // Selector Methods
 export const selectCurrentUser = (state) => state.user.currentUser;
+export const selectBackground = (state) => state.user.background;
 export const selectOrgTheme = (state) => state.user.organizationTheme;
 export const selectUserForm = (state) => state.user.userForm;
 export const selectIsAdmin = (state) => state.user.isAdmin;
