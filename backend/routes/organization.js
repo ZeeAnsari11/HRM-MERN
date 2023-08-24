@@ -11,6 +11,7 @@ import { dirname } from 'path';
 import express from "express";
 import { fileURLToPath } from 'url';
 import fs from 'fs'
+import { handleCatch } from '../utils/common.js';
 import multer from "multer"
 import path from 'path';
 
@@ -55,6 +56,7 @@ const fileFilter = (req, file, cb) => {
         // cb(new Error('Invalid file type. Only PNG and WebP files are allowed.'), false);
         const error = new Error('Invalid file type. Only PNG and WebP files are allowed.');
         cb(error, false);
+
     }
 };
 
