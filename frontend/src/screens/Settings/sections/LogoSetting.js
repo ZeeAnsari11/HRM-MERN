@@ -1,4 +1,5 @@
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { selectCurrentUser, selectOrgTheme } from '../../../states/reducers/slices/backend/UserSlice';
 import { uploadFile, uploadLogoFile } from '../../../api/uploadImage';
 import { useDispatch, useSelector } from "react-redux";
 
@@ -6,17 +7,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { base } from '../../../api/configuration';
 import { commonStyles } from '../../../styles/common';
-import { selectCurrentUser } from '../../../states/reducers/slices/backend/UserSlice';
 import { useRef } from "react";
 
 const LogoSetting = () => {
     const inputRef = useRef(null);
     const dispatcher = useDispatch();
     const currentUser = useSelector(selectCurrentUser);
-
+    const theme = useSelector(selectOrgTheme);
     const imgUrl = `${base}${currentUser?.organization.logo}`
     const handleClick = () => {
-        console.log("==1========");
         inputRef.current.click();
     };
     
@@ -36,7 +35,7 @@ const LogoSetting = () => {
                 <img
                     src={imgUrl}
                     alt="Logo"
-                    className="w-full h-auto"
+                    className="w-full h-auto shadow-lg rounded-md" style={{backgroundColor: theme.primary}}
                 />
             </div>
 

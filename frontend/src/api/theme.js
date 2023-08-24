@@ -1,6 +1,5 @@
-import { setOrganization, setOrganizationTheme } from "../states/reducers/slices/backend/UserSlice";
-
 import axios from "axios";
+import { setOrganizationTheme } from "../states/reducers/slices/backend/UserSlice";
 import { theme } from "./configuration";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
@@ -8,7 +7,6 @@ import { toastMessage } from "../AlertConfigs";
 export const createTheme = (data, dispatch, trigger) => {
     axios.post(theme.createTheme, data)
     .then(() => {
-        dispatch(setOrganizationTheme(data))
         toastMessage('success', "Theme Saved Successfully", toast);
     })
     .catch((err) => {
@@ -28,7 +26,6 @@ export const updateTheme = (org_id, themeData, dispatcher, trigger) => {
     }
     axios.put(theme.updateTheme+org_id, data)
     .then(() => {
-        dispatcher(setOrganization(themeData))
         toastMessage('success', "Theme Updated Successfully", toast)
         getAllTheme(org_id, dispatcher, trigger)
     })
