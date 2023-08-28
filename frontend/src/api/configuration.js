@@ -18,6 +18,7 @@ export const organizationRoutes = {
     getDepartmentsByOrgId: baseUrl+'/departments/organization/',
     getDesignationsByOrgId: baseUrl+'/designations/organization/',
     getLeaveTypeByOrgId: baseUrl+'/leave-types/organization/',
+    getShortLeaveTypeByOrgId: baseUrl+'/short-leave/organization/',
     getUsersByFilter: baseUrl+'/user/filter-user/organization',
     getEmployementTypesByOrgId: baseUrl+'/employmentType/all/'
 }
@@ -173,6 +174,11 @@ export const employeementTypeRoute = {
 export const leaveTypeRoute = {
     updateLeaveTypeById :baseUrl + '/leaveType/',
     createLeaveType : baseUrl +'/leaveType/new'
+}
+
+export const shortLeaveTypeRoute = {
+    createShortLeaveType : baseUrl +'/short-leave/new',
+    updatShorteLeaveTypeById :baseUrl + '/short-leave/update/',
 }
 
 export const timeSlotsRoute = {

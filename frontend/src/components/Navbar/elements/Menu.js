@@ -56,7 +56,10 @@ const Menu = ({ menu, user }) => {
                                 to={menuItem.to}  
                                 key={index} 
                                 onClick={() => {
-                                    if (menuItem.title !== selectedMenuChildItem) diapatcher(setChangeMenuChildState(menuItem.title))
+                                    if (menuItem.title !== selectedMenuChildItem) {
+                                        diapatcher(setChangeMenuChildState(menuItem.title));
+                                        localStorage.setItem('selectedMenuChildItem', menuItem.title);
+                                    }
                                 }}>
                                 <FontAwesomeIcon icon={menuItem.font} className='text-white p-2 bg-gray-600 rounded-md' width={'20'} />
                                 <div className={`origin-left duration-200 text-white`}>

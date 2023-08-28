@@ -28,7 +28,7 @@ export const Menus = [
     { title: "Departments", access:"Admin",font: faCalendarCheck, child:[], to:"/dashboard/departments"  },
     { title: "Branches", access:"Admin",font: faCalendarCheck, child:[], to:"/dashboard/branches"  },
     { title: "TimeSlots", access:"Admin",font: faCalendarCheck, child:[], to:"/dashboard/timeSlots"  },
-    { title: "EmployeementType",access:"Admin", font: faCalendarCheck, child:[], to:"/dashboard/employeement-type"  },
+    { title: "Employment Type",access:"Admin", font: faCalendarCheck, child:[], to:"/dashboard/employeement-type"  },
 
 
     {
@@ -49,6 +49,7 @@ export const Menus = [
             { title: "View Leaves", font: faCalendarCheck, to:"/dashboard/leaves"},
             { title: "Policy", font: faTimeline, to:"/dashboard/policy" },
             { title: "Leave Types", access:"Admin", font: faTimeline, to:"/dashboard/leave-type" },
+            { title: "Short Leave Types", access:"Admin", font: faTimeline, to:"/dashboard/short-leave-type" },
         ]
     },
     {
