@@ -3,6 +3,7 @@ import Asset from "./screens/AddAsset";
 import AssetTypes from "./screens/AssetTypes";
 import Attendence from "./screens/Attendence";
 import Branches from "./screens/Branches";
+import ChartPage from "./screens/Chart/src";
 import Departments from "./screens/Departments";
 import Desiginations from "./screens/Desiginations";
 import EmployeementType from "./screens/EmployeementType";
@@ -18,6 +19,7 @@ import Probation from "./screens/Probation";
 import Roaster from "./screens/Roaster/src";
 import { Route } from "react-router-dom";
 import Settings from "./screens/Settings";
+import ShortLeaveType from "./screens/ShortLeaveType";
 import Skeleton from "./screens/Skeleton";
 import TimeSheet from "./screens/TimeSheet";
 import TimeSlots from "./screens/TimeSlots";
@@ -27,7 +29,6 @@ import ViewAttendenceRequests from "./screens/ViewAttendenceRequests";
 import ViewEmployees from "./screens/ViewEmployees";
 import ViewWorkFromHome from "./screens/WorkFromHome";
 import WorkFromHomeRequest from "./screens/WorkFromHomeRequest";
-import ChartPage from "./screens/Chart/src";
 ;
 
 export const privateRoutes = () => {
@@ -46,6 +47,8 @@ export const privateRoutes = () => {
       <Route path="manage-assets" element={<ManageAssets />} />
       <Route path="leave-type" element={<LeaveType />} />
       <Route path="employeement-type" element={<EmployeementType/>} />
+      <Route path="short-leave-type" element={<ShortLeaveType/>} />
+
 
 
     </>
