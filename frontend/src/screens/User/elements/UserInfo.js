@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { commonStyles } from '../../../styles/common';
 import { loadAllOrganizationsInfo } from '../../../api/user';
 
-const UserInfo = ({ disabled, formData, changePageNumber, handleInputChange, showButton }) => {
+const UserInfo = ({ disabled, formData, changePageNumber, handleInputChange, showButton,trigger }) => {
     const [errors, setErrors] = React.useState({
         roleType: false,
         grossSalary: false,
@@ -28,18 +28,22 @@ const UserInfo = ({ disabled, formData, changePageNumber, handleInputChange, sho
             if ( !formData[field]) {
                 newErrors[field] = true;
                 hasErrors = true;
+                trigger = true
             }
             if(!formData?.drivingLiscence?.number){
                 numbersError.drivingLiscenceNumber = true;
                  hasErrors = true;
+                 trigger = true
             }
             if(!formData?.passport?.number){
                 numbersError.passportNumber = true;
                  hasErrors = true;
+                 trigger = true
             }
             if(!formData?.nic?.number){
                 numbersError.nicNumber = true;
                  hasErrors = true;
+                 trigger = true
             }  
         }
         setNumError(numbersError)

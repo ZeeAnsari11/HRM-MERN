@@ -3,6 +3,7 @@ import { Toggler } from '../../../components/FormItems/Toggler'
 import { commonStyles } from '../../../styles/common'
 
 const Configuration = ({ disabled, formData, changePageNumber, handleInputChange, showButton }) => {
+  
   return (
     <div className='space-y-2'>
       <Toggler

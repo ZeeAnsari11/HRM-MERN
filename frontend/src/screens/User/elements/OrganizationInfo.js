@@ -13,7 +13,8 @@ import { selectEmploymentTypes } from '../../../states/reducers/slices/backend/E
 import { selectOrganizationDesignation } from '../../../states/reducers/slices/backend/Designation';
 import { selectUserDepartment } from '../../../states/reducers/slices/backend/Department';
 
-const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputChange, showButton }) => {
+const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputChange, showButton, skip , trigger }) => {
+    console.log("=====formData.designation._id======",formData.designation._id);
     const dispatcher = useDispatch();
     const userOrgId = useSelector(selectCurrentUserOrg);
     const branchId = useSelector(selectCurrentUserBranch);
@@ -40,14 +41,18 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
             if (!formData[field]) {
                 newErrors[field] = true;
                 hasErrors = true;
+                trigger = true
             } else {
                 newErrors[field] = false;
             }
+        console.log("====formData[field]==",formData[field]);
+        console.log("====newErrors[field]==",newErrors[field]);
+
         }
-        
         if (formData.roaster?.restDays?.length === 0) {
-            newErrors['restDays'] = true
+            newErrors['restDays'] = tru
             hasErrors = true;
+            trigger = true
         }
         else {
             newErrors['restDays'] = false
@@ -60,7 +65,6 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
-        console.log(validator(), "validator")
         if (validator()) {
             changePageNumber();
         }
@@ -68,6 +72,9 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
 
     const handleInputChangeWithValidation = (e) => {
         handleInputChange(e);
+        console.log("=====e.target.value===",e.target.value);
+        console.log("=====e.target.name===",e.target.name);
+
         setErrors((prevErrors) => ({
             ...prevErrors,
             [e.target.name]: e.target.value ? false : true,
@@ -99,31 +106,33 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
     };
     return (
         <form className="lg:col-span-2 space-y-4" onSubmit={handleFormSubmit}>
+           {skip? '' : 
             <div className="md:col-span-5">
-                <label htmlFor="full_name">Department</label>
-                <div className="flex space-x-2">
-                    <select name='department' id="department" disabled={disabled} value={formData.department} className={
-                        errors.department
-                            ? `${commonStyles.input} border-red-500`
-                            : commonStyles.input
-                    } onChange={handleInputChangeWithValidation}>
-                        <option value={''}>Select Department</option>
-                        {
-                            departments.map((department) => {
-                                return <option key={department._id} value={department._id}>{department.name}</option>
-                            })
-                        }
-                    </select>
-                    <Link to={'/dashboard/departments'} className='bg-gray-100 flex justify-center items-start rounded-md hover:bg-gray-300'><FontAwesomeIcon icon={faPlus} className='w-3 h-3 p-4'/></Link>
-                </div>
-                {errors.department && (
-                    <span className="text-red-500">Please select a department.</span>
-                )}
+            <label htmlFor="full_name">Department</label>
+            <div className="flex space-x-2">
+                <select name='department' id="department" disabled={disabled} value={formData.department} className={
+                    errors.department
+                        ? `${commonStyles.input} border-red-500`
+                        : commonStyles.input
+                } onChange={handleInputChangeWithValidation}>
+                    <option value={''}>Select Department</option>
+                    {
+                        departments.map((department) => {
+                            return <option key={department._id} value={department._id}>{department.name}</option>
+                        })
+                    }
+                </select>
+                <Link to={'/dashboard/departments'} className='bg-gray-100 flex justify-center items-start rounded-md hover:bg-gray-300'><FontAwesomeIcon icon={faPlus} className='w-3 h-3 p-4'/></Link>
             </div>
+            {errors.department && (
+                <span className="text-red-500">Please select a department.</span>
+            )}
+        </div>
+        }
             <div className="md:col-span-5">
                 <label htmlFor="full_name">Designation</label>
                 <div className="flex space-x-2">
-                    <select disabled={disabled} name='designation' id="designation" value={formData.designation} onChange={handleInputChangeWithValidation} className={
+                    <select disabled={disabled} name='designation' id="designation" value={formData.designation._id} onChange={handleInputChangeWithValidation} className={
                         errors.designation
                             ? `${commonStyles.input} border-red-500`
                             : commonStyles.input
@@ -138,7 +147,7 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
                     <Link to={'/dashboard/desiginations'} className='bg-gray-100 flex justify-center items-start rounded-md hover:bg-gray-300'><FontAwesomeIcon icon={faPlus} className='w-3 h-3 p-4'/></Link>
                 </div>
                 {errors.designation && (
-                    <span className="text-red-500">Please select a designation.</span>
+                    <span className="text-red-500">Please select designation.</span>
                 )}
             </div>
             <div className="md:col-span-5">
