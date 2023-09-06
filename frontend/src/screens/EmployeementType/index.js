@@ -8,6 +8,7 @@ import Table from '../../components/Table';
 import { commonStyles } from '../../styles/common';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 
 const EmployeementType = () => {
   let orgId;
@@ -29,8 +30,13 @@ const EmployeementType = () => {
     setToggleChange(!toggleChange);
   }
 
+  const [loader, setLoader] = useState(true);
+
+  const employementLoader = () => {
+    setLoader(false)
+  }
   let LoadData = () => {
-    getEmployementTypesByOrgId(orgId, setEmploymentTypes)
+    getEmployementTypesByOrgId(orgId, setEmploymentTypes, employementLoader)
   }
 
   const handleInputChange = (e) => {
@@ -88,7 +94,7 @@ const EmployeementType = () => {
       handler: handleCreateEmployeementType,
     }
   ]
-
+  if(!loader)
   return (
      <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
      <div className="mt-6">
@@ -111,6 +117,7 @@ const EmployeementType = () => {
      </div>
  </main>
   );
+  else return <ComponentLoader color="black" />;
 };
 
 export default EmployeementType;

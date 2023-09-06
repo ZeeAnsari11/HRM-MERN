@@ -3,10 +3,13 @@ import { timeSlotsRoute } from "./configuration";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
 
-export const getTimeSlotsByOrgId = (orgId, setTimeSlots) => {
+export const getTimeSlotsByOrgId = (orgId, setTimeSlots, trigger = null) => {
     axios.get(timeSlotsRoute.getTimeSlotsByOrgId+orgId)
     .then((response) => {
         setTimeSlots(response.data.response)
+        if(trigger !== null){
+            trigger()
+        }
     })
     .catch((err) => {
         console.log(err);

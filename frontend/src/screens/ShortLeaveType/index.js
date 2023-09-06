@@ -9,6 +9,7 @@ import Table from '../../components/Table';
 import { commonStyles } from '../../styles/common';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 
 const ShortLeaveType = () => {
   let orgId;
@@ -36,8 +37,12 @@ const ShortLeaveType = () => {
     setToggleChange(!toggleChange);
   }
 
+  const [loader, setLoader] = useState(true);
+  const shortleaveLoader = () => {
+    setLoader(false)
+  }
   let LoadData = () => {
-    getShortLeaveTypeByOrgId(orgId, setShortLeaveType)
+    getShortLeaveTypeByOrgId(orgId, setShortLeaveType, shortleaveLoader)
   }
 
   const handleInputChange = (e) => {
@@ -112,6 +117,7 @@ const ShortLeaveType = () => {
     }
   ]
 
+  if(!loader)
   return (
     <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
       <div className="mt-6">
@@ -134,6 +140,7 @@ const ShortLeaveType = () => {
       </div>
     </main>
   );
+  else return <ComponentLoader color="black" />;
 };
 
 export default ShortLeaveType;

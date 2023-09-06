@@ -5,6 +5,8 @@ import axios from 'axios';
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
 
+
+
 export const getLeaveRequestByOrganizationId = (org_id, dispatcher) => {
     axios.get(leaveRequestRoutes.getLeaveTypes+org_id)
     .then((response) => {
@@ -15,10 +17,13 @@ export const getLeaveRequestByOrganizationId = (org_id, dispatcher) => {
     })
 }
 
-export const getShortLeaveTypesByOrganizationId = (org_id, dispatcher) => {
+export const getShortLeaveTypesByOrganizationId = (org_id, dispatcher, trigger = null) => {
     axios.get(shortLeaveRoutes.getShortLeaveTypes+org_id)
     .then((response) => {
         dispatcher(setShortLeaveTypes(response.data.response))
+        if(trigger !== null){
+            trigger()
+        }
     })
     .catch((err) => {
         // console.log(err);

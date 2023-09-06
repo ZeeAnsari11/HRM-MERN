@@ -1,39 +1,36 @@
 import { Disclosure } from "@headlessui/react";
 import { Link } from "react-router-dom";
-import image from "../../../assets/NexHr.webp"
+import image from "../../../assets/NexHr.webp";
 const Navbar = () => {
-  const navigation = [
-    "Features",
-    "Services",
-    "Gallery",
-    "Blog",
-  ];
+  const navigation = ["Features", "Services", "Gallery", "Blog"];
 
   return (
-    <div className="w-full backdrop-blur-lg fixed px-8 tablet:px-2 shadow-md">
-      <nav className="flex flex-wrap items-center justify-between px-8 py-2 lg:justify-between xl:px-0">
+    <div className="w-full backdrop-blur-lg fixed top-0 px-8 tablet:px-2 shadow-md">
+      <nav className="max-w-screen-xl mx-auto flex flex-wrap items-center justify-between px-3 py-2 lg:justify-between xl:px-0">
         {/* Logo  */}
         <Disclosure>
           {({ open }) => (
             <>
               <div className="flex flex-wrap items-center justify-between w-full lg:w-auto">
                 <Link to="/">
-                      <img
-                        src={image}
-                        alt="N"
-                        width="32"
-                        height="32"
-                        className="w-[160px]"
-                      />
+                  <img
+                    src={image}
+                    alt="N"
+                    width="32"
+                    height="32"
+                    className="w-[160px]"
+                  />
                 </Link>
 
                 <Disclosure.Button
                   aria-label="Toggle Menu"
-                  className={`px-2 ml-auto text-gray-500 rounded-md lg:hidden hover:text-[#1567B1] focus:text-[#1567B1] focus:outline-none`}>
+                  className={`px-2 ml-auto text-gray-500 rounded-md lg:hidden hover:text-[#1567B1] focus:text-[#1567B1] focus:outline-none`}
+                >
                   <svg
                     className="w-6 h-6 fill-current"
                     xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24">
+                    viewBox="0 0 24 24"
+                  >
                     {open && (
                       <path
                         fillRule="evenodd"
@@ -53,11 +50,23 @@ const Navbar = () => {
                 <Disclosure.Panel className="flex flex-wrap w-full my-5 lg:hidden">
                   <>
                     {navigation.map((item, index) => (
-                      <a key={index} href="/" className={`w-full px-4 py-2 -ml-4 text-gray-500 rounded-md hover:text- focus:text-[#1567B1] focus:bg-indigo-100 focus:outline-none`}>
-                          {item}
+                      <a
+                        key={index}
+                        href="/"
+                        className={`w-full px-4 py-2 -ml-4 text-gray-500 rounded-md hover:text- focus:text-[#1567B1] focus:bg-indigo-100 focus:outline-none`}
+                      >
+                        {item}
                       </a>
                     ))}
                   </>
+                  <div className="lg:hidden flex w-full">
+                <Link
+                  to="/login"
+                  className={`px-6 py-2 text-white bg-[#1567B1] roerunded-md md:ml-5 w-full text-center mt-4`}
+                >
+                  Login
+                </Link>
+              </div>
                 </Disclosure.Panel>
               </div>
             </>
@@ -69,8 +78,11 @@ const Navbar = () => {
           <ul className="items-center justify-end flex-1 pt-6 list-none lg:pt-0 lg:flex">
             {navigation.map((menu, index) => (
               <li className="mr-3 nav__item" key={index}>
-                <a href="/" className={`inline-block px-4 py-2 text-lg font-normal text-gray-800 no-underline rounded-md hover:text-[#1567B1] focus:text-[#1567B1] focus:bg-indigo-100 focus:outline-none`}>
-                    {menu}
+                <a
+                  href="/"
+                  className={`inline-block px-4 py-2 text-lg font-normal text-gray-800 no-underline rounded-md hover:text-[#1567B1] focus:text-[#1567B1] focus:bg-indigo-100 focus:outline-none`}
+                >
+                  {menu}
                 </a>
               </li>
             ))}
@@ -78,13 +90,16 @@ const Navbar = () => {
         </div>
 
         <div className="hidden mr-3 space-x-4 lg:flex nav__item">
-          <Link to="/login" className={`px-6 py-2 text-white bg-[#1567B1] rounded-md md:ml-5`}>
-              Login
+          <Link
+            to="/login"
+            className={`px-6 py-2 text-white bg-[#1567B1] rounded-md md:ml-5`}
+          >
+            Login
           </Link>
         </div>
       </nav>
     </div>
   );
-}
+};
 
 export default Navbar;

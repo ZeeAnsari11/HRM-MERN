@@ -8,6 +8,7 @@ import Table from '../../components/Table';
 import { commonStyles } from '../../styles/common';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 
 const LeaveType = () => {
   let orgId;
@@ -37,8 +38,13 @@ const LeaveType = () => {
     setToggleChange(!toggleChange);
   }
 
+  const [loader, setLoader] = useState(true);
+  const leaveLoader = () => {
+    setLoader(false)
+  }
+
   let LoadData = () => {
-    getLeaveTypeByOrgId(orgId, setLeaveType)
+    getLeaveTypeByOrgId(orgId, setLeaveType, leaveLoader)
   }
 
   // const handleInputChange = (e) => {
@@ -124,6 +130,7 @@ const LeaveType = () => {
     }
   ]
 
+  if(!loader)
   return (
       <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
       <div className="mt-6">
@@ -146,6 +153,7 @@ const LeaveType = () => {
       </div>
   </main>
   );
+  else return <ComponentLoader color="black" />;
 };
 
 export default LeaveType;

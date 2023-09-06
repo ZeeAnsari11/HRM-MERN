@@ -9,6 +9,7 @@ import TimeSlotsView from './TimeSlotsView';
 import { commonStyles } from '../../styles/common';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 
 const TimeSlots = () => {
   let orgId = useSelector(selectCurrentUserOrg);
@@ -87,8 +88,14 @@ const TimeSlots = () => {
     setToggleChange(!toggleChange);
   }
 
+  const [loader, setLoader] = useState(true);
+
+  const timeslotsLoader = () => {
+    setLoader(false)
+  }
+
   let LoadData = () => {
-    getTimeSlotsByOrgId(orgId, setTimeSlots)
+    getTimeSlotsByOrgId(orgId, setTimeSlots, timeslotsLoader)
   }
 
   const handleCreateTimeSlots = (trigger) => {
@@ -220,6 +227,7 @@ const TimeSlots = () => {
     }
   ]
 
+  if(!loader)
   return (
     <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
       <div className="mt-6">
@@ -262,6 +270,7 @@ const TimeSlots = () => {
       </div>
     </main>
   );
+  else return <ComponentLoader color="black" />;
 };
 
 export default TimeSlots;

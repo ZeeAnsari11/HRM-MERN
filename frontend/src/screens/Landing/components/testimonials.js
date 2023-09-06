@@ -1,13 +1,12 @@
-import Container from "./container";
 import React from "react";
 
 const Testimonials  = () => {
   return (
-    <Container>
-      <div className="grid gap-10 lg:grid-cols-2 xl:grid-cols-3 px-8 tablet:px-2">
+    <div>
+      <div className="grid gap-10 lg:grid-cols-2 xl:grid-cols-3 px-8 tablet:px-2 mt-6 max-w-screen-xl mx-auto">
         <div className="lg:col-span-2 xl:col-auto">
-          <div className="flex flex-col justify-between w-full h-full bg-gray-200 px-14 rounded-2xl py-14 dark:bg-trueGray-800">
-            <p className="text-2xl leading-normal ">
+          <div className="flex flex-col justify-between w-full h-full bg-gray-200 px-6 rounded-2xl py-14 dark:bg-trueGray-800">
+            <p className="text-lg leading-normal ">
             I have been using the HRMS application for my organization for the past six months, and I must say it has been a game-changer for our HR department. The level of automation and ease of use it offers have made our HR processes more efficient than ever before.
             </p>
 
@@ -19,8 +18,8 @@ const Testimonials  = () => {
           </div>
         </div>
         <div className="">
-          <div className="flex flex-col justify-between w-full h-full bg-gray-200 px-14 rounded-2xl py-14 dark:bg-trueGray-800">
-            <p className="text-2xl leading-normal ">
+          <div className="flex flex-col justify-between w-full h-full bg-gray-200 px-6 rounded-2xl py-14 dark:bg-trueGray-800">
+            <p className="text-lg leading-normal ">
               With this HRMS, managing employee data and leave requests is a breeze. The self-service feature is a huge time-saver, and the integration options work seamlessly with our existing systems.
             </p>
 
@@ -32,8 +31,8 @@ const Testimonials  = () => {
           </div>
         </div>
         <div className="">
-          <div className="flex flex-col justify-between w-full h-full bg-gray-200 px-14 rounded-2xl py-14 dark:bg-trueGray-800">
-            <p className="text-2xl leading-normal ">
+          <div className="flex flex-col justify-between w-full h-full bg-gray-200 px-6 rounded-2xl py-14 dark:bg-trueGray-800">
+            <p className="text-lg leading-normal ">
               We love the robust security measures in the HRMS. Our sensitive employee data is well-protected, and we trust the system to comply with data protection regulations.
             </p>
 
@@ -45,7 +44,7 @@ const Testimonials  = () => {
           </div>
         </div>
       </div>
-    </Container>
+    </div>
   );
 }
 

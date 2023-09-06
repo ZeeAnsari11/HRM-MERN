@@ -8,6 +8,7 @@ import Table from '../../components/Table';
 import { commonStyles } from '../../styles/common';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 
 const Allowances = () => {
   let orgId;
@@ -31,9 +32,14 @@ const Allowances = () => {
   const changeToggler = () => {
     setToggleChange(!toggleChange);
   }
+  
+  const [loader, setLoader] = useState(true)
+  const allowanceLoader = () =>{
+    setLoader(false)
+  }
 
   let LoadData = () => {
-    getAllowancesByOrgId(orgId, setAllowances)
+    getAllowancesByOrgId(orgId, setAllowances, allowanceLoader)
   }
 
   const handleInputChange = (e) => {
@@ -101,6 +107,7 @@ const Allowances = () => {
     }
   ]
 
+  if(!loader)
   return (
 
         <main className="mx-auto px-4 sm:px-6 pt-4">
@@ -122,6 +129,7 @@ const Allowances = () => {
           } />
       </main>
   );
+  else return <ComponentLoader color="black" />;
 };
 
 export default Allowances;

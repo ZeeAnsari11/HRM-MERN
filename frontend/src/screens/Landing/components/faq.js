@@ -1,4 +1,3 @@
-import Container from "./container";
 import { Disclosure } from "@headlessui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
@@ -6,8 +5,8 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 const Faq = () => {
   return (
-    <Container className="!p-0">
-      <div className="w-full max-w-2xl p-2 mx-auto rounded-2xl">
+    <div className="!p-0">
+      <div className="w-full max-w-2xl p-2 mx-auto rounded-2xl mt-8">
         {faqdata.map((item, index) => (
           <div key={item.question} className="mb-5">
             <Disclosure>
@@ -30,7 +29,7 @@ const Faq = () => {
           </div>
         ))}
       </div>
-    </Container>
+    </div>
   );
 }
 

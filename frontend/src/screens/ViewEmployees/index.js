@@ -3,11 +3,11 @@ import { selectAllUsers, selectOrgId } from '../../states/reducers/slices/backen
 import { useDispatch, useSelector } from 'react-redux'
 
 import EmployeeViewAndEdit from './EmployeeViewAndEdit';
-import React from 'react'
-import TimeSlotsView from '../TimeSlots/TimeSlotsView'
+import React, { useState } from 'react'
 import { getAllUsersByOrganization } from '../../api/user'
 import { useEffect } from 'react'
 import { useMemo } from 'react'
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 
 function ViewEmployees() {
 
@@ -50,8 +50,13 @@ function ViewEmployees() {
 
   const organization = useSelector(selectOrgId)
   const dispatcher = useDispatch()
+
+  const [loader, setLoader] = useState(true)
+  const viewemployeeLoader = () =>{
+    setLoader(false)
+  }
   useEffect(() => {
-    getAllUsersByOrganization(organization, dispatcher)
+    getAllUsersByOrganization(organization, dispatcher, viewemployeeLoader)
   }, [])
 
   const apiData = useSelector(selectAllUsers)
@@ -121,6 +126,7 @@ function ViewEmployees() {
     }
 
   }
+  if(!loader)
   return (
     <div className="bg-gray-100 text-gray-900">
       <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
@@ -130,6 +136,7 @@ function ViewEmployees() {
       </main>
     </div>
   );
+  else return <ComponentLoader color="black" />;
 }
 
 export default ViewEmployees;

@@ -1,4 +1,3 @@
-import React from "react";
 import { commonStyles } from "../../styles/common";
 import { selectCurrentUser } from "../../states/reducers/slices/backend/UserSlice";
 import { useSelector } from "react-redux";
@@ -34,8 +33,10 @@ const probations = {
 
 
 const Probation = () => {
-  const { employment, duration, end_date, status } = probations;
+
+  const { duration, end_date, status } = probations;
   const currentUser = useSelector(selectCurrentUser)
+  
   return (
     <div className="p-4 tablet:p-8">
       <div className="flex flex-col tablet:flex-row justify-between">

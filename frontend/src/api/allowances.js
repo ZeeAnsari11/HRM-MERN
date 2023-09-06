@@ -17,11 +17,13 @@ export const createAllowance = (formData, changeToggler, trigger) => {
         })
 }
 
-export const getAllowancesByOrgId = (orgId, setAssetTypes) => {
+export const getAllowancesByOrgId = (orgId, setAssetTypes, trigger = null) => {
     axios.get(allowances.getAllowancesByOrgId + orgId)
         .then((response) => {
-
             setAssetTypes(response.data.response)
+            if(trigger !== null){
+                trigger()
+            }
         })
         .catch((err) => {
             console.log(err);

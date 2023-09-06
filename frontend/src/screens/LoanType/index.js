@@ -12,6 +12,7 @@ import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserS
 import { setOrganizationDesignation } from '../../states/reducers/slices/backend/Designation';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 
 const LoanType = () => {
   let dispatcher = useDispatch();
@@ -27,6 +28,8 @@ const LoanType = () => {
     type: "",
     designations: "",
 });
+
+  const [loader, setLoader] = useState(true);
   useEffect(() => {
     LoadData();
   }, [toggleChange]);
@@ -35,13 +38,17 @@ const LoanType = () => {
     setToggleChange(!toggleChange);
   };
 
+  const loanLoader = () =>{
+    setLoader(false)
+  }
+
   let LoadData = () => {
     axios
       .get(organizationRoutes.getDesignationsByOrgId + orgId)
       .then((rsp) => {
         dispatcher(setOrganizationDesignation(rsp.data.response));
         setDesiginations(rsp.data.response);
-        getLoanTypesByOrgId(orgId, setLoanTypes);
+        getLoanTypesByOrgId(orgId, setLoanTypes, loanLoader);
       })
       .catch((e) => console.log(e));
   };
@@ -130,6 +137,7 @@ const LoanType = () => {
       handler: handleUpdateLoanType,
     },
   ];
+  if(!loader)
   return (
          <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
          <div className="mt-6">
@@ -152,6 +160,7 @@ const LoanType = () => {
          </div>
      </main>
   );
+  else return <ComponentLoader color="black"/>
 };
 
 export default LoanType;

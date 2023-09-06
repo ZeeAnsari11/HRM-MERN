@@ -12,7 +12,7 @@ import Testimonials from "./components/testimonials";
 const Landing = () => {
   return (
     <div className="scroll-smooth">
-        <div className="h-screen tablet:h-full">
+        <div className="tablet:h-full">
             <Navbar />
             <Hero />
         </div>

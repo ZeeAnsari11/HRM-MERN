@@ -9,6 +9,7 @@ import { createBranch } from '../../api/branches';
 import { getBranchesByOrgId } from '../../api/branches';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 
 const Branches = () => {
   let orgId;
@@ -38,8 +39,13 @@ const Branches = () => {
     setToggleChange(!toggleChange);
   }
 
+  const [loader, setLoader] = useState(true);
+  const branchLoader = () => {
+    setLoader(false)
+  }
+
   let LoadData = () => {
-    getBranchesByOrgId(orgId, setBranches)
+    getBranchesByOrgId(orgId, setBranches,branchLoader)
   }
 
   const handleInputChange = (e) => {
@@ -125,6 +131,7 @@ const Branches = () => {
     }
   ]
 
+  if(!loader)
   return (
     <main className="mx-auto px-4 sm:px-6 pt-4">
       <Table columns={columns} data={data}
@@ -145,6 +152,7 @@ const Branches = () => {
         } />
     </main>
   );
+  else return <ComponentLoader color="black" />;
 };
 
 export default Branches;

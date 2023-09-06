@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <div className="relative">
       <Container className="border-t-gray-400">
-        <div className="flex flex-wrap tablet:space-y-4 max-w-screen-xl justify-between pt-10 mt-5 border-t border-gray-100 px-8 tablet:px-2">
+        <div className="max-w-screen-xl mx-auto flex flex-wrap tablet:space-y-4 justify-between pt-10 mt-5 border-t border-gray-100 px-4 lg:px-12">
           <div>
             <a href="/">
               <img src={image} alt="N" width="32" height="32"  className="w-[160px] xl:px-0  "/>

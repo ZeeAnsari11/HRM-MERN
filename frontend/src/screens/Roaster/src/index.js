@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 
 import Calendar from './Calendar';
-import React from 'react';
 import { getCurrentUser } from '../../../api/user';
 import { selectCurrentUser } from '../../../states/reducers/slices/backend/UserSlice';
 import { useEffect } from 'react';
@@ -9,7 +8,7 @@ import { useEffect } from 'react';
 function Roaster() {
 
   // Sample roster data with start and end times for each day of the week
-  
+
   const dispatcher = useDispatch()
   useEffect(() => {
     getCurrentUser(dispatcher)

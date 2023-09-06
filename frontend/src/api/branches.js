@@ -18,10 +18,13 @@ export const createBranch = (formData, changeToggler, trigger) => {
         })
 }
 
-export const getBranchesByOrgId = (orgId, setBranches) => {
+export const getBranchesByOrgId = (orgId, setBranches,trigger = null) => {
     axios.get(organizationRoutes.getBranchesByOrgId + orgId)
         .then((response) => {
             setBranches(response.data.branches)
+            if(trigger !== null){
+                trigger()
+            }
         })
         .catch((err) => {
             console.log(err);
