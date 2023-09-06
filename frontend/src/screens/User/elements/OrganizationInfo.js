@@ -50,7 +50,7 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
 
         }
         if (formData.roaster?.restDays?.length === 0) {
-            newErrors['restDays'] = tru
+            newErrors['restDays'] = true
             hasErrors = true;
             trigger = true
         }
