@@ -143,8 +143,11 @@ function Table({ columns, data, element }) {
     useSortBy,
     usePagination
   );
+  console.log("=========data========",data);
+  
+  console.log("=========page========",page);
   // Render the UI for your table
-  if (page.length > 0)
+  if (data.length > 0)
   {
     return (
       <>

@@ -71,7 +71,7 @@ export const Menus = [
             { title: "View Attendece", font: faCalendarCheck, to:"/dashboard/attendence"},
         ]
     },
-
+    { title: "Tax Rules", access:"Admin", font: faCircleDollarToSlot, child:[], to:"/dashboard/tax-rules"  },
     { title: "Payslips", access:"Admin", font: faCircleDollarToSlot, child:[], to:"/dashboard/payslips"  },
     { title: "Allowances",access:"Admin", font: faCalendarCheck, child:[], to:"/dashboard/allowances"  },
     { title: "Profile ", font: faUserCircle, gap: true, child:[], to:"/dashboard/profile"},

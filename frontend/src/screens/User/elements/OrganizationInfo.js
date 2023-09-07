@@ -14,7 +14,6 @@ import { selectOrganizationDesignation } from '../../../states/reducers/slices/b
 import { selectUserDepartment } from '../../../states/reducers/slices/backend/Department';
 
 const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputChange, showButton, skip , trigger }) => {
-    console.log("=====formData.designation._id======",formData.designation._id);
     const dispatcher = useDispatch();
     const userOrgId = useSelector(selectCurrentUserOrg);
     const branchId = useSelector(selectCurrentUserBranch);
@@ -58,8 +57,7 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
             newErrors['restDays'] = false
         }
         
-        setErrors(newErrors);
-        
+        setErrors(newErrors);  
         return hasErrors;
     };
 

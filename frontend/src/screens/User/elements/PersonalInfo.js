@@ -3,7 +3,6 @@ import React from 'react'
 import { commonStyles } from '../../../styles/common';
 
 const PersonalInfo = ({ disabled, changePageNumber, handleInputChange, formData, showButton, skip ,trigger}) => {
-    console.log("===formData.phoneNumber====",formData.phoneNumber);
     const [errors, setErrors] = React.useState({
         firstName: false,
         lastName: false,
