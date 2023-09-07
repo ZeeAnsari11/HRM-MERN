@@ -21,6 +21,7 @@ import { Route } from "react-router-dom";
 import Settings from "./screens/Settings";
 import ShortLeaveType from "./screens/ShortLeaveType";
 import Skeleton from "./screens/Skeleton";
+import TaxRules from "./screens/TaxRules";
 import TimeSheet from "./screens/TimeSheet";
 import TimeSlots from "./screens/TimeSlots";
 import User from "./screens/User";
@@ -48,6 +49,8 @@ export const privateRoutes = () => {
       <Route path="leave-type" element={<LeaveType />} />
       <Route path="employeement-type" element={<EmployeementType/>} />
       <Route path="short-leave-type" element={<ShortLeaveType/>} />
+      <Route path="tax-rules" element={<TaxRules/>} />
+
 
 
 

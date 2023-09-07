@@ -1,11 +1,15 @@
-import express from "express";
 import {
-    creatingTaxRule, updateTaxRuleById, deleteTaxRuleById, getTaxRuleId
+    creatingTaxRule,
+    deleteTaxRuleById,
+    getTaxRuleByOrganizationId,
+    getTaxRuleId,
+    updateTaxRuleById
 } from '../controllers/taxRule.js'
+
+import express from "express";
 
 export const taxRuleRoute = express.Router();
 
 taxRuleRoute.route('/taxRule/new').post(creatingTaxRule)
-taxRuleRoute.route('/taxRule/update/:id').put(updateTaxRuleById)
-taxRuleRoute.route('/taxRule/delete/:id').delete(deleteTaxRuleById)
-taxRuleRoute.route('/taxRule/:id').get(getTaxRuleId)
+taxRuleRoute.route('/taxRule/:id').put(updateTaxRuleById).delete(deleteTaxRuleById).get(getTaxRuleId)
+taxRuleRoute.route('/taxRule/organization/:id').get(getTaxRuleByOrganizationId)

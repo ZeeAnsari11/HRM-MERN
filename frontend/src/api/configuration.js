@@ -20,7 +20,9 @@ export const organizationRoutes = {
     getLeaveTypeByOrgId: baseUrl+'/leave-types/organization/',
     getShortLeaveTypeByOrgId: baseUrl+'/short-leave/organization/',
     getUsersByFilter: baseUrl+'/user/filter-user/organization',
-    getEmployementTypesByOrgId: baseUrl+'/employmentType/all/'
+    getEmployementTypesByOrgId: baseUrl+'/employmentType/all/',
+    getTaxRulesByOrgId: baseUrl+'/taxRule/organization/'
+
 }
 
 export const leaveRequestRoutes = {
@@ -163,6 +165,12 @@ export const branchRoute = {
     createBranch : baseUrl+'/branch/new',
     updateBranchById :baseUrl + '/branch/',
     deleteBranchById : baseUrl +'/branch/'
+}
+
+export const taxRuleRoute = {
+    createTaxRule : baseUrl+'/taxRule/new/',
+    updateTaxRuleById :baseUrl + '/taxRule/',
+    deleteTaxRuleById : baseUrl +'/taxRule/'
 }
 
 export const employeementTypeRoute = {
