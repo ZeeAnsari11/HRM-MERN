@@ -21,12 +21,14 @@ export const getLoanTypesByOrgId = (orgId, setAssetTypes, trigger = null) => {
     axios.get(loanType.getAllowancesByOrgId + orgId)
         .then((response) => {
             setAssetTypes(response.data.response);
-            if(trigger !== null){
-                trigger()
-            }
         })
         .catch((err) => {
             console.log(err);
+        })
+        .finally(() =>{
+            if(trigger !== null){
+                trigger()
+            }
         })
 }
 

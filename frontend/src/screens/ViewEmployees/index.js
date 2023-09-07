@@ -57,7 +57,7 @@ function ViewEmployees() {
   }
   useEffect(() => {
     getAllUsersByOrganization(organization, dispatcher, viewemployeeLoader)
-  }, [])
+  })
 
   const apiData = useSelector(selectAllUsers)
 

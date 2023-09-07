@@ -29,19 +29,19 @@ const Departments = () => {
     name: "",
     branch: "",
   });
- 
+
   useEffect(() => {
     LoadData();
-  }, [toggleChange]);
-  const [loader, setLoader] = useState(true);
-  const departmentLoader = () => {
-    setLoader(false);
-  };
+  });
+
   const changeToggler = () => {
     setToggleChange(!toggleChange);
   };
 
- 
+  const [loader, setLoader] = useState(true);
+  const departmentLoader = () => {
+    setLoader(false);
+  };
   let LoadData = () => {
     getDepartmentsByOrgId(orgId, setDepartment);
     getBranchesByOrgId(orgId, setBranches, departmentLoader);

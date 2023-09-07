@@ -46,9 +46,12 @@ const Desiginations = () => {
         console.log(rsp.data.response)
 
         // Disable loader to decide btw not found & data
-        setLoader(false);
+        
       })
-      .catch((e) => console.log(e));
+      .catch((e) => console.log(e))
+      .finally(() =>{
+        setLoader(false);
+    })
   };
 
   const changeToggler = () => {

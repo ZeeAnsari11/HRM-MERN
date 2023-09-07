@@ -23,12 +23,14 @@ export const getEmployementTypesByOrgId = (orgId, setEmploymentTypes, trigger = 
     axios.get(organizationRoutes.getEmployementTypesByOrgId + orgId)
         .then((response) => {
             setEmploymentTypes(response.data.response)
-            if(trigger !== null){
-                trigger()
-            }
         })
         .catch((err) => {
             console.log(err);
+        })
+        .finally(() =>{
+            if(trigger !== null){
+                trigger()
+            }
         })
 }
 

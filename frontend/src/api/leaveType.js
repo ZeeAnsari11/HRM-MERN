@@ -23,12 +23,14 @@ export const getLeaveTypeByOrgId = (orgId, setLeaveType, trigger = null) => {
     axios.get(organizationRoutes.getLeaveTypeByOrgId + orgId)
         .then((response) => {
             setLeaveType(response.data.response)
-            if(trigger !== null){
-                trigger()
-            }
         })
         .catch((err) => {
             console.log(err);
+        })
+        .finally(() =>{
+            if(trigger !== null){
+                trigger()
+            }
         })
 }
 

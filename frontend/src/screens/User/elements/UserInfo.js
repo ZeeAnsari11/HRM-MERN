@@ -70,12 +70,12 @@ const UserInfo = ({ disabled, formData, changePageNumber, handleInputChange, sho
     const userOrgId = useSelector(selectCurrentUserOrg);
     const branchId = useSelector(selectCurrentUserBranch);
     const grades = useSelector(selectUserGrades)
-    const [frontFile, setFrontFile] = useState(null);
-    const [backFile, setBackFile] = useState(null);
+    const [setFrontFile] = useState(null);
+    const [setBackFile] = useState(null);
 
     useEffect(() => {
         loadAllOrganizationsInfo(dispatcher, userOrgId, branchId);
-    }, []);
+    });
 
     const handleFrontFileChange = (event) => {
         const file = event.target.files[0];

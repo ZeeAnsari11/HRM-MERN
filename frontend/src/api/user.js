@@ -185,16 +185,18 @@ export const getAllUsersByOrganization = (
         setAllUsers(
           response.data.users.filter((user) => {
             if (user.firstUser === false) return user;
-            if (trigger !== null) {
-              trigger();
-            }
           })
         )
       );
     })
     .catch((error) => {
       console.log(error);
-    });
+    })
+    .finally(() =>{
+      if(trigger !== null){
+          trigger()
+      }
+  })
 };
 
 export const updateUserById = (userId, data, trigger) => {

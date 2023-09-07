@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { selectUserForm, setUserForm } from "../../states/reducers/slices/backend/UserSlice";
-import { useDispatch, useSelector } from "react-redux";
 
 import Configuration from "../User/elements/Configuration";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

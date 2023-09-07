@@ -29,13 +29,15 @@ export const getShortLeaveTypeByOrgId = (
     .get(organizationRoutes.getShortLeaveTypeByOrgId + orgId)
     .then((response) => {
       setLeaveType(response.data.response);
-      if (trigger !== null) {
-        trigger();
-      }
     })
     .catch((err) => {
       console.log(err);
-    });
+    })
+    .finally(() =>{
+      if(trigger !== null){
+          trigger()
+      }
+  })
 };
 
 export const updateShortLeaveTypeById = (id, formData, trigger) => {
