@@ -317,8 +317,8 @@ export const getAllUsersByOrganizationId = (req, res, next) => {
         .then((organization) => {
             if (!organization) throw new Error("organization dont exist")
             UserModel.find({ organization: req.params.id })
-            .select('-roster')
-            .populate('designation')
+                .select('-roster')
+                .populate('designation')
                 .then((users) => {
                     if (users.length === 0) throw new Error("No users are there for this org.")
                     users.forEach((user) => {
@@ -365,6 +365,13 @@ export const getAllUsersByBranchId = (req, res, next) => {
 //// Delete User By Id ////
 export const deleteUserById = (req, res, next) => {
     // deleteById(req.params.id, res, next, UserModel);
+    let request = {
+        body: {
+            isActive : false
+        },
+        params : {id : req.params.id}
+    }
+    updateById(request, res, next, UserModel, "User")
 }
 
 //// Update User By Id ////
@@ -898,18 +905,18 @@ export const updateProfilePicture = (req, res, next) => {
 };
 
 export const selectUserBG_Shifter = (req, res, next) => {
-    
+
     UserModel.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true, runValidators: true })
-    .then((updatedDocument) => {
-        if (!updatedDocument) {
-            throw new Error(`User Not Found`);
-        }
-        res.status(200).json({
-            success: true,
-            Message: `BackGround Shifter Selected`
+        .then((updatedDocument) => {
+            if (!updatedDocument) {
+                throw new Error(`User Not Found`);
+            }
+            res.status(200).json({
+                success: true,
+                Message: `BackGround Shifter Selected`
+            });
+        })
+        .catch((error) => {
+            handleCatch(error, res, 500, next);
         });
-    })
-    .catch((error) => {
-        handleCatch(error, res, 500, next);
-    });
 }
