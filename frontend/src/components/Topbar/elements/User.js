@@ -81,7 +81,7 @@ import { selectCurrentUser } from "../../../states/reducers/slices/backend/UserS
 import { useNavigate } from "react-router-dom";
 
 const User = () => {
-  const key = "user";
+  // const key = "user";
   const dispatcher = useDispatch();
   const navigation = useNavigate();
   const { firstName, lastName, email } = useSelector(selectCurrentUser);

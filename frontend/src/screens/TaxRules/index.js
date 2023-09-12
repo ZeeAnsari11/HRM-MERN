@@ -32,16 +32,16 @@ const TaxRules = () => {
     percentage: '',
   });
 
+  let LoadData = () => {
+    getTaxRulesByOrgId(orgId, setTaxRules)
+  }
+
   useEffect(() => {
     LoadData()
-  }, [toggleChange]);
+  });
 
   const changeToggler = () => {
     setToggleChange(!toggleChange);
-  }
-
-  let LoadData = () => {
-    getTaxRulesByOrgId(orgId, setTaxRules)
   }
 
   const handleInputChange = (e) => {

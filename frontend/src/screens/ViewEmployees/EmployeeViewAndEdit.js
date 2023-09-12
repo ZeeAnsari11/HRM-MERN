@@ -26,9 +26,7 @@ export default function EmployeeViewAndEdit({ data }) {
     }
 
     const handleAction = ({id, isLineManager})=>{
-        if(!isLineManager && !isHOD){
-            
-        }
+        
     }
     const btnConfig = [
         {

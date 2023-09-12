@@ -1,5 +1,4 @@
-import { deleteBranch, updateBranchById } from '../../api/branches';
-import { faArrowAltCircleRight, faPencil } from '@fortawesome/free-solid-svg-icons';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';

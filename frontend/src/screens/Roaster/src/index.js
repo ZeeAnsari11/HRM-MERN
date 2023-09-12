@@ -12,7 +12,7 @@ function Roaster() {
   const dispatcher = useDispatch()
   useEffect(() => {
     getCurrentUser(dispatcher)
-  }, []);
+  });
   const user = useSelector(selectCurrentUser)
 
   const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];

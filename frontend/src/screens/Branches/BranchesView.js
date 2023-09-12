@@ -1,5 +1,5 @@
-import { deleteBranch, updateBranchById } from '../../api/branches';
-import { faArrowAltCircleRight, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { updateBranchById } from '../../api/branches';
+import { faArrowAltCircleRight } from '@fortawesome/free-solid-svg-icons';
 
 import CBForm from './CBForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -64,9 +64,9 @@ export default function BranchesView({ data }) {
         });
       };
 
-    const handleAction = (id) => {
-        deleteBranch(id);
-    }
+    // const handleAction = (id) => {
+    //     deleteBranch(id);
+    // }
 
     return <div className="flex items-center space-x-2 justify-center">
             <Modal

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Table, { StatusPill } from '../../components/Table';
-import { faArrowAltCircleRight, faEye, faPencil } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faPencil } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getMissingPunchesRquestsOfUser } from '../../api/missingPunchesRequests';
@@ -53,11 +53,11 @@ function ViewAttendenceRequests() {
                 </div>
             )
         }
-    ], [])
+    ], [handleAction])
 
 
     let userId = useSelector(selectUID)
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm] = useState("");
     const [AttendenceRequestHistory, setAttendenceRequestHistory] = useState([]);
 
     const convertToAMPM = (time) => {
@@ -74,7 +74,7 @@ function ViewAttendenceRequests() {
             .catch((error) => {
                 console.log(error);
             });
-    }, []);
+    });
     
     const filteredAttendenceHistory = AttendenceRequestHistory.filter((entry) =>
         entry.status.toLowerCase().includes(searchTerm.toLowerCase()))

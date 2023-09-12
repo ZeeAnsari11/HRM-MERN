@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { createAssetType, deleteAssetType, getAssetTypesByOrgId, updateAssetType } from '../../api/assetTypes';
-import { faArrowAltCircleRight, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { createAssetType, getAssetTypesByOrgId, updateAssetType } from '../../api/assetTypes';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 
 import ATForm from './ATForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -90,7 +90,7 @@ const AssetTypes = () => {
   });
   useEffect(() => {
     getAssetTypesByOrgId(orgId, setAssetTypes)
-  }, [toggleChange]);
+  }, [setAssetTypes, orgId]);
   const changeToggler = () => {
     setToggleChange(!toggleChange);
   }

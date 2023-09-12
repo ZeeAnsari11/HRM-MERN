@@ -1,4 +1,4 @@
-import { faCalendarCheck, faCalendarDay, faCalendarPlus, faCalendarTimes, faCalendarWeek, faCediSign, faChartArea, faCircleDollarToSlot, faCodePullRequest, faCoffee, faFileAlt, faGear, faHome, faNetworkWired, faTimeline, faUser, faUserCircle, faUserClock, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faCalendarCheck, faCalendarDay, faCalendarPlus, faCalendarTimes, faCalendarWeek, faChartArea, faCircleDollarToSlot, faCodePullRequest, faFileAlt, faGear, faHome, faTimeline, faUser, faUserCircle, faUserClock, faUsers } from '@fortawesome/free-solid-svg-icons'
 
 export const Menus = [
     { title: "Dashboard", font:faHome, gap: true, child:[], to: "/dashboard/home"},

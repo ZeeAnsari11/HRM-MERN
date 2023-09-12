@@ -32,7 +32,7 @@ const Departments = () => {
 
   useEffect(() => {
     LoadData();
-  },[]);
+  });
 
   const changeToggler = () => {
     setToggleChange(!toggleChange);

@@ -1,10 +1,9 @@
-import { deleteLoanType, updateLoanTypeById } from '../../api/LoanType';
-import { faArrowAltCircleRight, faEye, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { updateLoanTypeById } from '../../api/LoanType';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LoanTypeForm from './LoanTypeForm';
 import Modal from '../../components/Modal';
-import MultiSelect from '../../components/SelectForm/MultiSelect';
 import React from 'react';
 import { useState } from 'react';
 
@@ -24,7 +23,7 @@ export default function LoanTypeView({ data, desiginationsList }) {
         if (formData.type.trim() === "") {
             newValidationErrors.type = "Type is required.";
         }
-        if (formData.designations === "" || formData.designations == undefined || formData.designations.length <=0) {
+        if (formData.designations === "" || formData.designations === undefined || formData.designations.length <=0) {
             newValidationErrors.designations = "Select at least one designation";
         }
 
@@ -56,9 +55,9 @@ export default function LoanTypeView({ data, desiginationsList }) {
         });
     };
 
-    const handleAction = (id) => {
-        deleteLoanType(id);
-    }
+    // const handleAction = (id) => {
+    //     deleteLoanType(id);
+    // }
 
     return <div className="flex items-center space-x-2 justify-center">
              <Modal

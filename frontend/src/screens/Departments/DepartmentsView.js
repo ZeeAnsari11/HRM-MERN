@@ -1,6 +1,5 @@
-import { deleteBranch, updateBranchById } from '../../api/branches';
-import { deleteDepartmentById, updateDepartmentById } from '../../api/departments';
-import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { updateDepartmentById } from '../../api/departments';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 
 import CUForm from '../Profile/elements/common/CUForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -67,9 +66,9 @@ export default function DepartmentsView({ data }) {
 
 
 
-    const handleAction = (id) => {
-        deleteDepartmentById(id);
-    }
+    // const handleAction = (id) => {
+    //     deleteDepartmentById(id);
+    // }
 
     return <div className="flex items-center space-x-2">
         <Modal

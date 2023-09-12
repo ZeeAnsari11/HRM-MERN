@@ -1,6 +1,5 @@
-import { deleteDesiginationById, updateDesiginationById } from '../../api/designation';
-import { deleteTimeSlotById, updateTimeSlotById } from '../../api/timeSlots';
-import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { updateTimeSlotById } from '../../api/timeSlots';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 
 import CTForm from './CTForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -125,9 +124,9 @@ export default function TimeSlotsView({ data }) {
 
 
 
-    const handleAction = (id) => {
-        deleteTimeSlotById(id);
-    }
+    // const handleAction = (id) => {
+    //     deleteTimeSlotById(id);
+    // }
 
     return <div className="flex items-center space-x-2">
         <Modal

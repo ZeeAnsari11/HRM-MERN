@@ -1,4 +1,3 @@
-import Countries from '../User/elements/Countries';
 import React from 'react';
 
 export default function TRForm({ formData, handleInputChange, disableFields, validationErrors, skip }) {

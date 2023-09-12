@@ -1,5 +1,5 @@
-import { deleteEmployeementTypeById, updateEmployeementTypeById } from '../../api/employeementType';
-import { faArrowAltCircleRight, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { updateEmployeementTypeById } from '../../api/employeementType';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 
 import EmployeementTypeForm from './EmployeementTypeForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -49,9 +49,9 @@ export default function EmployeementTypeView({ data }) {
     };
 
 
-    const handleAction = (id) => {
-        deleteEmployeementTypeById(id);
-    }
+    // const handleAction = (id) => {
+    //     deleteEmployeementTypeById(id);
+    // }
 
     return <div className="flex items-center space-x-2 justify-center">
         <Modal
