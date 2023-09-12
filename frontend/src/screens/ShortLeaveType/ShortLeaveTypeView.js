@@ -1,10 +1,10 @@
 import { deleteBranch, updateBranchById } from '../../api/branches';
+import { faArrowAltCircleRight, faPencil } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import React from 'react';
 import SLTForm from './SLTForm';
-import { faArrowAltCircleRight } from '@fortawesome/free-solid-svg-icons';
 import { updateShortLeaveTypeById } from '../../api/shortLeaveType';
 import { useState } from 'react';
 
@@ -62,7 +62,7 @@ export default function ShortLeaveTypeView({ data }) {
 
     return <div className="flex items-center space-x-2">
         <Modal
-            action={<FontAwesomeIcon icon={faArrowAltCircleRight} />}
+            action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
             title={''}
             Element={<SLTForm handleInputChange={handleInputChange} formData={formData} validationErrors={validationErrors} />}
             btnConfig={ViewBtnConfig}

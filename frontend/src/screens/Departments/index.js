@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createDepartment, getDepartmentsByOrgId } from "../../api/departments";
 
 import CDForm from "./CDForm";
+import ComponentLoader from "../../components/Loader/ComponentLoader";
 import DepartmentsView from "./DepartmentsView";
 import Modal from "../../components/Modal";
 import Table from "../../components/Table";
@@ -10,7 +11,6 @@ import { getBranchesByOrgId } from "../../api/branches";
 import { selectCurrentUserOrg } from "../../states/reducers/slices/backend/UserSlice";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
-import ComponentLoader from "../../components/Loader/ComponentLoader";
 
 const Departments = () => {
   let orgId;
@@ -32,7 +32,7 @@ const Departments = () => {
 
   useEffect(() => {
     LoadData();
-  });
+  },[]);
 
   const changeToggler = () => {
     setToggleChange(!toggleChange);

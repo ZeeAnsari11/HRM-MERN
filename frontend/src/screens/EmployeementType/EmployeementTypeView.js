@@ -65,11 +65,13 @@ export default function EmployeementTypeView({ data }) {
                 }
             }}
         />
-        <button
+        {
+         //          DELETE BUTTON FUNCTIONALITY ALREADY IMPLEMENTED
+        /* <button
             className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
             onClick={() => handleAction(data.id)}
         >
             <FontAwesomeIcon icon={faTrash} />
-        </button>
+        </button> */}
     </div>
 }

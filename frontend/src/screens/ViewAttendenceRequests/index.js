@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Table, { StatusPill } from '../../components/Table';
-import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faArrowAltCircleRight, faEye, faPencil } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getMissingPunchesRquestsOfUser } from '../../api/missingPunchesRequests';
@@ -44,7 +44,7 @@ function ViewAttendenceRequests() {
                 <div className='flex items-center justify-center'>
                     <div className='pr-2'>
                         <button title="Flow" className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow" onClick={() => handleAction(row.original)}>
-                            <FontAwesomeIcon icon={faArrowAltCircleRight} />
+                        <FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />
                         </button>
                     </div>
                     <button title="View" className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow" onClick={() => handleAction(row.original)}>

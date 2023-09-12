@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createAssetType, deleteAssetType, getAssetTypesByOrgId, updateAssetType } from '../../api/assetTypes';
-import { faArrowAltCircleRight, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faArrowAltCircleRight, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import ATForm from './ATForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -37,7 +37,7 @@ const AssetTypeForm = ({ data }) => {
   return (
     <div className="flex items-center space-x-2">
       <Modal
-        action={<FontAwesomeIcon icon={faArrowAltCircleRight} />}
+       action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
         title={'Update Asset Type'}
         Element={
           <form>
@@ -63,12 +63,14 @@ const AssetTypeForm = ({ data }) => {
           }
         }}
       />
-      <button title='Delete'
+      {
+        //          DELETE BUTTON FUNCTIONALITY ALREADY IMPLEMENTED
+      /* <button title='Delete'
         className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
         onClick={() => deleteAssetType(data.id)}
       >
         <FontAwesomeIcon icon={faTrash} />
-      </button>
+      </button> */}
     </div>
   )
 }

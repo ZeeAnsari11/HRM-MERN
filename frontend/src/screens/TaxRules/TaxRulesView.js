@@ -1,5 +1,5 @@
 import { deleteTaxRulesById, updateTaxRulesById } from '../../api/taxRules';
-import { faArrowAltCircleRight, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faArrowAltCircleRight, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
@@ -23,7 +23,7 @@ export default function TaxRulesView({ data }) {
 
   const handleUpdateTaxRule = (trigger) => {
     const newValidationErrors = {};
-    
+
     if (formData.fromAmount === "") {
       newValidationErrors.fromAmount = "From Amount is required.";
     }
@@ -71,9 +71,9 @@ export default function TaxRulesView({ data }) {
 
   return <div className="flex items-center space-x-2 justify-center">
     <Modal
-      action={<FontAwesomeIcon icon={faArrowAltCircleRight} />}
+      action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
       title={''}
-      Element={<TRForm formData={formData} handleInputChange={handleInputChange} validationErrors={validationErrors} skip={true}/>}
+      Element={<TRForm formData={formData} handleInputChange={handleInputChange} validationErrors={validationErrors} skip={true} />}
       btnConfig={ViewBtnConfig}
       check={(closeModal) => {
         if (!validationErrors?.ruleNo && !validationErrors?.fromAmount && !validationErrors?.toAmount && !validationErrors?.percentage && !validationErrors?.fixRate && formData?.ruleNo && formData?.fromAmount && formData?.toAmount && formData?.percentage && formData?.fixRate) {

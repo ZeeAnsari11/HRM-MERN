@@ -22,7 +22,7 @@ const CUForm = ({ config, handleInputChange, isFull=true , validationErrors}) =>
                             </div>
                             <p className='block text-sm font-bold mb-1'>{item?.label}</p>
                         </div>
-                        {validationErrors && <p className={commonStyles.error}>{item.error.message}</p>}
+                        {validationErrors && <p className={commonStyles?.error}>{item?.error?.message}</p>}
                         </div>
                     }
                     return <div key={index} className="mb-4">
@@ -37,7 +37,7 @@ const CUForm = ({ config, handleInputChange, isFull=true , validationErrors}) =>
                             onChange={item.onChange}
                             required={item?.isRequired}
                         />
-                        {validationErrors && <p className={commonStyles.error}>{item.error.message}</p>}
+                        {validationErrors && <p className={commonStyles.error}>{item?.error?.message}</p>}
                     </div>
                 })
             }

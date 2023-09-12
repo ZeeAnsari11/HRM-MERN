@@ -1,10 +1,10 @@
 import { deleteBranch, updateBranchById } from '../../api/branches';
+import { faArrowAltCircleRight, faPencil } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LTForm from './LTForm';
 import Modal from '../../components/Modal';
 import React from 'react';
-import { faArrowAltCircleRight } from '@fortawesome/free-solid-svg-icons';
 import { updateLeaveTypeById } from '../../api/leaveType';
 import { useState } from 'react';
 
@@ -60,9 +60,9 @@ export default function LeaveTypeView({ data }) {
 
     return <div className="flex items-center space-x-2">
         <Modal
-            action={<FontAwesomeIcon icon={faArrowAltCircleRight} />}
+            action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
             title={''}
-            Element={<LTForm handleInputChange={handleInputChange} formData={formData} validationErrors={validationErrors}/>}
+            Element={<LTForm handleInputChange={handleInputChange} formData={formData} validationErrors={validationErrors} />}
             btnConfig={ViewBtnConfig}
             check={(closeModal) => {
                 if (!validationErrors?.name && !validationErrors?.shortName && !validationErrors?.accumulativeCount && formData?.name.trim() && formData?.shortName.trim() && formData?.accumulativeCount) {
