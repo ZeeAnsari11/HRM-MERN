@@ -7,6 +7,7 @@ import ChartPage from "./screens/Chart/src";
 import Departments from "./screens/Departments";
 import Desiginations from "./screens/Desiginations";
 import EmployeementType from "./screens/EmployeementType";
+import Grades from "./screens/Grades";
 import Leave from "./screens/Leave";
 import LeavePolicy from "./screens/LeavePolicy";
 import LeaveRequest from "./screens/LeaveRequest";
@@ -50,6 +51,8 @@ export const privateRoutes = () => {
       <Route path="employeement-type" element={<EmployeementType/>} />
       <Route path="short-leave-type" element={<ShortLeaveType/>} />
       <Route path="tax-rules" element={<TaxRules/>} />
+      <Route path="grades" element={<Grades/>} />
+
 
 
 

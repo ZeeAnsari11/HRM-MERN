@@ -21,7 +21,8 @@ export const organizationRoutes = {
     getShortLeaveTypeByOrgId: baseUrl+'/short-leave/organization/',
     getUsersByFilter: baseUrl+'/user/filter-user/organization',
     getEmployementTypesByOrgId: baseUrl+'/employmentType/all/',
-    getTaxRulesByOrgId: baseUrl+'/taxRule/organization/'
+    getTaxRulesByOrgId: baseUrl+'/taxRule/organization/',
+    getGradesByOrgId: baseUrl+'/grade/organization/',
 
 }
 
@@ -62,7 +63,16 @@ export const asset = {
 export const assetType = {
     createAssetType : baseUrl+'/asset-type/new',
     getAssetType: baseUrl+'/asset-type/organization/',
-    deleteAssetType: baseUrl+'/asset-type/'
+    deleteAssetType: baseUrl+'/asset-type/',
+    UpdateAssetType: baseUrl+'/asset-type/',
+}
+
+export const gradesRoute = {
+    createGrades : baseUrl+'/grade/new',
+    getGrades: baseUrl+'/grade/',
+    deleteGrades: baseUrl+'/grade/',
+    updateGrades: baseUrl+'/grade/'
+
 }
 
 export const allowances = {
