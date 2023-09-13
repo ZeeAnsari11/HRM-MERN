@@ -1,13 +1,13 @@
+import React, { useState } from 'react'
 import Table, { AvatarCell, SelectColumnFilter, StatusPill } from '../../components/Table';
 import { selectAllUsers, selectOrgId } from '../../states/reducers/slices/backend/UserSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 import EmployeeViewAndEdit from './EmployeeViewAndEdit';
-import React, { useState } from 'react'
 import { getAllUsersByOrganization } from '../../api/user'
 import { useEffect } from 'react'
 import { useMemo } from 'react'
-import ComponentLoader from '../../components/Loader/ComponentLoader';
 
 function ViewEmployees() {
 
@@ -47,7 +47,6 @@ function ViewEmployees() {
     },
   ], [])
 
-
   const organization = useSelector(selectOrgId)
   const dispatcher = useDispatch()
 
@@ -55,9 +54,10 @@ function ViewEmployees() {
   const viewemployeeLoader = () =>{
     setLoader(false)
   }
+  
   useEffect(() => {
     getAllUsersByOrganization(organization, dispatcher, viewemployeeLoader)
-  })
+  }, [])
 
   const apiData = useSelector(selectAllUsers)
 
@@ -111,7 +111,7 @@ function ViewEmployees() {
       attachment: obj.drivingLiscence.attachment,
       expiry: obj.drivingLiscence.expiry
     },
-    isHOD : obj.HOD.isHOD,
+    isHOD : obj.HOD?.isHOD,
     grossSalary: obj.grossSalary,
     temporaryAddress: obj.temporaryAddress,
     permanentAddress: obj.permanentAddress,
@@ -124,18 +124,18 @@ function ViewEmployees() {
     } else {
       data[index].status = "Active";
     }
-
   }
+
   if(!loader)
-  return (
-    <div className="bg-gray-100 text-gray-900">
-      <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <div className="mt-6">
-          <Table columns={columns} data={data} />
-        </div>
-      </main>
-    </div>
-  );
+    return (
+      <div className="bg-gray-100 text-gray-900">
+        <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+          <div className="mt-6">
+            <Table columns={columns} data={data} />
+          </div>
+        </main>
+      </div>
+    );
   else return <ComponentLoader color="black" />;
 }
 

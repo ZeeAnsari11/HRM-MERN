@@ -13,7 +13,7 @@ import { selectEmploymentTypes } from '../../../states/reducers/slices/backend/E
 import { selectOrganizationDesignation } from '../../../states/reducers/slices/backend/Designation';
 import { selectUserDepartment } from '../../../states/reducers/slices/backend/Department';
 
-const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputChange, showButton, skip , trigger }) => {
+const OrganizationInfo = ({isValid, disabled, formData, changePageNumber, handleInputChange, showButton, skip , trigger }) => {
     const dispatcher = useDispatch();
     const userOrgId = useSelector(selectCurrentUserOrg);
     const branchId = useSelector(selectCurrentUserBranch);
@@ -22,7 +22,7 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
     const lineManager = useSelector(selectFinalAuthority);
     const timeSlots = useSelector(selectTimeSlots);
     const employmentTypes = useSelector(selectEmploymentTypes)
-
+    console.log("formData", formData)
     const [errors, setErrors] = React.useState({
         department: false,
         designation: false,
@@ -44,9 +44,6 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
             } else {
                 newErrors[field] = false;
             }
-        console.log("====formData[field]==",formData[field]);
-        console.log("====newErrors[field]==",newErrors[field]);
-
         }
         if (formData.roaster?.restDays?.length === 0) {
             newErrors['restDays'] = true
@@ -70,9 +67,6 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
 
     const handleInputChangeWithValidation = (e) => {
         handleInputChange(e);
-        console.log("=====e.target.value===",e.target.value);
-        console.log("=====e.target.name===",e.target.name);
-
         setErrors((prevErrors) => ({
             ...prevErrors,
             [e.target.name]: e.target.value ? false : true,
@@ -90,7 +84,7 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
 
     useEffect(() => {
         loadAllOrganizationsInfo(dispatcher, userOrgId, branchId);
-    });
+    }, []);
 
     const convertToAMPM = (time) => {
         const [hours, minutes] = time.split(':');
@@ -130,7 +124,7 @@ const OrganizationInfo = ({ disabled, formData, changePageNumber, handleInputCha
             <div className="md:col-span-5">
                 <label htmlFor="full_name">Designation</label>
                 <div className="flex space-x-2">
-                    <select disabled={disabled} name='designation' id="designation" value={formData.designation._id} onChange={handleInputChangeWithValidation} className={
+                    <select disabled={disabled} name='designation' id="designation" value={formData.designation?._id} onChange={handleInputChangeWithValidation} className={
                         errors.designation
                             ? `${commonStyles.input} border-red-500`
                             : commonStyles.input

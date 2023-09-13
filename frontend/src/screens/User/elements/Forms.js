@@ -14,10 +14,12 @@ const Forms = ({ formNumber, changePageNumber, formData, handleInputChange }) =>
     const organization = useSelector(selectOrgId);
     const branch = useSelector(selectCurrentUserBranch);
     const [loader, setLoader] = React.useState(false); 
+    
     useEffect(() => {
         handleInputChange({ target: { name: 'organization', value: organization } });
         handleInputChange({ target: { name: 'branch', value: branch } });
     }, [])
+    
     const handleSubmit = () => {
         setLoader(true)
         let element = {

@@ -7,25 +7,23 @@ import Modal from "../../components/Modal";
 import OrganizationInfo from "../User/elements/OrganizationInfo";
 import PersonalInfo from "../User/elements/PersonalInfo";
 import UserInfo from "../User/elements/UserInfo";
+import { updateUserById } from "../../api/user";
 
 export default function EmployeeViewAndEdit({ data }) {
     const [formData, setFormData] = useState(data);
     const [pageNumber, setPageNumber] = useState(1);
-
+    const [validator, setValidator] = useState(true);
     let trigger = false;
 
     const changePageNumber = () => {
         setPageNumber(pageNumber + 1);
     }
 
-    const handleUpdateUser = () => {
-        console.log("====trigger==", trigger);
-        if (trigger) {
-            console.log("===caled===");
-        }
+    const handleUpdateUser = (trigger) => {
+        updateUserById(data.id, formData, trigger);
     }
 
-    const handleAction = ({id, isLineManager})=>{
+    const handleAction = ({id, isLineManager, isHOD})=>{
         if(!isLineManager && !isHOD){
             
         }
@@ -61,14 +59,15 @@ export default function EmployeeViewAndEdit({ data }) {
             title={"View Employee"}
             Element={
                 <>
-                    <PersonalInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false} skip={true} trigger={trigger} />
-                    <UserInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false} trigger={trigger} />
-                    <OrganizationInfo formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false} skip={true} trigger={trigger} />
-                    <Configuration formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false} trigger={trigger} />
+                    <PersonalInfo isValid={setValidator} formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false} skip={true} trigger={trigger} />
+                    <UserInfo isValid={setValidator} formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false} trigger={trigger} />
+                    <OrganizationInfo isValid={setValidator} formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false} skip={true} trigger={trigger} />
+                    <Configuration isValid={setValidator} formData={formData} changePageNumber={changePageNumber} handleInputChange={handleInputChange} showButton={false} trigger={trigger} />
                 </>
             }
             btnConfig={btnConfig}
             check={(closeModal) => {
+                closeModal();
             }
             } />
         <button

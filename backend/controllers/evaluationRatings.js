@@ -1,6 +1,7 @@
-import { EvaluationRatingseModel } from '../models/evaluationRatingsSchema.js'
+import { createNew, deleteById, getById, handleCatch, updateById } from '../utils/common.js'
+
+import { EvaluationRatingseModel } from '../models/evaluationratingsSchema.js'
 import { OrganizationModel } from '../models/organizationSchema.js'
-import { createNew, deleteById, updateById, getById, handleCatch } from '../utils/common.js'
 
 export const createEvaluationRating = (req, res, next) => {
     try {
