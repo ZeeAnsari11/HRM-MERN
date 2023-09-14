@@ -221,7 +221,7 @@ export const getUserLeaveDetails = (userId, dispatch) => {
   axios
     .get(userLeave.details + userId)
     .then((response) => {
-      dispatch(setUserLeaveDetails(response.data.result));
+      dispatch(setUserLeaveDetails(response.data.result.leaveTypeDetails));
     })
     .catch((error) => {
       // console.log(error)

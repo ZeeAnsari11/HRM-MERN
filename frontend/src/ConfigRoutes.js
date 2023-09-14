@@ -30,7 +30,7 @@ import ViewAttendenceRequests from "./screens/ViewAttendenceRequests";
 import ViewEmployees from "./screens/ViewEmployees";
 import ViewWorkFromHome from "./screens/WorkFromHome";
 import WorkFromHomeRequest from "./screens/WorkFromHomeRequest";
-;
+import GeneratePayslips from "./screens/GeneratePayslips";
 
 export const privateRoutes = () => {
     return <>
@@ -44,15 +44,13 @@ export const privateRoutes = () => {
       <Route path="timeSlots" element={<TimeSlots />} />
       <Route path="allowances" element={<Allowances />} />
       <Route path="loan-type" element={<LoanType />} />
+      <Route path="generate-payslips" element={<GeneratePayslips />} />
       <Route path="payslips" element={<Payslips />} />
       <Route path="manage-assets" element={<ManageAssets />} />
       <Route path="leave-type" element={<LeaveType />} />
       <Route path="employeement-type" element={<EmployeementType/>} />
       <Route path="short-leave-type" element={<ShortLeaveType/>} />
       <Route path="tax-rules" element={<TaxRules/>} />
-
-
-
 
     </>
   }

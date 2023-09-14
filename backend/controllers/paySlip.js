@@ -39,7 +39,6 @@ const common = (req, res, next) => {
         .then((organization) => {
             if (!organization) throw new Error('No Such Organization')
             return UserModel.find({ organization: organization._id, firstUser: false })
-            // return UserModel.find({ _id: "647f0a13acdf3955d82a8a44" })
                 .populate({
                     path: 'leaveTypeDetails.leaveType',
                     select: ('name')
