@@ -36,6 +36,8 @@ const LeavePolicy = () => {
     getUserLeaveDetails(user_id, dispatch)
   }, [])
   const leaveDetails = useSelector(selectUserLeaveDetails)
+  console.log("leaveDetails",leaveDetails
+  );
   
   const totalLeaves = leaveData.reduce((sum, item) => sum + item.balance, 0);
   const leavesBullet = leaveData.map((leave) => {
@@ -48,7 +50,6 @@ const LeavePolicy = () => {
         </div>
         <span className='mobile:ml-0 rounded-full bg-gray-300 w-7 h-7 flex justify-center items-center'>{leave.balance}</span>
       </li>
-
     );
   });
 
@@ -68,7 +69,6 @@ const LeavePolicy = () => {
           </BarChart>
         </ResponsiveContainer>
       </div>
-      
       <ul className="flex justify-center items-center mt-8 mobile:block mobile:space-y-4">
         <li className="flex items-center mobile:space-x-2 mobile:justify-between">
           <div className='flex items-center'>

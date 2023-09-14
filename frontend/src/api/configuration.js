@@ -197,7 +197,8 @@ export const timeSlotsRoute = {
 }
 
 export const  paySlips = {
-    ofUser: baseUrl+'/paySlip/user/'
+    ofUser: baseUrl+'/paySlip/user/',
+    generate: baseUrl+'/paySlip/new/'
 }
 
 export const relatives = {
