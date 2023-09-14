@@ -2,7 +2,7 @@ import Countries from './Countries'
 import React from 'react'
 import { commonStyles } from '../../../styles/common';
 
-const PersonalInfo = ({ disabled, changePageNumber, handleInputChange, formData, showButton, skip ,trigger}) => {
+const PersonalInfo = ({isValid=null, disabled, changePageNumber, handleInputChange, formData, showButton, skip ,trigger}) => {
     const [errors, setErrors] = React.useState({
         firstName: false,
         lastName: false,
@@ -48,7 +48,6 @@ const PersonalInfo = ({ disabled, changePageNumber, handleInputChange, formData,
             ...prevErrors,
             [e.target.name]: e.target.value ? false : true,
         }));
-    
         // Update the formData state in the parent component
         handleInputChange(e);
     }

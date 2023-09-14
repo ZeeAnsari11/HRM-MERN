@@ -1,12 +1,13 @@
-import { PaySlipModel } from "../models/payslipSchema.js";
-import { UserModel } from "../models/userSchema.js"
+import { createNew, getAll, handleCatch, updateById } from "../utils/common.js"
+
 import { AllowanceModel } from "../models/allowanceSchema.js";
-import { createNew, updateById, handleCatch, getAll } from "../utils/common.js"
-import { SalaryModel } from "../models/salarySchema.js";
-import { OrganizationModel } from "../models/organizationSchema.js";
-import { TaxRuleModel } from "../models/taxRuleSchema.js";
 import { AttendanceModel } from "../models/attendanceSchema.js"
 import { ExpenseModel } from "../models/expenseSchema.js";
+import { OrganizationModel } from "../models/organizationSchema.js";
+import { PaySlipModel } from "../models/paySlipSchema.js";
+import { SalaryModel } from "../models/salarySchema.js";
+import { TaxRuleModel } from "../models/taxRuleSchema.js";
+import { UserModel } from "../models/userSchema.js"
 
 let count = 0;
 let resp = []

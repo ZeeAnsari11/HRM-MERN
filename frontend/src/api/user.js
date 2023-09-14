@@ -200,17 +200,17 @@ export const getAllUsersByOrganization = (
 };
 
 export const updateUserById = (userId, data, trigger) => {
-  console.log(data);
+  console.log("Update User");
   axios
     .put(userRoutes.updateById + userId, data)
     .then((response) => {
       toastMessage("success", response.data.Message, toast);
       setTimeout(() => {
-        window.location.href = "/dashboard/profile";
+        //window.location.href = "/dashboard/profile";
       }, 2000);
     })
     .catch((error) => {
-      console.log(error);
+      toastMessage("error", error.response.data.Message, toast);
     })
     .finally(() => {
       trigger();

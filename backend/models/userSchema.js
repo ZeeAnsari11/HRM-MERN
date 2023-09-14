@@ -288,7 +288,6 @@ const userSchema = mongoose.Schema({
         type: String,
         trim: true,
         maxLength: [70, 'Cannot exceeds from 70 characters'],
-        //validate: /^[a-zA-Z]+$/
     },
     nationality: {
         type: String,

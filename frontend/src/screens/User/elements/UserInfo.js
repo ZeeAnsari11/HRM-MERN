@@ -75,7 +75,7 @@ const UserInfo = ({ disabled, formData, changePageNumber, handleInputChange, sho
 
     useEffect(() => {
         loadAllOrganizationsInfo(dispatcher, userOrgId, branchId);
-    });
+    }, []);
 
     const handleFrontFileChange = (event) => {
         const file = event.target.files[0];
@@ -89,6 +89,14 @@ const UserInfo = ({ disabled, formData, changePageNumber, handleInputChange, sho
         handleInputChange({ target: { name: 'backSide', value: file } });
     };
 
+    const getDate = (date) => {
+        const dateObject = new Date(date);
+        const year = dateObject.getUTCFullYear();
+        const month = dateObject.getUTCMonth() + 1;
+        const day = dateObject.getUTCDate();
+
+        return `${year}-${month}-${day}`;
+    }
     return (
         <form className="lg:col-span-2 space-y-4" onSubmit={handleFormSubmit}>
             <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
@@ -265,7 +273,7 @@ const UserInfo = ({ disabled, formData, changePageNumber, handleInputChange, sho
                     <input
                         type="date"
                         name="joiningDate"
-                        value={formData.joiningDate}
+                        value={getDate(formData.joiningDate)}
                         onChange={handler}
                         disabled={disabled}
                         id="joiningDate"

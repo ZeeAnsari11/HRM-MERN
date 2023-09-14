@@ -181,9 +181,6 @@ app.use(apiVersion, PermssionsRoute)
 app.use(apiVersion, themeRoute)
 app.use(apiVersion, backgroundShifterRoute)
 
-
-
-
 app.use((err, req, res, next) => {
     errorHandler(err, res, next)
 });
