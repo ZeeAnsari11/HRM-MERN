@@ -23,6 +23,7 @@ export const organizationRoutes = {
     getEmployementTypesByOrgId: baseUrl+'/employmentType/all/',
     getTaxRulesByOrgId: baseUrl+'/taxRule/organization/',
     getGradesByOrgId: baseUrl+'/grade/organization/',
+    getGradeBenefitsByOrgId: baseUrl+'/benefits/organization/'
 
 }
 
@@ -87,6 +88,12 @@ export const loanType = {
     getAllowancesByOrgId: baseUrl+'/loan-type/organization/',
     updateLoanTypeById : baseUrl+'/loan-type/',
     deleteLoanTypeById : baseUrl+'/loan-type/'
+}
+
+export const gradeBenefits = {
+    createGradeBenefit : baseUrl+'/benefits/new',
+    updateGradeBenefitById : baseUrl+'/benefits/',
+    deleteGradeBenefitById : baseUrl+'/benefits/'
 }
 
 export const assetManagment = {

@@ -1,10 +1,10 @@
 import { AttendanceModel } from "../models/attendanceSchema.js";
-import { handleCatch } from "../utils/common.js"
-import moment from "moment";
-import { UserModel } from "../models/userSchema.js";
-import { TimeSlotsModel } from "../models/timeSlotsSchema.js";
 import { LeaveRequestModel } from "../models/leaveRequestSchema.js";
 import { LeaveTypeModel } from "../models/leaveTypeSchema.js";
+import { TimeSlotsModel } from "../models/timeSlotsSchema.js";
+import { UserModel } from "../models/userSchema.js";
+import { handleCatch } from "../utils/common.js"
+import moment from "moment";
 const placeHolder = '1970-01-01T';
 let onLeave;
 let isAbsent;
@@ -229,7 +229,7 @@ export const filterAttendance = (req, res, next) => {
               ]
             }
           }
-          else if ('my-sheet') {
+          else if (req.body.filter == 'my-sheet') {
             query = {
               $and: [
                 { user: req.body.user },

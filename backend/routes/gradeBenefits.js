@@ -1,15 +1,14 @@
-import express from 'express'
-import { 
-    addGradeToBenefits,
-    createGradeBenefits, 
-    deleteGradeBenefits, 
+import {
+    createGradeBenefits,
+    deleteGradeBenefits,
     getAllGradeBenefits,
     getGradeBenefitsByGradeId,
     getGradeBenefitsById,
-    updateGradeBenefits 
+    updateGradeBenefits
 } 
 from '../controllers/gradeBenefits.js';
 
+import express from 'express'
 
 export const gradeBenefitsRoute = express.Router();
 
@@ -20,15 +19,10 @@ gradeBenefitsRoute.get('/benefits/organization/:id', getAllGradeBenefits);
 gradeBenefitsRoute.get('/benefits/grade/:id', getGradeBenefitsByGradeId);
 
 // Create grade benefits
-gradeBenefitsRoute.post('/benefits/create', createGradeBenefits);
+gradeBenefitsRoute.post('/benefits/new', createGradeBenefits);
 
-// Update grade benefits
-gradeBenefitsRoute.put('/benefits/update/:id', updateGradeBenefits);
+// Update/delete/get grade benefits
+gradeBenefitsRoute.put('/benefits/:id', updateGradeBenefits).delete( deleteGradeBenefits).get( getGradeBenefitsById);
 
-// Delete grade benefits
-gradeBenefitsRoute.delete('/benefits/delete/:id', deleteGradeBenefits);
-
-//get GradeBenefits by Id 
-gradeBenefitsRoute.get('/benefits/:id', getGradeBenefitsById).put(addGradeToBenefits);
 
 
