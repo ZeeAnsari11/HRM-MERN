@@ -1,12 +1,13 @@
-import { assetType } from "./configuration";
+import { assetType, grades, gradesRoute, organizationRoutes } from "./configuration";
+
 import axios from "axios";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
 
-export const createAssetType = (formData, changeToggler, trigger) => {
-    axios.post(assetType.createAssetType, formData)
+export const createGrades = (formData, changeToggler, trigger) => {
+    axios.post(gradesRoute.createGrades, formData)
         .then(() => {
-            toastMessage("success", "Asset Type created successfully,", toast);
+            toastMessage("success", "Grades created successfully,", toast);
             changeToggler();
         })
         .catch((err) => {
@@ -17,22 +18,22 @@ export const createAssetType = (formData, changeToggler, trigger) => {
         })
 }
 
-export const getAssetTypesByOrgId = (orgId, setAssetTypes) => {
-    axios.get(assetType.getAssetType + orgId)
+export const getGradesByOrgId = (orgId, setGrades) => {
+    axios.get(organizationRoutes.getGradesByOrgId + orgId)
         .then((response) => {
-            setAssetTypes(response.data.response)
+            setGrades(response.data.grades)
         })
         .catch((err) => {
             console.log(err);
         })
 }
 
-export const deleteAssetType = (id) => {
-    axios.delete(assetType.deleteAssetType+id)
+export const deleteGrade = (id) => {
+    axios.delete(gradesRoute.deleteGrades+id)
     .then((response) => {
         toastMessage("success", response.data.Message, toast) 
         setTimeout(() => {
-            window.location.href = "/dashboard/asset-type"
+            window.location.href = "/dashboard/grades"
         }, 2000)
     })
     .catch((err) => { 
@@ -40,12 +41,12 @@ export const deleteAssetType = (id) => {
     })
 }
 
-export const updateAssetType = (id, data, trigger) => {
-    axios.put(assetType.UpdateAssetType+id, data)
+export const updateGrade = (id, data, trigger) => {
+    axios.put(gradesRoute.updateGrades+id, data)
     .then((response) => {
         toastMessage("success", response.data.Message, toast)
         setTimeout(() => {
-            window.location.href = "/dashboard/asset-type"
+            window.location.href = "/dashboard/grades"
         }, 2000)
     })
     .catch((err) => { 

@@ -76,5 +76,9 @@ export const Menus = [
     { title: "Payslips", access:"Admin", font: faCircleDollarToSlot, child:[], to:"/dashboard/payslips"  },
     { title: "Allowances",access:"Admin", font: faCalendarCheck, child:[], to:"/dashboard/allowances"  },
     { title: "Profile ", font: faUserCircle, gap: true, child:[], to:"/dashboard/profile"},
+    { title: "Grades", access:"Admin", font: faCircleDollarToSlot, child:[], to:"/dashboard/grades"  },
+    { title: "Grades Benefits", access:"Admin", font: faCircleDollarToSlot, child:[], to:"/dashboard/grade-benefits"  },
+
+
     { title: "Settings", font: faGear, child:[], to:"/dashboard/settings" },
 ];

@@ -1,11 +1,11 @@
 import { AttendanceModel } from "../models/attendanceSchema.js";
-import { handleCatch } from "../utils/common.js";
-import moment from "moment";
-import { UserModel } from "../models/userSchema.js";
-import { TimeSlotsModel } from "../models/timeSlotsSchema.js";
 import { LeaveRequestModel } from "../models/leaveRequestSchema.js";
 import { LeaveTypeModel } from "../models/leaveTypeSchema.js";
-const placeHolder = "1970-01-01T";
+import { TimeSlotsModel } from "../models/timeSlotsSchema.js";
+import { UserModel } from "../models/userSchema.js";
+import { handleCatch } from "../utils/common.js"
+import moment from "moment";
+const placeHolder = '1970-01-01T';
 let onLeave;
 let isAbsent;
 export const createAttendance = (req, res, next) => {
@@ -356,11 +356,12 @@ export const filterAttendance = (req, res, next) => {
                   },
                 },
                 {
-                  isAbsent: false,
-                },
-              ],
-            };
-          } else if ("my-sheet") {
+                  isAbsent: false
+                }
+              ]
+            }
+          }
+          else if (req.body.filter == 'my-sheet') {
             query = {
               $and: [
                 { user: req.body.user },

@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { createAssetType, getAssetTypesByOrgId, updateAssetType } from '../../api/assetTypes';
-import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { createAssetType, deleteAssetType, getAssetTypesByOrgId, updateAssetType } from '../../api/assetTypes';
+import { createGrades, getGradesByOrgId, updateGrade } from '../../api/Grades';
+import { faArrowAltCircleRight, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-
-import ATForm from './ATForm';
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import GradesForm from './GradesForm';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import { commonStyles } from '../../styles/common';
-import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
 
-const AssetTypeForm = ({ data }) => {
-  const [value, setValue] = useState(data.type);
+const GradesViewForm = ({ data }) => {
+  const [value, setValue] = useState(data.name);
+  
   const [validationErrors, setValidationErrors] = useState({
-    type: "",
+    name: "",
   });
   const handleAssetTypeUpdate = (trigger) => {
     const newValidationErrors = {};
@@ -28,7 +29,7 @@ const AssetTypeForm = ({ data }) => {
       trigger();
       return;
     }
-    updateAssetType(data.id, { type: value }, trigger)
+    updateGrade(data.id, { name: value }, trigger)
   }
   const btnConfig = [
     {
@@ -44,11 +45,11 @@ const AssetTypeForm = ({ data }) => {
         Element={
           <form>
           <div className="mb-4">
-            <label className="block text-sm font-bold mb-1">Type</label>
+            <label className="block text-sm font-bold mb-1">Name</label>
             <input
               className="border border-gray-300 rounded-md px-3 py-2 w-full"
               type="text"
-              name="type"
+              name="name"
               value={value}
              onChange={(e) => setValue(e.target.value)}
               required
@@ -60,7 +61,7 @@ const AssetTypeForm = ({ data }) => {
         </form>}
         btnConfig={btnConfig}
         check={(closeModal) => {
-          if (!validationErrors?.type && value?.trim()) {
+          if (!validationErrors?.name && value?.trim()) {
             closeModal()
           }
         }}
@@ -78,21 +79,23 @@ const AssetTypeForm = ({ data }) => {
 }
 
 
-const AssetTypes = () => {
+const Grades = () => {
   let orgId;
   orgId = useSelector(selectCurrentUserOrg);
   const [toggleChange, setToggleChange] = useState(false);
-  const [assetTypes, setAssetTypes] = useState([]);
+  const [grades, setGrades] = useState([]);
+  const [loader, setLoader] = useState(true)
+
   const [formData, setFormData] = useState({
-    type: '',
+    name: '',
     organization: orgId,
   });
   const [validationErrors, setValidationErrors] = useState({
-    type: "",
+    name: "",
   });
   useEffect(() => {
-    getAssetTypesByOrgId(orgId, setAssetTypes)
-  }, [setAssetTypes, orgId]);
+    getGradesByOrgId(orgId, setGrades)
+  }, [toggleChange]);
   const changeToggler = () => {
     setToggleChange(!toggleChange);
   }
@@ -105,10 +108,11 @@ const AssetTypes = () => {
       [name]: "",
     });
   };
-  const handleCreateAssetType = (trigger) => {
+  const handleCreateGrades = (trigger) => {
     const newValidationErrors = {};
-    if (formData.type.trim() === "") {
-      newValidationErrors.name = "Asset Type is required.";
+    console.log("===formData=",formData);
+    if (formData.name.trim() === "") {
+      newValidationErrors.name = "Name is required.";
     }
     if (Object.keys(newValidationErrors).length > 0) {
       // Set validation errors and prevent closing the modal
@@ -116,47 +120,48 @@ const AssetTypes = () => {
       trigger();
       return;
     }
-    createAssetType(formData, changeToggler, trigger);
+    createGrades(formData, changeToggler, trigger);
     setFormData({
-      type: '',
+      name: '',
       organization: orgId,
     });
   };
   const columns = [
     {
-      Header: "Type",
-      accessor: "type",
+      Header: "Name",
+      accessor: "name",
     },
     {
       Header: "Action",
       accessor: "action",
       Cell: ({ row }) => (
-        <AssetTypeForm data={row.original} />
+        <GradesViewForm data={row.original} />
       ),
     },
   ];
-  const data = assetTypes?.map(obj => ({
+  const data = grades?.map(obj => ({
     id: obj._id,
-    type: obj.type,
+    name: obj.name,
   }));
   const btnConfig = [
     {
       title: 'Create',
-      handler: handleCreateAssetType,
+      handler: handleCreateGrades,
     }
   ]
+  if(loader)
   return (
     <div className='my-4'>
        <Table data={data} columns={columns} element={
           <Modal
-            action="Create Asset Type"
-            title="Create Asset Type"
-            Element={<ATForm formData={formData} handleInputChange={handleInputChange} validationErrors={validationErrors}/>}
+            action="Create Grade"
+            title="Create Grade"
+            Element={<GradesForm formData={formData} handleInputChange={handleInputChange} validationErrors={validationErrors}/>}
             btnConfig={btnConfig}
             btnStyle={commonStyles.btnDark}
             validationErrors={validationErrors}
         check={(closeModal) => {
-          if (!validationErrors?.type && formData?.type.trim()) {
+          if (!validationErrors?.name && formData?.name.trim()) {
             closeModal()
           }
         }}
@@ -164,5 +169,6 @@ const AssetTypes = () => {
        }/>
     </div>
   );
+  else return <ComponentLoader color="black" />
 };
-export default AssetTypes;
+export default Grades;

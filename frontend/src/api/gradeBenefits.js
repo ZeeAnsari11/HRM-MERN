@@ -1,12 +1,13 @@
+import { gradeBenefits, loanType, organizationRoutes } from "./configuration";
+
 import axios from "axios";
-import { loanType } from "./configuration";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
 
-export const createLoanType = (formData, changeToggler, trigger) => {
-    axios.post(loanType.createLoanType, formData)
+export const createGradeBenefit = (formData, changeToggler, trigger) => {
+    axios.post(gradeBenefits.createGradeBenefit, formData)
         .then(() => {
-            toastMessage("success", "Loan Type created successfully,", toast);
+            toastMessage("success", "GradeBenefit created successfully,", toast);
             changeToggler();
         })
         .catch((err) => {
@@ -17,28 +18,28 @@ export const createLoanType = (formData, changeToggler, trigger) => {
         })
 }
 
-export const getLoanTypesByOrgId = (orgId, setAssetTypes, trigger = null) => {
-    axios.get(loanType.getAllowancesByOrgId + orgId)
+export const getgradeBenefitsByOrgId = (orgId, setAssetTypes, trigger = null) => {
+    axios.get(organizationRoutes.getGradeBenefitsByOrgId + orgId)
         .then((response) => {
             setAssetTypes(response.data.response);
         })
         .catch((err) => {
             console.log(err);
         })
-        .finally(() => {
-            if (trigger !== null) {
+        .finally(() =>{
+            if(trigger !== null){
                 trigger()
             }
         })
 }
 
-export const deleteLoanType = (id) => {
-    axios.delete(loanType.deleteLoanTypeById + id)
+export const deleteGradeBenefitsById = (id) => {
+    axios.delete(gradeBenefits.deleteGradeBenefitById + id)
         .then((response) => {
             toastMessage("success", response.data.Message, toast);
-            //TODO: Update required
+             //TODO: Update required
             setTimeout(() => {
-                window.location.href = "/dashboard/loan-type"
+                window.location.href = "/dashboard/grade-benefits"
             }, 2000)
         })
         .catch((err) => {
@@ -46,18 +47,18 @@ export const deleteLoanType = (id) => {
         })
 }
 
-export const updateLoanTypeById = (id, formData, trigger) => {
-    axios.put(loanType.updateLoanTypeById + id, formData)
+export const updateGradeBenefitsById = (id, formData, trigger) => {
+    axios.put(gradeBenefits.updateGradeBenefitById + id, formData)
         .then((response) => {
             toastMessage("success", response.data.Message, toast)
             setTimeout(() => {
-                window.location.href = "/dashboard/loan-type"
+                window.location.href = "/dashboard/grade-benefits"
             }, 2000)
         })
         .catch((error) => {
             toastMessage("error", error.response.data.Message, toast)
         })
-        .finally(() => {
+        .finally(()=>{
             trigger();
         })
 }

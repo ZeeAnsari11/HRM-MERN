@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import CDForm from "./CDForm";
+import ComponentLoader from "../../components/Loader/ComponentLoader";
 import DesiginationsView from "./DesiginationsView";
 import Modal from "../../components/Modal";
 import Table from "../../components/Table";
@@ -12,7 +13,7 @@ import { organizationRoutes } from "../../api/configuration";
 import { selectCurrentUserOrg } from "../../states/reducers/slices/backend/UserSlice";
 import { setOrganizationDesignation } from "../../states/reducers/slices/backend/Designation";
 import { useMemo } from "react";
-import ComponentLoader from "../../components/Loader/ComponentLoader";
+
 // import NotFound from "../../components/Table/shared/NotFound";
 
 const Desiginations = () => {
@@ -46,12 +47,12 @@ const Desiginations = () => {
         console.log(rsp.data.response)
 
         // Disable loader to decide btw not found & data
-        
+
       })
       .catch((e) => console.log(e))
-      .finally(() =>{
+      .finally(() => {
         setLoader(false);
-    })
+      })
   };
 
   const changeToggler = () => {

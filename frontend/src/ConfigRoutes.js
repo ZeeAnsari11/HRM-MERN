@@ -7,6 +7,9 @@ import ChartPage from "./screens/Chart/src";
 import Departments from "./screens/Departments";
 import Desiginations from "./screens/Desiginations";
 import EmployeementType from "./screens/EmployeementType";
+import GeneratePayslips from "./screens/GeneratePayslips";
+import GradeBenefits from "./screens/GradeBenefits";
+import Grades from "./screens/Grades";
 import Leave from "./screens/Leave";
 import LeavePolicy from "./screens/LeavePolicy";
 import LeaveRequest from "./screens/LeaveRequest";
@@ -30,7 +33,6 @@ import ViewAttendenceRequests from "./screens/ViewAttendenceRequests";
 import ViewEmployees from "./screens/ViewEmployees";
 import ViewWorkFromHome from "./screens/WorkFromHome";
 import WorkFromHomeRequest from "./screens/WorkFromHomeRequest";
-import GeneratePayslips from "./screens/GeneratePayslips";
 
 export const privateRoutes = () => {
     return <>
@@ -51,7 +53,9 @@ export const privateRoutes = () => {
       <Route path="employeement-type" element={<EmployeementType/>} />
       <Route path="short-leave-type" element={<ShortLeaveType/>} />
       <Route path="tax-rules" element={<TaxRules/>} />
-
+      <Route path="grades" element={<Grades/>} />
+      <Route path="grade-benefits" element={<GradeBenefits/>} />
+      
     </>
   }
   
