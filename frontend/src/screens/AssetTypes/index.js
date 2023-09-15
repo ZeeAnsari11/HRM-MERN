@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { createAssetType, getAssetTypesByOrgId, updateAssetType } from '../../api/assetTypes';
-import { faPencil } from '@fortawesome/free-solid-svg-icons';
-
 
 import ATForm from './ATForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
