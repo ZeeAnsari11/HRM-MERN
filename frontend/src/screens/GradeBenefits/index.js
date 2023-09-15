@@ -32,7 +32,6 @@ const GradeBenefits = () => {
     grade: '',
     description: '',
   });
-  console.log("======formData==========", formData);
   const [loader, setLoader] = useState(true);
   useEffect(() => {
     LoadData();
@@ -56,7 +55,6 @@ const GradeBenefits = () => {
       })
       .catch((e) => console.log(e));
   };
-  console.log("===", grades);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -70,7 +68,6 @@ const GradeBenefits = () => {
 
 
   const handleCreateGradeBenefit = (trigger) => {
-    console.log("================111111=2222222=========");
     const newValidationErrors = {};
     if (formData.name.trim() === "") {
       newValidationErrors.name = "Name is required.";

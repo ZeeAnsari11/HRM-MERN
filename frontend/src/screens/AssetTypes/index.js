@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { createAssetType, deleteAssetType, getAssetTypesByOrgId, updateAssetType } from '../../api/assetTypes';
-import { faArrowAltCircleRight, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { createAssetType, getAssetTypesByOrgId, updateAssetType } from '../../api/assetTypes';
 
 import ATForm from './ATForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import { commonStyles } from '../../styles/common';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
 

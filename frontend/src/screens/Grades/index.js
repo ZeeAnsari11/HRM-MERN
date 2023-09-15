@@ -3,6 +3,7 @@ import { createAssetType, deleteAssetType, getAssetTypesByOrgId, updateAssetType
 import { createGrades, getGradesByOrgId, updateGrade } from '../../api/Grades';
 import { faArrowAltCircleRight, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import GradesForm from './GradesForm';
 import Modal from '../../components/Modal';
@@ -13,6 +14,7 @@ import { useSelector } from 'react-redux';
 
 const GradesViewForm = ({ data }) => {
   const [value, setValue] = useState(data.name);
+  
   const [validationErrors, setValidationErrors] = useState({
     name: "",
   });
@@ -82,6 +84,8 @@ const Grades = () => {
   orgId = useSelector(selectCurrentUserOrg);
   const [toggleChange, setToggleChange] = useState(false);
   const [grades, setGrades] = useState([]);
+  const [loader, setLoader] = useState(true)
+
   const [formData, setFormData] = useState({
     name: '',
     organization: orgId,
@@ -145,6 +149,7 @@ const Grades = () => {
       handler: handleCreateGrades,
     }
   ]
+  if(loader)
   return (
     <div className='my-4'>
        <Table data={data} columns={columns} element={
@@ -164,5 +169,6 @@ const Grades = () => {
        }/>
     </div>
   );
+  else return <ComponentLoader color="black" />
 };
 export default Grades;

@@ -21,7 +21,6 @@ export const createGradeBenefit = (formData, changeToggler, trigger) => {
 export const getgradeBenefitsByOrgId = (orgId, setAssetTypes, trigger = null) => {
     axios.get(organizationRoutes.getGradeBenefitsByOrgId + orgId)
         .then((response) => {
-            console.log('==response====',response);
             setAssetTypes(response.data.response);
         })
         .catch((err) => {
