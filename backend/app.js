@@ -131,7 +131,9 @@ app.post(`${apiVersion}/upload/:id`, upload.single('profile'), (req, res) => {
         });
 });
 // app.use(permissionsMiddlewre);
-
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/welcome.html');
+})
 app.use(apiVersion, organizationRoute);
 app.use(apiVersion, branchRoute);
 app.use(apiVersion, assetsRoute);
