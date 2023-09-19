@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createLoanType, getLoanTypesByOrgId } from '../../api/LoanType';
 
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 import LoanTypeForm from './LoanTypeForm';
 import LoanTypeView from './LoanTypeView';
 import Modal from '../../components/Modal';
@@ -12,7 +13,6 @@ import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserS
 import { setOrganizationDesignation } from '../../states/reducers/slices/backend/Designation';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import ComponentLoader from '../../components/Loader/ComponentLoader';
 
 const LoanType = () => {
   let dispatcher = useDispatch();
@@ -150,7 +150,7 @@ const LoanType = () => {
                      btnConfig={btnConfig}
                      validationErrors={validationErrors}
                      check={(closeModal) => {
-                         if (!validationErrors?.type && !validationErrors?.designations && formData?.type.trim()) {
+                         if (!validationErrors?.type && !validationErrors?.designations && formData?.type.trim() && formData.designations.length>0) {
                              closeModal()
                          }
                      }}

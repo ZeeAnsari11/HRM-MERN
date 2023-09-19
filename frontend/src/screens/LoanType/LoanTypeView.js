@@ -1,10 +1,9 @@
-import { updateLoanTypeById } from '../../api/LoanType';
-import { faPencil } from '@fortawesome/free-solid-svg-icons';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LoanTypeForm from './LoanTypeForm';
 import Modal from '../../components/Modal';
 import React from 'react';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { updateLoanTypeById } from '../../api/LoanType';
 import { useState } from 'react';
 
 export default function LoanTypeView({ data, desiginationsList }) {
@@ -65,8 +64,7 @@ export default function LoanTypeView({ data, desiginationsList }) {
             Element={<LoanTypeForm formData={formData} handleInputChange={handleInputChange} desiginationsList={desiginationsList} validationErrors={validationErrors} />}
             btnConfig={ViewBtnConfig}
             check={(closeModal) => {
-                console.log("ready to close")
-                if (!validationErrors?.type && !validationErrors?.designations && formData?.type.trim()) {
+                if (!validationErrors?.type && !validationErrors?.designations && formData?.type.trim() && formData.designations.length>0) {
                     closeModal()
                 }
             }}

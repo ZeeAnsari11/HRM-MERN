@@ -18,8 +18,6 @@ export default function MultiSelect({ handleInputChange, grades, formData }) {
     }
   },[]);
   
-  console.log("========formData.grade===",formData.grade);
-  console.log("===========selectedPeople====",selectedPeople);
   const handleChange = (newSelectedPeople) => {
     setSelectedPeople(newSelectedPeople);
     handleInputChange({ target: { name: "grade", value: newSelectedPeople } });
