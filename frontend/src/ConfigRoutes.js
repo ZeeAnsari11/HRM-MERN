@@ -18,6 +18,7 @@ import Loan from "./screens/Loan";
 import LoanType from "./screens/LoanType";
 import ManageAssets from "./screens/ManageAsset";
 import Payslips from "./screens/Payslips";
+import PayslipsOrganization from "./screens/PayslipsOrganization";
 import Probation from "./screens/Probation";
 import Roaster from "./screens/Roaster/src";
 import { Route } from "react-router-dom";
@@ -48,6 +49,7 @@ export const privateRoutes = () => {
       <Route path="loan-type" element={<LoanType />} />
       <Route path="generate-payslips" element={<GeneratePayslips />} />
       <Route path="payslips" element={<Payslips />} />
+      <Route path="/dashboard/payslips/org" element={<PayslipsOrganization/>} />
       <Route path="manage-assets" element={<ManageAssets />} />
       <Route path="leave-type" element={<LeaveType />} />
       <Route path="employeement-type" element={<EmployeementType/>} />

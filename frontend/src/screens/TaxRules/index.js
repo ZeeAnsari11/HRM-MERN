@@ -38,7 +38,7 @@ const TaxRules = () => {
 
   useEffect(() => {
     LoadData()
-  });
+  }, []);
 
   const changeToggler = () => {
     setToggleChange(!toggleChange);

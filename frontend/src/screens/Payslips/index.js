@@ -1,25 +1,27 @@
 import React, { useState } from 'react';
 import Table, { StatusPill } from '../../components/Table';
-import { selectPayslips, selectUID } from '../../states/reducers/slices/backend/UserSlice';
+import { getPayslips, getPayslipsOrg } from '../../api/payslips';
+import { selectOrgId, selectPayslips, selectUID } from '../../states/reducers/slices/backend/UserSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 import View from './src/modal';
-import { getPayslips } from '../../api/payslips';
 import { useEffect } from 'react';
 import { useMemo } from 'react';
 
-function Payslips() {
+function Payslips({isAdmin = false}) {
   const apiData = useSelector(selectPayslips);
   const user_id = useSelector(selectUID);
+  const org_id = useSelector(selectOrgId);
   const dispatcher = useDispatch();
   useEffect(() => {
-    getPayslips(user_id, dispatcher);
+    if(isAdmin === false) getPayslips(user_id, dispatcher);
+    else getPayslipsOrg(org_id, dispatcher);
   }, []);
 
   const [setSelectedId] = useState(null);
-
+  const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"];
   const data = apiData.map(obj => ({
-    month: obj.month,
+    month: month[obj.month],
     grossSalary: obj.grossSalary,
     tax: obj.tax,
     finalSalary: obj.finalSalary,
@@ -70,7 +72,7 @@ function Payslips() {
 
   return (
       <main className="mx-auto px-4 sm:px-6 lg:px-8 mt-6 pt-4">
-        <Table columns={columns} data={data} />
+        <Table columns={columns} data={data}/>
       </main>
   );
 }

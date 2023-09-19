@@ -19,7 +19,6 @@ const GeneratePayslips = () => {
         month: selectedMonth,
         year: selectedYear,
       };
-      console.log(payslipData, "payslipData");
       savePaySlipData(organizationId, payslipData);
     }
   };
@@ -34,7 +33,7 @@ const GeneratePayslips = () => {
               Month
             </label>
             <Select
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              className={commonStyles.input}
               placeholder="Select a month"
               onChange={(value) => setSelectedMonth(value)}
             >
@@ -57,7 +56,7 @@ const GeneratePayslips = () => {
               Year
             </label>
             <DatePicker
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              className={commonStyles.input}
               picker="year"
               placeholder="Select a year"
               onChange={(date, dateString) => {

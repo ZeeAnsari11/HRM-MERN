@@ -1,4 +1,4 @@
-import { faCalendarCheck,faDollarSign, faCalendarDay, faCalendarPlus, faCalendarTimes, faCalendarWeek, faCediSign, faChartArea, faCircleDollarToSlot, faCodePullRequest, faCoffee, faFileAlt, faGear, faHome, faNetworkWired, faTimeline, faUser, faUserCircle, faUserClock, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faCalendarCheck, faCalendarDay, faCalendarPlus, faCalendarTimes, faCalendarWeek, faCediSign, faChartArea, faCircleDollarToSlot, faCodePullRequest, faCoffee, faDollarSign, faFileAlt, faGear, faHome, faNetworkWired, faTimeline, faUser, faUserCircle, faUserClock, faUsers } from '@fortawesome/free-solid-svg-icons'
 
 export const Menus = [
     { title: "Dashboard", font:faHome, gap: true, child:[], to: "/dashboard/home"},
@@ -72,8 +72,13 @@ export const Menus = [
         ]
     },
     { title: "Tax Rules", access:"Admin", font: faCircleDollarToSlot, child:[], to:"/dashboard/tax-rules"  },
-    { title: "Generate Payslips", access:"Admin", font: faDollarSign, child:[], to:"/dashboard/generate-payslips"  },
-    { title: "Payslips", access:"Admin", font: faCircleDollarToSlot, child:[], to:"/dashboard/payslips"  },
+    { title: "Payslips", access:"Admin", font: faCircleDollarToSlot, 
+        child:[
+            { title: "Generate Payslips", access:"Admin", font: faDollarSign, child:[], to:"/dashboard/generate-payslips"  },
+            { title: "Organization's Payslips", access:"Admin", font: faDollarSign, child:[], to:"/dashboard/payslips/org"  },
+            { title: "View Payslips", access:"Admin", font: faDollarSign, child:[], to:"/dashboard/payslips"  }
+        ] 
+    },
     { title: "Allowances",access:"Admin", font: faCalendarCheck, child:[], to:"/dashboard/allowances"  },
     { title: "Profile ", font: faUserCircle, gap: true, child:[], to:"/dashboard/profile"},
     { title: "Grades", access:"Admin", font: faCircleDollarToSlot, child:[], to:"/dashboard/grades"  },

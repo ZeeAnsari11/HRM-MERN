@@ -215,6 +215,7 @@ export const timeSlotsRoute = {
 
 export const  paySlips = {
     ofUser: baseUrl+'/paySlip/user/',
+    ofOrganizarion: baseUrl+'/paySlip/organization/',
     generate: baseUrl+'/paySlip/new/'
 }
 

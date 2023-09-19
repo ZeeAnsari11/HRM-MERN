@@ -565,6 +565,27 @@ export const updatePaySlipsById = (req, res, next) => {
 }
 
 export const getPaySlipsByUserId = (req, res, next) => {
-    let query = {user:req.params.id, status:'close'}
-   getAll(res, next, PaySlipModel,{user:req.params.id, status:'close'}, "PaySlips")
+    let query = {user:req.params.id}
+    getAll(res, next, PaySlipModel, query, "PaySlips")
+}
+
+export const getPayslipsByOrgId = (req, res, next) => {
+    let query = {organization:req.params.id}
+    getAll(res, next, PaySlipModel, query, "PaySlips")
+}
+
+export const checkForgetPDuplicates = (req, res, next) => {
+    let query = {
+        user:req.params.id,
+        month:req.body.month,
+        year:req.body.year
+    }
+    PaySlipModel.findOne(query)
+    .then((response)=>{
+        if (response === null) next();
+        else throw new Error('Payslip for this month already generated.');
+    })
+    .catch((error) => {
+        handleCatch(error, res, 400, next)
+    })
 }

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { paySlips } from './configuration';
 import { setPayslips } from '../states/reducers/slices/backend/UserSlice';
-import { toastMessage } from '../AlertConfigs';
 import { toast } from 'react-toastify';
+import { toastMessage } from '../AlertConfigs';
 
 export const getPayslips = (userId, dispatcher) => {
     axios.get(paySlips.ofUser + userId)
@@ -15,12 +15,22 @@ export const getPayslips = (userId, dispatcher) => {
    
 }
 
+export const getPayslipsOrg = (organizationId, dispatcher) => {
+    axios.get(paySlips.ofOrganizarion + organizationId)
+    .then((response) => {
+        dispatcher(setPayslips(response.data.response));
+    })
+    .catch((error) => {
+        // console.log(error.response.data);
+    });
+}
+
 export const savePaySlipData = (organizationId, formData) => {
     axios.post(paySlips.generate + organizationId, formData)
-    .then((response) => {
-        toastMessage("success", "PaySlip Generated SuccessFully.", toast);
+    .then(() => {
+        toastMessage("success", "Payslips generated successfully", toast);
     })
-    .catch((err) => {
-        toastMessage("error", "PaySlip Generation Failed.", toast);
+    .catch((error) => {
+        toastMessage("error", error.response.data.Message, toast);
     })
 }
