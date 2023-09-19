@@ -1,9 +1,10 @@
+import { Button, DatePicker, Form, Select } from 'antd';
 import React, { useState } from 'react';
-import { DatePicker, Button, Form, Select } from 'antd';
+
 import { commonStyles } from '../../styles/common';
 import { savePaySlipData } from '../../api/payslips';
-import { useSelector } from 'react-redux';
 import { selectOrgId } from '../../states/reducers/slices/backend/UserSlice';
+import { useSelector } from 'react-redux';
 
 const { Option } = Select;
 

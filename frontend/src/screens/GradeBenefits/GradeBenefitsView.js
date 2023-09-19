@@ -72,7 +72,7 @@ export default function GradeBenefitsView({ data, gradesList }) {
             Element={<GradeBenefitsForm formData={formData} handleInputChange={handleInputChange} gradesList={gradesList} validationErrors={validationErrors} />}
             btnConfig={ViewBtnConfig}
             check={(closeModal) => {
-                if (!validationErrors?.name && !validationErrors?.grade && !validationErrors?.description && formData?.name.trim() && formData?.description.trim()) {
+                if (!validationErrors?.name && !validationErrors?.grade && !validationErrors?.description && formData?.name.trim() && formData?.description.trim() && formData?.grade.length>0 ) {
                     closeModal()
                 }
             }

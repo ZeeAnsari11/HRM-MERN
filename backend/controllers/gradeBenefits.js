@@ -78,7 +78,7 @@ export const updateGradeBenefits = (req, res, next) => {
                     res.status(200).json({
                       success: true,
                       Message: `Updated Successfully`,
-                      notExistGrades: `grade(s) not found ${notExistGrades}`
+                      notExistGrades: `grades not found ${notExistGrades}`
                     })
                   })
                   .catch((err) => {
