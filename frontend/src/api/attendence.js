@@ -1,6 +1,8 @@
 import axios from "axios";
-import { attendenceRoute } from "./configuration";
+import { attendence, attendenceRoute } from "./configuration";
 import { setAttendence } from "../states/reducers/slices/backend/Attendence";
+import { toastMessage } from "../AlertConfigs";
+import { toast } from "react-toastify";
 
 export const timesheetAttendence = (dispatcher, _id) => {
   axios
@@ -16,4 +18,15 @@ export const timesheetAttendence = (dispatcher, _id) => {
     .catch((err) => {
       console.log(err);
     });
+};
+
+export const markAttendance = (form) => {
+  axios
+    .post(attendence.checkIO, form)
+    .then((response) => {
+      toastMessage("success", "Attendance Marked SuccessFully.", toast);
+  })
+  .catch((err) => {
+      toastMessage("error", "PaySlip Generation Failed.", toast);
+  })
 };

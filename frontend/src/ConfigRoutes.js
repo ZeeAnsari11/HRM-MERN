@@ -51,7 +51,6 @@ export const privateRoutes = () => {
       <Route path="employeement-type" element={<EmployeementType/>} />
       <Route path="short-leave-type" element={<ShortLeaveType/>} />
       <Route path="tax-rules" element={<TaxRules/>} />
-
     </>
   }
   

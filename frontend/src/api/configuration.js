@@ -238,3 +238,7 @@ export const theme = {
     updateTheme: baseUrl+'/theme/org/',
     getTheme: baseUrl+'/theme/org/'
 }
+
+export const attendence = {
+    checkIO: baseUrl+'/attendence/new'
+}
