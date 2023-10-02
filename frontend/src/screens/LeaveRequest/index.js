@@ -54,8 +54,6 @@ const LeaveRequest = () => {
     getShortLeaveTypesByOrganizationId(org_id, dispatcher, closeLoader);
   }, []);
 
-
-
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
     if (!short) {
