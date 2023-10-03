@@ -18,7 +18,7 @@ const CheckInCheckOut = () => {
 
   const c_user = useSelector(selectCurrentUser)
   const user = c_user._id
-  
+  console.log(user, "user");
 
   useEffect(() => {
     let interval;
@@ -39,18 +39,21 @@ const CheckInCheckOut = () => {
   }, [isCheckedIn, checkInTime]);
 
   const handleCheckIn = () => {
-    setIsCheckedIn(true);
-    setCheckInTime(new Date());
-    localStorage.setItem('isCheckedIn', 'true');
-    localStorage.setItem('checkInTime', new Date().toString());
-    const formData = {
-      user: user,
-      date: new Date().toISOString().split('T')[0], 
-      checkIn: checkInTime,
-    };
+    // Check if already checked in before allowing check-in again
+    if (!isCheckedIn) {
+      setIsCheckedIn(true);
+      setCheckInTime(new Date());
+      localStorage.setItem('isCheckedIn', 'true');
+      localStorage.setItem('checkInTime', new Date().toString());
+      const formData = {
+        user: user,
+        date: new Date().toISOString().split('T')[0],
+        checkIn: new Date().toLocaleTimeString(),
+      };
 
-    markAttendance(formData)
-  
+      console.log(formData, "formData");
+      markAttendance(formData);
+    }
   };
 
   const handleCheckOut = () => {
@@ -59,12 +62,12 @@ const CheckInCheckOut = () => {
     localStorage.setItem('isCheckedIn', 'false');
     const formData = {
       user: user,
-      date: new Date().toISOString().split('T')[0], 
+      date: new Date().toISOString().split('T')[0],
       checkOut: new Date().toLocaleTimeString(),
     };
 
-    markAttendance(formData)
-
+    console.log(formData, "formData");
+    markAttendance(formData);
   };
 
   const formatTime = (seconds) => {
@@ -81,7 +84,6 @@ const CheckInCheckOut = () => {
       setElapsedTime(0);
       localStorage.setItem('elapsedTime', '0');
     }
-  
   };
 
   useEffect(() => {

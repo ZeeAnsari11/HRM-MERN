@@ -10,12 +10,14 @@ let onLeave;
 let isAbsent;
 export const createAttendance = (req, res, next) => {
   try {
+    console.log(req.body);
     if (
       req.body.user &&
       req.body.date &&
       (req.body.checkIn || req.body.checkOut) &&
       Object.keys(req.body).length == 3
     ) {
+      
       if (req.body.checkIn && req.body.checkOut)
         throw new Error("Invalid request body");
       if (req.body.checkIn) {
@@ -62,9 +64,9 @@ const checkAlreadyExists = (req, res, next, query) => {
         date: req.body.date,
         checkIn: "false",
         checkOut: "false",
-      })
-        .then((exist) => {
-          if (exist)
+      }) 
+        .then((exist) => { 
+          if (exist) 
             throw new Error("Your attendance is already marked on this date");
           fetchUserRosterDetails(req, res, next);
         })
