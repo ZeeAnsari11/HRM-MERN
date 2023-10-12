@@ -1,4 +1,4 @@
-import { faCalendarCheck, faCalendarDay, faCalendarPlus, faCalendarTimes, faCalendarWeek, faCediSign, faChartArea, faCircleDollarToSlot, faCodePullRequest, faCoffee, faDollarSign, faFileAlt, faGear, faHome, faNetworkWired, faTimeline, faUser, faUserCircle, faUserClock, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faCalendarCheck, faCalendarDay, faCalendarPlus, faCalendarTimes, faCalendarWeek, faCediSign,faArrowCircleRight, faChartArea, faCircleDollarToSlot, faCodePullRequest, faCoffee, faDollarSign, faFileAlt, faGear, faHome, faNetworkWired, faTimeline, faUser, faUserCircle, faUserClock, faUsers, faArrowDown, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons'
 
 export const Menus = [
     { title: "Dashboard", font:faHome, gap: true, child:[], to: "/dashboard/home"},
@@ -84,6 +84,11 @@ export const Menus = [
     { title: "Grades", access:"Admin", font: faCircleDollarToSlot, child:[], to:"/dashboard/grades"  },
     { title: "Grades Benefits", access:"Admin", font: faCircleDollarToSlot, child:[], to:"/dashboard/grade-benefits"  },
 
-
+    { title: "Request Flow",access:"Admin", font: faArrowDown,
+        child:[
+            { title: "Create Request Flow",access:"Admin", font: faArrowCircleRight,child:[], to:"/dashboard/request-flow"  },
+            { title: "Request Types",access:"Admin", font: faArrowCircleLeft,child:[], to:"/dashboard/request-type"  }
+        ],
+    },
     { title: "Settings", font: faGear, child:[], to:"/dashboard/settings" },
 ];

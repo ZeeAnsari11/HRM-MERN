@@ -30,6 +30,7 @@ export const createCommnQuestion = (req, res, next) => {
                         handleCatch(error, res, 500, next)
                     })
             })
+            
             .catch((error) => {
                 handleCatch(error, res, 404, next)
             })

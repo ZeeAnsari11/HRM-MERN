@@ -84,6 +84,11 @@ export const getAllRequestFlow = (req, res, next) => {
     getAll(res, next, RequestFlowModel, { requestType: req.params.id }, "RequestFlow")
 }
 
+export const getAllRequestFlowOfOrganization = (req, res, next) => {
+    console.log("req.params.id", req.params.id);
+    getAll(res, next, RequestFlowModel, { organization: req.params.id }, "RequestFlow")
+}
+
 
 export const createRequestFlowNode = async (req, res, next) => {
     try {
@@ -245,7 +250,6 @@ const getNextNode = (node, callback) => {
                 populatedNode.nextNode = nextNode;
                 callback(populatedNode);
             });
-
 
         })
         .catch(error => {

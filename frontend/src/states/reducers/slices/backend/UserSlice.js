@@ -32,6 +32,8 @@ export const UserSlice = createSlice({
     isAdmin: false,
     userChart: [],
     userById: {},
+    requestTypes: [],
+    setRequestFlows: [],
     userId: '',
     background: '',
     organizationTheme : {
@@ -108,6 +110,12 @@ export const UserSlice = createSlice({
     setOrganizationTheme: (state, action) => {
       state.organizationTheme = action.payload;
     },
+    setRequestTypes: (state, action) => {
+      state.requestTypes = action.payload;
+    },
+    setRequestFlows: (state, action) => {
+      state.requestFlowNodes = action.payload;
+    },
     setBackground: (state, action) => {
       if (action.payload === 'default') {
         state.background = ''
@@ -140,11 +148,15 @@ export const {
   setUpdatedLeave,
   setUserLeaveDetails,
   setUserChart,
-  setUserById
+  setUserById,
+  setRequestTypes,
+  setRequestFlows,
 } = UserSlice.actions;
 
 // Selector Methods
 export const selectCurrentUser = (state) => state.user.currentUser;
+export const selectRequestFlows = (state) => state.user.setRequestFlows;
+export const selectRequestTypes = (state) => state.user.requestTypes;
 export const selectBackground = (state) => state.user.background;
 export const selectOrgTheme = (state) => state.user.organizationTheme;
 export const selectUserForm = (state) => state.user.userForm;

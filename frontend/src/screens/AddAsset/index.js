@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// Import React and Tailwind CSS
+
 import React from 'react';
 import { commonStyles } from '../../styles/common';
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
@@ -11,9 +11,9 @@ import { selectAssetTypes } from '../../states/reducers/slices/backend/Assets';
 import { selectOrgId } from '../../states/reducers/slices/backend/UserSlice';
 import { useDropzone } from "react-dropzone";
 
-// Define a component for the add asset form
+
 const Asset = () => {
-  // Use state to store the form values
+  
   const [name, setName] = React.useState('');
   const [condition, setCondition] = useState('');
   const [manufacturedBy, setManufacturedBy] = useState('');
@@ -32,12 +32,12 @@ const Asset = () => {
   };
   const { getRootProps, getInputProps } = useDropzone({ onDrop: handleDrop });
 
-  // Define a function to handle the form submission
+  
   const handleSubmit = (e) => {
-    // Prevent the default browser behavior
+    
     e.preventDefault();
 
-    // Create a new asset object with the form values
+    
     const newAsset = {
       organization,
       name,
@@ -59,7 +59,7 @@ const Asset = () => {
     getAssetTypesByOrganizationId(organization, dispatcher)
   }, []);
 
-  // Return the JSX for the add asset form
+  
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl block text-gray-700 font-bold mb-2 pl-1 pr-4 py-2">Add Asset</h1>

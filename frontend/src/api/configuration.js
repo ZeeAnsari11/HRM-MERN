@@ -260,3 +260,18 @@ export const theme = {
 export const attendence = {
     checkIO: baseUrl+'/attendence/new'
 }
+
+export const requestType = {
+    all: baseUrl+'/request-type/all/',
+    create: baseUrl+'/request-type/create',
+    update: baseUrl+'/request-type/update/'
+}
+
+export const requestFlow = {
+    create: baseUrl+'/request-flow/create',
+    // nodes:  baseUrl+'/request-flow/all/nodes/',
+    all: baseUrl+'/request-flow/all-org/',    
+}
+
+
+

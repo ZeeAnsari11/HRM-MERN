@@ -12,9 +12,9 @@ import { selectLoanTypes } from '../../states/reducers/slices/backend/Loan';
 import { selectOrgId } from '../../states/reducers/slices/backend/UserSlice';
 import { useDropzone } from "react-dropzone";
 
-// Define a component for the add asset form
+
 const CreateLoanRequest = () => {
-  // Use state to store the form values
+  
   const [loanType, setLoanType] = React.useState('');
   const [loancCategory, setLoanCategory] = useState('');
   const [amount, setAmount] = useState('');
@@ -77,6 +77,7 @@ const CreateLoanRequest = () => {
     setTimeout(() => {
       setRequestCreated(false);
     }, 3000);
+
   };
 
   // Define a function to handle the form submission
