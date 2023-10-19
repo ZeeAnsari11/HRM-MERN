@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { createAssetType, deleteAssetType, getAssetTypesByOrgId, updateAssetType } from '../../api/assetTypes';
-import { createGrades, getGradesByOrgId, updateGrade } from '../../api/Grades';
-import { faArrowAltCircleRight, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { createGrades, deleteGrade, getGradesByOrgId, updateGrade } from '../../api/Grades';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import ComponentLoader from '../../components/Loader/ComponentLoader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,11 +8,14 @@ import GradesForm from './GradesForm';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import { commonStyles } from '../../styles/common';
-import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { useSelector } from 'react-redux';
 
 const GradesViewForm = ({ data }) => {
   const [value, setValue] = useState(data.name);
+  
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
   
   const [validationErrors, setValidationErrors] = useState({
     name: "",
@@ -29,7 +31,7 @@ const GradesViewForm = ({ data }) => {
       trigger();
       return;
     }
-    updateGrade(data.id, { name: value }, trigger)
+    updateGrade(data.id, { name: value }, trigger, orgId, role)
   }
   const btnConfig = [
     {
@@ -70,7 +72,7 @@ const GradesViewForm = ({ data }) => {
         //          DELETE BUTTON FUNCTIONALITY ALREADY IMPLEMENTED
       /* <button title='Delete'
         className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
-        onClick={() => deleteAssetType(data.id)}
+        onClick={() => deleteGrade(data.id)}
       >
         <FontAwesomeIcon icon={faTrash} />
       </button> */}
@@ -80,8 +82,9 @@ const GradesViewForm = ({ data }) => {
 
 
 const Grades = () => {
-  let orgId;
-  orgId = useSelector(selectCurrentUserOrg);
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
   const [toggleChange, setToggleChange] = useState(false);
   const [grades, setGrades] = useState([]);
   const [loader, setLoader] = useState(true)
@@ -93,9 +96,11 @@ const Grades = () => {
   const [validationErrors, setValidationErrors] = useState({
     name: "",
   });
+  
   useEffect(() => {
-    getGradesByOrgId(orgId, setGrades)
+    getGradesByOrgId(orgId, setGrades, role)
   }, [toggleChange]);
+  
   const changeToggler = () => {
     setToggleChange(!toggleChange);
   }
@@ -120,7 +125,7 @@ const Grades = () => {
       trigger();
       return;
     }
-    createGrades(formData, changeToggler, trigger);
+    createGrades(formData, changeToggler, trigger, orgId, role);
     setFormData({
       name: '',
       organization: orgId,

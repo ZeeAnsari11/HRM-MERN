@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { createLeaveType, getLeaveTypeByOrgId } from '../../api/leaveType';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 import LTForm from './LTForm';
 import LeaveTypeView from './LeaveTypeView';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import { commonStyles } from '../../styles/common';
-import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
-import ComponentLoader from '../../components/Loader/ComponentLoader';
 
 const LeaveType = () => {
-  let orgId;
-  orgId = useSelector(selectCurrentUserOrg);
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
   const [toggleChange, setToggleChange] = useState(false);
   const [leaveType, setLeaveType] = useState([]);
   const [formData, setFormData] = useState({
@@ -44,7 +45,7 @@ const LeaveType = () => {
   }
 
   let LoadData = () => {
-    getLeaveTypeByOrgId(orgId, setLeaveType, leaveLoader)
+    getLeaveTypeByOrgId(orgId, setLeaveType, leaveLoader, role)
   }
 
   // const handleInputChange = (e) => {
@@ -78,7 +79,7 @@ const LeaveType = () => {
         trigger();
         return;
     }
-    createLeaveType(formData, changeToggler, trigger);
+    createLeaveType(formData, changeToggler, trigger, orgId, role);
     setFormData({
       name: '',
       shortName: '',

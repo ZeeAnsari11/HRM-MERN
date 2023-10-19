@@ -1,5 +1,6 @@
+import { AssetManagment, UpdateAssetById, createAsset, filterAssets, getAssetById, getAssets, getAssetsAllocatedToNonActiveUsers, getAssetsAllocatedToUserById, getPreviousHolderByAssetId, setAssetToNonActive } from "../controllers/assets.js";
+
 import express from "express";
-import { createAsset, getAssetById, UpdateAssetById , getAssets, filterAssets, AssetManagment, getAssetsAllocatedToUserById, getPreviousHolderByAssetId, getAssetsAllocatedToNonActiveUsers, setAssetToNonActive} from "../controllers/assets.js";
 
 export const assetsRoute = express.Router();
 

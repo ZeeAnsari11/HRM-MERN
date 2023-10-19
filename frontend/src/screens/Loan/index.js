@@ -1,11 +1,11 @@
 import Table, { StatusPill } from '../../components/Table';
 import { selectCreatingLoan, selectUserLoan } from '../../states/reducers/slices/backend/Loan'
+import { selectCurrentUserOrg, selectCurrentUserRole, selectUID } from '../../states/reducers/slices/backend/UserSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
 import CreateLoanRequest from './CreateLoan'
 import React from 'react'
 import { getUserLoanById } from '../../api/loan'
-import { selectUID } from '../../states/reducers/slices/backend/UserSlice'
 import { useEffect } from 'react'
 import { useMemo } from 'react'
 import { useState } from 'react'
@@ -14,6 +14,9 @@ import { useState } from 'react'
 
 function Loan() {
 
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
   const columns = useMemo(() => [
     {
       Header: "Loan Type",
@@ -48,7 +51,7 @@ function Loan() {
   const req = useSelector(selectCreatingLoan)
   const dispatcher = useDispatch()
   useEffect(() => {
-    getUserLoanById(userId, dispatcher)
+    getUserLoanById(userId, dispatcher, orgId, role)
     setCreatingLoanRequest(req)
   }, [])
 

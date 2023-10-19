@@ -1,11 +1,15 @@
-import { gradeBenefits, loanType, organizationRoutes } from "./configuration";
+import { gradeBenefits, organizationRoutes } from "./configuration";
 
 import axios from "axios";
+import { setHeaders } from "../utils/AdminStatus";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
 
-export const createGradeBenefit = (formData, changeToggler, trigger) => {
-    axios.post(gradeBenefits.createGradeBenefit, formData)
+export const createGradeBenefit = (formData, changeToggler, trigger, orgId, role) => {
+    formData.organization = orgId;
+    const headers = setHeaders(orgId, role, 'createGradeBenefits')
+
+    axios.post(gradeBenefits.createGradeBenefit, formData, {headers})
         .then(() => {
             toastMessage("success", "GradeBenefit created successfully,", toast);
             changeToggler();
@@ -18,8 +22,10 @@ export const createGradeBenefit = (formData, changeToggler, trigger) => {
         })
 }
 
-export const getgradeBenefitsByOrgId = (orgId, setAssetTypes, trigger = null) => {
-    axios.get(organizationRoutes.getGradeBenefitsByOrgId + orgId)
+export const getgradeBenefitsByOrgId = (orgId, setAssetTypes, trigger = null, role) => {
+    const headers = setHeaders(orgId, role, 'getAllGradeBenefits')
+    
+    axios.get(organizationRoutes.getGradeBenefitsByOrgId + orgId, {headers})
         .then((response) => {
             setAssetTypes(response.data.response);
         })
@@ -47,8 +53,10 @@ export const deleteGradeBenefitsById = (id) => {
         })
 }
 
-export const updateGradeBenefitsById = (id, formData, trigger) => {
-    axios.put(gradeBenefits.updateGradeBenefitById + id, formData)
+export const updateGradeBenefitsById = (id, formData, trigger, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'updateGradeBenefits')
+
+    axios.put(gradeBenefits.updateGradeBenefitById + id, formData, {headers})
         .then((response) => {
             toastMessage("success", response.data.Message, toast)
             setTimeout(() => {

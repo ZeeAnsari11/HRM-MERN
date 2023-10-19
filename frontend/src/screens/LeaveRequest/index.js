@@ -1,28 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { addHours, differenceInBusinessDays } from "date-fns";
 import {
+  GetUserAllowedLeaves,
   getLeaveRequestByOrganizationId,
   getShortLeaveTypesByOrganizationId,
   saveFormData,
 } from "../../api/leaverequest";
+import React, { useEffect, useState } from "react";
+import { addHours, differenceInBusinessDays } from "date-fns";
 import {
-  selectLeaveTypes,
-  selectShortLeaveTypes,
-} from "../../states/reducers/slices/backend/LeaveRequest";
-import {
+  selectCurrentUserRole,
   selectOrgId,
   selectUID,
   selectUserLeaveTypes,
 } from "../../states/reducers/slices/backend/UserSlice";
+import {
+  selectLeaveTypes,
+  selectShortLeaveTypes,
+} from "../../states/reducers/slices/backend/LeaveRequest";
 import { useDispatch, useSelector } from "react-redux";
 
+import ComponentLoader from "../../components/Loader/ComponentLoader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { commonStyles } from "../../styles/common";
 import { faCloudUploadAlt } from "@fortawesome/free-solid-svg-icons";
 import { useDropzone } from "react-dropzone";
-import ComponentLoader from "../../components/Loader/ComponentLoader";
 
 const LeaveRequest = () => {
+  let role = useSelector(selectCurrentUserRole);
+
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [leaveType, setLeaveType] = useState("");
@@ -39,7 +43,11 @@ const LeaveRequest = () => {
 
   const dispatcher = useDispatch();
   const org_id = useSelector(selectOrgId);
-  const leaveTypes = useSelector(selectLeaveTypes);
+
+  const [toggleChange, setToggleChange] = useState(false);
+  const [leaveTypes, setLeaveTypes] = useState([]);
+
+  // const leaveTypes = useSelector(selectLeaveTypes);
   const shortLeaveTypes = useSelector(selectShortLeaveTypes);
   const leavesCount = useSelector(selectUserLeaveTypes);
   const user = useSelector(selectUID);
@@ -50,12 +58,13 @@ const LeaveRequest = () => {
     setLoader(false)
   }
   useEffect(() => {
-    getLeaveRequestByOrganizationId(org_id, dispatcher);
-    getShortLeaveTypesByOrganizationId(org_id, dispatcher, closeLoader);
+    // getLeaveRequestByOrganizationId(org_id, dispatcher,role);
+    GetUserAllowedLeaves(user, org_id, role, setLeaveTypes)
+    getShortLeaveTypesByOrganizationId(org_id, dispatcher, closeLoader, role);
   }, []);
 
-
-
+  console.log("======leaveTypes====", leaveTypes);
+  console.log("========selectedLeaveType====", selectedLeaveType);
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
     if (!short) {
@@ -129,217 +138,221 @@ const LeaveRequest = () => {
       organization,
       reason,
     };
-    saveFormData(newFormData);
+    saveFormData(newFormData, org_id, role);
   };
 
-  if(!loader)
-  return (
-    <form onSubmit={handleSubmit} className="p-4">
-      <h2 className="text-xl  mb-4 ">Create Leave Request</h2>
-      <div className="mb-4">
-        <label className="block text-gray-700 mb-2" htmlFor="leave-type">
-          Leave Type
-        </label>
-        <select
-          className={commonStyles.input}
-          id="leave-type"
-          value={leaveType}
-          onChange={(e) => {
-            setLeaveType(e.target.value);
-            setSelectedLeaveType(
-              leaveTypes.filter((leaveType) => {
-                if (leaveType._id === e.target.value) return leaveType;
-              })
-            );
-          }}
-          required
-        >
-          <option value="">Select leave type</option>
-          {leaveTypes.map((type) => {
-            return (
-              <option key={type._id} value={type._id}>
-                {type.name}
-              </option>
-            );
-          })}
-        </select>
-      </div>
-      {selectedLeaveType[0]?.shortLeave && (
+  if (!loader)
+    return (
+      <form onSubmit={handleSubmit} className="p-4">
+        <h2 className="text-xl  mb-4 ">Create Leave Request</h2>
         <div className="mb-4">
-          <label
-            className="block text-gray-700 font-bold mb-2 pl-1 pr-4 py-2"
-            htmlFor="short"
-          >
-            <input
-              className={commonStyles.input}
-              type="checkbox"
-              id="short"
-              checked={short}
-              onChange={handleTimeChange}
-            />
-            <span className="text-sm font-medium">Short</span>
-          </label>
-        </div>
-      )}
-      {short && (
-        <div className="mb-4">
-          <label
-            className="block text-gray-700  mb-2 "
-            htmlFor="short-leave-type"
-          >
-            Short Leave Type
+          <label className="block text-gray-700 mb-2" htmlFor="leave-type">
+            Leave Type
           </label>
           <select
             className={commonStyles.input}
-            id="short-leave-type"
-            value={shortLeaveType}
-            onChange={(e) => setShortLeaveType(e.target.value)}
+            id="leave-type"
+            value={leaveType}
+            onChange={(e) => {
+              setLeaveType(e.target.value);
+              setSelectedLeaveType(
+                leaveTypes?.filter((leaveType) => {
+                  if (leaveType.leaveType._id === e.target.value) return leaveType.leaveType;
+                })
+              );
+            }}
             required
           >
-            <option value="">Select Short Leave Type</option>
-            {shortLeaveTypes.map((type) => {
-              return <option value={type._id}>{type.name}</option>;
+            <option value="">Select leave type</option>
+            {leaveTypes?.map((type) => {
+              return (
+                <option key={type.leaveType._id} value={type.leaveType._id}>
+                  {type.leaveType.name}
+                </option>
+              );
             })}
           </select>
         </div>
-      )}
+        {selectedLeaveType[0]?.leaveType.shortLeave && (
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 font-bold mb-2 pl-1 pr-4 py-2"
+              htmlFor="short"
+            >
+              <input
+                className={commonStyles.input}
+                type="checkbox"
+                id="short"
+                checked={short}
+                onChange={handleTimeChange}
+              />
+              <span className="text-sm font-medium">Short</span>
+            </label>
+          </div>
+        )}
+        {short && (
+          <div className="mb-4">
+            <label
+              className="block text-gray-700  mb-2 "
+              htmlFor="short-leave-type"
+            >
+              Short Leave Type
+            </label>
+            <select
+              className={commonStyles.input}
+              id="short-leave-type"
+              value={shortLeaveType}
+              onChange={(e) => setShortLeaveType(e.target.value)}
+              required
+            >
+              <option value="">Select Short Leave Type</option>
+              {shortLeaveTypes.map((type) => {
+                return <option value={type._id}>{type.name}</option>;
+              })}
+            </select>
+          </div>
+        )}
 
-      {short && (
+        {short && (
+          <div className="mb-4">
+            <label className="block text-gray-700  mb-2 " htmlFor="start-time">
+              Start Time
+            </label>
+            <input
+              className={commonStyles.input}
+              id="start-time"
+              type="time"
+              value={startTime}
+              onChange={handleStartTime}
+              required
+            />
+          </div>
+        )}
+
+        {short && (
+          <div className="mb-4">
+            <label className="block text-gray-700  mb-2 " htmlFor="end-time">
+              End Time
+            </label>
+            <input
+              className={commonStyles.input}
+              id="end-time"
+              value={endTime}
+              type="time"
+              readOnly={true}
+            />
+          </div>
+        )}
+
         <div className="mb-4">
-          <label className="block text-gray-700  mb-2 " htmlFor="start-time">
-            Start Time
+          <label
+            className="block text-gray-700  mb-2 "
+            htmlFor="available-leaves"
+          >
+            Available Leaves
           </label>
           <input
             className={commonStyles.input}
-            id="start-time"
-            type="time"
-            value={startTime}
-            onChange={handleStartTime}
+            id="available-leaves"
+            type="text"
+            value={leaveTypes
+              .filter((leaveType) => selectedLeaveType[0]?.leaveType._id === leaveType.leaveType._id)
+              .map((leaveType) => leaveType.count)
+              .join(', ')
+            }
+            readOnly
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700  mb-2 " htmlFor="start-date">
+            Start Date
+          </label>
+          <input
+            className={commonStyles.input}
+            id="start-date"
+            type="date"
+            value={startDate}
+            onChange={handleStartDateChange}
             required
           />
         </div>
-      )}
-
-      {short && (
         <div className="mb-4">
-          <label className="block text-gray-700  mb-2 " htmlFor="end-time">
-            End Time
+          <label className="block text-gray-700  mb-2 " htmlFor="end-date">
+            End Date
           </label>
           <input
             className={commonStyles.input}
-            id="end-time"
-            value={endTime}
-            type="time"
-            readOnly={true}
+            id="end-date"
+            type="date"
+            value={endDate}
+            onChange={handleEndDateChange}
+            required
           />
         </div>
-      )}
-
-      <div className="mb-4">
-        <label
-          className="block text-gray-700  mb-2 "
-          htmlFor="available-leaves"
-        >
-          Available Leaves
-        </label>
-        <input
-          className={commonStyles.input}
-          id="available-leaves"
-          type="text"
-          value={availableLeaves}
-          readOnly
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700  mb-2 " htmlFor="start-date">
-          Start Date
-        </label>
-        <input
-          className={commonStyles.input}
-          id="start-date"
-          type="date"
-          value={startDate}
-          onChange={handleStartDateChange}
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700  mb-2 " htmlFor="end-date">
-          End Date
-        </label>
-        <input
-          className={commonStyles.input}
-          id="end-date"
-          type="date"
-          value={endDate}
-          onChange={handleEndDateChange}
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700  mb-2 " htmlFor="count">
-          Count
-        </label>
-        <input
-          className={commonStyles.input}
-          id="count"
-          type="number"
-          value={count}
-          readOnly
-        />
-      </div>
-
-      {selectedLeaveType[0]?.attachmentRequired && (
         <div className="mb-4">
-          <label
-            className="block text-gray-700 font-bold mb-2 pl-1 "
-            htmlFor="attachment"
-          >
-            Attachment
+          <label className="block text-gray-700  mb-2 " htmlFor="count">
+            Count
           </label>
-          <div
-            {...getRootProps()}
-            className="border border-dashed p-4 border-backgroundDark "
-          >
-            <input {...getInputProps()} accept=".pdf,.doc,.docx,image/*" />
-            {attachmentPreview ? (
-              <img src={attachmentPreview} alt="Attachment Preview" />
-            ) : (
-              <>
-                <FontAwesomeIcon
-                  icon={faCloudUploadAlt}
-                  className="text-4xl mb-4 mx-auto flex justify-center items-center"
-                />
-                <p className="text-center">
-                  Drag 'n' drop some files here, or click to select files
-                </p>
-              </>
-            )}
-          </div>
+          <input
+            className={commonStyles.input}
+            id="count"
+            type="number"
+            value={count}
+            readOnly
+          />
         </div>
-      )}
 
-      <div className="mb-4">
-        <label className="block text-gray-700 mb-2" htmlFor="reason">
-          Reason
-        </label>
-        <textarea
-          className={commonStyles.input}
-          id="reason"
-          rows="4"
-          value={reason}
-          onChange={(e) => setReason(e.target.value)}
-          required
-        ></textarea>
-      </div>
-      <div className="flex items-center justify-between">
-        <button className={commonStyles.btnDark} type="submit">
-          Submit
-        </button>
-      </div>
-    </form>
-  );
-  else return <ComponentLoader color='black'/>
+        {selectedLeaveType[0]?.attachmentRequired && (
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 font-bold mb-2 pl-1 "
+              htmlFor="attachment"
+            >
+              Attachment
+            </label>
+            <div
+              {...getRootProps()}
+              className="border border-dashed p-4 border-backgroundDark "
+            >
+              <input {...getInputProps()} accept=".pdf,.doc,.docx,image/*" />
+              {attachmentPreview ? (
+                <img src={attachmentPreview} alt="Attachment Preview" />
+              ) : (
+                <>
+                  <FontAwesomeIcon
+                    icon={faCloudUploadAlt}
+                    className="text-4xl mb-4 mx-auto flex justify-center items-center"
+                  />
+                  <p className="text-center">
+                    Drag 'n' drop some files here, or click to select files
+                  </p>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2" htmlFor="reason">
+            Reason
+          </label>
+          <textarea
+            className={commonStyles.input}
+            id="reason"
+            rows="4"
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            required
+          ></textarea>
+        </div>
+        <div className="flex items-center justify-between">
+          <button className={commonStyles.btnDark} type="submit">
+            Submit
+          </button>
+        </div>
+      </form>
+    );
+  else return <ComponentLoader color='black' />
 };
 
 export default LeaveRequest;

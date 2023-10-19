@@ -1,16 +1,17 @@
 import Table, { StatusPill } from '../../components/Table';
+import { selectCurrentUserOrg, selectCurrentUserRole, selectUID } from '../../states/reducers/slices/backend/UserSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
 import React from 'react'
 import View from './src/modal';
 import { getUserLeaves } from '../../api/leaverequest';
-import { selectUID } from '../../states/reducers/slices/backend/UserSlice'
 import { selectUserLeaves } from '../../states/reducers/slices/backend/LeaveRequest';
 import { useEffect } from 'react'
 import { useMemo } from 'react'
 
 function Leave() {
-
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
 
   const columns = useMemo(() => [
     {
@@ -51,11 +52,13 @@ function Leave() {
       )
     },
   ], [])
+  
   const user_id = useSelector(selectUID)
   const apiData = useSelector(selectUserLeaves)
   const dispatcher = useDispatch()
+  
   useEffect(() => {
-    getUserLeaves(user_id, dispatcher)
+    getUserLeaves(user_id, dispatcher, orgId, role)
   }, [])
 
   const data = apiData.map(obj => ({
@@ -79,6 +82,3 @@ function Leave() {
 }
 
 export default Leave;
-
-
-

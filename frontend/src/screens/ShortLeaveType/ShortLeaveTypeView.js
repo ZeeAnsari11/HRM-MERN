@@ -1,13 +1,18 @@
-import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import React from 'react';
 import SLTForm from './SLTForm';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { updateShortLeaveTypeById } from '../../api/shortLeaveType';
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
 
 export default function ShortLeaveTypeView({ data }) {
+    let orgId = useSelector(selectCurrentUserOrg);
+    let role = useSelector(selectCurrentUserRole);
+
     const [formData, setFormData] = useState({
         name: data.name,
         shiftReductionInPercentage: data.shiftReductionInPercentage,
@@ -38,7 +43,7 @@ export default function ShortLeaveTypeView({ data }) {
             trigger();
             return;
         }
-        updateShortLeaveTypeById(data.id, formData, trigger);
+        updateShortLeaveTypeById(data.id, formData, trigger, orgId, role);
     };
 
     const ViewBtnConfig = [
@@ -66,7 +71,7 @@ export default function ShortLeaveTypeView({ data }) {
             Element={<SLTForm handleInputChange={handleInputChange} formData={formData} validationErrors={validationErrors} />}
             btnConfig={ViewBtnConfig}
             check={(closeModal) => {
-                if (!validationErrors.name && !validationErrors.shiftReductionInPercentage && !validationErrors.balance && formData.name && formData.balance >= 0 && formData.balance <= 1 && formData.shiftReductionInPercentage >= 20 && formData.shiftReductionInPercentage <= 100) {
+                if (!validationErrors.name && !validationErrors.shiftReductionInPercentage && !validationErrors.balance && formData.name && formData.balance >= 0.2 && formData.balance <= 1 && formData.shiftReductionInPercentage >= 20 && formData.shiftReductionInPercentage <= 100) {
                     closeModal()
                 }
             }}

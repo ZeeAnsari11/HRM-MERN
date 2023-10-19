@@ -1,10 +1,14 @@
+import { selectCurrentUser, selectCurrentUserOrg, selectCurrentUserRole } from "../../states/reducers/slices/backend/UserSlice";
+
 import { commonStyles } from "../../styles/common";
 import { saveFormDataForMissingPunches } from "../../api/missingPunchesRequests";
-import { selectCurrentUser } from "../../states/reducers/slices/backend/UserSlice";
 import { useSelector } from 'react-redux';
 import { useState } from "react";
 
 export default function Attendence() {
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
   let user = useSelector(selectCurrentUser)
   const [formData, setFormData] = useState({
     user :user._id ,
@@ -19,7 +23,7 @@ export default function Attendence() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    saveFormDataForMissingPunches(formData)
+    saveFormDataForMissingPunches(formData, orgId, role)
   };
 
   return (

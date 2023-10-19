@@ -1,11 +1,14 @@
 import axios from "axios";
 import { leaveTypeRoute } from "./configuration";
 import { organizationRoutes } from "./configuration";
+import { setHeaders } from "../utils/AdminStatus";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
 
-export const createLeaveType = (formData, changeToggler, trigger) => {
-    axios.post(leaveTypeRoute.createLeaveType, formData)
+export const createLeaveType = (formData, changeToggler, trigger, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'createNewLeaveType')
+
+    axios.post(leaveTypeRoute.createLeaveType, formData, {headers})
         .then(() => {
             toastMessage("success", "Leave Type successfully,", toast);
             changeToggler();
@@ -19,8 +22,10 @@ export const createLeaveType = (formData, changeToggler, trigger) => {
 }
 
 
-export const getLeaveTypeByOrgId = (orgId, setLeaveType, trigger = null) => {
-    axios.get(organizationRoutes.getLeaveTypeByOrgId + orgId)
+export const getLeaveTypeByOrgId = (orgId, setLeaveType, trigger = null, role) => {
+    const headers = setHeaders(orgId, role, 'getLeaveTypeByOrgId')
+
+    axios.get(organizationRoutes.getLeaveTypeByOrgId + orgId, {headers})
         .then((response) => {
             setLeaveType(response.data.response)
         })
@@ -34,8 +39,10 @@ export const getLeaveTypeByOrgId = (orgId, setLeaveType, trigger = null) => {
         })
 }
 
-export const updateLeaveTypeById = (id, formData, trigger) => {
-    axios.put(leaveTypeRoute.updateLeaveTypeById + id, formData)
+export const updateLeaveTypeById = (id, formData, trigger, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'updateLeaveTypeById')
+
+    axios.put(leaveTypeRoute.updateLeaveTypeById + id, formData, {headers})
         .then((response) => {
             toastMessage("success", response.data.Message, toast)
             //TODO: Update required

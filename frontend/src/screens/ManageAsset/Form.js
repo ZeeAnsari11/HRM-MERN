@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { selectAllUsers, selectCurrentUserRole, selectOrgId } from "../../states/reducers/slices/backend/UserSlice";
 import { selectAllocationAction, selectAllocationId, selectAsset } from "../../states/reducers/slices/backend/Assets";
-import { getAssetById } from "../../api/asset";
+import { useDispatch, useSelector } from "react-redux";
+
 import { AllocateDeallocateAsset } from "../../api/asset";
-import { getAllUsersByOrganization } from "../../api/user";
-import { selectAllUsers, selectOrgId } from "../../states/reducers/slices/backend/UserSlice";
-import SelectForm from "../../components/SelectForm";
 import Loader from "../../components/Loader";
+import SelectForm from "../../components/SelectForm";
+import { getAllUsersByOrganization } from "../../api/user";
+import { getAssetById } from "../../api/asset";
 
 const FormGG = () => {
+  const orgId = useSelector(selectOrgId)
+  let role = useSelector(selectCurrentUserRole);
+  
   const [user, setUser] = useState("");
   const [reason, setReason] = useState("");
   const [condition, setCondition] = useState("");
@@ -24,7 +28,7 @@ const FormGG = () => {
 
   useEffect(() => {
     getAllUsersByOrganization(org_id, dispatcher);
-    getAssetById(id, dispatcher);
+    getAssetById(id, dispatcher, orgId, role);
   }, [org_id, dispatcher, id]);
 
   const handleInputChange = (e) => {
@@ -70,7 +74,7 @@ const FormGG = () => {
           date,
           action,
         };
-        AllocateDeallocateAsset(allocationOfAsset, dispatcher, setShowLoading);
+        AllocateDeallocateAsset(allocationOfAsset, dispatcher, setShowLoading, orgId, role);
       }
     } else {
       setShowLoading(false);

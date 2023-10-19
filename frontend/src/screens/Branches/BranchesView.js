@@ -1,13 +1,19 @@
-import { updateBranchById } from '../../api/branches';
-import { faArrowAltCircleRight } from '@fortawesome/free-solid-svg-icons';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import CBForm from './CBForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import React from 'react';
+import { faArrowAltCircleRight } from '@fortawesome/free-solid-svg-icons';
+import { updateBranchById } from '../../api/branches';
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
 
 export default function BranchesView({ data }) {
+  
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
     const [formData, setFormData] = useState({
         city: data.city,
         country: data.country,
@@ -43,7 +49,7 @@ export default function BranchesView({ data }) {
       return;
     }
     
-        updateBranchById(data.id ,formData, trigger);
+        updateBranchById(data.id ,formData, trigger, orgId, role);
     };
 
     const ViewBtnConfig = [

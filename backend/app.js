@@ -40,6 +40,7 @@ import { loanRepaymentRoute } from "./routes/loanRepayment.js";
 import { loanRoute } from "./routes/loan.js";
 import { loanTypeRoute } from "./routes/loanType.js";
 import { missingPunchesRequestRoute } from "./routes/missingPunches.js";
+import morgan from "morgan"
 import multer from "multer"
 import { organizationRoute } from "./routes/organization.js";
 import path from 'path';
@@ -74,6 +75,7 @@ app.use(cookieParser());
 app.use(helmet())
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(bodyParser.json())
+// app.use(morgan('dev'))
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -135,53 +137,57 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/welcome.html');
 })
 app.use(apiVersion, organizationRoute);
-app.use(apiVersion, branchRoute);
-app.use(apiVersion, assetsRoute);
 app.use(apiVersion, assetRevisionRoute);
 app.use(apiVersion, relativesRoute);
 app.use(apiVersion, experienceRoute);
 app.use(apiVersion, bankRoute);
-app.use(apiVersion, departmentRoute);
 app.use(apiVersion, userRoute);
 app.use(apiVersion, qualificationRoute);
 app.use(apiVersion, certificateRoute);
 app.use(apiVersion, addressRoute);
-app.use(apiVersion, loanTypeRoute);
-app.use(apiVersion, loanRoute);
 app.use(apiVersion, salaryRoute);
-app.use(apiVersion, designationRoute);
-app.use(apiVersion, assetTypeRoute);
-app.use(apiVersion, employmentTypeRoute);
 app.use(apiVersion, eoeTypeRoute);
 app.use(apiVersion, probEvalAttributesRoute);
 app.use(apiVersion, commonQuestionsRoute);
 app.use(apiVersion, evaluationRatingRoute);
 app.use(apiVersion, leaveSlabsRoute);
-app.use(apiVersion, leaveTypeRoute);
-app.use(apiVersion, gradeRoute)
-app.use(apiVersion, gradeBenefitsRoute)
-app.use(apiVersion, shortLeaveTypeRoute);
-app.use(apiVersion, leaveRequestRoute);
-app.use(apiVersion, userRoleRoute);
-app.use(apiVersion, timeSlotsRoute);
+// app.use(apiVersion, userRoleRoute);
 app.use(apiVersion, loanRepaymentRoute);
 app.use(apiVersion, authRoute);
-app.use(apiVersion, wfhRoute);
 app.use(apiVersion, probationEvaluationRoute)
 app.use(apiVersion, requestFlowRoute)
 app.use(apiVersion, requestTypeRoute)
 app.use(apiVersion, gradeRoute)
 app.use(apiVersion, requestRoute)
-app.use(apiVersion, missingPunchesRequestRoute)
-app.use(apiVersion, attendenceRoute)
-app.use(apiVersion, allowanceRoute)
 app.use(apiVersion, paySlipRoute)
-app.use(apiVersion, taxRuleRoute)
 app.use(apiVersion, holidayRoute)
 app.use(apiVersion, expenseRoute)
 app.use(apiVersion, PermssionsRoute)
 app.use(apiVersion, themeRoute)
 app.use(apiVersion, backgroundShifterRoute)
+
+
+app.use(apiVersion, permissionsMiddlewre);
+app.use(apiVersion, designationRoute); 
+app.use(apiVersion, loanTypeRoute);
+app.use(apiVersion, departmentRoute);
+app.use(apiVersion, branchRoute);
+app.use(apiVersion, timeSlotsRoute);
+app.use(apiVersion, employmentTypeRoute);
+app.use(apiVersion, taxRuleRoute)
+app.use(apiVersion, allowanceRoute)
+app.use(apiVersion, gradeRoute)
+app.use(apiVersion, gradeBenefitsRoute)
+app.use(apiVersion, assetTypeRoute);
+app.use(apiVersion, leaveTypeRoute);
+app.use(apiVersion, shortLeaveTypeRoute);
+app.use(apiVersion, assetsRoute);
+app.use(apiVersion, missingPunchesRequestRoute)
+app.use(apiVersion, attendenceRoute)
+app.use(apiVersion, leaveRequestRoute);
+app.use(apiVersion, wfhRoute);
+app.use(apiVersion, loanRoute);
+
 
 app.use((err, req, res, next) => {
     errorHandler(err, res, next)

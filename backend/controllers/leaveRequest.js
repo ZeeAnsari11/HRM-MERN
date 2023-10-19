@@ -304,7 +304,7 @@ export const updateLeaveRequest = (req, res, next) => {
                             }
                         }
                         else if (userLeaveRequest.short == false && req.body.short == false) {
-                            
+
                             if (userLeaveRequest.leaveType.toString() !== req.body.leaveType.toString() ||
                                 new Date(userLeaveRequest.startDate).toString() !== new Date(req.body.startDate).toString() ||
                                 new Date(userLeaveRequest.endDate).toString() !== new Date(req.body.endDate).toString()) {
@@ -482,4 +482,30 @@ export const userLeaveRequests = (req, res, next) => {
         .catch((error) => {
             handleCatch(error, res, 404, next)
         })
+}
+
+export const GetUserAllowedLeaves = (req, res, next) => {
+    try {
+        if (!req.params.id) throw new Error('Ivalid Body')
+        UserModel.findById(req.params.id)
+        .populate({
+            path: 'leaveTypeDetails.leaveType',
+            select: 'name shortLeave', 
+          })
+            .select('leaveTypeDetails')
+            .then((userAllowedLeaves) => {
+                if (!userAllowedLeaves) throw new Error("User not found")
+                res.status(200).json({
+                    success: true,
+                    userAllowedLeaves
+                })
+            })
+            .catch((err) => {
+                 handleCatch(err, res,404, next)
+            });
+    }
+    catch (err) {
+        handleCatch(err, res,400, next)
+    }
+
 }

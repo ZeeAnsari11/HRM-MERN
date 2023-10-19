@@ -16,4 +16,3 @@ leaveTypeRoute.route('/leaveType/updateStatus/:id').put(changeLeaveStatusById)
 leaveTypeRoute.route('/leaveType/:id').put(updateLeaveTypeById).get(getLeaveTypeById)
 leaveTypeRoute.route('/leaveTypes/filter').get(filterLeaveTypes)
 leaveTypeRoute.route('/leave-types/organization/:id').get(getLeaveTypeByOrgId)
-

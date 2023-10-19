@@ -1,10 +1,11 @@
-import { createNew, updateById, getAll } from "../utils/common.js"
-import { AssetsModel } from "../models/assetsSchema.js"
-import { UserModel } from "../models/userSchema.js"
+import { createNew, getAll, updateById } from "../utils/common.js"
+
 import { AssetTypeModel } from "../models/assetTypeSchema.js"
-import { handleCatch } from "../utils/common.js"
-import { createAssetRevision } from "./assetsRevisions.js"
+import { AssetsModel } from "../models/assetsSchema.js"
 import { AssetsRevisionsModel } from "../models/assetsRevisionsSchema.js"
+import { UserModel } from "../models/userSchema.js"
+import { createAssetRevision } from "./assetsRevisions.js"
+import { handleCatch } from "../utils/common.js"
 
 // Create a new asset
 export const createAsset = (req, res, next) => {
@@ -109,10 +110,18 @@ export const getPreviousHolderByAssetId = (req, res, next) => {
     AssetsModel.findById(req.params.id)
         .then(asset => {
             if (!asset) throw new Error ("Asset not found")
+            if(asset.previousHolders.length === 0){
+                throw new ("This is asset is not assigned to any user yet")
+            }
             asset.previousHolders.forEach((revisionId) => {
-                AssetsRevisionsModel.find({ _id: revisionId, organization: asset.organization }).populate('user')
+                AssetsRevisionsModel.find({ _id: revisionId, organization: asset.organization }) 
+                .populate({
+                    path: 'user',
+                    select: 'firstName lastName' // Specify the fields you want to retrieve
+                })
                     .then((assetRevision) => {
                         count++;
+                        
                         if (assetRevision.length == 0) notFoundRevision.push(revisionId)
                         result.push(assetRevision[0]);
                         if (count == asset.previousHolders.length) {
@@ -162,7 +171,7 @@ export const getAssets = (req, res, next) => {
 // Return an asset details by Id/ and to which user an asset is assigned
 export const getAssetById = (req, res, next) => {
 
-    AssetsModel.findById(req.params.id).populate('user')
+    AssetsModel.findById(req.params.id).populate('user').select('firstName lastName')
         .then((asset) => {
             if (!asset) { throw new Error (`Asset Not Found`) }
             else {

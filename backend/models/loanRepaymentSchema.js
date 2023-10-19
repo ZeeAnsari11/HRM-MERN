@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
 import { LoanModel } from "./loanSchema.js";
+import mongoose from "mongoose";
 const loanRepaymentSchema = mongoose.Schema({
     rePaymentDate: {
         type: Date,
@@ -20,6 +20,9 @@ const loanRepaymentSchema = mongoose.Schema({
             ],
             messsage: 'Please Enter Action Type'
         }
+    },
+    paidAt: {
+        type: Date
     },
     createdAt: {
         type: Date,

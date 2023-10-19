@@ -1,10 +1,13 @@
 import axios from "axios"
+import { setHeaders } from "../utils/AdminStatus";
 import { timeSlotsRoute } from "./configuration";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
 
-export const getTimeSlotsByOrgId = (orgId, setTimeSlots, trigger = null) => {
-    axios.get(timeSlotsRoute.getTimeSlotsByOrgId+orgId)
+export const getTimeSlotsByOrgId = (orgId, setTimeSlots, trigger = null, role) => {
+    const headers = setHeaders(orgId, role, 'getTimeSlotsByOrganizationId');
+    
+    axios.get(timeSlotsRoute.getTimeSlotsByOrgId+orgId, {headers})
     .then((response) => {
         setTimeSlots(response.data.response)
     })
@@ -19,12 +22,13 @@ export const getTimeSlotsByOrgId = (orgId, setTimeSlots, trigger = null) => {
     
 }
 
-export const createTimeSlot = (formData, changeToggler, trigger) => {
-    axios.post(timeSlotsRoute.createTimeSlot, formData)
-    .then((response) => {
-        toastMessage("success", "Asset Type created successfully,", toast);
-        changeToggler();
+export const createTimeSlot = (formData, changeToggler, trigger, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'getTimeSlotsByOrganizationId');
 
+    axios.post(timeSlotsRoute.createTimeSlot, formData , {headers})
+    .then((response) => {
+        toastMessage("success", "TimeSlot created successfully,", toast);
+        changeToggler();
     })
     .catch((err) => {
         console.log(err);
@@ -47,8 +51,10 @@ export const deleteTimeSlotById = (id) => {
         })
 }
 
-export const updateTimeSlotById = (id, formData, trigger) => {
-    axios.put(timeSlotsRoute.updateTimeSlotById + id, formData)
+export const updateTimeSlotById = (id, formData, trigger, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'updateTimeSlotById');
+
+    axios.put(timeSlotsRoute.updateTimeSlotById + id, formData, {headers})
         .then((response) => {
             toastMessage("success", "TimeSlot Updated Successfully", toast)
              //TODO: Update required

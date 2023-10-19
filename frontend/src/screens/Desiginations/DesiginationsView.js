@@ -1,15 +1,21 @@
 import { deleteDesiginationById, updateDesiginationById } from '../../api/designation';
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import CDForm from './CDForm';
 import CUForm from '../Profile/elements/common/CUForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
 
 export default function DesiginationsView({ data }) {
 
+    let orgId, role;
+    orgId = useSelector(selectCurrentUserOrg);
+    role = useSelector(selectCurrentUserRole);
+    
     const [formData, setFormData] = useState({
         title: data.title,
         shortForm: data.shortForm
@@ -35,7 +41,7 @@ export default function DesiginationsView({ data }) {
             trigger();
             return;
         }
-        updateDesiginationById(data.id, formData, trigger);
+        updateDesiginationById(data.id, formData, trigger, orgId, role);
     };
 
     // const handleInputChange = (e) => {

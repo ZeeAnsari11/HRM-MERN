@@ -1,4 +1,5 @@
 import Allowances from "./screens/Allowances";
+import AppliedLoans from "./screens/Loan/AppliedLoans";
 import Asset from "./screens/AddAsset";
 import AssetTypes from "./screens/AssetTypes";
 import Attendence from "./screens/Attendence";
@@ -15,6 +16,7 @@ import LeavePolicy from "./screens/LeavePolicy";
 import LeaveRequest from "./screens/LeaveRequest";
 import LeaveType from "./screens/LeaveType";
 import Loan from "./screens/Loan";
+import LoanRequestList from "./screens/Loan/LoanRequestList";
 import LoanType from "./screens/LoanType";
 import ManageAssets from "./screens/ManageAsset";
 import Payslips from "./screens/Payslips";
@@ -55,6 +57,8 @@ export const privateRoutes = () => {
       <Route path="tax-rules" element={<TaxRules/>} />
       <Route path="grades" element={<Grades/>} />
       <Route path="grade-benefits" element={<GradeBenefits/>} />
+      <Route path="all-loans" element={<LoanRequestList/>} />
+
       
     </>
   }
@@ -76,5 +80,7 @@ export const publicRoutes = () => {
         <Route path="view-wfh" element={< ViewWorkFromHome />} />
         <Route path="profile" element={<UserProfile />} />
         <Route path="settings" element={<Settings />} />
+        <Route path="applied-loans" element={<AppliedLoans />} />
+
     </>
 }

@@ -1,11 +1,14 @@
-import { assetType, grades, gradesRoute, organizationRoutes } from "./configuration";
+import { grades, gradesRoute, organizationRoutes } from "./configuration";
 
 import axios from "axios";
+import { setHeaders } from "../utils/AdminStatus";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
 
-export const createGrades = (formData, changeToggler, trigger) => {
-    axios.post(gradesRoute.createGrades, formData)
+export const createGrades = (formData, changeToggler, trigger, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'createGrade')
+
+    axios.post(gradesRoute.createGrades, formData, {headers})
         .then(() => {
             toastMessage("success", "Grades created successfully,", toast);
             changeToggler();
@@ -13,13 +16,15 @@ export const createGrades = (formData, changeToggler, trigger) => {
         .catch((err) => {
             toastMessage("error", err.response.data.Message, toast);
         })
-        .finally(()=>{
+        .finally(() => {
             trigger()
         })
 }
 
-export const getGradesByOrgId = (orgId, setGrades) => {
-    axios.get(organizationRoutes.getGradesByOrgId + orgId)
+export const getGradesByOrgId = (orgId, setGrades, role) => {
+    const headers = setHeaders(orgId, role, 'getAllGrades')
+    
+    axios.get(organizationRoutes.getGradesByOrgId + orgId,{headers})
         .then((response) => {
             setGrades(response.data.grades)
         })
@@ -28,31 +33,35 @@ export const getGradesByOrgId = (orgId, setGrades) => {
         })
 }
 
-export const deleteGrade = (id) => {
-    axios.delete(gradesRoute.deleteGrades+id)
-    .then((response) => {
-        toastMessage("success", response.data.Message, toast) 
-        setTimeout(() => {
-            window.location.href = "/dashboard/grades"
-        }, 2000)
-    })
-    .catch((err) => { 
-        toastMessage("error", err.response.data.Message, toast) 
-    })
+export const deleteGrade = (id, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'deleteGradeById')
+
+    axios.delete(gradesRoute.deleteGrades + id , {headers})
+        .then((response) => {
+            toastMessage("success", response.data.Message, toast)
+            setTimeout(() => {
+                window.location.href = "/dashboard/grades"
+            }, 2000)
+        })
+        .catch((err) => {
+            toastMessage("error", err.response.data.Message, toast)
+        })
 }
 
-export const updateGrade = (id, data, trigger) => {
-    axios.put(gradesRoute.updateGrades+id, data)
-    .then((response) => {
-        toastMessage("success", response.data.Message, toast)
-        setTimeout(() => {
-            window.location.href = "/dashboard/grades"
-        }, 2000)
-    })
-    .catch((err) => { 
-        toastMessage("error", err.response.data.Message, toast) 
-    })
-    .finally(() => {
-        trigger();
-    })
+export const updateGrade = (id, data, trigger, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'updateGrade')
+
+    axios.put(gradesRoute.updateGrades + id, data , {headers})
+        .then((response) => {
+            toastMessage("success", response.data.Message, toast)
+            setTimeout(() => {
+                window.location.href = "/dashboard/grades"
+            }, 2000)
+        })
+        .catch((err) => {
+            toastMessage("error", err.response.data.Message, toast)
+        })
+        .finally(() => {
+            trigger();
+        })
 }

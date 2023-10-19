@@ -1,5 +1,6 @@
+import { createAttendance, filterAttendance, markAbsent, updateAttendance } from '../controllers/attendance.js';
+
 import express from 'express';
-import { createAttendance, markAbsent, filterAttendance, updateAttendance} from '../controllers/attendance.js';
 export const attendenceRoute = express.Router();
 
 attendenceRoute.route('/attendence/new').post(createAttendance)

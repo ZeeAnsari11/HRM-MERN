@@ -1,14 +1,19 @@
-import { updateTimeSlotById } from '../../api/timeSlots';
-import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import CTForm from './CTForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import React from 'react';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { updateTimeSlotById } from '../../api/timeSlots';
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
 
 export default function TimeSlotsView({ data }) {
-
+  
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
     const [formData, setFormData] = useState({
         name: data.name,
         startTime: data.startTime,
@@ -84,7 +89,7 @@ export default function TimeSlotsView({ data }) {
       trigger();
       return;
     }
-        updateTimeSlotById(data.id, formData, trigger);
+        updateTimeSlotById(data.id, formData, trigger, orgId, role);
     };
 
     const handleInputChange = (e) => {

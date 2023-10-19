@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { createLeaveType, getLeaveTypeByOrgId } from '../../api/leaveType';
 import { createShortLeaveType, getShortLeaveTypeByOrgId } from '../../api/shortLeaveType';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 import Modal from '../../components/Modal';
 import SLTForm from './SLTForm';
 import ShortLeaveTypeView from './ShortLeaveTypeView';
 import Table from '../../components/Table';
 import { commonStyles } from '../../styles/common';
-import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
-import ComponentLoader from '../../components/Loader/ComponentLoader';
 
 const ShortLeaveType = () => {
-  let orgId;
-  orgId = useSelector(selectCurrentUserOrg);
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
   const [toggleChange, setToggleChange] = useState(false);
   const [shortLeaveType, setShortLeaveType] = useState([]);
   const [formData, setFormData] = useState({
@@ -42,7 +43,7 @@ const ShortLeaveType = () => {
     setLoader(false)
   }
   let LoadData = () => {
-    getShortLeaveTypeByOrgId(orgId, setShortLeaveType, shortleaveLoader)
+    getShortLeaveTypeByOrgId(orgId, setShortLeaveType, shortleaveLoader, role)
   }
 
   const handleInputChange = (e) => {
@@ -74,7 +75,7 @@ const ShortLeaveType = () => {
       trigger();
       return;
   }
-    createShortLeaveType(formData, changeToggler, trigger);
+    createShortLeaveType(formData, changeToggler, trigger, orgId, role);
     setFormData({
       name: '',
       shiftReductionInPercentage: '0',
@@ -123,14 +124,14 @@ const ShortLeaveType = () => {
       <div className="mt-6">
         <Table columns={columns} data={data} element={
           <Modal
-            action="Create Leave Type"
-            title="Create Leave Type"
+            action="Create Short Leave Type"
+            title="Create Short Leave Type"
             btnStyle={commonStyles.btnDark}
             Element={<SLTForm formData={formData} handleInputChange={handleInputChange} validationErrors={validationErrors} />}
             btnConfig={btnConfig}
             validationErrors={validationErrors}
             check={(closeModal) => {
-              if (!validationErrors.name && !validationErrors.shiftReductionInPercentage && !validationErrors.balance && formData.name && formData.balance>=0 && formData.balance<=1 && formData.shiftReductionInPercentage>=20 && formData.shiftReductionInPercentage<=100) {
+              if (!validationErrors.name && !validationErrors.shiftReductionInPercentage && !validationErrors.balance && formData.name && formData.balance>=0.2 && formData.balance<=1 && formData.shiftReductionInPercentage>=20 && formData.shiftReductionInPercentage<=100) {
                 closeModal()
               }
             }}

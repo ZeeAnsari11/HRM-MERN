@@ -178,6 +178,7 @@ export const getAllUsersByOrganization = (
   dispatcher,
   trigger = null
 ) => {
+  // const headers = setHeaders(orgId,role, 'getAllUsersByOrganizationId')
   axios
     .get(getAllUsers.byOrganization + organizationId)
     .then((response) => {
@@ -192,11 +193,11 @@ export const getAllUsersByOrganization = (
     .catch((error) => {
       console.log(error);
     })
-    .finally(() =>{
-      if(trigger !== null){
-          trigger()
+    .finally(() => {
+      if (trigger !== null) {
+        trigger()
       }
-  })
+    })
 };
 
 export const updateUserById = (userId, data, trigger) => {
@@ -235,7 +236,7 @@ export const getUserChart = (id, dispatcher) => {
     .then((response) => {
       dispatcher(setUserChart(response.data.childs));
     })
-    .catch((error) => {});
+    .catch((error) => { });
 };
 
 export const getUserById = (id, dispatcher, setLoader) => {
@@ -244,7 +245,7 @@ export const getUserById = (id, dispatcher, setLoader) => {
     .then((response) => {
       dispatcher(setUserById(response.data.user));
     })
-    .catch((error) => {})
+    .catch((error) => { })
     .finally(() => {
       setLoader(false);
     });

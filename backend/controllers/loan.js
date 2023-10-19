@@ -1,10 +1,11 @@
+import { getAll, handleCatch, updateById } from "../utils/common.js"
+
 import { LoanModel } from "../models/loanSchema.js"
-import { LoanTypeModel } from "../models/loanTypeSchema.js"
 import { LoanRepaymentModel } from "../models/loanRepaymentSchema.js"
+import { LoanTypeModel } from "../models/loanTypeSchema.js"
+import { RequestFlowModel } from "../models/requestFlowSchema.js"
 import { UserModel } from "../models/userSchema.js"
 import { creatingRequest } from "../utils/request.js"
-import { handleCatch, updateById } from "../utils/common.js"
-import { RequestFlowModel } from "../models/requestFlowSchema.js"
 import mongoose from "mongoose"
 
 export const createLoan = (req, res, next) => {
@@ -132,7 +133,7 @@ export const filterLoans = (req, res, next) => {
         if (!req.query.organization) throw new Error("Organization not specified");
         if (req.query.status && Object.keys(req.query).length == 2) {
             req.query.status = (req.query.status).toLowerCase()
-            if (req.query.status == "pending" || req.query.status == "approved" || req.query.status == "rejected"|| req.query.status =="processing") {
+            if (req.query.status == "pending" || req.query.status == "approved" || req.query.status == "rejected" || req.query.status == "processing") {
                 LoanModel.find(req.query)
                     .then((loans) => {
                         if (loans.length == 0) throw new Error("No such loans/organization found")
@@ -218,4 +219,29 @@ export const chanegeLoanStatus = (new_Status, loanId) => {
 
 export const LoanApproved = () => {
     console.log("========= Your Loan is Approved=======");
+}
+
+export const getAllLoans = (req, res, next) => {
+    LoanModel.find({ organization: req.params.id })
+        .populate({
+            path: 'user',
+            select: 'firstName lastName'
+        })
+        .populate({
+            path: 'loan_type',
+            select: 'type'
+        })
+        .populate({
+            path: 'repaymentSchedules',
+            select: 'rePaymentAmount rePaymentDate status'
+        })
+        .then((result)=>{
+            res.status(200).json({
+                response : result,
+                success : true
+            });
+        })
+        .catch((err)=>{
+            handleCatch(err, res, 404, next)
+        })
 }

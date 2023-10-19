@@ -96,7 +96,7 @@ const OrganizationInfo = ({
 
   useEffect(() => {
     loadAllOrganizationsInfo(dispatcher, userOrgId, branchId);
-  });
+  },[]);
 
   const convertToAMPM = (time) => {
     const [hours, minutes] = time.split(":");

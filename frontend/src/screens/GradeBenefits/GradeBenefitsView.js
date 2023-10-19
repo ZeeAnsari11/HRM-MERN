@@ -1,16 +1,19 @@
-import { deleteLoanType, updateLoanTypeById } from '../../api/LoanType';
-import { faArrowAltCircleRight, faEye, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import GradeBenefitsForm from './GradeBenefitsForm';
-import LoanTypeForm from './GradeBenefitsForm';
 import Modal from '../../components/Modal';
-import MultiSelect from './MultiSelect';
 import React from 'react';
+import { deleteLoanType } from '../../api/LoanType';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { updateGradeBenefitsById } from '../../api/gradeBenefits';
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
 
 export default function GradeBenefitsView({ data, gradesList }) {
+    let orgId = useSelector(selectCurrentUserOrg);
+    let role = useSelector(selectCurrentUserRole);
+
     const [formData, setFormData] = useState({
         id: data.id,
         name: data.name,
@@ -41,7 +44,7 @@ export default function GradeBenefitsView({ data, gradesList }) {
             return;
         }
 
-        updateGradeBenefitsById(formData.id, formData, trigger);
+        updateGradeBenefitsById(formData.id, formData, trigger, orgId, role);
     };
 
     const ViewBtnConfig = [
@@ -72,7 +75,7 @@ export default function GradeBenefitsView({ data, gradesList }) {
             Element={<GradeBenefitsForm formData={formData} handleInputChange={handleInputChange} gradesList={gradesList} validationErrors={validationErrors} />}
             btnConfig={ViewBtnConfig}
             check={(closeModal) => {
-                if (!validationErrors?.name && !validationErrors?.grade && !validationErrors?.description && formData?.name.trim() && formData?.description.trim() && formData?.grade.length>0 ) {
+                if (!validationErrors?.name && !validationErrors?.grade && !validationErrors?.description && formData?.name.trim() && formData?.description.trim() && formData?.grade.length > 0) {
                     closeModal()
                 }
             }

@@ -1,13 +1,18 @@
 import { deleteTaxRulesById, updateTaxRulesById } from '../../api/taxRules';
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import React from 'react';
 import TRForm from './TRForm';
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
 
 export default function TaxRulesView({ data }) {
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
   const [formData, setFormData] = useState({
     fromAmount: data.fromAmount,
     toAmount: data.toAmount,
@@ -44,7 +49,7 @@ export default function TaxRulesView({ data }) {
       return;
     }
 
-    updateTaxRulesById(data.id, formData, trigger);
+    updateTaxRulesById(data.id, formData, trigger, orgId, role);
   };
 
   const ViewBtnConfig = [
@@ -66,7 +71,7 @@ export default function TaxRulesView({ data }) {
   };
 
   const handleAction = (id) => {
-    deleteTaxRulesById(id);
+    deleteTaxRulesById(id, orgId, role);
   }
 
   return <div className="flex items-center space-x-2 justify-center">

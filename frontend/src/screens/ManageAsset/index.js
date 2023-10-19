@@ -1,4 +1,5 @@
 import { faDashboard, faDeleteLeft, faHistory, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { selectCurrentUserRole, selectOrgId } from "../../states/reducers/slices/backend/UserSlice";
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from "react";
 
@@ -9,14 +10,14 @@ import Icon from '../../../src/assets/not-found-icon.jpeg';
 import MyModal from "./Modal/Modal";
 import { getAssetByOrganizationId } from "../../api/asset";
 import { selectAllAsset } from "../../states/reducers/slices/backend/Assets";
-import { selectOrgId } from "../../states/reducers/slices/backend/UserSlice";
 
 const ManageAssets = () => {
   const dispatcher = useDispatch();
   const organization = useSelector(selectOrgId)
+  let role = useSelector(selectCurrentUserRole);
 
   useEffect(() => {
-    getAssetByOrganizationId(organization, dispatcher)
+    getAssetByOrganizationId(organization, dispatcher,role)
   }, []);
 
   const assets = useSelector(selectAllAsset)
@@ -73,7 +74,7 @@ const ManageAssets = () => {
                 <MyModal
                   title="Allocate Asset"
                   action={<FontAwesomeIcon title="allocate" icon={faDashboard} />}
-                  Form={<FormGG />}
+                  Form={<FormGG/>}
                   id={asset._id}
                 />
                 <MyModal

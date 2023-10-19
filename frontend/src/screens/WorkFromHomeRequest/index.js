@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { selectOrgId, selectUID } from "../../states/reducers/slices/backend/UserSlice";
+import { selectCurrentUserRole, selectOrgId, selectUID } from "../../states/reducers/slices/backend/UserSlice";
 
 import { CreateWfhRequest } from "../../api/wfh";
 import Loader from "../../components/Loader";
@@ -13,6 +13,7 @@ const WorkFromHomeRequest = () => {
   const [reason, setReason] = useState("");
   const [count, setCount] = useState("");
   const org_id = useSelector(selectOrgId);
+  let role = useSelector(selectCurrentUserRole);
   const user = useSelector(selectUID)
   const [isLoader,setIsLoader] = useState(false);
 
@@ -54,7 +55,7 @@ const WorkFromHomeRequest = () => {
       organization,
       reason
     };
-    CreateWfhRequest(newFormData, closeLoader)
+    CreateWfhRequest(newFormData, closeLoader,org_id, role)
   };
 
   return (

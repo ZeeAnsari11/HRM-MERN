@@ -2,6 +2,7 @@ import { PermissionsModel } from "../models/permissions.js"
 import { handleCatch } from "../utils/common.js"
 export const permissionsMiddlewre = (req, res, next) => {
     try {
+        console.log("==========1===hh====",req.headers['key']);
         if (req.headers['key'] == "createOrganization") next();
 
         else if (req.headers['organization'] && req.headers['key'] && req.headers['role']) {

@@ -1,13 +1,18 @@
-import { updateEmployeementTypeById } from '../../api/employeementType';
-import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import EmployeementTypeForm from './EmployeementTypeForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import React from 'react';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { updateEmployeementTypeById } from '../../api/employeementType';
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
 
 export default function EmployeementTypeView({ data }) {
+    let orgId = useSelector(selectCurrentUserOrg);
+    let role = useSelector(selectCurrentUserRole);
+    
     const [formData, setFormData] = useState({
         employmentType: data.employmentType,
     });
@@ -27,7 +32,7 @@ export default function EmployeementTypeView({ data }) {
             trigger();
             return;
         }
-        updateEmployeementTypeById(data.id, formData, trigger);
+        updateEmployeementTypeById(data.id, formData, trigger, orgId, role);
     };
 
     const ViewBtnConfig = [
