@@ -1,6 +1,7 @@
+import { createNew, deleteById, getById, handleCatch, updateById } from "../utils/common.js";
+
 import { GradeModel } from "../models/gradeSchema.js";
 import { OrganizationModel } from "../models/organizationSchema.js";
-import { getById, createNew, updateById, deleteById, handleCatch } from "../utils/common.js";
 
 // Create a new grade
 //api/v1/grade/new
@@ -26,6 +27,7 @@ export const createGrade = (req, res, next) => {
 //Get all the Grades of Organizationß
 // /api/v1/grade/organization/:id
 export const getAllGrades = (req, res, next) => {
+    console.log("===========1=============");
     GradeModel.find({ organization: req.params.id })
         .then((grades) => {
             if (grades.length === 0) throw new Error ("No grades found")

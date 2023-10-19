@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { createEmployeementType, getEmployementTypesByOrgId } from '../../api/employeementType';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 import EmployeementTypeForm from './EmployeementTypeForm';
 import EmployeementTypeView from './EmployeementTypeView';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import { commonStyles } from '../../styles/common';
-import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
-import ComponentLoader from '../../components/Loader/ComponentLoader';
 
 const EmployeementType = () => {
-  let orgId;
-  orgId = useSelector(selectCurrentUserOrg);
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+
   const [toggleChange, setToggleChange] = useState(false);
   const [employmentTypes, setEmploymentTypes] = useState([]);
   const [formData, setFormData] = useState({
@@ -36,7 +37,7 @@ const EmployeementType = () => {
     setLoader(false)
   }
   let LoadData = () => {
-    getEmployementTypesByOrgId(orgId, setEmploymentTypes, employementLoader)
+    getEmployementTypesByOrgId(orgId, setEmploymentTypes, employementLoader, role)
   }
 
   const handleInputChange = (e) => {
@@ -56,13 +57,13 @@ const EmployeementType = () => {
       newValidationErrors.employmentType = "Employment Type is required.";
     }
     if (Object.keys(newValidationErrors).length > 0) {
-    
+
       // Set validation errors and prevent closing the modal
       setValidationErrors(newValidationErrors);
       trigger();
       return;
     }
-    createEmployeementType(formData, changeToggler, trigger);
+    createEmployeementType(formData, changeToggler, trigger, orgId, role);
     setFormData({
       employmentType: '',
       organization: orgId,
@@ -94,29 +95,29 @@ const EmployeementType = () => {
       handler: handleCreateEmployeementType,
     }
   ]
-  if(!loader)
-  return (
-     <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-     <div className="mt-6">
-         <Table columns={columns} data={data} element={
-             <Modal
-                 action="Create Employment Type"
-                 title="Create Employment Type"
-                 btnStyle={commonStyles.btnDark}
-                 Element={<EmployeementTypeForm formData={formData} handleInputChange={handleInputChange}  validationErrors={validationErrors} />}
-                 btnConfig={btnConfig}
-                 validationErrors={validationErrors}
-                 check={(closeModal) => {
-                     if (!validationErrors?.employmentType && formData?.employmentType.trim()) {
-                         closeModal()
-                     }
-                 }}
-             />
-         } />
+  if (!loader)
+    return (
+      <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <div className="mt-6">
+          <Table columns={columns} data={data} element={
+            <Modal
+              action="Create Employment Type"
+              title="Create Employment Type"
+              btnStyle={commonStyles.btnDark}
+              Element={<EmployeementTypeForm formData={formData} handleInputChange={handleInputChange} validationErrors={validationErrors} />}
+              btnConfig={btnConfig}
+              validationErrors={validationErrors}
+              check={(closeModal) => {
+                if (!validationErrors?.employmentType && formData?.employmentType.trim()) {
+                  closeModal()
+                }
+              }}
+            />
+          } />
 
-     </div>
- </main>
-  );
+        </div>
+      </main>
+    );
   else return <ComponentLoader color="black" />;
 };
 

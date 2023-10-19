@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createAssetType, getAssetTypesByOrgId, updateAssetType } from '../../api/assetTypes';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import ATForm from './ATForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,10 +8,13 @@ import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import { commonStyles } from '../../styles/common';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
-import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
 
 const AssetTypeForm = ({ data }) => {
+  
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
   const [value, setValue] = useState(data.type);
   const [validationErrors, setValidationErrors] = useState({
     type: "",
@@ -26,7 +30,7 @@ const AssetTypeForm = ({ data }) => {
       trigger();
       return;
     }
-    updateAssetType(data.id, { type: value }, trigger)
+    updateAssetType(data.id, { type: value }, trigger, orgId, role)
   }
   const btnConfig = [
     {
@@ -77,8 +81,9 @@ const AssetTypeForm = ({ data }) => {
 
 
 const AssetTypes = () => {
-  let orgId;
-  orgId = useSelector(selectCurrentUserOrg);
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+
   const [toggleChange, setToggleChange] = useState(false);
   const [assetTypes, setAssetTypes] = useState([]);
   const [formData, setFormData] = useState({
@@ -88,9 +93,11 @@ const AssetTypes = () => {
   const [validationErrors, setValidationErrors] = useState({
     type: "",
   });
+  
   useEffect(() => {
-    getAssetTypesByOrgId(orgId, setAssetTypes)
-  }, [setAssetTypes, orgId]);
+    getAssetTypesByOrgId(orgId, setAssetTypes,role)
+  }, [toggleChange, orgId]);
+  
   const changeToggler = () => {
     setToggleChange(!toggleChange);
   }
@@ -114,7 +121,7 @@ const AssetTypes = () => {
       trigger();
       return;
     }
-    createAssetType(formData, changeToggler, trigger);
+    createAssetType(formData, changeToggler, trigger, orgId, role);
     setFormData({
       type: '',
       organization: orgId,

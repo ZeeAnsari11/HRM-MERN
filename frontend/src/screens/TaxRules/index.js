@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { createTaxRule, getTaxRulesByOrgId } from '../../api/taxRules';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import Modal from '../../components/Modal';
 import TRForm from './TRForm';
 import Table from '../../components/Table';
 import TaxRulesView from './TaxRulesView';
 import { commonStyles } from '../../styles/common';
-import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
 
 const TaxRules = () => {
-  let orgId;
-  orgId = useSelector(selectCurrentUserOrg);
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
   const [toggleChange, setToggleChange] = useState(false);
   const [taxRules, setTaxRules] = useState([]);
   const [formData, setFormData] = useState({
@@ -33,7 +34,7 @@ const TaxRules = () => {
   });
 
   let LoadData = () => {
-    getTaxRulesByOrgId(orgId, setTaxRules)
+    getTaxRulesByOrgId(orgId, setTaxRules, role)
   }
 
   useEffect(() => {
@@ -79,7 +80,7 @@ const TaxRules = () => {
       trigger();
       return;
     }
-    createTaxRule(formData, changeToggler, trigger);
+    createTaxRule(formData, changeToggler, trigger, orgId, role);
     setFormData({
       ruleNo: '',
       fromAmount: '',

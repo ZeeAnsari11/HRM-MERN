@@ -1,12 +1,18 @@
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LoanTypeForm from './LoanTypeForm';
 import Modal from '../../components/Modal';
 import React from 'react';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { updateLoanTypeById } from '../../api/LoanType';
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
 
 export default function LoanTypeView({ data, desiginationsList }) {
+    let orgId = useSelector(selectCurrentUserOrg);
+    let role = useSelector(selectCurrentUserRole);
+    
     const [formData, setFormData] = useState({
         id: data.id,
         type: data.type,
@@ -33,7 +39,7 @@ export default function LoanTypeView({ data, desiginationsList }) {
             return;
         }
         
-        updateLoanTypeById(formData.id ,formData, trigger);
+        updateLoanTypeById(formData.id ,formData, trigger, orgId, role);
     };
 
     const ViewBtnConfig = [

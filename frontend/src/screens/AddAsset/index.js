@@ -1,4 +1,5 @@
 import { getAssetTypesByOrganizationId, saveAssetFormData } from '../../api/asset';
+import { selectCurrentUserOrg, selectCurrentUserRole, selectOrgId } from '../../states/reducers/slices/backend/UserSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 
@@ -8,11 +9,13 @@ import React from 'react';
 import { commonStyles } from '../../styles/common';
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import { selectAssetTypes } from '../../states/reducers/slices/backend/Assets';
-import { selectOrgId } from '../../states/reducers/slices/backend/UserSlice';
 import { useDropzone } from "react-dropzone";
 
 // Define a component for the add asset form
 const Asset = () => {
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
   // Use state to store the form values
   const [name, setName] = React.useState('');
   const [condition, setCondition] = useState('');
@@ -50,13 +53,13 @@ const Asset = () => {
       description,
       type,
     };
-    saveAssetFormData(newAsset)
+    saveAssetFormData(newAsset, orgId, role)
   };
 
   const organization = useSelector(selectOrgId)
   const assetType = useSelector(selectAssetTypes)
   useEffect(() => {
-    getAssetTypesByOrganizationId(organization, dispatcher)
+    getAssetTypesByOrganizationId(organization, dispatcher,role)
   }, []);
 
   // Return the JSX for the add asset form

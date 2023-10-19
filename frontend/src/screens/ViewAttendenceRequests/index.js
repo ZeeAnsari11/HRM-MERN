@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import Table, { StatusPill } from '../../components/Table';
 import { faEye, faPencil } from '@fortawesome/free-solid-svg-icons';
+import { selectCurrentUserOrg, selectCurrentUserRole, selectUID } from '../../states/reducers/slices/backend/UserSlice'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getMissingPunchesRquestsOfUser } from '../../api/missingPunchesRequests';
-import { selectUID } from '../../states/reducers/slices/backend/UserSlice'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 function ViewAttendenceRequests() {
 
+    let orgId = useSelector(selectCurrentUserOrg);
+    let role = useSelector(selectCurrentUserRole);
+    
     const [showView, setShowView] = useState(false);
     const handleAction = (rowData) => {
         setShowView(!showView);
@@ -67,14 +70,14 @@ function ViewAttendenceRequests() {
         return formattedTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
     }
     useEffect(() => {
-        getMissingPunchesRquestsOfUser(userId)
+        getMissingPunchesRquestsOfUser(userId, orgId, role)
             .then((response) => {
                 if (response !== undefined) setAttendenceRequestHistory(response);
             })
             .catch((error) => {
                 console.log(error);
             });
-    });
+    },[]);
     
     const filteredAttendenceHistory = AttendenceRequestHistory.filter((entry) =>
         entry.status.toLowerCase().includes(searchTerm.toLowerCase()))

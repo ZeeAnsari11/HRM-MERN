@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createGradeBenefit, getgradeBenefitsByOrgId } from '../../api/gradeBenefits';
 import { createLoanType, getLoanTypesByOrgId } from '../../api/LoanType';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import ComponentLoader from '../../components/Loader/ComponentLoader';
 import GradeBenefitsForm from './GradeBenefitsForm';
@@ -11,7 +12,7 @@ import Table from '../../components/Table';
 import axios from 'axios';
 import { commonStyles } from '../../styles/common';
 import { organizationRoutes } from '../../api/configuration';
-import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
+import { setHeaders } from '../../utils/AdminStatus';
 // import { setOrganizationDesignation } from '../../states/reducers/slices/backend/Designation';
 // import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -19,13 +20,14 @@ import { useSelector } from 'react-redux';
 const GradeBenefits = () => {
   // let dispatcher = useDispatch();
   let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+
   const [toggleChange, setToggleChange] = useState(false);
   const [grades, setGrades] = useState([]);
   const [gradeBenefits, setGradeBenefits] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
-    description: '',
-    organization: orgId,
+    description: ''
   });
   const [validationErrors, setValidationErrors] = useState({
     name: '',
@@ -46,12 +48,14 @@ const GradeBenefits = () => {
   }
 
   let LoadData = () => {
+    const headers = setHeaders(orgId, role, 'getAllGrades')
+
     axios
-      .get(organizationRoutes.getGradesByOrgId + orgId)
+      .get(organizationRoutes.getGradesByOrgId + orgId, {headers})
       .then((rsp) => {
         // dispatcher(setOrganizationDesignation(rsp.data.response));
         setGrades(rsp.data.grades);
-        getgradeBenefitsByOrgId(orgId, setGradeBenefits, loanLoader);
+        getgradeBenefitsByOrgId(orgId, setGradeBenefits, loanLoader,role);
       })
       .catch((e) => console.log(e));
   };
@@ -65,7 +69,6 @@ const GradeBenefits = () => {
       [name]: "",
     });
   };
-
 
   const handleCreateGradeBenefit = (trigger) => {
     const newValidationErrors = {};
@@ -84,7 +87,7 @@ const GradeBenefits = () => {
       trigger();
       return;
     }
-    createGradeBenefit(formData, changeToggler, trigger);
+    createGradeBenefit(formData, changeToggler, trigger, orgId, role);
     setFormData({
       name: '',
       grade: '',

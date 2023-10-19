@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { createAllowance, getAllowancesByOrgId } from '../../api/allowances';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import AllowanceForm from './AllowanceForm';
 import AllowanceView from './AllowanceView';
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import { commonStyles } from '../../styles/common';
-import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
-import ComponentLoader from '../../components/Loader/ComponentLoader';
 
 const Allowances = () => {
   let orgId;
   orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
   const [toggleChange, setToggleChange] = useState(false);
   const [allowances, setAllowances] = useState([]);
   const [formData, setFormData] = useState({
@@ -39,7 +41,7 @@ const Allowances = () => {
   }
 
   let LoadData = () => {
-    getAllowancesByOrgId(orgId, setAllowances, allowanceLoader)
+    getAllowancesByOrgId(orgId, setAllowances, allowanceLoader, role)
   }
 
   const handleInputChange = (e) => {
@@ -69,7 +71,7 @@ const Allowances = () => {
       return;
     }
     
-    createAllowance(formData, changeToggler, trigger);
+    createAllowance(formData, changeToggler, trigger, orgId, role);
     setFormData({
       allowanceName: '',
       percrentageOfBaseSalary: '',

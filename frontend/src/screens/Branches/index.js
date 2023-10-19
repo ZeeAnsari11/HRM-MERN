@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import BranchesView from './BranchesView';
 import CBForm from './CBForm';
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import { commonStyles } from '../../styles/common';
 import { createBranch } from '../../api/branches';
 import { getBranchesByOrgId } from '../../api/branches';
-import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
-import ComponentLoader from '../../components/Loader/ComponentLoader';
 
 const Branches = () => {
   let orgId;
   orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+
   const [toggleChange, setToggleChange] = useState(false);
   const [branches, setBranches] = useState([]);
   const [formData, setFormData] = useState({
@@ -45,7 +47,7 @@ const Branches = () => {
   }
 
   let LoadData = () => {
-    getBranchesByOrgId(orgId, setBranches,branchLoader)
+    getBranchesByOrgId(orgId, setBranches, branchLoader, role)
   }
 
   const handleInputChange = (e) => {
@@ -80,7 +82,7 @@ const Branches = () => {
       trigger();
       return;
     }
-    createBranch(formData, changeToggler, trigger);
+    createBranch(formData, changeToggler, trigger, orgId, role);
     setFormData({
       name: '',
       city: '',
@@ -131,27 +133,27 @@ const Branches = () => {
     }
   ]
 
-  if(!loader)
-  return (
-    <main className="mx-auto px-4 sm:px-6 pt-4">
-      <Table columns={columns} data={data}
-        element={
-          <Modal
-            action="Create Branch"
-            title="Create Branch"
-            btnStyle={commonStyles.btnDark}
-            Element={<CBForm formData={formData} handleInputChange={handleInputChange} validationErrors={validationErrors}/>}
-            btnConfig={btnConfig}
-            validationErrors={validationErrors}
-        check={(closeModal) => {
-          if (!validationErrors?.name && !validationErrors?.city && !validationErrors?.country && !validationErrors?.description && formData?.name.trim() && formData?.city.trim() && formData?.country.trim() && formData?.description.trim()) {
-            closeModal()
-          }
-        }}
-          />
-        } />
-    </main>
-  );
+  if (!loader)
+    return (
+      <main className="mx-auto px-4 sm:px-6 pt-4">
+        <Table columns={columns} data={data}
+          element={
+            <Modal
+              action="Create Branch"
+              title="Create Branch"
+              btnStyle={commonStyles.btnDark}
+              Element={<CBForm formData={formData} handleInputChange={handleInputChange} validationErrors={validationErrors} />}
+              btnConfig={btnConfig}
+              validationErrors={validationErrors}
+              check={(closeModal) => {
+                if (!validationErrors?.name && !validationErrors?.city && !validationErrors?.country && !validationErrors?.description && formData?.name.trim() && formData?.city.trim() && formData?.country.trim() && formData?.description.trim()) {
+                  closeModal()
+                }
+              }}
+            />
+          } />
+      </main>
+    );
   else return <ComponentLoader color="black" />;
 };
 

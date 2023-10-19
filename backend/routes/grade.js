@@ -7,8 +7,11 @@ import {
 } from '../controllers/grade.js';
 
 import express from 'express'
+import { permissionsMiddlewre } from '../middlewares/permissions.js';
 
 export const gradeRoute = express.Router();
+
+gradeRoute.use(permissionsMiddlewre);
 
 gradeRoute.route('/grade/new').post(createGrade);
 gradeRoute.route('/grade/organization/:id').get(getAllGrades);

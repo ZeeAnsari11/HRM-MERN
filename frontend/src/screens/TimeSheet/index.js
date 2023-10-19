@@ -1,5 +1,5 @@
 import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
-import { selectTimeSheet, selectUID } from '../../states/reducers/slices/backend/UserSlice'
+import { selectCurrentUserOrg, selectCurrentUserRole, selectTimeSheet, selectUID } from '../../states/reducers/slices/backend/UserSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,7 +11,9 @@ import { useMemo } from 'react'
 import { useState } from 'react';
 
 function TimeSheet() {
-
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
   const [showView, setShowView] = useState(false);
 
 
@@ -91,12 +93,14 @@ function TimeSheet() {
   }
 
   useEffect(() => {
-    getTimeSheet(body, dispatcher)
+    getTimeSheet(body, dispatcher, orgId, role)
   }, [])
 
   const data = apiData.map(obj => ({
-    date: obj.date.substring(0, 10), checkIn: obj.checkIn,
-    checkOut: obj.checkOut, earlyArrivalTime: obj.earlyArrivalTime,
+    date: obj.date.substring(0, 10),
+    checkIn: obj.checkIn ==='false' ? 'Missing': obj.checkIn,
+    checkOut: obj.checkOut  ==='false' ? 'Missing': obj.checkOut, 
+    earlyArrivalTime: obj.earlyArrivalTime,
     earlyLeftTime: obj.earlyLeftTime,
     isAbsent: obj.isAbsent,
     isEarlyArrival: obj.isEarlyArrival,

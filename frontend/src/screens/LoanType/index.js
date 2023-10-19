@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createLoanType, getLoanTypesByOrgId } from '../../api/LoanType';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import ComponentLoader from '../../components/Loader/ComponentLoader';
 import LoanTypeForm from './LoanTypeForm';
@@ -9,7 +10,7 @@ import Table from '../../components/Table';
 import axios from 'axios';
 import { commonStyles } from '../../styles/common';
 import { organizationRoutes } from '../../api/configuration';
-import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
+import { setHeaders } from '../../utils/AdminStatus';
 import { setOrganizationDesignation } from '../../states/reducers/slices/backend/Designation';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -17,6 +18,8 @@ import { useSelector } from 'react-redux';
 const LoanType = () => {
   let dispatcher = useDispatch();
   let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
   const [toggleChange, setToggleChange] = useState(false);
   const [desiginations, setDesiginations] = useState([]);
   const [loanTypes, setLoanTypes] = useState([]);
@@ -42,13 +45,15 @@ const LoanType = () => {
     setLoader(false)
   }
 
+  
   let LoadData = () => {
+    const headers = setHeaders(orgId, role, 'getAllDesignationsByOrgId');
     axios
-      .get(organizationRoutes.getDesignationsByOrgId + orgId)
+      .get(organizationRoutes.getDesignationsByOrgId + orgId, {headers})
       .then((rsp) => {
         dispatcher(setOrganizationDesignation(rsp.data.response));
         setDesiginations(rsp.data.response);
-        getLoanTypesByOrgId(orgId, setLoanTypes, loanLoader);
+        getLoanTypesByOrgId(orgId, setLoanTypes, loanLoader, role);
       })
       .catch((e) => console.log(e));
   };
@@ -81,7 +86,7 @@ const LoanType = () => {
             return;
         }
         
-    createLoanType(formData, changeToggler, trigger);
+    createLoanType(formData, changeToggler, trigger, orgId, role);
     setFormData({
       type: '',
       designations: '',

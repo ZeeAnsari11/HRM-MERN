@@ -11,6 +11,10 @@ export const Menus = [
             { title: "Roaster",    font:faCalendarPlus, to:"/dashboard/roaster"},
             { title: "Chart",    font:faChartArea, to:"/dashboard/chart" },
             { title: "Loan & Advance",    font:faCircleDollarToSlot, to:"/dashboard/loan" },
+            { title: "Admin Loan Requests", access:"Admin", font:faCircleDollarToSlot, to:"/dashboard/all-loans" },
+            { title: "Applied Loan Requests", access:"Admin", font:faCircleDollarToSlot, to:"/dashboard/applied-loans" },
+
+
         ] 
     },
     {

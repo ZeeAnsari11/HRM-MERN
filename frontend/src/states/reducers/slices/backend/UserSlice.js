@@ -170,5 +170,6 @@ export const selectProfileCompletion = (state) => state.user.profileCompletion
 export const selecteUpdatedWfh = (state) => state.user.updatedWfh
 export const selecteUpdatedLeave = (state) => state.user.updatedLeave
 export const selectUserLeaveDetails = (state) => state.user.userLeaveDetails
+export const selectCurrentUserRole = (state) => state.user.currentUser.roleType;
 
 export const UserReducer = UserSlice.reducer;

@@ -1,46 +1,58 @@
 import { deletAllowanceById, updateAllowanceById } from '../../api/allowances';
+import { deleteLoanById, updateLoanRequestById } from '../../api/loan';
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
-import AllowanceForm from './AllowanceForm';
-import CUForm from '../Profile/elements/common/CUForm';
+import CreateLoanRequest from './CreateLoan';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 
-export default function AllowanceView({ data }) {
+export default function EditAndViewLoan({ data }) {
+
     let orgId = useSelector(selectCurrentUserOrg);
     let role = useSelector(selectCurrentUserRole);
 
     const [formData, setFormData] = useState({
-        allowanceName: data.allowanceName,
-        percrentageOfBaseSalary: data.percrentageOfBaseSalary
+        loan_amount: data.loan_amount,
+        reason: data.reason,
+        date: data.date,
+        loan_type: data.loan_type,
+        id: data.id
     });
 
     const [validationErrors, setValidationErrors] = useState({
-        allowanceName: '',
-        percrentageOfBaseSalary: ''
+        loan_amount: '',
+        reason: '',
+        date: '',
+        loan_type: '',
     })
 
 
     const handleUpdateDepartmennt = (trigger) => {
+        console.log("====callllllll======", formData);
         const newValidationErrors = {};
-        if (formData.allowanceName.trim() === "") {
-            newValidationErrors.allowanceName = "Allowance Name is required.";
+        if (formData.loan_amount === "") {
+            newValidationErrors.loan_amount = "Loan amount is required.";
         }
-        if (formData.percrentageOfBaseSalary === "") {
-            newValidationErrors.percrentageOfBaseSalary = "% of Base Salary is required.";
+        if (formData.reason === "") {
+            newValidationErrors.reason = "Reason is required.";
         }
-
+        if (formData.date === "") {
+            newValidationErrors.date = "Date is required.";
+        }
+        if (formData.loan_type === "") {
+            newValidationErrors.loan_type = "Loan Type is required.";
+        }
         if (Object.keys(newValidationErrors).length > 0) {
             // Set validation errors and prevent closing the modal
             setValidationErrors(newValidationErrors);
             trigger();
             return;
         }
-        updateAllowanceById(data.id, formData, trigger, orgId, role);
+        updateLoanRequestById(orgId, role, data.id, formData,trigger)
     };
 
     const handleInputChange = (e) => {
@@ -54,23 +66,7 @@ export default function AllowanceView({ data }) {
         });
     };
 
-    let title = "Update Department"
-    const formDataConfig = [
-        {
-            label: 'Allowance Name',
-            type: 'text',
-            name: 'allowanceName',
-            value: formData.allowanceName,
-            onChange: handleInputChange,
-        },
-        {
-            label: 'Percrentage Of BaseSalary',
-            type: 'text',
-            name: 'percrentageOfBaseSalary',
-            value: formData.percrentageOfBaseSalary,
-            onChange: handleInputChange,
-        },
-    ]
+    let title = "Update Loan Request"
 
     const btnConfig = [{
         title: 'Update',
@@ -78,17 +74,17 @@ export default function AllowanceView({ data }) {
     }]
 
     const handleAction = (id) => {
-        deletAllowanceById(id, orgId, role);
+        deleteLoanById(orgId, role, id)
     }
 
     return <div className="flex items-center space-x-2">
         <Modal
             action={<FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />}
             title={title}
-            Element={<AllowanceForm formData={formData} config={formDataConfig} handleInputChange={handleInputChange} validationErrors={validationErrors} />}
+            Element={<CreateLoanRequest formData={formData} handleInputChange={handleInputChange} validationErrors={validationErrors} />}
             btnConfig={btnConfig}
             check={(closeModal) => {
-                if (!validationErrors?.allowanceName && !validationErrors?.percrentageOfBaseSalary && formData?.allowanceName.trim() && formData?.percrentageOfBaseSalary) {
+                if (!validationErrors?.loan_amount && !validationErrors?.reason && !validationErrors?.date && !validationErrors?.loan_type && formData?.loan_amount && formData?.reason && formData?.loan_type) {
                     closeModal()
                 }
             }}

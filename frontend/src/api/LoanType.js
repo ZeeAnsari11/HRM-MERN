@@ -1,10 +1,12 @@
 import axios from "axios";
 import { loanType } from "./configuration";
+import { setHeaders } from "../utils/AdminStatus";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
 
-export const createLoanType = (formData, changeToggler, trigger) => {
-    axios.post(loanType.createLoanType, formData)
+export const createLoanType = (formData, changeToggler, trigger, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'createLoanType');
+    axios.post(loanType.createLoanType, formData, {headers})
         .then(() => {
             toastMessage("success", "Loan Type created successfully,", toast);
             changeToggler();
@@ -17,8 +19,9 @@ export const createLoanType = (formData, changeToggler, trigger) => {
         })
 }
 
-export const getLoanTypesByOrgId = (orgId, setAssetTypes, trigger = null) => {
-    axios.get(loanType.getAllowancesByOrgId + orgId)
+export const getLoanTypesByOrgId = (orgId, setAssetTypes, trigger = null, role) => {
+    const headers = setHeaders(orgId, role, 'getAllLoanTypeByOrgId');
+    axios.get(loanType.getAllowancesByOrgId + orgId,{headers})
         .then((response) => {
             setAssetTypes(response.data.response);
         })
@@ -46,8 +49,9 @@ export const deleteLoanType = (id) => {
         })
 }
 
-export const updateLoanTypeById = (id, formData, trigger) => {
-    axios.put(loanType.updateLoanTypeById + id, formData)
+export const updateLoanTypeById = (id, formData, trigger, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'UpdateLoanTypeById');
+    axios.put(loanType.updateLoanTypeById + id, formData, {headers})
         .then((response) => {
             toastMessage("success", response.data.Message, toast)
             setTimeout(() => {

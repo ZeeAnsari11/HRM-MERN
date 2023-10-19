@@ -1,11 +1,14 @@
 import axios from "axios";
 import { organizationRoutes } from "./configuration";
+import { setHeaders } from "../utils/AdminStatus";
 import { taxRuleRoute } from "./configuration";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
 
-export const createTaxRule = (formData, changeToggler, trigger) => {
-    axios.post(taxRuleRoute.createTaxRule, formData)
+export const createTaxRule = (formData, changeToggler, trigger, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'creatingTaxRule')
+
+    axios.post(taxRuleRoute.createTaxRule, formData, {headers})
         .then(() => {
             toastMessage("success", "Branch created successfully,", toast);
             changeToggler();
@@ -18,8 +21,9 @@ export const createTaxRule = (formData, changeToggler, trigger) => {
         })
 }
 
-export const getTaxRulesByOrgId = (orgId, setTaxRules) => {
-    axios.get(organizationRoutes.getTaxRulesByOrgId + orgId)
+export const getTaxRulesByOrgId = (orgId, setTaxRules, role) => {
+    const headers = setHeaders(orgId, role, 'getTaxRuleByOrganizationId')
+    axios.get(organizationRoutes.getTaxRulesByOrgId + orgId, {headers})
         .then((response) => {
             setTaxRules(response.data.response)
         })
@@ -28,21 +32,25 @@ export const getTaxRulesByOrgId = (orgId, setTaxRules) => {
         })
 }
 
-export const deleteTaxRulesById = (id) => {
-    axios.delete(taxRuleRoute.deleteTaxRuleById + id)
+export const deleteTaxRulesById = (id, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'deleteTaxRuleById')
+
+    axios.delete(taxRuleRoute.deleteTaxRuleById + id , {headers})
         .then((response) => {
             toastMessage("success", response.data.Message, toast);
             setTimeout(() => {
                 window.location.href = "/dashboard/tax-rules"
-            }, 2000)
+            }, 2000) 
         })
         .catch((err) => {
             toastMessage("error", err.response.data.Message, toast);
         })
 }
 
-export const updateTaxRulesById = (id, formData, trigger) => {
-    axios.put(taxRuleRoute.updateTaxRuleById + id, formData)
+export const updateTaxRulesById = (id, formData, trigger, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'updateTaxRuleById')
+
+    axios.put(taxRuleRoute.updateTaxRuleById + id, formData, {headers})
         .then((response) => {
             toastMessage("success", response.data.Message, toast)
             //TODO: Update required

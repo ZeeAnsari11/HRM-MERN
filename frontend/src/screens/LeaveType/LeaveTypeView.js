@@ -1,13 +1,18 @@
-import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LTForm from './LTForm';
 import Modal from '../../components/Modal';
 import React from 'react';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { updateLeaveTypeById } from '../../api/leaveType';
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
 
 export default function LeaveTypeView({ data }) {
+    let orgId = useSelector(selectCurrentUserOrg);
+    let role = useSelector(selectCurrentUserRole);
+    
     const [formData, setFormData] = useState({
         shortName: data.shortName,
         accumulativeCount: data.accumulativeCount,
@@ -37,7 +42,7 @@ export default function LeaveTypeView({ data }) {
             trigger();
             return;
         }
-        updateLeaveTypeById(data.id, formData, trigger);
+        updateLeaveTypeById(data.id, formData, trigger, orgId, role);
     };
 
     const ViewBtnConfig = [

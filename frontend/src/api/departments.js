@@ -1,12 +1,15 @@
 import { departmentRoute, organizationRoutes } from "./configuration";
 
 import axios from "axios";
+import { setHeaders } from "../utils/AdminStatus";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
 
-export const createDepartment = (formData, changeToggler, trigger = null) => {
+export const createDepartment = (formData, changeToggler, trigger = null , orgId, role) => {
+  const headers = setHeaders(orgId, role, 'createDepartment');
+
   axios
-    .post(departmentRoute.createDepartment, formData)
+    .post(departmentRoute.createDepartment, formData, {headers})
     .then(() => {
       toastMessage("success", "Department creation success.", toast);
       changeToggler();
@@ -19,9 +22,10 @@ export const createDepartment = (formData, changeToggler, trigger = null) => {
     });
 };
 
-export const getDepartmentsByOrgId = (orgId, setDepartment) => {
+export const getDepartmentsByOrgId = (orgId, setDepartment, role) => {
+  const headers = setHeaders(orgId, role, 'getAllDepartmentsByOrganizationId');
   axios
-    .get(organizationRoutes.getDepartmentsByOrgId + orgId)
+    .get(organizationRoutes.getDepartmentsByOrgId + orgId,{headers})
     .then((response) => {
       setDepartment(response.data.departments);
     })
@@ -44,9 +48,11 @@ export const deleteDepartmentById = (id) => {
     });
 };
 
-export const updateDepartmentById = (id, formData, trigger) => {
+export const updateDepartmentById = (id, formData, trigger, orgId, role) => {
+  const headers = setHeaders(orgId, role, 'updateDepartmentById');
+
   axios
-    .put(departmentRoute.updateDepartmentById + id, formData)
+    .put(departmentRoute.updateDepartmentById + id, formData, {headers})
     .then((response) => {
       toastMessage("success", response.data.Message, toast);
       //TODO: Update required

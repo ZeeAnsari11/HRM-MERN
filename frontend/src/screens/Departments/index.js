@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { createDepartment, getDepartmentsByOrgId } from "../../api/departments";
+import { selectCurrentUserOrg, selectCurrentUserRole } from "../../states/reducers/slices/backend/UserSlice";
 
 import CDForm from "./CDForm";
 import ComponentLoader from "../../components/Loader/ComponentLoader";
@@ -8,13 +9,14 @@ import Modal from "../../components/Modal";
 import Table from "../../components/Table";
 import { commonStyles } from "../../styles/common";
 import { getBranchesByOrgId } from "../../api/branches";
-import { selectCurrentUserOrg } from "../../states/reducers/slices/backend/UserSlice";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
 const Departments = () => {
-  let orgId;
+  let orgId, role;
   orgId = useSelector(selectCurrentUserOrg);
+  role = useSelector(selectCurrentUserRole);
+  
   const [toggleChange, setToggleChange] = useState(false);
   const [departments, setDepartment] = useState([]);
   const [branches, setBranches] = useState([]);
@@ -32,7 +34,7 @@ const Departments = () => {
 
   useEffect(() => {
     LoadData();
-  });
+  },[]);
 
   const changeToggler = () => {
     setToggleChange(!toggleChange);
@@ -43,8 +45,8 @@ const Departments = () => {
     setLoader(false);
   };
   let LoadData = () => {
-    getDepartmentsByOrgId(orgId, setDepartment);
-    getBranchesByOrgId(orgId, setBranches, departmentLoader);
+    getDepartmentsByOrgId(orgId, setDepartment, role);
+    getBranchesByOrgId(orgId, setBranches, departmentLoader,role);
   };
 
   // const handleInputChange = (e) => {
@@ -75,7 +77,7 @@ const Departments = () => {
       trigger();
       return;
     }
-    createDepartment(formData, changeToggler, trigger);
+    createDepartment(formData, changeToggler, trigger, orgId, role);
     setFormData({ name: "", organization: orgId, branch: "" });
   };
 

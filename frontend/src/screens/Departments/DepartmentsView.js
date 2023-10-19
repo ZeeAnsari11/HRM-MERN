@@ -1,14 +1,18 @@
-import { updateDepartmentById } from '../../api/departments';
-import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import CUForm from '../Profile/elements/common/CUForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import React from 'react';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { updateDepartmentById } from '../../api/departments';
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
 
 export default function DepartmentsView({ data }) {
-
+   let orgId = useSelector(selectCurrentUserOrg);
+   let role = useSelector(selectCurrentUserRole);
+   
     const [formData, setFormData] = useState({
         name: data.name,
     });
@@ -28,7 +32,7 @@ export default function DepartmentsView({ data }) {
             return;
         }
         
-        updateDepartmentById(data.id, formData, trigger);
+        updateDepartmentById(data.id, formData, trigger, orgId, role);
     };
 
     const handleInputChange = (e) => {
@@ -77,7 +81,7 @@ export default function DepartmentsView({ data }) {
             Element={<CUForm config={formDataConfig} handleInputChange={handleInputChange} isFull={false} validationErrors={validationErrors}/>}
             btnConfig={btnConfig}
             check={(closeModal) => {
-                if (!validationErrors?.name && !validationErrors?.branch && formData?.name.trim() && formData?.branch.trim()) {
+                if (!validationErrors?.name && !validationErrors?.branch && formData?.name.trim()) {
                     closeModal()
                 }
             }}

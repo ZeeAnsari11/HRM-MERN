@@ -1,5 +1,5 @@
 import Table, { StatusPill } from '../../components/Table';
-import { selectUID, selectUserWfh } from '../../states/reducers/slices/backend/UserSlice'
+import { selectCurrentUserOrg, selectCurrentUserRole, selectUID, selectUserWfh } from '../../states/reducers/slices/backend/UserSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
 import React from 'react'
@@ -9,13 +9,14 @@ import { useEffect } from 'react'
 import { useMemo } from 'react'
 
 function ViewWorkFromHome() {
-
-
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
   const user_id = useSelector(selectUID)
   const apiData = useSelector(selectUserWfh)
   const dispatcher = useDispatch()
   useEffect(() => {
-    getAllWfhOfUser(user_id, dispatcher)
+    getAllWfhOfUser(user_id, dispatcher, orgId, role)
   }, [])
 
   const data = apiData.map(obj => ({

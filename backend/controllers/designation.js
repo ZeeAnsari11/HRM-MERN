@@ -4,7 +4,8 @@ import { DesignationModel } from "../models/designationSchema.js";
 import { OrganizationModel } from "../models/organizationSchema.js";
 
 export const createDesignation = (req, res, next) => {
-    try{
+    console.log("==========2=======")
+try{
         if(req.body.unique_id) throw new Error ("unique_id is not required in body")
         OrganizationModel.findById(req.body.organization)
         .then((response) => {

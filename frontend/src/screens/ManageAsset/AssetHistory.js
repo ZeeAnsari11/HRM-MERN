@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { getAssetHistoryById } from "../../api/asset";
+import { selectCurrentUserOrg, selectCurrentUserRole } from "../../states/reducers/slices/backend/UserSlice";
+
 import NotFound from "../../components/utils/NotFound";
+import { getAssetHistoryById } from "../../api/asset";
+import { useSelector } from "react-redux";
 
 const AssetHistoryPage = ({ data }) => {
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
   const [assetHistory, setAssetHistory] = useState([]);
 
   useEffect(() => {
-    getAssetHistoryById(data, setAssetHistory);
+    getAssetHistoryById(data, setAssetHistory, orgId,role);
   }, []);
 
   const description = "Record of this Asset Does not exist"
   const header = "History Not Found";
 
-  console.log("Asset length", assetHistory.length);
   return (
     <div className="overflow-x-auto">
       {assetHistory.length > 0 ? (

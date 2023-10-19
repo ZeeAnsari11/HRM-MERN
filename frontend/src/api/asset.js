@@ -2,11 +2,14 @@ import { allAssets, asset, assetManagment, assetType, getAsset, getAssetBy } fro
 import { setAllAssets, setAllocation, setAsset, setAssetHistory, setAssetTypes } from "../states/reducers/slices/backend/Assets";
 
 import axios from "axios";
+import { setHeaders } from "../utils/AdminStatus";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
 
-export const saveAssetFormData = (formData) => {
-    axios.post(asset.setAsset, formData)
+export const saveAssetFormData = (formData, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'createAsset')
+
+    axios.post(asset.setAsset, formData, {headers})
     .then(() => {
         toastMessage("success", "Asset created Successfully", toast);
     })
@@ -15,8 +18,10 @@ export const saveAssetFormData = (formData) => {
     })
 }
 
-export const getAssetTypesByOrganizationId = (organizationId, dispatcher) => {
-    axios.get(assetType.getAssetType+organizationId)
+export const getAssetTypesByOrganizationId = (organizationId, dispatcher, role) => {
+    const headers = setHeaders(organizationId, role, 'getAllAssetTypeByOrgId')
+
+    axios.get(assetType.getAssetType+organizationId, {headers})
     .then((response) => {
        dispatcher(setAssetTypes(response.data.response))
     })
@@ -25,8 +30,10 @@ export const getAssetTypesByOrganizationId = (organizationId, dispatcher) => {
     })
 }
 
-export const getAssetByOrganizationId = (organizationId, dispatcher) => {
-    axios.get(allAssets.getAssets+organizationId)
+export const getAssetByOrganizationId = (organizationId, dispatcher,role) => {
+    const headers = setHeaders(organizationId, role, 'getAssets')
+
+    axios.get(allAssets.getAssets+organizationId, {headers})
     .then((response) => {
        dispatcher(setAllAssets(response.data.response))
     })
@@ -35,11 +42,12 @@ export const getAssetByOrganizationId = (organizationId, dispatcher) => {
     })
 }
 
-export const AllocateDeallocateAsset = (formData, dispatcher, setShowLoading) => {
-    axios.put(assetManagment.manageAsset, formData)
+export const AllocateDeallocateAsset = (formData, dispatcher, setShowLoading, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'AssetManagment')
+
+    axios.put(assetManagment.manageAsset, formData, {headers})
     .then((response) => {
        dispatcher(setAllocation(formData))
-       console.log('=======response===',response);
        toastMessage("success", response.data.message, toast);
     })
     .catch((err) => {
@@ -50,19 +58,22 @@ export const AllocateDeallocateAsset = (formData, dispatcher, setShowLoading) =>
     })
 }
 
-export const getAssetHistoryById = (id , setHistory) => {
-    axios.get(getAsset.byId + id)
+export const getAssetHistoryById = (id , setHistory, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'getAssetById')
+
+    axios.get(getAsset.byId + id, {headers})
     .then((response) => {
-        console.log("Response", response);
         setHistory(response?.data?.data);
     })
-    .catch(() => {
-        toastMessage("error", "Fetching asset failed!", toast);
+    .catch((err) => {
+        toastMessage("error", err?.response?.data?.Message, toast);
     })
 }
 
-export const getAssetById = (id, dispatcher ) => {
-    axios.get(getAssetBy.id + id)
+export const getAssetById = (id, dispatcher, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'getAssetById')
+
+    axios.get(getAssetBy.id + id, {headers})
     .then((response) => {
         dispatcher(setAsset(response?.data?.asset));
     })

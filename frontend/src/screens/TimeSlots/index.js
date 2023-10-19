@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { createTimeSlot, getTimeSlotsByOrgId } from '../../api/timeSlots';
 import { faArrowAltCircleRight, faEye } from '@fortawesome/free-solid-svg-icons';
+import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
 
 import CTForm from './CTForm';
+import ComponentLoader from '../../components/Loader/ComponentLoader';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import TimeSlotsView from './TimeSlotsView';
 import { commonStyles } from '../../styles/common';
-import { selectCurrentUserOrg } from '../../states/reducers/slices/backend/UserSlice';
 import { useSelector } from 'react-redux';
-import ComponentLoader from '../../components/Loader/ComponentLoader';
 
 const TimeSlots = () => {
   let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
   const [toggleChange, setToggleChange] = useState(false);
   const [timeSlots, setTimeSlots] = useState([]);
   const [formData, setFormData] = useState({
@@ -95,7 +97,7 @@ const TimeSlots = () => {
   }
 
   let LoadData = () => {
-    getTimeSlotsByOrgId(orgId, setTimeSlots, timeslotsLoader)
+    getTimeSlotsByOrgId(orgId, setTimeSlots, timeslotsLoader, role)
   }
 
   const handleCreateTimeSlots = (trigger) => {
@@ -140,7 +142,7 @@ const TimeSlots = () => {
       trigger();
       return;
     }
-    createTimeSlot(formData, changeToggler, trigger);
+    createTimeSlot(formData, changeToggler, trigger, orgId, role);
     setFormData({
       name: '',
       startTime: '',

@@ -1,10 +1,13 @@
 import { allowances } from "./configuration";
 import axios from "axios";
+import { setHeaders } from "../utils/AdminStatus";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
 
-export const createAllowance = (formData, changeToggler, trigger) => {
-    axios.post(allowances.createAllowance, formData)
+export const createAllowance = (formData, changeToggler, trigger, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'createAllowance')
+
+    axios.post(allowances.createAllowance, formData, {headers})
         .then(() => {
             toastMessage("success", "Asset Type created successfully,", toast);
             changeToggler();
@@ -17,8 +20,9 @@ export const createAllowance = (formData, changeToggler, trigger) => {
         })
 }
 
-export const getAllowancesByOrgId = (orgId, setAssetTypes, trigger = null) => {
-    axios.get(allowances.getAllowancesByOrgId + orgId)
+export const getAllowancesByOrgId = (orgId, setAssetTypes, trigger = null, role) => {
+    const headers = setHeaders(orgId, role, 'getAllAllowanceByOrganization')
+    axios.get(allowances.getAllowancesByOrgId + orgId, {headers})
         .then((response) => {
             setAssetTypes(response.data.response)
             if(trigger !== null){
@@ -30,8 +34,10 @@ export const getAllowancesByOrgId = (orgId, setAssetTypes, trigger = null) => {
         })
 }
 
-export const deletAllowanceById = (id) => {
-    axios.delete(allowances.deletAllowancesById + id)
+export const deletAllowanceById = (id, orgId, role) => {
+const headers = setHeaders(orgId, role, 'deleteAllowanceById')
+
+    axios.delete(allowances.deletAllowancesById + id, {headers})
         .then((response) => {
             toastMessage("success", response.data.Message, toast);
             setTimeout(() => {
@@ -43,8 +49,10 @@ export const deletAllowanceById = (id) => {
         })
 }
 
-export const updateAllowanceById = (id, formData, trigger) => {
-    axios.put(allowances.updateAllowancesById + id, formData)
+export const updateAllowanceById = (id, formData, trigger, orgId, role) => {
+const headers = setHeaders(orgId, role, 'updateAllowanceById')
+
+    axios.put(allowances.updateAllowancesById + id, formData, {headers})
         .then((response) => {
             toastMessage("success", response.data.Message, toast)
         })

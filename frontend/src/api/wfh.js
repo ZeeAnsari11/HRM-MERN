@@ -2,11 +2,14 @@ import { createWfh, deleteRequest, getAllWfh, getTime, updateWfh } from './confi
 import { setTimeSheet, setUserWFH } from '../states/reducers/slices/backend/UserSlice';
 
 import axios from 'axios';
+import { setHeaders } from '../utils/AdminStatus';
 import { toast } from 'react-toastify';
 import { toastMessage } from '../AlertConfigs';
 
-export const CreateWfhRequest = (formData, toggler) => {
-    axios.post(createWfh.request , formData)
+export const CreateWfhRequest = (formData, toggler, org_id, role) => {
+    const headers = setHeaders(org_id, role, 'creatingWFH');
+
+    axios.post(createWfh.request , formData, {headers})
     .then((wfh) => {
         toastMessage("success", "Work From Home request generated successfully", toast);
     })
@@ -18,8 +21,10 @@ export const CreateWfhRequest = (formData, toggler) => {
     })
 }
 
-export const getAllWfhOfUser = (userId, dispatcher) => {
-    axios.get(getAllWfh.ofUser + userId)
+export const getAllWfhOfUser = (userId, dispatcher, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'getAllWFHByUserId');
+    
+    axios.get(getAllWfh.ofUser + userId, {headers})
     .then((response) => {
         dispatcher(setUserWFH(response.data.response));
     })
@@ -28,8 +33,9 @@ export const getAllWfhOfUser = (userId, dispatcher) => {
     });
 }
 
-export const getTimeSheet = (data, dispatcher) => {
-    axios.post(getTime.sheet, data)
+export const getTimeSheet = (data, dispatcher, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'filterAttendance')
+    axios.post(getTime.sheet, data, {headers})
     .then((response) => {
         dispatcher(setTimeSheet(response.data.response));
     })
@@ -38,8 +44,10 @@ export const getTimeSheet = (data, dispatcher) => {
     });
 }
 
-export const deleteWfhRequest = (id) => {
-    axios.delete(deleteRequest.wfh + id)
+export const deleteWfhRequest = (id, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'deleteWFH')
+
+    axios.delete(deleteRequest.wfh + id, {headers})
     .then((response) => {
         toastMessage("success", "WFH Deleted Succefully", toast)
         setTimeout(() => {
@@ -52,8 +60,10 @@ export const deleteWfhRequest = (id) => {
    
 }
 
-export const updateWfhRequest = (wfh, id) => {
-    axios.put(updateWfh.request + id, wfh)
+export const updateWfhRequest = (wfh, id, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'updateWFH')
+
+    axios.put(updateWfh.request + id, wfh, {headers})
     .then((response) => {
         toastMessage("success", "WFH Updated Succefully", toast)
         setTimeout(() => {

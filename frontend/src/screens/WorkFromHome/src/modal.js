@@ -1,24 +1,28 @@
-import React from "react";
-import { useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEdit, faEye } from '@fortawesome/free-solid-svg-icons';
-import FormFields from "./Formfields";
 import { deleteWfhRequest, updateWfhRequest } from "../../../api/wfh";
+import { faEdit, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { selectCurrentUserOrg, selectCurrentUserRole, selecteUpdatedWfh } from "../../../states/reducers/slices/backend/UserSlice";
+
 import EditWfh from "./EditWfh";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import FormFields from "./Formfields";
+import React from "react";
 import { useSelector } from "react-redux";
-import { selecteUpdatedWfh } from "../../../states/reducers/slices/backend/UserSlice";
+import { useState } from "react";
 
 export default function View({ selectedId, user_id }) {
+  let orgId = useSelector(selectCurrentUserOrg);
+  let role = useSelector(selectCurrentUserRole);
+  
   const [showModal, setShowModal] = useState(false);
   const [edit, setEdit] = useState(false);
   const wfh = useSelector(selecteUpdatedWfh)
 
   const handleDelete = () => {
-    deleteWfhRequest(selectedId)
+    deleteWfhRequest(selectedId, orgId, role)
   }
 
   const handleSubmit = () => {
-    updateWfhRequest(wfh, selectedId);
+    updateWfhRequest(wfh, selectedId, orgId, role);
       setShowModal(false);
       setEdit(false);
   }

@@ -37,7 +37,8 @@ export const shortLeaveRoutes = {
 }
 
 export const userLeaveRoute = {
-    getUserLeaves: baseUrl+'/leave-request/user-leaves/'
+    getUserLeaves: baseUrl+'/leave-request/user-leaves/',
+    getUserAllowedLeaves : baseUrl+'/leaves/user/'
 }
 
 export const userLeave = {
@@ -119,6 +120,15 @@ export const  getDesignation = {
 
 export const  getAsset = {
     byId: baseUrl+'/previous-holders/asset/'
+}
+
+export const  createLoanRequest = {
+    create: baseUrl+'/loan/new',
+    getAll : baseUrl+'/loans/org/',
+    getAllLoansByUser : baseUrl + '/loan/user/',
+    updateLoanRequest : baseUrl + '/loan/',
+    deleteLoanRequest : baseUrl + '/loan/',
+    loanRepqymentSchedule: baseUrl + '/loan-repayment-schedule/'
 }
 
 export const  getUserLoan = {

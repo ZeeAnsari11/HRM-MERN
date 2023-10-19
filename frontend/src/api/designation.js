@@ -2,6 +2,7 @@ import { desiginationsRoute, getDesignation } from "./configuration";
 
 import axios from "axios"
 import { setDesignationName } from "../states/reducers/slices/backend/Designation";
+import { setHeaders } from "../utils/AdminStatus";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
 
@@ -19,8 +20,9 @@ export const getDesignationById = (DesignationId, dispatcher, trigger) => {
     })
 }
 
-export const createDesigination = (formData, changeToggler, trigger) => {
-    axios.post(desiginationsRoute.createDesigination, formData)
+export const createDesigination = (formData, changeToggler, trigger, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'createDesignation');
+    axios.post(desiginationsRoute.createDesigination, formData, { headers })
     .then((response) => {
         changeToggler();
         toastMessage("success", "Designation created successfully", toast);
@@ -45,20 +47,21 @@ export const deleteDesiginationById = (id) => {
             toastMessage("error", err.response.data.Message, toast);
         })
 }
+export const updateDesiginationById = (id, formData, trigger, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'updateDesignationById');
 
-export const updateDesiginationById = (id, formData, trigger) => {
-    axios.put(desiginationsRoute.updateDesiginationById + id, formData)
+    axios.put(desiginationsRoute.updateDesiginationById + id, formData, { headers })
         .then((response) => {
             toastMessage("success", response.data.Message, toast)
+            setTimeout(() => {
+                window.location.href = "/dashboard/Desiginations"
+            }, 2000)
         })
         .catch((error) => {
             toastMessage("error", error.response.data.Message, toast)
         })
         .finally(()=>{
             //TODO: Update required
-            setTimeout(() => {
-                window.location.href = "/dashboard/Desiginations"
-            }, 2000)
             trigger();
         })
 }

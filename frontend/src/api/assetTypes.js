@@ -1,10 +1,13 @@
 import { assetType } from "./configuration";
 import axios from "axios";
+import { setHeaders } from "../utils/AdminStatus";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
 
-export const createAssetType = (formData, changeToggler, trigger) => {
-    axios.post(assetType.createAssetType, formData)
+export const createAssetType = (formData, changeToggler, trigger, orgId, role ) => {
+    const headers = setHeaders(orgId, role, 'createAssetType')
+
+    axios.post(assetType.createAssetType, formData, {headers})
         .then(() => {
             toastMessage("success", "Asset Type created successfully,", toast);
             changeToggler();
@@ -17,8 +20,9 @@ export const createAssetType = (formData, changeToggler, trigger) => {
         })
 }
 
-export const getAssetTypesByOrgId = (orgId, setAssetTypes) => {
-    axios.get(assetType.getAssetType + orgId)
+export const getAssetTypesByOrgId = (orgId, setAssetTypes,role) => {
+    const headers = setHeaders(orgId, role, 'getAllAssetTypeByOrgId')
+    axios.get(assetType.getAssetType + orgId, {headers})
         .then((response) => {
             setAssetTypes(response.data.response)
         })
@@ -40,8 +44,10 @@ export const deleteAssetType = (id) => {
     })
 }
 
-export const updateAssetType = (id, data, trigger) => {
-    axios.put(assetType.UpdateAssetType+id, data)
+export const updateAssetType = (id, data, trigger, orgId, role) => {
+    const headers = setHeaders(orgId, role, 'UpdateAssetTypeById')
+
+    axios.put(assetType.UpdateAssetType+id, data, {headers})
     .then((response) => {
         toastMessage("success", response.data.Message, toast)
         setTimeout(() => {

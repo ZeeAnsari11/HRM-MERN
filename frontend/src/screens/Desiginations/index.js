@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { selectCurrentUser, selectCurrentUserOrg, selectCurrentUserRole } from "../../states/reducers/slices/backend/UserSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 import CDForm from "./CDForm";
@@ -10,16 +11,18 @@ import axios from "axios";
 import { commonStyles } from "../../styles/common";
 import { createDesigination } from "../../api/designation";
 import { organizationRoutes } from "../../api/configuration";
-import { selectCurrentUserOrg } from "../../states/reducers/slices/backend/UserSlice";
+import { setHeaders } from "../../utils/AdminStatus";
 import { setOrganizationDesignation } from "../../states/reducers/slices/backend/Designation";
 import { useMemo } from "react";
 
 // import NotFound from "../../components/Table/shared/NotFound";
 
 const Desiginations = () => {
-  let orgId;
+  let orgId, role;
   let dispatcher = useDispatch();
   orgId = useSelector(selectCurrentUserOrg);
+  role = useSelector(selectCurrentUserRole);
+  
   const [toggleChange, setToggleChange] = useState(false);
   const [desiginations, setDesiginations] = useState([]);
   const [formData, setFormData] = useState({
@@ -39,13 +42,12 @@ const Desiginations = () => {
   }, [toggleChange]);
 
   let LoadData = (dispatcher) => {
+    const headers = setHeaders(orgId, role, 'getAllDesignationsByOrgId');
     axios
-      .get(organizationRoutes.getDesignationsByOrgId + orgId)
+      .get(organizationRoutes.getDesignationsByOrgId + orgId, {headers})
       .then((rsp) => {
         dispatcher(setOrganizationDesignation(rsp.data.response));
         setDesiginations(rsp.data.response);
-        console.log(rsp.data.response)
-
         // Disable loader to decide btw not found & data
 
       })
@@ -86,7 +88,7 @@ const Desiginations = () => {
       trigger();
       return;
     }
-    createDesigination(formData, changeToggler, trigger);
+    createDesigination(formData, changeToggler, trigger, orgId, role);
 
     setFormData({
       title: "",
