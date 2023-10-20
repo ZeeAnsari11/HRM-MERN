@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// Slice for Storing Current User
+
 export const UserSlice = createSlice({
   name: 'user',
   initialState: {
@@ -16,6 +16,7 @@ export const UserSlice = createSlice({
         number: ''
       }
     },
+    missingPunches: [],
     userAuthToken: null,
     teamLeads: [],
     finalAuthority: [],
@@ -28,12 +29,13 @@ export const UserSlice = createSlice({
     profileCompletion: 0,
     updatedWfh: {},
     updatedLeave: {},
+    updatedAttendance: {},
     userLeaveDetails: [],
     isAdmin: false,
     userChart: [],
     userById: {},
     requestTypes: [],
-    setRequestFlows: [],
+    requestFlows: [],
     userId: '',
     background: '',
     organizationTheme : {
@@ -74,6 +76,9 @@ export const UserSlice = createSlice({
     setUserGrades: (state, action) => {
       state.grades = action.payload;
     },
+    setmissingPunches: (state, action) => {
+      state.missingPunches = action.payload;
+    },
     setUserWFH: (state, action) => {
       state.wfh = action.payload;
     },
@@ -92,6 +97,10 @@ export const UserSlice = createSlice({
     setUpdatedLeave: (state, action) => {
       state.updatedLeave = action.payload;
     },
+    setupdatedAttendance: (state, action) => {
+      state.updatedAttendance = action.payload;
+    },
+    
     setUserLeaveDetails: (state, action) => {
       state.userLeaveDetails = action.payload;
     },
@@ -114,7 +123,7 @@ export const UserSlice = createSlice({
       state.requestTypes = action.payload;
     },
     setRequestFlows: (state, action) => {
-      state.requestFlowNodes = action.payload;
+      state.requestFlows = action.payload;
     },
     setBackground: (state, action) => {
       if (action.payload === 'default') {
@@ -125,7 +134,7 @@ export const UserSlice = createSlice({
   }
 });
 
-// Action Methods
+
 export const {
   setUserForm,
   setOrganizationTheme,
@@ -151,11 +160,15 @@ export const {
   setUserById,
   setRequestTypes,
   setRequestFlows,
+  setmissingPunches,
+  setupdatedAttendance,
 } = UserSlice.actions;
 
 // Selector Methods
 export const selectCurrentUser = (state) => state.user.currentUser;
-export const selectRequestFlows = (state) => state.user.setRequestFlows;
+export const selecUpdatedAttendance = (state) => state.user.updatedAttendance;
+export const selectMissingPunches = (state) => state.user.missingPunches;
+export const selectRequestFlows = (state) => state.user.requestFlows;
 export const selectRequestTypes = (state) => state.user.requestTypes;
 export const selectBackground = (state) => state.user.background;
 export const selectOrgTheme = (state) => state.user.organizationTheme;

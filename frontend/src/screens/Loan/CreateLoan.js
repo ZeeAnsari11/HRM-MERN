@@ -19,7 +19,6 @@ const CreateLoanRequest = ({ formData, handleInputChange, validationErrors }) =>
 
   // Use state to store the form values
   const [loanType, setLoanType] = React.useState(formData ? formData?.loan_type._id : '');
-
   const [loancCategory, setLoanCategory] = useState('');
   const [amount, setAmount] = useState(formData ? formData?.loan_amount : '');
   const [date, setDate] = useState(formData ? formData?.date : '');
@@ -95,7 +94,6 @@ const CreateLoanRequest = ({ formData, handleInputChange, validationErrors }) =>
     }, 3000);
 
     createLoan(formData, orgId, role)
-
   };
 
   // Define a function to handle the form submission

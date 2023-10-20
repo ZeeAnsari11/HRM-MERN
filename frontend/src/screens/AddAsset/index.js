@@ -13,10 +13,11 @@ import { useDropzone } from "react-dropzone";
 
 
 const Asset = () => {
+
   let orgId = useSelector(selectCurrentUserOrg);
   let role = useSelector(selectCurrentUserRole);
   
-  // Use state to store the form values
+
   const [name, setName] = React.useState('');
   const [condition, setCondition] = useState('');
   const [manufacturedBy, setManufacturedBy] = useState('');

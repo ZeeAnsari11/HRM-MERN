@@ -79,6 +79,7 @@ export const deleteLeaveRequest = (id) => {
 
 }
 
+
 export const getUserLeaves = (user_id, dispatcher, orgId, role) => {
     const headers = setHeaders(orgId, role, 'userLeaveRequests')
     axios.get(userLeaveRoute.getUserLeaves + user_id, { headers })
@@ -88,6 +89,7 @@ export const getUserLeaves = (user_id, dispatcher, orgId, role) => {
         .catch((err) => {
             // console.log(err);
         })
+
 }
 
 export const getLeaveTypeById = (leaveType_id, dispatcher) => {

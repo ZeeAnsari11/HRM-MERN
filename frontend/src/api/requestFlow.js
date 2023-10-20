@@ -18,17 +18,7 @@ export const getRequestTypes = (orgId, dispatcher, trigger = null) => {
   })
 }
 
-export const saveRequestFlowData = ( formData) => {
-    axios.post(requestFlow.create, formData)
-    .then((response) => {
-        console.log("response", response);
-        toastMessage("success", "Request Flow Created Successfully", toast);
-    })
-    .catch((error) => {
-        console.log("error", error);
-        toastMessage("error", error.response.data.Message, toast);
-    })
-}
+
 
 export const getRequestFlowsByOrgId = (orgId, dispatcher) => {
     axios
@@ -41,6 +31,33 @@ export const getRequestFlowsByOrgId = (orgId, dispatcher) => {
         console.log(err);
       });
 };
+
+export const getRequestFlows = (orgId, dispatcher, trigger = null) => {
+  axios.get(requestFlow.all+orgId)
+  .then((response) => {
+      dispatcher(setRequestFlows(response.data.response))
+  })
+  .catch((err) => {
+      toastMessage("error", err.response.data.Message, toast);
+  }).finally(() =>{
+    if(trigger !== null){
+        trigger()
+    }
+})
+}
+
+// export const saveRequestFlowData = ( formData) => {
+//     axios.post(requestFlow.create, formData)
+//     .then((response) => {
+//         console.log("response", response);
+//         toastMessage("success", "Request Flow Created Successfully", toast);
+//     })
+//     .catch((error) => {
+//         console.log("error", error);
+//         toastMessage("error", error.response.data.Message, toast);
+//     })
+// }
+
 
 export const getRequesTypesByOrgId = (orgId, dispatcher) => {
     axios
@@ -67,6 +84,24 @@ export const createRequestType = (formData, changeToggler, trigger = null) => {
       if (trigger !== null) trigger();
     });
 };
+
+
+export const saveRequestFlowData = (formData, changeToggler, trigger = null) => {
+  axios
+    .post(requestFlow.create, formData)
+    .then((res) => {
+      console.log("res:",res);
+      toastMessage("success", "Request Flow creation success.", toast);
+      changeToggler();
+    })
+    .catch((err) => {
+      toastMessage("error", "Request Flow creation failed!", toast);
+    })
+    .finally(() => {
+      if (trigger !== null) trigger();
+    });
+};
+
 
 export const updateRequestTypeById = (id, formData, trigger) => {
   axios

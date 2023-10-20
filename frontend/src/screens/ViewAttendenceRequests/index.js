@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import Table, { StatusPill } from '../../components/Table';
+
 import { faEye, faPencil } from '@fortawesome/free-solid-svg-icons';
 import { selectCurrentUserOrg, selectCurrentUserRole, selectUID } from '../../states/reducers/slices/backend/UserSlice'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getMissingPunchesRquestsOfUser } from '../../api/missingPunchesRequests';
+import { selectMissingPunches } from '../../states/reducers/slices/backend/UserSlice'
+
 import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import ViewAttendanceRequest from './src/modal';
 
 function ViewAttendenceRequests() {
 
@@ -41,28 +44,22 @@ function ViewAttendenceRequests() {
             accessor: 'createdAt',
         },
         {
-            Header: "Action",
+            Header: "Action", 
             accessor: 'action',
             Cell: ({ row }) => (
-                <div className='flex items-center justify-center'>
-                    <div className='pr-2'>
-                        <button title="Flow" className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow" onClick={() => handleAction(row.original)}>
-                        <FontAwesomeIcon icon={faPencil} className="text-backgroundDark cursor-pointer hover:text-gray-600" />
-                        </button>
-                    </div>
-                    <button title="View" className="bg-transparent hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow" onClick={() => handleAction(row.original)}>
-                        <FontAwesomeIcon icon={faEye} />
-                    </button>
-                </div>
+              <div className='flex items-center justify-center'>
+                <ViewAttendanceRequest
+                  selectedId={row.original.id}
+                />
+              </div>
             )
-        }
-    ], [handleAction])
+          },
+    ], [])
 
 
     let userId = useSelector(selectUID)
     const [searchTerm] = useState("");
-    const [AttendenceRequestHistory, setAttendenceRequestHistory] = useState([]);
-
+    const dispatch = useDispatch()
     const convertToAMPM = (time) => {
         const [hours, minutes] = time.split(':');
         const formattedTime = new Date();
@@ -70,32 +67,28 @@ function ViewAttendenceRequests() {
         return formattedTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
     }
     useEffect(() => {
-        getMissingPunchesRquestsOfUser(userId, orgId, role)
-            .then((response) => {
-                if (response !== undefined) setAttendenceRequestHistory(response);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        getMissingPunchesRquestsOfUser(userId,orgId,role, dispatch)
     },[]);
-    
+
+    const AttendenceRequestHistory = useSelector(selectMissingPunches)
+    console.log("Missing Pucnches", AttendenceRequestHistory);
     const filteredAttendenceHistory = AttendenceRequestHistory.filter((entry) =>
         entry.status.toLowerCase().includes(searchTerm.toLowerCase()))
-
+      
     const data = filteredAttendenceHistory.map(obj => ({
         date: obj.date.substring(0, 10),
         createdAt: obj.createdAt.substring(0, 10),
         status: obj.status,
         expectedTime: convertToAMPM(obj.expectedTime),
-        punchType: obj.punchType
-
+        punchType: obj.punchType,
+        id: obj._id
     }));
+
 
     return (
         <div className="bg-gray-100 text-gray-900">
             <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
                 <div className="mt-6">
-                    {/* {showView && <View />} */}
                     <Table columns={columns} data={data} />
                 </div>
             </main>

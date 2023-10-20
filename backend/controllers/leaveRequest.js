@@ -11,7 +11,6 @@ import mongoose from "mongoose";
 const placeHolder = '0001-01-01T';
 
 export const addingLeaveRequest = (req, res, next) => {
-    // console.log("=============1===================");
     try {
         let exist = false;
         let count = 0;
@@ -172,9 +171,7 @@ const creatingLeaveRequest = (req, res, next, user, session) => {
                 },
             })
                 .then((flows) => {
-                    // console.log("======flow===1=====", flows);
                     let flow = flows.filter(flow => flow.requestType != null)
-                    // console.log("======flow====2====", flow);
                     if (flow.length == 0) {
                         throw new Error("There is no flow defined for this type of request by organization.");
                     } else {

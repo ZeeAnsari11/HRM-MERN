@@ -12,6 +12,7 @@ export const createMissingPunchRequest = (req, res, next) => {
         if (req.body.expectedTime) {
             AttendanceModel.findOne({ user: req.body.user, date: req.body.date })
                 .then((attendanceFound) => {
+                    console.log("=======attendanceFound==",attendanceFound);
                     if (!attendanceFound) throw new Error("It might be the off day for which you are generating the request")
                     if (attendanceFound.isPresent) throw new Error("Your attendance is already marked");
                     if ((req.body.punchType == "checkIn" && attendanceFound.checkIn != "false") || (req.body.punchType == "checkOut" && attendanceFound.checkOut != "false")) {
@@ -21,6 +22,7 @@ export const createMissingPunchRequest = (req, res, next) => {
                         session.startTransaction();
                         MissingPunchesModel.find({ user: req.body.user, date: req.body.date, punchType: req.body.punchType })
                             .then((alreadyRequested) => {
+                                console.log("======alreadyRequested===",alreadyRequested);
                                 if (alreadyRequested.length > 0) throw new Error("Already generated request for that");
                                 return MissingPunchesModel.create([req.body], { session: session });
                             })

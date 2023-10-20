@@ -1,4 +1,3 @@
-
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
 
 import CUForm from '../Profile/elements/common/CUForm';
@@ -8,7 +7,7 @@ import React from 'react';
 import { useState } from 'react';
 import { updateRequestTypeById } from '../../api/requestFlow';
 
-export default function RequestTypeView({ data }) {
+export default function RequestFlowView({ data }) {
 
     const [formData, setFormData] = useState({
         name: data.name,

@@ -3,6 +3,7 @@ import { missingPunchesRoute } from './configuration';
 import { setHeaders } from "../utils/AdminStatus";
 import { toast } from 'react-toastify';
 import { toastMessage } from '../AlertConfigs';
+import { setmissingPunches } from '../states/reducers/slices/backend/UserSlice';
 
 export const saveFormDataForMissingPunches = (formData, orgId, role) => {
     const headers = setHeaders(orgId,role, 'createMissingPunchRequest')
@@ -15,15 +16,18 @@ export const saveFormDataForMissingPunches = (formData, orgId, role) => {
         })
 }
 
-export const getMissingPunchesRquestsOfUser = (id, orgId, role) => {
+export const getMissingPunchesRquestsOfUser = (id, orgId, role, dispatch) => {
+
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth()+1;
     const currentYear = currentDate.getFullYear();
     const headers = setHeaders(orgId, role, 'getMissingPunchRequest')
     return axios
       .get(missingPunchesRoute.getMissingPunchesHistoryByUserId+`?userId=${id}&month=${currentMonth}&year=${currentYear}`,{headers})
-      .then((response) => response.data.response)
+      .then((response) => {
+        dispatch(setmissingPunches(response.data.response))
+    })
       .catch((err) => {
-        // console.log(err);
+        
       });
   };

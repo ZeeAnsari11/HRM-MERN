@@ -1,4 +1,6 @@
-import { faCalendarCheck, faCalendarDay, faCalendarPlus, faCalendarTimes, faCalendarWeek, faCediSign,faArrowCircleRight, faChartArea, faCircleDollarToSlot, faCodePullRequest, faCoffee, faDollarSign, faFileAlt, faGear, faHome, faNetworkWired, faTimeline, faUser, faUserCircle, faUserClock, faUsers, faArrowDown, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons'
+
+import { faCalendarCheck, faCalendarDay, faCalendarPlus, faCalendarTimes, faCalendarWeek, faCediSign,faArrowCircleRight, faChartArea, faCircleDollarToSlot, faCodePullRequest, faCoffee, faDollarSign, faFileAlt, faGear, faHome, faNetworkWired, faTimeline, faUser, faUserCircle, faUserClock, faUsers, faArrowDown, faArrowCircleLeft, faLaptop } from '@fortawesome/free-solid-svg-icons'
+
 
 export const Menus = [
     { title: "Dashboard", font:faHome, gap: true, child:[], to: "/dashboard/home"},
@@ -18,10 +20,10 @@ export const Menus = [
         ] 
     },
     {
-        title: "Assets",
-        access:"Admin",
-        font: faCalendarDay,
-        child: [
+        title: "Assets", 
+        access:"Admin", 
+        font: faCalendarDay, 
+        child: [ 
             { title: "Add Asset", font: faCodePullRequest, to:"/dashboard/add-asset" },
             { title: "Manage Assets", font: faCalendarCheck, to:"/dashboard/manage-assets"},
             { title: "Asset Type", font: faCodePullRequest, to:"/dashboard/asset-type" },
@@ -33,7 +35,6 @@ export const Menus = [
     { title: "Branches", access:"Admin",font: faCalendarCheck, child:[], to:"/dashboard/branches"  },
     { title: "TimeSlots", access:"Admin",font: faCalendarCheck, child:[], to:"/dashboard/timeSlots"  },
     { title: "Employment Type",access:"Admin", font: faCalendarCheck, child:[], to:"/dashboard/employeement-type"  },
-
 
     {
         title: "Employee", 
@@ -75,6 +76,7 @@ export const Menus = [
             { title: "View Attendece", font: faCalendarCheck, to:"/dashboard/attendence"},
         ]
     },
+    { title: "Approvals", access:"Admin",font: faLaptop, child:[], to:"/dashboard/approvals"  },
     { title: "Tax Rules", access:"Admin", font: faCircleDollarToSlot, child:[], to:"/dashboard/tax-rules"  },
     { title: "Payslips", access:"Admin", font: faCircleDollarToSlot, 
         child:[
@@ -83,6 +85,7 @@ export const Menus = [
             { title: "View Payslips", access:"Admin", font: faDollarSign, child:[], to:"/dashboard/payslips"  }
         ] 
     },
+
     { title: "Allowances",access:"Admin", font: faCalendarCheck, child:[], to:"/dashboard/allowances"  },
     { title: "Profile ", font: faUserCircle, gap: true, child:[], to:"/dashboard/profile"},
     { title: "Grades", access:"Admin", font: faCircleDollarToSlot, child:[], to:"/dashboard/grades"  },
@@ -91,6 +94,7 @@ export const Menus = [
     { title: "Request Flow",access:"Admin", font: faArrowDown,
         child:[
             { title: "Create Request Flow",access:"Admin", font: faArrowCircleRight,child:[], to:"/dashboard/request-flow"  },
+
             { title: "Request Types",access:"Admin", font: faArrowCircleLeft,child:[], to:"/dashboard/request-type"  }
         ],
     },

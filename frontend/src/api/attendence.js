@@ -31,3 +31,33 @@ export const markAttendance = (form) => {
       toastMessage("error", err.response.data.Message, toast);
   })
 };
+
+export const deleteAttendanceRequest = (id) => {
+  axios.delete(attendence.delete + id)
+  .then((response) => {
+      toastMessage("success", "Attendance Request Deleted Succefully", toast)
+      setTimeout(() => {
+          window.location.href = "/dashboard/attendence"
+      }, 2000)
+      console.log(response);
+  })
+  .catch((error) => {
+      console.log(error.response.data.Message);
+  });
+ 
+}
+
+export const updateAttendanceRequest = (attendance, id) => {
+  axios.put(attendence.update + id, attendance)
+  .then((response) => {
+      toastMessage("success", "Missing Punches Request Updated Succefully", toast)
+      setTimeout(() => {
+          window.location.href = "/dashboard/attendence"
+      }, 2000)
+      console.log(response);
+  })
+  .catch((error) => {
+      console.log(error.response.data);
+  });
+ 
+}
