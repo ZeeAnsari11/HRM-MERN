@@ -25,6 +25,11 @@ const RequestFlowSchema = mongoose.Schema({
     required: [true, "Please Enter Name of Node Type"],
     trim: true,
   },
+  organization: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Organization',
+    required: [true, "Please Enter the Organization Id"]
+  },
   requestType: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'RequestType',

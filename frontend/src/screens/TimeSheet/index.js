@@ -66,8 +66,6 @@ function TimeSheet() {
     }
   ], [])
 
-
-
   const user = useSelector(selectUID)
   const apiData = useSelector(selectTimeSheet)
   const dispatcher = useDispatch()
@@ -94,6 +92,7 @@ function TimeSheet() {
     getTimeSheet(body, dispatcher)
   }, [])
 
+  console.log("ApiData", apiData);
   const data = apiData.map(obj => ({
     date: obj.date.substring(0, 10), checkIn: obj.checkIn,
     checkOut: obj.checkOut, earlyArrivalTime: obj.earlyArrivalTime,

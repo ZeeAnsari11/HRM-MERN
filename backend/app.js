@@ -101,8 +101,6 @@ app.post(`${apiVersion}/upload/:id`, upload.single('profile'), (req, res) => {
                 return res.status(404).json({ error: 'User not found.' });
             }
 
-            // Delete the existing profile file, if it exists
-
             if (user.profile) {
                 fs.unlink(user.profile, err => {
                     if (err) {
@@ -114,7 +112,6 @@ app.post(`${apiVersion}/upload/:id`, upload.single('profile'), (req, res) => {
                 });
             }
 
-            // Update the user's profile with the new file path
             user.profile = filePath;
             return user.save();
         })
@@ -130,7 +127,7 @@ app.post(`${apiVersion}/upload/:id`, upload.single('profile'), (req, res) => {
             res.status(500).json({ error: 'An error occurred.' });
         });
 });
-// app.use(permissionsMiddlewre);
+
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/welcome.html');
 })

@@ -9,7 +9,7 @@ import { selectUserLeaves } from '../../states/reducers/slices/backend/LeaveRequ
 import { useEffect } from 'react'
 import { useMemo } from 'react'
 
-function Leave() {
+function ViewApprovals() {
 
   const columns = useMemo(() => [
     {
@@ -63,7 +63,6 @@ function Leave() {
     createdAt: obj.createdAt.substring(0, 10), count: obj.count,
     status: obj.status, id: obj._id,
   }));
-
   return (
     <div className="bg-gray-100 text-gray-900">
       <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
@@ -75,7 +74,7 @@ function Leave() {
   );
 }
 
-export default Leave;
+export default ViewApprovals;
 
 
 

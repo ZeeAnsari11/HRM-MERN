@@ -258,7 +258,9 @@ export const theme = {
 }
 
 export const attendence = {
-    checkIO: baseUrl+'/attendence/new'
+    checkIO: baseUrl+'/attendence/new',
+    delete: baseUrl+'/missing-punch/',
+    update: baseUrl+ '/missing-punch/'
 }
 
 export const requestType = {
@@ -269,7 +271,6 @@ export const requestType = {
 
 export const requestFlow = {
     create: baseUrl+'/request-flow/create',
-    // nodes:  baseUrl+'/request-flow/all/nodes/',
     all: baseUrl+'/request-flow/all-org/',    
 }
 

@@ -7,7 +7,7 @@ import React from 'react';
 import { useState } from 'react';
 import { updateRequestTypeById } from '../../api/requestFlow';
 
-export default function RequestTypeView({ data }) {
+export default function RequestFlowView({ data }) {
 
     const [formData, setFormData] = useState({
         name: data.name,

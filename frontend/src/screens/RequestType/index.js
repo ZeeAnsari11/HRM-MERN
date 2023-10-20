@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { createDepartment } from "../../api/departments";
 
 import CDForm from "./CDForm";
 import ComponentLoader from "../../components/Loader/ComponentLoader";
-import DepartmentsView from "./RequestTypeView";
+import RequestTypeView from "./RequestTypeView";
 import Modal from "../../components/Modal";
 import Table from "../../components/Table";
 import { commonStyles } from "../../styles/common";
@@ -83,7 +82,7 @@ const RequestType = () => {
       {
         Header: "Action",
         accessor: "action",
-        Cell: ({ row }) => <DepartmentsView data={row.original} />,
+        Cell: ({ row }) => <RequestTypeView data={row.original} />,
       },
     ],
     []
@@ -91,6 +90,7 @@ const RequestType = () => {
 
   const apiData = useSelector(selectRequestTypes)
 
+  console.log("Request Types:", apiData);
   const data = apiData.map((obj) => ({
     id: obj._id,
     name: obj.name,

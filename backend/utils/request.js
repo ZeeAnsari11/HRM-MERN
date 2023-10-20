@@ -143,13 +143,12 @@ const addingRequest = (req, res, next, obj, show = true) => {
 
 export const requestToNextNode = (req, res, next) => {
     try {
-        // console.log('===============11============');
+
         if (!req.body.nodeId || !req.body.notificationId || !req.body.senderId || !req.body.flowRequestType || !req.body.requestId || !req.body.createdAt || !req.body.type) throw new Error('Invalid Body.')
         RequestFlowNodeModel.findById(req.body.nodeId)
             .then((previousNode) => {
                 if (!previousNode) throw new Error('No such node')
                 if (previousNode.nextNode !== null) {
-                    console.log("======if================");
                     RequestFlowNodeModel.findById(previousNode.nextNode)
                         .then((node) => {
                             console.log("=========node==", node);
@@ -160,12 +159,10 @@ export const requestToNextNode = (req, res, next) => {
                                     settingStatus(req, res, next, '', node, user)
                                 })
                                 .catch((error) => {
-                                    // console.log("=========1========", error);
                                     handleCatch(error, res, 404, next)
                                 })
                         })
                         .catch((error) => {
-                            // console.log("=========2========", error);
                             handleCatch(error, res, 401, next)
                         })
                 }
@@ -255,12 +252,11 @@ const settingStatus = (req, res, next, requestStatus = null, node = null, user =
                     }
                 })
                 .catch((err) => {
-                    // console.log("=========5========", error);
+
                     handleCatch(err, res, 500, next)
                 })
         })
         .catch((error) => {
-            // console.log("=========6========", error);
 
             handleCatch(error, res, 404, next)
         })
@@ -269,15 +265,13 @@ const settingStatus = (req, res, next, requestStatus = null, node = null, user =
 
 const getNodeUser = async (node, user, req, res, next, show) => {
     try {
-        // console.log("========node========",node);
         let nodeUser = ''
         if (node.lineManager) {
-            console.log("--------if called========");
             nodeUser = user.lineManager
         }
         else {
             const departmentUser = await UserModel.findOne({ HOD: { isHOD: true, department: node.department } }).select('HOD firstName lastName');
-            // console.log("==========departmentUser========",departmentUser );
+            
             if (!departmentUser) {
                 errorOccurred = true
                 throw new Error("Department not found for user")
@@ -294,7 +288,6 @@ const getNodeUser = async (node, user, req, res, next, show) => {
             flowRequestType: req.body.flowRequestType,
             createdAt: req.body.createdAt
         }
-        console.log("=========going for adding request==========", x);
         addingRequest(req, res, next, x, show)
     } catch (error) {
         handleCatch(error, res, 404, next)
@@ -303,7 +296,7 @@ const getNodeUser = async (node, user, req, res, next, show) => {
 }
 
 export const commonModels = (req, res, next, model, requestStatus = null, msg) => {
-    // console.log('===============55============');
+    
     model.findById(req.body.requestId)
         .then((Obj) => {
             if (!Obj) throw new Error(`Request for ${msg} is not found`)

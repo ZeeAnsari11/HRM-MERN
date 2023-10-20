@@ -4,7 +4,7 @@ import { RequestTypeModel } from "../models/requestTypeSchema.js";
 import { getAll, getById, handleCatch } from "../utils/common.js";
 
 export const createRequestFlow = (req, res, next) => {
-    const { name, requestType } = req.body;
+    const { name, requestType, organization } = req.body;
     RequestFlowModel.exists({ name: name, requestType: requestType })
         .then((flowExists) => {
             if (flowExists) {
@@ -18,7 +18,8 @@ export const createRequestFlow = (req, res, next) => {
                     else {
                         const newRequestFlow = new RequestFlowModel({
                             name,
-                            requestType
+                            requestType,
+                            organization
                         });
                         newRequestFlow
                             .save()
