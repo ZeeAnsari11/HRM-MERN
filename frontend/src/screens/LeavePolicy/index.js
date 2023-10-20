@@ -4,17 +4,13 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { FaFlask } from 'react-icons/fa';
 import { FaLeaf } from 'react-icons/fa';
+import { CheckCircle } from 'react-feather';
 import { MdLocalFlorist } from 'react-icons/md';
 import React from 'react';
 import { RiPlantFill } from 'react-icons/ri';
 import { getUserLeaveDetails } from '../../api/user';
 import { useEffect } from 'react';
 
-const leaveData = [
-  { leaveType: 'Annual Leaves', balance: 20, availed: 10, available: 10 },
-  { leaveType: 'Sick Leaves', balance: 10, availed: 5, available: 5 },
-  { leaveType: 'Personal Leaves', balance: 5, availed: 3, available: 2 },
-];
 
 const leaveFields = [
   { label: 'Leave Type', key: 'leaveType' },
@@ -26,7 +22,7 @@ const leaveFields = [
 
 const COLORS = ['#364f6b', '#3fc1c9', '#fc5185'];
 
-const icons = [FaLeaf, MdLocalFlorist, FaFlask];
+const icons = [FaLeaf, MdLocalFlorist, FaFlask, CheckCircle];
 
 const LeavePolicy = () => {
 
@@ -38,14 +34,26 @@ const LeavePolicy = () => {
   const leaveDetails = useSelector(selectUserLeaveDetails)
   console.log("leaveDetails",leaveDetails
   );
+
+const totalLeaves = leaveDetails.reduce((total, item) => total + item.leaveType.accumulativeCount, 0);
+
+const adjustedDataWithoutUnpaid = leaveDetails.map((item) => {
+  return {
+    leaveType: item.leaveType.name,
+    balance: item.leaveType.accumulativeCount, 
+    availed: 10, 
+    available: item.leaveType.accumulativeCount 
+  };
+});
   
-  const totalLeaves = leaveData.reduce((sum, item) => sum + item.balance, 0);
-  const leavesBullet = leaveData.map((leave) => {
-    const Icon = icons[leaveData.indexOf(leave)];
+const adjustedData = adjustedDataWithoutUnpaid.filter((leave) => leave.leaveType !== 'unpaid');
+
+  const leavesBullet = adjustedData.map((leave) => {
+    const Icon = icons.find((icon, index) => index === adjustedData.indexOf(leave));
     return (
       <li key={leave.leaveType} className='flex items-center space-x-1 mobile:space-x-2 mobile:justify-between'>
         <div className='flex items-center'>
-          <Icon style={{ color: COLORS[leaveData.indexOf(leave)], width: '40px' }} />
+        {Icon && <Icon style={{ color: COLORS[adjustedData.indexOf(leave)], width: '40px' }} />}
           <span className='mobile:ml-2 mr-2'>{leave.leaveType}</span>
         </div>
         <span className='mobile:ml-0 rounded-full bg-gray-300 w-7 h-7 flex justify-center items-center'>{leave.balance}</span>
@@ -57,7 +65,7 @@ const LeavePolicy = () => {
     <>
       <div className="flex justify-center mt-8">
         <ResponsiveContainer width="95%" height={300}>
-          <BarChart data={leaveData}>
+          <BarChart data={adjustedData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="leaveType" />
             <YAxis />

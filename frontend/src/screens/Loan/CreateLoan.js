@@ -12,7 +12,6 @@ import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import { selectLoanTypes } from '../../states/reducers/slices/backend/Loan';
 import { useDropzone } from "react-dropzone";
 
-// Define a component for the add asset form
 const CreateLoanRequest = ({ formData, handleInputChange, validationErrors }) => {
 
   let orgId = useSelector(selectCurrentUserOrg);
@@ -20,6 +19,7 @@ const CreateLoanRequest = ({ formData, handleInputChange, validationErrors }) =>
 
   // Use state to store the form values
   const [loanType, setLoanType] = React.useState(formData ? formData?.loan_type._id : '');
+
   const [loancCategory, setLoanCategory] = useState('');
   const [amount, setAmount] = useState(formData ? formData?.loan_amount : '');
   const [date, setDate] = useState(formData ? formData?.date : '');
@@ -93,7 +93,9 @@ const CreateLoanRequest = ({ formData, handleInputChange, validationErrors }) =>
     setTimeout(() => {
       setRequestCreated(false);
     }, 3000);
+
     createLoan(formData, orgId, role)
+
   };
 
   // Define a function to handle the form submission

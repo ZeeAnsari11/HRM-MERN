@@ -36,6 +36,8 @@ import ViewAttendenceRequests from "./screens/ViewAttendenceRequests";
 import ViewEmployees from "./screens/ViewEmployees";
 import ViewWorkFromHome from "./screens/WorkFromHome";
 import WorkFromHomeRequest from "./screens/WorkFromHomeRequest";
+import RequestFlow from "./screens/RequestFlow";
+import RequestType from "./screens/RequestType";
 
 export const privateRoutes = () => {
     return <>
@@ -59,8 +61,10 @@ export const privateRoutes = () => {
       <Route path="tax-rules" element={<TaxRules/>} />
       <Route path="grades" element={<Grades/>} />
       <Route path="grade-benefits" element={<GradeBenefits/>} />
-      <Route path="all-loans" element={<LoanRequestList/>} />
 
+      <Route path="all-loans" element={<LoanRequestList/>} />
+      <Route path="request-flow" element={<RequestFlow/>} />
+      <Route path="request-type" element={<RequestType/>} />
       
     </>
   }

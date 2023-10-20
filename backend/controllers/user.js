@@ -850,6 +850,57 @@ export const getUserLeaveQuota = (req, res, next) => {
     }
 }
 
+// export const getUserLeaveQuota = (req, res, next) => {
+//     try {
+//         UserModel.findOne({ _id: req.params.id })
+//             .select('firstName lastName leaveTypeDetails leaveRequests')
+//             .populate({
+//                 path: 'leaveTypeDetails.leaveType',
+//                 select: 'name accumulativeCount'
+//             })
+//             .then((user) => {
+//                 if (!user) throw new Error("No Leave Quota not found");
+
+//                 const leaveQuota = user.leaveTypeDetails.map((leaveDetail) => {
+//                     const { name, accumulativeCount } = leaveDetail.leaveType;
+
+//                     // Calculate availed and remaining leaves for this leave type
+//                     const leaveRequestsForType = user.leaveRequests.filter((request) => {
+//                         return request.leaveType === name; // Assuming leave type is stored as 'name' in leave requests
+//                     });
+
+//                     const availed = leaveRequestsForType.reduce((total, request) => {
+//                         // Calculate the number of days in the leave request
+//                         const startDate = new Date(request.startDate);
+//                         const endDate = new Date(request.endDate);
+//                         const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+                        
+//                         return total + days;
+//                     }, 0);
+
+//                     const remaining = accumulativeCount - availed;
+
+//                     return {
+//                         leaveType: name,
+//                         accumulativeCount,
+//                         availed,
+//                         remaining,
+//                     };
+//                 });
+
+//                 res.status(200).json({
+//                     success: true,
+//                     leaveQuota,
+//                 });
+//             })
+//             .catch((err) => handleCatch(err, res, 404, next));
+//     } catch (err) {
+//         handleCatch(err, res, 400, next);
+//     }
+// };
+
+
+
 // Controller function for handling image upload
 export const updateProfilePicture = (req, res, next) => {
     try {
