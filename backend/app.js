@@ -167,7 +167,7 @@ app.use(apiVersion, themeRoute)
 app.use(apiVersion, backgroundShifterRoute)
 
 
-app.use(apiVersion, permissionsMiddlewre);
+// app.use(apiVersion, permissionsMiddlewre);
 app.use(apiVersion, designationRoute); 
 app.use(apiVersion, loanTypeRoute);
 app.use(apiVersion, departmentRoute);

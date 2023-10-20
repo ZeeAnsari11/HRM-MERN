@@ -40,6 +40,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
+    "react-feather": "^2.0.10",
     "react-helmet": "^6.1.0",
     "react-icons": "^4.8.0",
     "react-modal": "^3.16.1",
@@ -59,11 +60,11 @@
     "tw-elements": "^1.0.0-beta2",
     "web-vitals": "^2.1.4"
   },
+  "homepage": "/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "cp .env.development .env && react-scripts start"
   },
   "eslintConfig": {
     "extends": [
@@ -90,3 +91,10 @@
     "typescript": "3.8.3"
   }
 }
+
+
+
+
+
+
+

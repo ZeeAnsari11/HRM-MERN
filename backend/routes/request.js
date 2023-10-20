@@ -1,7 +1,12 @@
+import { getListOfRequestsByLMAndRFT, rejectRequest, requestToNextNode } from '../utils/request.js';
+
 import express from 'express'
-import { requestToNextNode, rejectRequest} from '../utils/request.js';
 
 export const requestRoute = express.Router();
 
+// getListOfRequestsByLMAndRFT    (LMAndRFT ) Line Manager and Request Flow Type
+
 requestRoute.route('/request/nextNode').post(requestToNextNode);
 requestRoute.route('/request-reject').post(rejectRequest);
+requestRoute.route('/requests').get(getListOfRequestsByLMAndRFT);
+

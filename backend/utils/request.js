@@ -1,15 +1,17 @@
-import { RequestModel } from "../models/requestSchema.js";
 import { handleCatch, updateById } from './common.js'
+
+import { ExpenseModel } from "../models/expenseSchema.js";
+import { LeaveRequestModel } from "../models/leaveRequestSchema.js";
+import { LoanModel } from "../models/loanSchema.js";
+import { MissingPunchesModel } from "../models/missingPunchesSchema.js";
 import { RequestFlowModel } from "../models/requestFlowSchema.js";
 import { RequestFlowNodeModel } from "../models/requestFlowSchema.js";
+import { RequestModel } from "../models/requestSchema.js";
 import { UserModel } from "../models/userSchema.js";
-import { LeaveRequestModel } from "../models/leaveRequestSchema.js";
 import { WFHModel } from "../models/wfhSchema.js";
-import { MissingPunchesModel } from "../models/missingPunchesSchema.js";
-import { updateAttendance } from "../controllers/attendance.js"
-import { LoanModel } from "../models/loanSchema.js";
 import { rejectLeaveRequest } from "../controllers/leaveRequest.js";
-import { ExpenseModel } from "../models/expenseSchema.js";
+import { updateAttendance } from "../controllers/attendance.js"
+
 let errorOccurred = false
 
 export const creatingRequest = (req, res, next, user, request, requestFlow, requestType, type = null) => {
@@ -41,34 +43,34 @@ const getfirstNodeUser = async (req, res, next, node, user, request, requestType
                 run = false;
                 let model;
                 switch (type) {
-                    case 'MissingPunches': { 
+                    case 'MissingPunches': {
                         model = MissingPunchesModel
                         break;
                     }
-                    case 'Leave': { 
+                    case 'Leave': {
                         model = LeaveRequestModel
                         break;
                     }
                     case 'Loan': {
                         model = LoanModel
                         break;
-                     }
-                    case 'WFH': { 
+                    }
+                    case 'WFH': {
                         model = WFHModel
                         break;
                     }
                     case 'Expense': {
                         model = ExpenseModel
                         break;
-                     }
+                    }
                 }
-                model.deleteOne({_id : request._id})
-                .then(()=>{
-                    throw new Error("There is not Line Manger for that user")
-                })
-                .catch((err)=>{
-                    handleCatch(err, res, 500, next)
-                })
+                model.deleteOne({ _id: request._id })
+                    .then(() => {
+                        throw new Error("There is not Line Manger for that user")
+                    })
+                    .catch((err) => {
+                        handleCatch(err, res, 500, next)
+                    })
 
             }
         }
@@ -90,12 +92,11 @@ const getfirstNodeUser = async (req, res, next, node, user, request, requestType
             flowRequestType: requestType,
             createdAt: request.createdAt
         }
-       if(run){ addingRequest(req, res, next, x)}
+        if (run) { addingRequest(req, res, next, x) }
     } catch (error) {
         handleCatch(error, res, 404, next)
     }
 }
-
 
 const addingRequest = (req, res, next, obj, show = true) => {
     const senderId = obj.senderId;
@@ -266,7 +267,6 @@ const settingStatus = (req, res, next, requestStatus = null, node = null, user =
         })
 }
 
-
 const getNodeUser = async (node, user, req, res, next, show) => {
     try {
         // console.log("========node========",node);
@@ -391,5 +391,52 @@ export const rejectRequest = (req, res, next) => {
             break;
     }
 }
+
+export const getListOfRequestsByLMAndRFT = (req, res, next) => {
+    console.log("===rece==",req.query.receiverId);
+    console.log("===fT==",req.query.flowRequestType);
+
+   try{
+    RequestModel.aggregate([
+        {
+            $match: {
+                "requests.requestDetails": {
+                    $elemMatch: {
+                        "receiverId": req.query.receiverId,
+                        "flowRequestType": req.query.flowRequestType
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                matchingRequests: {
+                    $filter: {
+                        input: "$requests.requestDetails",
+                        as: "requestDetail",
+                        cond: {
+                            $and: [
+                                { $eq: ["$$requestDetail.receiverId", req.query.receiverId] },
+                                { $eq: ["$$requestDetail.flowRequestType", req.query.flowRequestType] }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]).exec((err, results) => {
+        if (err) {
+            handleCatch(err, res, 500, next)
+        }
+        res.json({
+            result : results
+        })
+    });
+   }
+   catch(err){
+    handleCatch(err, res, 400, next)
+   }
+}
+
 
 
