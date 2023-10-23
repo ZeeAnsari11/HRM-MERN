@@ -46,6 +46,7 @@ const common = (req, res, next) => {
                 })
         })
         .then((users) => {
+            console.log("======usersiiiii===",users);
             if (users.length == 0) throw new Error('No users in the provided organization')
             req.body.organization = req.params.id
             users.forEach(user => {
