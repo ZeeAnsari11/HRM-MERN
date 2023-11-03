@@ -23,7 +23,10 @@ export const organizationRoutes = {
     getEmployementTypesByOrgId: baseUrl+'/employmentType/all/',
     getTaxRulesByOrgId: baseUrl+'/taxRule/organization/',
     getGradesByOrgId: baseUrl+'/grade/organization/',
-    getGradeBenefitsByOrgId: baseUrl+'/benefits/organization/'
+    getGradeBenefitsByOrgId: baseUrl+'/benefits/organization/',
+    getLeaveRequestsByOrgId : baseUrl +'/leaves/org/',
+    getWFHRequestByOrgId : baseUrl +'/wfh/org/',
+    getAllM_PByOrdId : baseUrl+'/missing-punch/all/org/'
 
 }
 
@@ -284,5 +287,10 @@ export const requestFlow = {
     all: baseUrl+'/request-flow/all-org/',    
 }
 
-
-
+export const requestFlowNode = {
+    create: baseUrl+'/request-flow/create-node/',
+    all: baseUrl+'/request-flow/all/nodes/'  ,
+    deleteNode :   (flowId, nodeId)=>{
+        return `${baseUrl}/request-flow/${flowId}/nodes/${nodeId}`
+    }
+}

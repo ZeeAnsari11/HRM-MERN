@@ -1,9 +1,10 @@
+import { missingPunchesRoute, organizationRoutes } from './configuration';
+
 import axios from 'axios';
-import { missingPunchesRoute } from './configuration';
 import { setHeaders } from "../utils/AdminStatus";
+import { setmissingPunches } from '../states/reducers/slices/backend/UserSlice';
 import { toast } from 'react-toastify';
 import { toastMessage } from '../AlertConfigs';
-import { setmissingPunches } from '../states/reducers/slices/backend/UserSlice';
 
 export const saveFormDataForMissingPunches = (formData, orgId, role) => {
     const headers = setHeaders(orgId,role, 'createMissingPunchRequest')
@@ -31,3 +32,16 @@ export const getMissingPunchesRquestsOfUser = (id, orgId, role, dispatch) => {
         
       });
   };
+
+  export const getAllM_PByOrgId = (orgId, role, setRequests, loanLoader)=>{
+    console.log("===orgId=",orgId);
+    const headers = setHeaders(orgId, role, 'getAllWFHByOrgId')
+      axios.get(organizationRoutes.getAllM_PByOrdId + orgId, { headers })
+          .then((response) => {
+              setRequests(response.data.response)
+              loanLoader()
+          })
+          .catch((err) => {
+              // console.log(err);
+          })
+  }

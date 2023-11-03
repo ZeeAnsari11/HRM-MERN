@@ -1,49 +1,52 @@
+import { requestFlow, requestType } from "./configuration";
+import { setRequestFlows, setRequestTypes } from "../states/reducers/slices/backend/UserSlice";
+
 import axios from "axios";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
-import {setRequestFlows, setRequestTypes } from "../states/reducers/slices/backend/UserSlice";
-import { requestFlow, requestType } from "./configuration";
 
-export const getRequestTypes = (orgId, dispatcher, trigger = null) => {
-    axios.get(requestType.all+orgId)
+export const getRequestTypes = (orgId, dispatcher, trigger = null, firstLoad = null) => {
+  axios.get(requestType.all + orgId)
     .then((response) => {
-        dispatcher(setRequestTypes(response.data.response))
+      dispatcher(setRequestTypes(response.data.response))
     })
     .catch((err) => {
+      if (!firstLoad) {
         toastMessage("error", err.response.data.Message, toast);
-    }).finally(() =>{
-      if(trigger !== null){
-          trigger()
       }
-  })
+    }).finally(() => {
+      if (trigger !== null) {
+        trigger()
+      }
+    })
 }
 
 
 
 export const getRequestFlowsByOrgId = (orgId, dispatcher) => {
-    axios
-      .get(requestFlow.all + orgId)
-      .then((response) => {
-        // console.log("responseData==", response);
-        dispatcher(setRequestFlows(response.data.response))
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  axios
+    .get(requestFlow.all + orgId)
+    .then((response) => {
+      // console.log("responseData==", response);
+      dispatcher(setRequestFlows(response.data.response))
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 export const getRequestFlows = (orgId, dispatcher, trigger = null) => {
-  axios.get(requestFlow.all+orgId)
-  .then((response) => {
+  axios.get(requestFlow.all + orgId)
+    .then((response) => {
       dispatcher(setRequestFlows(response.data.response))
-  })
-  .catch((err) => {
+    })
+    .catch((err) => {
       toastMessage("error", err.response.data.Message, toast);
-  }).finally(() =>{
-    if(trigger !== null){
+    }).finally(() => {
+      if (trigger !== null) {
         trigger()
-    }
-})
+      }
+    })
 }
 
 // export const saveRequestFlowData = ( formData) => {
@@ -60,14 +63,14 @@ export const getRequestFlows = (orgId, dispatcher, trigger = null) => {
 
 
 export const getRequesTypesByOrgId = (orgId, dispatcher) => {
-    axios
-      .get(requestFlow.all + orgId)
-      .then((response) => {
-        dispatcher(setRequestFlows(response.data.response))
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  axios
+    .get(requestFlow.all + orgId)
+    .then((response) => {
+      dispatcher(setRequestFlows(response.data.response))
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 export const createRequestType = (formData, changeToggler, trigger = null) => {
@@ -90,12 +93,13 @@ export const saveRequestFlowData = (formData, changeToggler, trigger = null) => 
   axios
     .post(requestFlow.create, formData)
     .then((res) => {
-      console.log("res:",res);
+      console.log("res:", res);
       toastMessage("success", "Request Flow creation success.", toast);
-      changeToggler();
+      // changeToggler();
     })
     .catch((err) => {
-      toastMessage("error", "Request Flow creation failed!", toast);
+      console.log("==err.Message=",err.Message);
+      toastMessage("error", err.response.data.Message, toast);
     })
     .finally(() => {
       if (trigger !== null) trigger();
@@ -103,14 +107,16 @@ export const saveRequestFlowData = (formData, changeToggler, trigger = null) => 
 };
 
 
-export const updateRequestTypeById = (id, formData, trigger) => {
+export const updateRequestTypeById = (id, formData, trigger, changeToggler) => {
+console.log("====changeToggler=",changeToggler);
   axios
     .put(requestType.update + id, formData)
     .then((response) => {
       toastMessage("success", response.data.Message, toast);
-      setTimeout(() => {
-        window.location.href = "/dashboard/request-type";
-      }, 2000);
+      // setTimeout(() => {
+      //   window.location.href = "/dashboard/request-type";
+      // }, 2000);
+      changeToggler()
     })
     .catch((error) => {
       toastMessage("error", error.response.data.Message, toast);

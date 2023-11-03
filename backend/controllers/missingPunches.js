@@ -1,9 +1,10 @@
-import { handleCatch, getById, deleteById, updateById, getAll } from "../utils/common.js"
-import { MissingPunchesModel } from "../models/missingPunchesSchema.js"
+import { deleteById, getAll, getById, handleCatch, updateById } from "../utils/common.js"
+
 import { AttendanceModel } from "../models/attendanceSchema.js"
-import { creatingRequest } from "../utils/request.js";
-import { UserModel } from "../models/userSchema.js";
+import { MissingPunchesModel } from "../models/missingPunchesSchema.js"
 import { RequestFlowModel } from "../models/requestFlowSchema.js";
+import { UserModel } from "../models/userSchema.js";
+import { creatingRequest } from "../utils/request.js";
 import mongoose from "mongoose";
 
 export const createMissingPunchRequest = (req, res, next) => {
@@ -12,7 +13,6 @@ export const createMissingPunchRequest = (req, res, next) => {
         if (req.body.expectedTime) {
             AttendanceModel.findOne({ user: req.body.user, date: req.body.date })
                 .then((attendanceFound) => {
-                    console.log("=======attendanceFound==",attendanceFound);
                     if (!attendanceFound) throw new Error("It might be the off day for which you are generating the request")
                     if (attendanceFound.isPresent) throw new Error("Your attendance is already marked");
                     if ((req.body.punchType == "checkIn" && attendanceFound.checkIn != "false") || (req.body.punchType == "checkOut" && attendanceFound.checkOut != "false")) {
@@ -22,7 +22,7 @@ export const createMissingPunchRequest = (req, res, next) => {
                         session.startTransaction();
                         MissingPunchesModel.find({ user: req.body.user, date: req.body.date, punchType: req.body.punchType })
                             .then((alreadyRequested) => {
-                                console.log("======alreadyRequested===",alreadyRequested);
+                                console.log("======alreadyRequested===", alreadyRequested);
                                 if (alreadyRequested.length > 0) throw new Error("Already generated request for that");
                                 return MissingPunchesModel.create([req.body], { session: session });
                             })
@@ -89,15 +89,15 @@ export const deleteMissingPunchRequest = (req, res, next) => {
         .catch(err => handleCatch(err, res, 423, next))
 }
 
-export const filterMissingPunches = (req, res, next)=>{
+export const filterMissingPunches = (req, res, next) => {
     const { month, year, userId } = req.query;
     let query = {
         user: userId,
         date: {
-          $gte: new Date(year, month - 1, 1), // Start of the month
-          $lt: new Date(year, month, 1) // Start of the next month
+            $gte: new Date(year, month - 1, 1), // Start of the month
+            $lt: new Date(year, month, 1) // Start of the next month
         }
-      }
+    }
     getAll(res, next, MissingPunchesModel, query, "Attendence Request history for this user");
 }
 export const updateMissingPunchRequest = (req, res, next) => {
@@ -116,4 +116,21 @@ export const updateMissingPunchRequest = (req, res, next) => {
         .catch((err) => {
             handleCatch(err, res, err.statusCode || 423, next);
         });
+}
+
+export const getAllMPByOrgId = (req, res, next) => {
+    MissingPunchesModel.find()
+        .populate({
+            path: 'user',
+            select: 'firstName lastName organization',
+            match: { organization: req.params.id }
+        })
+        .then((response) => {
+            res.status(200).json({
+                response
+            })
+        })
+        .catch((err) => {
+            handleCatch(err, res, 400, next)
+        })
 }

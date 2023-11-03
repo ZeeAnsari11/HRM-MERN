@@ -1,4 +1,4 @@
-import { deleteById, getById, handleCatch, updateById } from '../utils/common.js'
+import { deleteById, getAll, getById, handleCatch, updateById } from '../utils/common.js'
 
 import { LeaveRequestModel } from "../models/leaveRequestSchema.js";
 import { LeaveTypeModel } from "../models/leaveTypeSchema.js";
@@ -505,4 +505,21 @@ export const GetUserAllowedLeaves = (req, res, next) => {
         handleCatch(err, res,400, next)
     }
 
+}
+
+export const getLeaveRequestsByOrgId= (req, res, next)=>{
+    LeaveRequestModel.find({ organization: req.params.id })
+    .populate('leaveType', 'name')
+    .populate('user', 'firstName lastName') 
+    .populate('shortleaveDetails.shortLeaveType', 'name')
+    .then((response) => {
+        res.status(200).json({
+            success: true,
+            response
+        });
+    })
+    .catch((error) => {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    });
 }

@@ -740,6 +740,11 @@ export const getChildsByUserId = (req, res, next) => {
         console.log("fdfghj", req.params.id);
         if (!req.params.id) throw new Error("Please provide the Id for which you want to retrieve childs")
         UserModel.find({ lineManager: req.params.id, isActive: true })
+            .select('firstName lastName isLineManager')
+            .populate({
+                path : 'designation',
+                select : "shortForm title"
+            })
             .then((childs) => {
                 if (childs.length == 0) {
                     throw new Error("No childs found")

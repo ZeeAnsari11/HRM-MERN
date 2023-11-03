@@ -4,10 +4,12 @@ import { BranchModel } from '../models/branchSchema.js';
 import { LeaveTypeModel } from '../models/leaveTypeSchema.js';
 import { OrganizationModel } from '../models/organizationSchema.js';
 import { PermissionsModel } from '../models/permissions.js';
+import { UserModel } from '../models/userSchema.js';
 import { addingUser } from './user.js';
 import app from '../app.js';
 import expressListEndpoints from "express-list-endpoints";
 import fs from 'fs'
+import { log } from 'console';
 import mongoose from "mongoose";
 
 export const createOrganization = (req, res, next) => {
@@ -137,3 +139,57 @@ export const createLeaveTypeWithFirstUser = (req, res, next, actualReq) => {
         })
         .catch((err) => { handleCatch(err, res, 500, next) })
 }
+
+
+export const getOrganizationalHierarchy = async (req, res, next) => {
+    UserModel.find({ organization: req.params.id })
+        .populate({
+            path: 'designation',
+            select: 'title'
+        })
+        .select('firstName lastName isLineManager isTeamLead lineManager children') // Make sure 'children' is a valid field
+        .lean()
+        .then((users) => {
+            console.log("===1====");
+            let hierarchy = buildHierarchy(users);
+            res.status(200).json(hierarchy);
+        })
+        .catch((error) => {
+            console.error('Error fetching organizational hierarchy:', error);
+            res.status(500).json({ message: 'Internal server error' });
+        });
+};
+
+const buildHierarchy = (users) => {
+    const userMap = {};
+    const hierarchy = [];
+
+    // Mapping users by ID for efficient access
+    users.forEach((user) => {
+        user.children = [];
+        userMap[user._id] = user;
+    });
+
+    // Building the hierarchy
+    users.forEach((user) => {
+        if (user.isLineManager && user.isLineManager) {
+            hierarchy.push(user);
+            const parent = userMap[user.lineManager]; // Assuming you have a 'lineManager' field for the parent user's ID
+            if (parent) {
+                parent.children.push(user);
+            }
+        }     
+        else if (user.isLineManager) {
+            hierarchy.push(user);
+        }
+
+        else {
+            const parent = userMap[user.lineManager]; // Assuming you have a 'lineManager' field for the parent user's ID
+            if (parent) {
+                parent.children.push(user);
+            }
+        }
+    });
+
+    return hierarchy;
+};

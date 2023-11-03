@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { createDepartment } from "../../api/departments";
+import { createRequestType, getRequestTypes } from "../../api/requestFlow";
+import { selectCurrentUserOrg, selectRequestTypes } from "../../states/reducers/slices/backend/UserSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 import CDForm from "./CDForm";
 import ComponentLoader from "../../components/Loader/ComponentLoader";
 import DepartmentsView from "./RequestTypeView";
-
-import RequestTypeView from "./RequestTypeView";
-
 import Modal from "../../components/Modal";
+import RequestTypeView from "./RequestTypeView";
 import Table from "../../components/Table";
 import { commonStyles } from "../../styles/common";
-import { selectCurrentUserOrg, selectRequestTypes } from "../../states/reducers/slices/backend/UserSlice";
+import { createDepartment } from "../../api/departments";
 import { useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { createRequestType, getRequestTypes } from "../../api/requestFlow";
 
 const RequestType = () => {
   let orgId;
@@ -22,18 +20,16 @@ const RequestType = () => {
 
   const [formData, setFormData] = useState({
     name: "",
-    organization: orgId,
-    branch: "",
+    organization: orgId
   });
 
   const [validationErrors, setValidationErrors] = useState({
-    name: "",
-    branch: "",
+    name: ""
   });
 
   useEffect(() => {
     LoadData();
-  });
+  },[toggleChange]);
 
   const changeToggler = () => {
     setToggleChange(!toggleChange);
@@ -45,7 +41,7 @@ const RequestType = () => {
     setLoader(false);
   };
   let LoadData = () => {
-    getRequestTypes(orgId, dispatcher, RequestTypeLoader);
+    getRequestTypes(orgId, dispatcher, RequestTypeLoader, true);
   };
 
 
@@ -70,7 +66,7 @@ const RequestType = () => {
       return;
     }
     createRequestType(formData, changeToggler, trigger);
-    setFormData({ name: "", organization: orgId, branch: "" });
+    setFormData({ name: "", organization: orgId });
   };
 
   const columns = useMemo(
@@ -86,7 +82,7 @@ const RequestType = () => {
       {
         Header: "Action",
         accessor: "action",
-        Cell: ({ row }) => <RequestTypeView data={row.original} />,
+        Cell: ({ row }) => <RequestTypeView data={row.original}  changeToggler = {LoadData}/>,
       },
     ],
     []
@@ -129,9 +125,7 @@ const RequestType = () => {
               check={(closeModal) => {
                 if (
                   !validationErrors?.name &&
-                  !validationErrors?.branch &&
-                  formData?.name.trim() &&
-                  formData?.branch.trim()
+                  formData?.name.trim() 
                 ) {
                   closeModal();
                 }

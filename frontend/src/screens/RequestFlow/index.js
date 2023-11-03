@@ -1,11 +1,12 @@
 import { Button, Form, Input, Select } from 'antd';
 import React, { useState } from 'react';
-import { useEffect } from 'react';
-import { saveRequestFlowData } from '../../api/requestFlow';
 import { selectOrgId, selectRequestTypes } from '../../states/reducers/slices/backend/UserSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { getRequestTypes } from '../../api/requestFlow';
+
 import { commonStyles } from '../../styles/common';
+import { getRequestTypes } from '../../api/requestFlow';
+import { saveRequestFlowData } from '../../api/requestFlow';
+import { useEffect } from 'react';
 
 const { Option } = Select;
 
@@ -13,7 +14,7 @@ const RequestFlow = () => {
   const orgId = useSelector(selectOrgId);
   const dispatcher = useDispatch();
   useEffect(() => {
-    getRequestTypes(orgId, dispatcher);
+    getRequestTypes(orgId, dispatcher, null, true);
   }, []);
   const requestTypes = useSelector(selectRequestTypes);
 
@@ -27,8 +28,10 @@ const RequestFlow = () => {
       const requestFlowData = {
         requestType: selectedRequestType,
         name: requestFlowName.trim(),
+        organization : orgId
       };
       saveRequestFlowData(requestFlowData);
+      form.resetFields(); // Reset the form fields
     });
   };
   

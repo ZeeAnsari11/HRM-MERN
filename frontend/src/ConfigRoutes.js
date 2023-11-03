@@ -1,3 +1,6 @@
+import AdminAttendenceR from "./screens/AdminAttendenceR";
+import AdminLR from "./screens/AdminLR";
+import AdminWFHR from "./screens/AdminWFHR";
 import Allowances from "./screens/Allowances";
 import AppliedLoans from "./screens/Loan/AppliedLoans";
 import Asset from "./screens/AddAsset";
@@ -8,6 +11,7 @@ import ChartPage from "./screens/Chart/src";
 import Departments from "./screens/Departments";
 import Desiginations from "./screens/Desiginations";
 import EmployeementType from "./screens/EmployeementType";
+import FlowNode from "./screens/FlowNode";
 import GeneratePayslips from "./screens/GeneratePayslips";
 import GradeBenefits from "./screens/GradeBenefits";
 import Grades from "./screens/Grades";
@@ -22,6 +26,8 @@ import ManageAssets from "./screens/ManageAsset";
 import Payslips from "./screens/Payslips";
 import PayslipsOrganization from "./screens/PayslipsOrganization";
 import Probation from "./screens/Probation";
+import RequestFlow from "./screens/RequestFlow";
+import RequestType from "./screens/RequestType";
 import Roaster from "./screens/Roaster/src";
 import { Route } from "react-router-dom";
 import Settings from "./screens/Settings";
@@ -32,15 +38,11 @@ import TimeSheet from "./screens/TimeSheet";
 import TimeSlots from "./screens/TimeSlots";
 import User from "./screens/User";
 import UserProfile from "./screens/Profile";
+import ViewApprovals from "./screens/Approvals";
 import ViewAttendenceRequests from "./screens/ViewAttendenceRequests";
 import ViewEmployees from "./screens/ViewEmployees";
 import ViewWorkFromHome from "./screens/WorkFromHome";
 import WorkFromHomeRequest from "./screens/WorkFromHomeRequest";
-
-import RequestFlow from "./screens/RequestFlow";
-import RequestType from "./screens/RequestType";
-import ViewApprovals from "./screens/Approvals";
-
 
 export const privateRoutes = () => {
     return <>
@@ -67,6 +69,14 @@ export const privateRoutes = () => {
       <Route path="all-loans" element={<LoanRequestList/>} />
       <Route path="request-flow" element={<RequestFlow/>} />
       <Route path="request-type" element={<RequestType/>} />
+      <Route path="all/leave-request" element={<AdminLR />} />
+      <Route path="all/wfh-request" element={<AdminWFHR />} />
+      <Route path="all/missing-punches" element={<AdminAttendenceR />} />
+      <Route path="flow-node" element={<FlowNode />} />
+
+
+
+      
       
     </>
   }

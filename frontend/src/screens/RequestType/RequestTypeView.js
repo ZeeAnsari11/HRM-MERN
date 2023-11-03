@@ -1,15 +1,14 @@
-
-import { faPencil } from '@fortawesome/free-solid-svg-icons';
-
 import CUForm from '../Profile/elements/common/CUForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal';
 import React from 'react';
-import { useState } from 'react';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { updateRequestTypeById } from '../../api/requestFlow';
+import { useState } from 'react';
 
-export default function RequestTypeView({ data }) {
+export default function RequestTypeView({ data , changeToggler}) {
 
+console.log("===changeToggler=",changeToggler);
     const [formData, setFormData] = useState({
         name: data.name,
     });
@@ -27,8 +26,7 @@ export default function RequestTypeView({ data }) {
             trigger();
             return;
         }
-        
-        updateRequestTypeById(data.id, formData, trigger);
+        updateRequestTypeById(data.id, formData, trigger, changeToggler);
     };
 
     const handleInputChange = (e) => {
@@ -65,7 +63,7 @@ export default function RequestTypeView({ data }) {
             Element={<CUForm config={formDataConfig} handleInputChange={handleInputChange} isFull={false} validationErrors={validationErrors}/>}
             btnConfig={btnConfig}
             check={(closeModal) => {
-                if (!validationErrors?.name && !validationErrors?.branch && formData?.name.trim() && formData?.branch.trim()) {
+                if (!validationErrors?.name  && formData?.name.trim() ) {
                     closeModal()
                 }
             }}

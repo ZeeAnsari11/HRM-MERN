@@ -1,7 +1,8 @@
-import { DepartmentModel } from "../models/departmentSchema.js";
 import { RequestFlowModel, RequestFlowNodeModel } from "../models/requestFlowSchema.js";
-import { RequestTypeModel } from "../models/requestTypeSchema.js";
 import { getAll, getById, handleCatch } from "../utils/common.js";
+
+import { DepartmentModel } from "../models/departmentSchema.js";
+import { RequestTypeModel } from "../models/requestTypeSchema.js";
 
 export const createRequestFlow = (req, res, next) => {
     const { name, requestType, organization } = req.body;
@@ -86,7 +87,6 @@ export const getAllRequestFlow = (req, res, next) => {
 }
 
 export const getAllRequestFlowOfOrganization = (req, res, next) => {
-    console.log("req.params.id", req.params.id);
     getAll(res, next, RequestFlowModel, { organization: req.params.id }, "RequestFlow")
 }
 
@@ -267,7 +267,6 @@ export const getAllRequestFlowNodes = (req, res, next) => {
                 throw new Error('Request Flow not found')
             }
             const head = requestFlow.head;
-            console.log(head);
             getNextNode(head, (finalNode) => {
                 const nodes = [];
                 let currentNode = finalNode;
@@ -282,4 +281,5 @@ export const getAllRequestFlowNodes = (req, res, next) => {
             handleCatch(error, res, 404, next)
         });
 };
+
 

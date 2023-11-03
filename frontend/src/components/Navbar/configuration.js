@@ -1,6 +1,4 @@
-
-import { faCalendarCheck, faCalendarDay, faCalendarPlus, faCalendarTimes, faCalendarWeek, faCediSign,faArrowCircleRight, faChartArea, faCircleDollarToSlot, faCodePullRequest, faCoffee, faDollarSign, faFileAlt, faGear, faHome, faNetworkWired, faTimeline, faUser, faUserCircle, faUserClock, faUsers, faArrowDown, faArrowCircleLeft, faLaptop } from '@fortawesome/free-solid-svg-icons'
-
+import { faArrowCircleLeft, faArrowCircleRight, faArrowDown, faCalendarCheck, faCalendarDay, faCalendarPlus, faCalendarTimes, faCalendarWeek, faCediSign, faChartArea, faCircleDollarToSlot, faCodePullRequest, faCoffee, faDollarSign, faFileAlt, faGear, faHome, faLaptop, faNetworkWired, faTimeline, faUser, faUserCircle, faUserClock, faUsers } from '@fortawesome/free-solid-svg-icons'
 
 export const Menus = [
     { title: "Dashboard", font:faHome, gap: true, child:[], to: "/dashboard/home"},
@@ -49,7 +47,7 @@ export const Menus = [
         title: "Leave", 
         font: faCalendarWeek,
         child: [
-            { access:"Admin", title: "Requests", font: faCalendarTimes, to:"/dashboard/timesheet" },
+            { access:"Admin", title: "Requests", font: faCalendarTimes, to:"/dashboard/all/leave-request" },
             { title: "Request Leave", font: faCodePullRequest, to:"/dashboard/leaverequest" },
             { title: "View Leaves", font: faCalendarCheck, to:"/dashboard/leaves"},
             { title: "Policy", font: faTimeline, to:"/dashboard/policy" },
@@ -62,6 +60,7 @@ export const Menus = [
         font: faCalendarWeek,
            
         child: [
+            { access:"Admin", title: "Requests", font: faCalendarTimes, to:"/dashboard/all/wfh-request" },
             // { access:"Admin", title: "Requests", font: faCalendarTimes, to:"/dashboard/wfh" },
             { title: "Request", font: faCalendarTimes, to:"/dashboard/wfh" },
             { title: "View WFH Requests", font: faFileAlt, to:"/dashboard/view-wfh" },
@@ -71,6 +70,7 @@ export const Menus = [
         title: "Attendence", 
         font: faCalendarWeek,
         child: [
+            { access:"Admin", title: "Requests", font: faCalendarTimes, to:"/dashboard/all/missing-punches" },
             { title: "Time Sheet", font: faCalendarTimes, to:"/dashboard/timesheet" },
             { title: "Attendence Request ", font: faFileAlt, to:"/dashboard/attendence-request" },
             { title: "View Attendece", font: faCalendarCheck, to:"/dashboard/attendence"},
@@ -95,7 +95,9 @@ export const Menus = [
         child:[
             { title: "Create Request Flow",access:"Admin", font: faArrowCircleRight,child:[], to:"/dashboard/request-flow"  },
 
-            { title: "Request Types",access:"Admin", font: faArrowCircleLeft,child:[], to:"/dashboard/request-type"  }
+            { title: "Request Types",access:"Admin", font: faArrowCircleLeft,child:[], to:"/dashboard/request-type"  },
+            { title: "Flow Nodes",access:"Admin", font: faArrowCircleLeft,child:[], to:"/dashboard/flow-node"  }
+
         ],
     },
     { title: "Settings", font: faGear, child:[], to:"/dashboard/settings" },

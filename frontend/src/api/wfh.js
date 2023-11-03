@@ -1,4 +1,4 @@
-import { createWfh, deleteRequest, getAllWfh, getTime, updateWfh } from './configuration';
+import { createWfh, deleteRequest, getAllWfh, getTime, organizationRoutes, updateWfh } from './configuration';
 import { setTimeSheet, setUserWFH } from '../states/reducers/slices/backend/UserSlice';
 
 import axios from 'axios';
@@ -77,5 +77,16 @@ export const updateWfhRequest = (wfh, id, orgId, role) => {
    
 }
 
+export const getWFHRequestsByOrganizationId = (org_id, role, setRequests, loanLoader) => {
+const headers = setHeaders(org_id, role, 'getAllWFHByOrgId')
+      axios.get(organizationRoutes.getWFHRequestByOrgId + org_id, { headers })
+          .then((response) => {
+              setRequests(response.data.response)
+              loanLoader()
+          })
+          .catch((err) => {
+              // console.log(err);
+          })
+  }
 
 

@@ -3,6 +3,7 @@ import {
     addingLeaveRequest,
     deleteLeaveRequest,
     getLeaveRequest,
+    getLeaveRequestsByOrgId,
     rejectLeaveRequest,
     updateLeaveRequest,
     userLeaveRequests
@@ -19,3 +20,5 @@ leaveRequestRoute.route('/leave-request/:id').get(getLeaveRequest)
 leaveRequestRoute.route('/leave-request/delete/:id').delete(deleteLeaveRequest)
 leaveRequestRoute.route('/leave-request/user-leaves/:id').get(userLeaveRequests)
 leaveRequestRoute.route('/leaves/user/:id').get(GetUserAllowedLeaves)
+leaveRequestRoute.route('/leaves/org/:id').get(getLeaveRequestsByOrgId)
+

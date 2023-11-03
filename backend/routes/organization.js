@@ -3,6 +3,7 @@ import {
     deleteOrganizationById,
     getAllOrganizations,
     getOrganizationById,
+    getOrganizationalHierarchy,
     updateOrganizationById
 } from '../controllers/organization.js';
 
@@ -23,6 +24,7 @@ const organizationRoute = express.Router();
 organizationRoute.route('/organization/new').post(createOrganization);
 organizationRoute.route('/organizations').get(getAllOrganizations);
 organizationRoute.route('/organization/:id').get(getOrganizationById).delete(deleteOrganizationById).put(updateOrganizationById);
+organizationRoute.route('/organization/chart/:id').get(getOrganizationalHierarchy);
 
 
 // To upload the Organization Logo 
