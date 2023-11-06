@@ -147,10 +147,9 @@ export const getOrganizationalHierarchy = async (req, res, next) => {
             path: 'designation',
             select: 'title'
         })
-        .select('firstName lastName isLineManager isTeamLead lineManager children') // Make sure 'children' is a valid field
+        .select('firstName lastName isLineManager isTeamLead lineManager firstUser children') // Make sure 'children' is a valid field
         .lean()
         .then((users) => {
-            console.log("===1====");
             let hierarchy = buildHierarchy(users);
             res.status(200).json(hierarchy);
         })
@@ -191,5 +190,6 @@ const buildHierarchy = (users) => {
         }
     });
 
-    return hierarchy;
+    // return hierarchy;
+    return hierarchy.filter((item) => item.firstUser === true);
 };

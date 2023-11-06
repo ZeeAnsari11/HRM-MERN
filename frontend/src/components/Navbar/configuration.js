@@ -10,6 +10,7 @@ export const Menus = [
             { title: "Probation",    font:faUserClock, to:"/dashboard/probation" },
             { title: "Roaster",    font:faCalendarPlus, to:"/dashboard/roaster"},
             { title: "Chart",    font:faChartArea, to:"/dashboard/chart" },
+            { title: "Full-Chart", access:"Admin", font:faChartArea, to:"/dashboard/org-chart" },
             { title: "Loan & Advance",    font:faCircleDollarToSlot, to:"/dashboard/loan" },
             { title: "Admin Loan Requests", access:"Admin", font:faCircleDollarToSlot, to:"/dashboard/all-loans" },
             { title: "Applied Loan Requests", access:"Admin", font:faCircleDollarToSlot, to:"/dashboard/applied-loans" },

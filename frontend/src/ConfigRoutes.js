@@ -23,6 +23,7 @@ import Loan from "./screens/Loan";
 import LoanRequestList from "./screens/Loan/LoanRequestList";
 import LoanType from "./screens/LoanType";
 import ManageAssets from "./screens/ManageAsset";
+import OrgChart from "./screens/OrgChart/src";
 import Payslips from "./screens/Payslips";
 import PayslipsOrganization from "./screens/PayslipsOrganization";
 import Probation from "./screens/Probation";
@@ -73,11 +74,8 @@ export const privateRoutes = () => {
       <Route path="all/wfh-request" element={<AdminWFHR />} />
       <Route path="all/missing-punches" element={<AdminAttendenceR />} />
       <Route path="flow-node" element={<FlowNode />} />
+      <Route path="org-chart" element={<OrgChart />}/>
 
-
-
-      
-      
     </>
   }
   

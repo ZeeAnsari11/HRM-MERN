@@ -1,12 +1,13 @@
 import { Button, Checkbox, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { addNode, deleteNodeFromFlow, getAllNodesByFlowId, getAllRequestFlowOfOrg } from '../../api/flowNode';
+import { faCross, faX } from '@fortawesome/free-solid-svg-icons';
 import { selectCurrentUserOrg, selectCurrentUserRole } from '../../states/reducers/slices/backend/UserSlice';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Input } from 'antd';
 import { getDepartmentsByOrgId } from '../../api/departments';
 import { useSelector } from 'react-redux';
-import { faCross, faX } from '@fortawesome/free-solid-svg-icons';
 
 const { Option } = Select;
 
@@ -30,10 +31,8 @@ const FlowNode = () => {
     useEffect(() => {
         getAllRequestFlowOfOrg(orgId, role)
             .then((flows) => {
-                console.log("===flows====", flows);
                 setRequestFlows(flows)
                 const requests = flows.map(flow => {
-                    console.log("======flowId===", flow._id);
                     return getAllNodesByFlowId(flow._id, orgId, role)
                         .then(result => {
                             return result;
@@ -81,8 +80,6 @@ const FlowNode = () => {
     };
 
     const deleteNode = (nodeId, requestFlowId) => {
-        console.log("=========nodeId====", nodeId);
-        console.log("=========requestFlowId====", requestFlowId);
         deleteNodeFromFlow(requestFlowId, nodeId, changeToggler)
     }
 

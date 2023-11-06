@@ -1,5 +1,6 @@
+import { orgChart, organization, userChart } from "./configuration";
+
 import axios from "axios"
-import { organization } from "./configuration";
 import { toast } from "react-toastify";
 import { toastMessage } from "../AlertConfigs";
 
@@ -15,3 +16,12 @@ export const createOrganizationFirstUser = (data, navigation) => {
             toastMessage("error", "Error creating account. try again later.", toast);
         })
 } 
+export const getOrgChart = (orgId, role, setLoader, setDataUser) => {
+    axios
+      .get(orgChart.details + orgId)
+      .then((response) => {
+        setDataUser(response.data)
+        setLoader(false)
+      })
+      .catch((error) => { });
+  };

@@ -52,6 +52,10 @@ export const userChart = {
     details: baseUrl+'/user/chart/my-chart/'
 }
 
+export const orgChart = {
+    details: baseUrl+'/organization/chart/'
+}
+
 export const leaveType = {
     getLeaveType: baseUrl+'/leaveType/'
 }
